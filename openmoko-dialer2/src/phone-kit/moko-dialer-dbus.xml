@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<node name="/org/openmoko/PhoneKit">
+<interface name="org.openmoko.PhoneKit.Dialer">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="moko_dialer"/>
+
+  <property name="Status" type="i" access="read" />
+
+  <method name="Dial">
+    <arg type="s" name="number" direction="in" />
+  </method>
+
+  <method name="HangUp">
+    <arg type="s" name="message" direction="in" />
+  </method>
+
+  <signal name="IncomingCall">
+    <arg type="s" name="number"/>
+  </signal>
+  <signal name="OutgoingCall">
+    <arg type="s" name="number" />
+  </signal>
+
+  <signal name="Talking">
+  </signal>
+
+  <signal name="HungUp">
+  </signal>
+
+  <signal name="Rejected">
+  </signal>
+
+  <signal name="StatusChanged">
+    <arg type="i" name="status" />
+  </signal>
+
+</interface>
+</node>
