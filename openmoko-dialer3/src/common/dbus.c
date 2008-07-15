@@ -6,6 +6,8 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include "dbus.h"
+	
+DBusGProxy *networkBus = NULL, *simBus = NULL, *callBus = NULL;
 
 static void lose (const char *str, ...)
 {
@@ -26,31 +28,10 @@ static void lose_gerror (const char *prefix, GError *error)
 	lose ("%s: %s", prefix, error->message);
 }
 
-static void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
-{
-  printf ("Received network status");
-}
-
-static void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data)
-{
-  printf ("Received network signal strength");
-}
-
-static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
-{
-  printf ("Received sim auth status");
-}
-
-static void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data)
-{
-  printf ("Received call status");
-}
-
-
 
 int main(int argc, char ** argv) {
 	DBusGConnection *bus;
-	DBusGProxy *networkBus, *simBus, *callBus;
+
 	GError *error = NULL;
 	GMainLoop *mainloop = NULL;
 	g_type_init ();
@@ -102,3 +83,4 @@ int main(int argc, char ** argv) {
 	exit(EXIT_SUCCESS);
 
 }
+

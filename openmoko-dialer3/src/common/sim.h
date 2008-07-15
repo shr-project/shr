@@ -1,0 +1,20 @@
+#ifndef _SIM_H
+#define _SIM_H
+
+#define DBUS_SIM_READY "READY"
+#define DBUS_SIM_PIN_REQUIRED "SIM PIN"
+#define DBUS_SIM_PUK_REQUIRED "SIM PUK"
+#define DBUS_SIM_PIN2_REQUIRED "SIM PIN2"
+#define DBUS_SIM_PUK2_REQUIRED "SIM PUK2"
+
+typedef enum {
+	SIM_READY,
+	SIM_PIN_REQUIRED,
+	SIM_PUK_REQUIRED,
+	SIM_PIN2_REQUIRED,
+	SIM_PUK2_REQUIRED
+} SimStatus;
+
+int get_authentication_state();
+
+#endif
