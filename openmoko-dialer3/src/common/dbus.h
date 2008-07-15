@@ -18,5 +18,7 @@ static void network_status_handler (DBusGProxy *proxy, const  GHashTable ** stat
 static void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data);
 static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
 static void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data);
+static void lose (const char *str, ...);
+static void lose_gerror (const char *prefix, GError *error);
 
 #endif

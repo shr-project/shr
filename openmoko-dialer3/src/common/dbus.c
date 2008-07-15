@@ -7,8 +7,6 @@
 #include <dbus/dbus-glib-bindings.h>
 #include "dbus.h"
 	
-DBusGProxy *networkBus = NULL, *simBus = NULL, *callBus = NULL;
-
 static void lose (const char *str, ...)
 {
 	va_list args;

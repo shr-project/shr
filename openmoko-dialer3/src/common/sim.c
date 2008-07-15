@@ -6,6 +6,7 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include "sim.h"
+#include "dbus.h"
 
 static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 

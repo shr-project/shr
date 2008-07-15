@@ -6,4 +6,4 @@ AM_LDFLAGS = @DIALER_LIBS@
 noinst_LIBRARIES = libdialer-common.a
 
 libdialer_common_a_SOURCES = \
-	*.c *.h 
+	dbus.c dbus.h sim.c sim.h network.c network.h call.c call.h 

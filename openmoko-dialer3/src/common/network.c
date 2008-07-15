@@ -6,6 +6,7 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include "network.h"
+#include "dbus.h"
 
 static void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
 {
