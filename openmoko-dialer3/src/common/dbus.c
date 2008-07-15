@@ -80,6 +80,23 @@ int main(int argc, char ** argv) {
 	dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
                                      NULL, NULL);
 
+	dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
+			NULL, NULL);
+
+	dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_UINT , G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (networkBus, "SignalStrength", G_CALLBACK (network_signal_strength_handler),
+			NULL, NULL);
+
+	dbus_g_proxy_add_signal (simBus, "AuthStatus", G_TYPE_STRING, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (simBus, "AuthStatus", G_CALLBACK (sim_auth_status_handler),
+			NULL, NULL);
+
+	dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID); 
+	dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (network_status_handler),
+			NULL, NULL);
+
+
 	g_main_loop_run (mainloop);
 
 	exit(EXIT_SUCCESS);
