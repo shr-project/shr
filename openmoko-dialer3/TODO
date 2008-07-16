@@ -1,8 +1,9 @@
-
-
 phonekit-lib:
 * sends dbus events to ogsmd
 * the dialer application (the one used to place calls) is linked against it
+
+phonekit-daemon:
+* listens for incomming dbus events (like call recieved)
 
 phonegui-lib:
 * an incomming call dialog
@@ -14,6 +15,3 @@ dialer:
 * the dialer application you use to place calls
 * can be launched to display the call history directly (when you clock on a
 missed call notification for instance, not sure about this one though)
-
-phonekit-daemon:
-* listens for incomming dbus events (like call recieved)

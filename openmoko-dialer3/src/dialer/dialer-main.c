@@ -1,7 +1,9 @@
 /*
  *  Copyright (C) 2007 Openmoko, Inc.
  *
- *  Authored by OpenedHand Ltd <info@openedhand.com>
+ *  Authored by:
+ *    OpenedHand Ltd <info@openedhand.com>
+ *    Marc-Olivier Barre <marco@marcochapeau.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -19,9 +21,8 @@
 #include <unistd.h>
 
 #include <gtk/gtk.h>
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-bindings.h>
 
+#include "phonekit.h"
 #include "moko-keypad.h"
 #include "moko-history.h"
 
@@ -31,8 +32,6 @@ typedef struct
   GtkWidget *history;
   
   GtkWidget *main_window;
-
-  DBusGProxy *dialer_proxy;
 } DialerData;
 
 static gboolean show_missed;
@@ -59,7 +58,7 @@ dial_clicked_cb (GtkWidget *widget, const gchar *number, DialerData *data)
 
   g_debug ("Dial %s", number);
 
-  dbus_g_proxy_call (data->dialer_proxy, "Dial", &error, G_TYPE_STRING, number, G_TYPE_INVALID, G_TYPE_INVALID);
+  phonekit_dial (number, &error);
 
   if (error)
   {
@@ -103,7 +102,7 @@ int main (int argc, char **argv)
   GtkWidget *window, *keypad;
   MokoJournal *journal;
   DBusGConnection *connection;
-  GError *error = NULL;
+  GError *error = NULL, *phonekit_error = NULL;
   DialerData *data;
 
   program_log ("start dialer");
@@ -130,27 +129,23 @@ int main (int argc, char **argv)
   /* application object */
   g_set_application_name ("OpenMoko Dialer");
 
-  program_log ("open connection to dbus");
-  connection = dbus_g_bus_get (DBUS_BUS_SESSION,
-                               &error);
-  if (connection == NULL)
+  program_log ("Initialize the PhoneKit");
+  phonekit_init (&phonekit_error);
+  
+  if (phonekit_error)
   {
     GtkWidget *dlg;
-
-    dlg = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-        "Failed to open connection to bus: %s", error->message);
+    dlg = gtk_message_dialog_new (GTK_WINDOW (data->main_window), GTK_DIALOG_MODAL,
+                                  GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+                                  "Dialer Error:\n%s", phonekit_error->message);
+    g_warning (phonekit_error->message);
     gtk_dialog_run (GTK_DIALOG (dlg));
     gtk_widget_destroy (dlg);
-
-    g_error_free (error);
+    
+    g_error_free (phonekit_error);
     exit (1);
   }
-
-  program_log ("get PhoneKit dbus proxy object");
-  data->dialer_proxy = dbus_g_proxy_new_for_name (connection,
-      "org.openmoko.PhoneKit",
-      "/org/openmoko/PhoneKit/Dialer", "org.openmoko.PhoneKit.Dialer");
-
+  
   /* Set up the journal */
   program_log ("load journal");
   journal = moko_journal_open_default ();
