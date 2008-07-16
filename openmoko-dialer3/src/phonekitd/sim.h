@@ -49,9 +49,11 @@ typedef enum {
 
 
 int get_authentication_state();
-int send_pin_code(int code, const char* pin, const char* puk);
+int send_pin_code(int codeToSet, const char* pin);
+int send_puk_code(int codeToSet, const char* puk, const char* pin);
 int sim_handle_errors(GError *error);
-void displayPinUI(int code);
-void displayPukUI(int code);
+int handleSimAuth(int result, int codeToSet);
+void displayPinUI(int codeToSet);
+void displayPukUI(int codeToSet);
 
 #endif
