@@ -1,1 +1,1 @@
-SUBDIRS = common phonekitd
+SUBDIRS = phonekitd

@@ -23,6 +23,7 @@
 #include <dbus/dbus-glib-bindings.h>
 #include "sim.h"
 #include "dbus.h"
+#include "dbus/sim.h"
 
 static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
@@ -35,9 +36,7 @@ int get_authentication_state() {
 	char *status = NULL;
 	GError *error = NULL;
 	int result = -1;
-	if (!dbus_g_proxy_call (simBus, "GetAuthStatus", &error,
-				G_TYPE_INVALID,
-				G_TYPE_STRING, &status, G_TYPE_INVALID))
+	if (!org_freesmartphone_GSM_SIM_get_auth_status(simBus, &status, &error))
 		lose_gerror ("Failed to complete GetAuthStatus", error);
 	
 	if(strcmp(status,DBUS_SIM_READY))

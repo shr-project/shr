@@ -52,6 +52,6 @@ AC_OUTPUT([
 Makefile
 libhito/Makefile
 src/Makefile
-src/common/Makefile
+src/phonekitd/Makefile
 data/Makefile
 ])
