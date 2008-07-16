@@ -31,6 +31,7 @@ typedef enum {
 	SIM_PUK2_REQUIRED
 } SimStatus;
 
-int get_authentication_state();
+int get_authentication_state ();
+void send_pin_to_ophonekitd (gchar *pin);
 
 #endif
