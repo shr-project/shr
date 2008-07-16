@@ -47,8 +47,11 @@ typedef enum {
 	SIM_ERROR_INVALID_INDEX = -6
 } SimErrors;
 
+
 int get_authentication_state();
-int send_pin_code(int code, const char* pin);
+int send_pin_code(int code, const char* pin, const char* puk);
 int sim_handle_errors(GError *error);
 void displayPinUI(int code);
+void displayPukUI(int code);
+
 #endif

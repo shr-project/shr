@@ -34,13 +34,13 @@ static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpoi
 		displayPinUI(SIM_PIN_REQUIRED);
 	}
 	else if(strcmp(status,DBUS_SIM_PUK_REQUIRED)) {
-		displayPinUI(SIM_PUK_REQUIRED);
+		displayPukUI(SIM_PUK_REQUIRED);
 	}
 	else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED)) {
 		displayPinUI(SIM_PIN2_REQUIRED);
 	}
 	else {
-		displayPinUI(SIM_PUK2_REQUIRED);
+		displayPukUI(SIM_PUK2_REQUIRED);
 	}
 
 	printf ("Received sim auth status");
@@ -86,15 +86,30 @@ void displayPinUI(int code) {
 
 }
 
-int send_pin_code(int code, const char* pin) {
+void displayPukUI(int code) {
+
+	/* TODO */
+}
+
+int send_pin_code(int code, const char* pin, const char* puk) {
         
 	char *status = NULL;
 	GError *error = NULL;
 	int result = 0;
 
-	if(!org_freesmartphone_GSM_SIM_send_auth_code (simBus, pin, &error)) {
-		result = sim_handle_errors(error);
-	}
+	switch(code) {
+		case SIM_PUK_REQUIRED:
+		case SIM_PUK2_REQUIRED:
+                        if(!org_freesmartphone_GSM_SIM_unlock (simBus, puk, pin, &error)) {
+				result = sim_handle_errors(error);
+			}
+
+			break;
+		default:
+			if(!org_freesmartphone_GSM_SIM_send_auth_code (simBus, pin, &error)) {
+				result = sim_handle_errors(error);
+			}
+	}	
 
 	if(result  < 0) {
 		switch(result) {
