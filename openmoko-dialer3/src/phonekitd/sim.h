@@ -23,6 +23,13 @@
 #define DBUS_SIM_PIN2_REQUIRED "SIM PIN2"
 #define DBUS_SIM_PUK2_REQUIRED "SIM PUK2"
 
+#define DBUS_SIM_ERROR_NOT_PRESENT "org.freesmartphone.GSM.SIM.NotPresent"
+#define DBUS_SIM_ERROR_AUTH_FAILED "org.freesmartphone.GSM.SIM.AuthFailed"
+#define DBUS_SIM_ERROR_BLOCKED "org.freesmartphone.GSM.SIM.Blocked"
+#define DBUS_SIM_ERROR_NOT_FOUND "org.freesmartphone.GSM.SIM.NotFound"
+#define DBUS_SIM_ERROR_MEMORY_FULL "org.freesmartphone.GSM.SIM.MemoryFull"
+#define DBUS_SIM_ERROR_INVALID_INDEX "org.freesmartphone.GSM.SIM.InvalidIndex"
+
 typedef enum {
 	SIM_READY,
 	SIM_PIN_REQUIRED,
@@ -31,7 +38,17 @@ typedef enum {
 	SIM_PUK2_REQUIRED
 } SimStatus;
 
-int get_authentication_state ();
-void send_pin_to_ophonekitd (gchar *pin);
+typedef enum {
+	SIM_ERROR_NOT_PRESENT = -1,
+	SIM_ERROR_AUTH_FAILED = -2,
+	SIM_ERROR_BLOCKED = -3,
+	SIM_ERROR_NOT_FOUND = -4,
+	SIM_ERROR_MEMORY_FULL = -5,
+	SIM_ERROR_INVALID_INDEX = -6
+} SimErrors;
 
+int get_authentication_state();
+int send_pin_code(int code, const char* pin);
+int sim_handle_errors(GError *error);
+void displayPinUI(int code);
 #endif
