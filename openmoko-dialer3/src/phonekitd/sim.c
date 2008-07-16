@@ -27,7 +27,7 @@
 static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
   printf ("Received sim auth status");
-  }
+}
 
 
 int get_authentication_state() {

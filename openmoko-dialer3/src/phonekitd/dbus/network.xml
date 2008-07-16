@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd" doc:id="freesmartphone-gsm-network-interface">
+
+<doc:doc>
+  <doc:summary>freesmartphone.org GSM Network Interface</doc:summary>
+</doc:doc>
+
+<interface name="org.freesmartphone.GSM.Network">
+
+  <doc:doc>
+    <doc:para>
+    The Network interface is used to give information about the GSM
+    service providers and this device's status with regards to
+    to network registration and connectivity.
+
+    Taxonomy note: We think in terms of (service) providers
+    rather than (network) operators, since multiple (service)
+    providers can use the networks from operators, however
+    what actually matters most is the provider name, not the
+    actual network operator the provider is using.
+    </doc:para>
+  </doc:doc>
+
+  <method name="Register">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network"/>
+    <doc:doc>
+        <doc:description>Register with any available service provider.</doc:description>
+        <doc:inote>This maps to the GSM 07.07 command +COPS=0, see 3GPP TS 07.07 Chapter 7.3.</doc:inote>
+    </doc:doc>
+  </method>
+
+  <method name="Unregister">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network"/>
+    <doc:doc>
+        <doc:description>Unregister from service provider.</doc:description>
+        <doc:inote>This maps to the GSM 07.07 command +COPS=2, see 3GPP TS 07.07 Chapter 7.3.</doc:inote>
+    </doc:doc>
+  </method>
+
+  <method name="GetStatus">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network"/>
+    <doc:doc>
+      <doc:description>Get Network Status.</doc:description>
+      <doc:inote>
+        This can map to the following GSM 07.07 commands:
+        +CREG? (see 3GPP TS 07.07 Chapter 7.3),
+        +COPS? (see 3GPP TS 07.07 Chapter 7.4),
+        +CSQ (see 3GPP TS 07.07 Chapter 8.5).
+      </doc:inote>
+    </doc:doc>
+    <arg type="a{sv}" name="status" direction="out">
+      <doc:doc>
+        <doc:summary>
+          Network status information. Mandatory tuples are:
+          ( "registration", string ):
+          The registration status. Expected values are:
+          "unregistered" = not registered, not trying,
+          "home" = registered to home network,
+          "busy" = not registered, but currently trying,
+          "denied" = no permitted network available,
+          "unknown" = no idea,
+          "roaming" = registered to foreign network.
+          Optional tuples are:
+          ( "provider", string ): The network provider (if registered or roaming).
+          ( "strength", int ): The signal strength in percentage (0-100).
+          ( "lac", string ): The location area code string (if available).
+          ( "cid", string ): The cell id string (if available).
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <signal name="Status">
+    <doc:doc>
+      <doc:description>
+        Sent, when the network registration status changes.
+      </doc:description>
+    </doc:doc>
+    <arg type="a{sv}" name="status">
+      <doc:doc>
+        <doc:summary>
+          The registration status. See method GetStatus for expected values.
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </signal>
+
+  <method name="GetSignalStrength">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network"/>
+    <doc:doc>
+      <doc:description>Query the current signal strength, if registered with a service provider.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +CSQ, see 3GPP TS 07.07 Chapter 8.5</doc:inote>
+    </doc:doc>
+    <arg type="i" name="signal_strength" direction="out">
+      <doc:doc>
+        <doc:summary>The signal strength in percent (0-100).</doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <signal name="SignalStrength">
+    <doc:doc>
+      <doc:description>
+        (OPTIONAL) Sent, when registered with a service provider and the network signal strength changes.
+      </doc:description>
+      <doc:inote>There is no unsolicited response code for signal strength in GSM 07.07</doc:inote>
+    </doc:doc>
+    <arg type="i" name="signal_strength">
+      <doc:doc>
+        <doc:summary>The signal strength in percent (0-100).</doc:summary>
+      </doc:doc>
+    </arg>
+  </signal>
+
+  <method name="ListProviders">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network"/>
+      <doc:doc>
+        <doc:description>List available service providers.</doc:description>
+        <doc:inote>This maps to the GSM 07.07 command +COPS=?, see 3GPP TS 07.07 Chapter 7.3</doc:inote>
+      </doc:doc>
+    <arg type="a(isss)" name="providers" direction="out">
+      <doc:doc>
+        <doc:summary>
+          An array of four-tuples with the following structure:
+          1. Unique numerical operator code,
+          2. Status ("unknown", "available", "current", "forbidden"),
+          3. Long Name,
+          4. Short Name (optional, may be empty).
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="RegisterWithProvider">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network"/>
+      <doc:doc>
+        <doc:description>Register to a dedicated service provider.</doc:description>
+          <doc:inote>This maps to the GSM 07.07 command +COPS=1..., see 3GPP TS 07.07 Chapter 7.3</doc:inote>
+      </doc:doc>
+    <arg type="i" name="operator_code" direction="in">
+      <doc:doc>
+        <doc:summary>The operator code.</doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="GetCountryCode">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network" />
+    <doc:doc>
+      <doc:description>Compute the country code of the current service provider.</doc:description>
+      <doc:inote>
+        This maps to the GSM 07.07 command +COPS?, see 3GPP TS 07.07 Chapter 5.6.
+        Get the dial code by cross-referencing ITU E.212 (Land Mobile Numbering Plan).
+      </doc:inote>
+    </doc:doc>
+    <arg type="s" name="dial_code" direction="out">
+      <doc:doc>
+        <doc:summary>The country dial code (including the +).</doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="GetCallForwarding">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network" />
+    <doc:doc>
+      <doc:description>Get the network call forwarding status.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +CCFC=(reason),2, see 3GPP TS 07.07 Chapter 7.10.</doc:inote>
+    </doc:doc>
+    <arg type="a{sv}" name="status" direction="out">
+      <doc:doc>
+        <doc:summary>
+          A dictionary containing entries for call classes. Expected keywords are:
+          "voice", "data", "voice+data", "fax", "voice+data+fax". Rarely you can expect:
+          "sms", "dcs", "dca", "dpa", "pad".
+          The value is a three-tuple with the following structure:
+          1. Enabled (boolean),
+          2. Call forwarding number,
+          3. Seconds after which the call forwarding gets active.
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="EnableCallForwarding">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network" />
+    <doc:doc>
+      <doc:description>Enable network call forwarding.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +CCFC=(...),3, see 3GPP TS 07.07 Chapter 7.10.</doc:inote>
+    </doc:doc>
+    <arg type="s" name="reason" direction="in">
+      <doc:doc>
+        <doc:summary>
+          Reason for which you want to enable network call forwarding. Valid reasons are:
+          "unconditional",
+          "mobile busy",
+          "no reply",
+          "not reachable",
+          "all",
+          "all conditional",
+        </doc:summary>
+      </doc:doc>
+    </arg>
+    <arg type="s" name="class" direction="in">
+      <doc:doc>
+        <doc:summary>
+          Call class for which you want to enable network call forwarding. See GetCallForwarding for valid classes.
+        </doc:summary>
+      </doc:doc>
+    </arg>
+    <arg type="s" name="number" direction="in">
+      <doc:doc>
+        <doc:summary>
+          Phone number to which you want to enable network call forwarding.
+        </doc:summary>
+      </doc:doc>
+    </arg>
+    <arg type="i" name="timeout" direction="in">
+      <doc:doc>
+        <doc:summary>
+          Number of seconds, after which network call forwarding launches (only for reason "no reply").
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="DisableCallForwarding">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network" />
+    <doc:doc>
+      <doc:description>Disable network call forwarding.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +CCFC=(...),4, see 3GPP TS 07.07 Chapter 7.10.</doc:inote>
+    </doc:doc>
+    <arg type="s" name="reason" direction="in">
+      <doc:doc>
+        <doc:summary>
+          Reason for which you want to disable network call forwarding. Valid reasons are:
+          "unconditional",
+          "mobile busy",
+          "no reply",
+          "not reachable",
+          "all",
+          "all conditional",
+        </doc:summary>
+      </doc:doc>
+    </arg>
+    <arg type="s" name="class" direction="in">
+      <doc:doc>
+        <doc:summary>
+          Call class for which you want to enable network call forwarding. See GetCallForwarding for valid classes.
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="SetCallingIdentification">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network" />
+    <doc:doc>
+      <doc:description>Set whether your subscriber number is visible during a call.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +CLIR=(value), see 3GPP TS 07.07 Chapter 7.7.</doc:inote>
+    </doc:doc>
+    <arg type="s" name="visible" direction="in">
+      <doc:doc>
+        <doc:summary>
+          "on", if your subscriber number should always be visible to other parties.
+          "off", if your subscriber number should never be visible to other parties.
+          "network", if you want to use the network default.
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="GetCallingIdentification">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_network" />
+    <doc:doc>
+      <doc:description>Get whether your subscriber number is visible during a call.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +CLIR?, see 3GPP TS 07.07 Chapter 7.7.</doc:inote>
+    </doc:doc>
+    <arg type="s" name="visible" direction="out">
+      <doc:doc>
+        <doc:summary>
+          "on", if your subscriber number is always visible to other parties.
+          "off", if your subscriber number is never visible to other parties.
+          "network", if visibility depends on the network settings.
+      </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+
+
+  <!-- FIXME Do we want methods for:
+       * List available GSM bands
+       * Get/set preferred GSM band
+       * List preferred provider
+       * Add preferred provider to list
+       * Remove preferred provider from list
+       * Get home provider ID (if roaming)
+       * Get time from network
+       * Get cell ID
+       -->
+
+</interface>
+</node>
