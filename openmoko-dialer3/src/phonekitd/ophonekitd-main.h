@@ -16,6 +16,5 @@
 
 #ifndef _OPHONEKITD_MAIN_H
 #define _OPHONEKITD_MAIN_H
-#define DEBUG
 gboolean register_to_network();
 #endif

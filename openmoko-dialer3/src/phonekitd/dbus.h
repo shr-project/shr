@@ -16,7 +16,7 @@
 
 #ifndef _DBUS_H
 #define _DBUS_H
-
+#define DEBUG
 #define NETWORKD_BUS		"org.freesmartphone.onetworkd"
 #define GSMD_BUS		"org.freesmartphone.ogsmd"
 #define BUS_PATH		"/org/freesmartphone/GSM/Device"
