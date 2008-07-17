@@ -14,10 +14,22 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef _CALL_H
-#define _CALL_H
+#ifndef _DEVICE_H
+#define _DEVICE_H
 
-#define CALL_ERROR g_quark_from_static_string("ophonekitd-call")
+#define DBUS_DEVICE_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Device.NotPresent"
+#define DBUS_DEVICE_ERROR_TIMEOUT "org.freesmartphone.GSM.Device.Timeout"
+#define DBUS_DEVICE_ERROR_FAILED "org.freesmartphone.GSM.Device.Failed"
 
+#define DEVICE_ERROR g_quark_from_static_string("ophonekitd-device")
+
+typedef enum {
+	DEVICE_ERROR_NOT_PRESENT = -1,
+	DEVICE_ERROR_TIMEOUT = -2,
+	DEVICE_ERROR_FAILED = -3
+} DeviceErrors;
+
+GError* device_handle_errors(GError *dbus_error);
+gboolean device_set_antenna_power(GError* error, gboolean power);
 
 #endif

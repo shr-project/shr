@@ -17,5 +17,7 @@
 #ifndef _NETWORK_H
 #define _NETWORK_H
 
+#define NETWORK_ERROR g_quark_from_static_string("ophonekitd-network")
+
 
 #endif

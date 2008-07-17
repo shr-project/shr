@@ -31,7 +31,7 @@
 #define DBUS_SIM_ERROR_INVALID_INDEX "org.freesmartphone.GSM.SIM.InvalidIndex"
 
 #define SIM_ERROR g_quark_from_static_string("ophonekitd-sim")
-
+#define IS_SIM_ERROR(error, code) g_error_matches(error, SIM_ERROR, code)
 typedef enum {
 	SIM_READY,
 	SIM_PIN_REQUIRED,

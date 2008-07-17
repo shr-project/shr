@@ -91,10 +91,9 @@ void sim_display_puk_UI(int codeToSet) {
 
 gboolean sim_send_pin_code(GError* error, int *codeToSet, const char* pin) {
         
-	char *status = NULL;
 	GError *dbus_error = NULL;
 
-	if(!org_freesmartphone_GSM_SIM_set_auth_code (simBus, pin, &dbus_error)) {
+	if(!org_freesmartphone_GSM_SIM_send_auth_code (simBus, pin, &dbus_error)) {
 		error = sim_handle_errors(dbus_error);
 	}
 
@@ -103,7 +102,6 @@ gboolean sim_send_pin_code(GError* error, int *codeToSet, const char* pin) {
 
 gboolean sim_set_puk_code(GError* error, int* codeToSet, const char* puk, const char* pin) {
         
-	char *status = NULL;
 	GError *dbus_error = NULL;
 
 	if(!org_freesmartphone_GSM_SIM_unlock (simBus, puk, pin, &dbus_error)) {
@@ -118,14 +116,14 @@ gboolean sim_set_puk_code(GError* error, int* codeToSet, const char* puk, const 
 gboolean sim_handle_sim_auth(GError* error, int *codeToSet) {
 	gboolean result = TRUE;
 	if(error  != NULL) {
-		if(g_error_matches(error, SIM_ERROR, SIM_ERROR_AUTH_FAILED))
+		if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED))
 			result = FALSE;
-		else if(g_error_matches(error, SIM_ERROR, SIM_ERROR_BLOCKED)) {
+		else if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
 			/* We know there's a signal for that but we thought
 			 * it was worth the round trip to dbus in order to
 			 * prevent an UI rebuild */
 			int needed_code;
-			if(result = sim_get_authentication_state(error, &needed_code))
+			if((result = sim_get_authentication_state(error, &needed_code)))
 				*codeToSet = needed_code;			
 		
 		}
