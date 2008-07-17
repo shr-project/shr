@@ -48,12 +48,12 @@ typedef enum {
 } SimErrors;
 
 
-int get_authentication_state();
-int send_pin_code(int codeToSet, const char* pin);
-int send_puk_code(int codeToSet, const char* puk, const char* pin);
+int sim_get_authentication_state();
+int sim_send_pin_code(int codeToSet, const char* pin);
+int sim_send_puk_code(int codeToSet, const char* puk, const char* pin);
 int sim_handle_errors(GError *error);
-int handleSimAuth(int result, int codeToSet);
-void displayPinUI(int codeToSet);
-void displayPukUI(int codeToSet);
+int sim_handle_sim_auth(int result, int codeToSet);
+void sim_display_pin_UI(int codeToSet);
+void sim_display_puk_UI(int codeToSet);
 
 #endif

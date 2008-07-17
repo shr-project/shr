@@ -31,23 +31,23 @@ static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpoi
 		// TODO Set Antenna Power 
 	}
 	else if(strcmp(status,DBUS_SIM_PIN_REQUIRED)) {
-		displayPinUI(SIM_PIN_REQUIRED);
+		sim_display_pin_UI(SIM_PIN_REQUIRED);
 	}
 	else if(strcmp(status,DBUS_SIM_PUK_REQUIRED)) {
-		displayPukUI(SIM_PUK_REQUIRED);
+		sim_display_puk_UI(SIM_PUK_REQUIRED);
 	}
 	else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED)) {
-		displayPinUI(SIM_PIN2_REQUIRED);
+		sim_display_pin_UI(SIM_PIN2_REQUIRED);
 	}
 	else {
-		displayPukUI(SIM_PUK2_REQUIRED);
+		sim_display_puk_UI(SIM_PUK2_REQUIRED);
 	}
 
 	printf ("Received sim auth status");
 }
 
 
-int get_authentication_state() {
+int sim_get_authentication_state() {
 
 	char *status = NULL;
 	GError *error = NULL;
@@ -74,7 +74,7 @@ int get_authentication_state() {
 	return result;
 }
 
-void displayPinUI(int codeToSet) {
+void sim_display_pin_UI(int codeToSet) {
 	int result = -1;
 
 	while(result < 0) {
@@ -86,12 +86,12 @@ void displayPinUI(int codeToSet) {
 
 }
 
-void displayPukUI(int codeToSet) {
+void sim_display_puk_UI(int codeToSet) {
 
 	/* TODO */
 }
 
-int send_pin_code(int codeToSet, const char* pin) {
+int sim_send_pin_code(int codeToSet, const char* pin) {
         
 	char *status = NULL;
 	GError *error = NULL;
@@ -101,10 +101,10 @@ int send_pin_code(int codeToSet, const char* pin) {
 		result = sim_handle_errors(error);
 	}
 
-	return handleSimAuth(result, codeToSet);
+	return sim_handle_sim_auth(result, codeToSet);
 }
 
-int set_puk_code(int codeToSet, const char* puk, const char* pin) {
+int sim_set_puk_code(int codeToSet, const char* puk, const char* pin) {
         
 	char *status = NULL;
 	GError *error = NULL;
@@ -115,11 +115,11 @@ int set_puk_code(int codeToSet, const char* puk, const char* pin) {
 	}
 
 
-	return handleSimAuth(result, codeToSet);
+	return sim_handle_sim_auth(result, codeToSet);
 
 }
 
-int handleSimAuth(int result, int codeToSet) {
+int sim_handle_sim_auth(int result, int codeToSet) {
 	if(result  < 0) {
 		switch(result) {
 			case SIM_ERROR_AUTH_FAILED:
@@ -129,7 +129,7 @@ int handleSimAuth(int result, int codeToSet) {
 				/* We know there's a signal for that but we thought
 				 * it was worth the round trip to dbus in order to
 				 * prevent an UI rebuild */
-				result = get_authentication_state();
+				result = sim_get_authentication_state();
 				if(result < 0) {
 					return -1;
 				}

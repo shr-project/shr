@@ -27,7 +27,7 @@
 
 #define DBUS_TYPE_G_STRING_VARIANT_HASHTABLE (dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE))
 
-static DBusGProxy *networkBus = NULL, *simBus = NULL, *callBus = NULL;
+static DBusGProxy *networkBus = NULL, *simBus = NULL, *callBus = NULL, *deviceBus = NULL;
 static void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data);
 static void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data);
 static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);

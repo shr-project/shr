@@ -64,9 +64,10 @@ int main(int argc, char ** argv) {
 	if (!bus)
 		lose_gerror ("Couldn't connect to system bus", error);
 
-	networkBus = dbus_g_proxy_new_for_name (bus, NETWORKD_BUS, BUS_PATH, NETWORK_INTERFACE);
+	networkBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, NETWORK_INTERFACE);
 	simBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SIM_INTERFACE);
 	callBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
+	deviceBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, DEVICE_INTERFACE);
 
   	mainloop = g_main_loop_new (NULL, FALSE);
 	
