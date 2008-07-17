@@ -30,3 +30,12 @@ static void call_status_handler (DBusGProxy *proxy, const int id, const char *st
   printf ("Received call status");
 }
 
+GError* call_handle_errors(GError *dbus_error) {
+	const char *error_name = dbus_g_error_get_name(dbus_error);
+	int callError = 0;
+
+	lose_gerror ("Unknown call error", dbus_error);
+	
+	return g_error_new (CALL_ERROR, callError, "TODO");
+}
+

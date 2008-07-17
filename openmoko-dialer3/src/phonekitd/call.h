@@ -17,7 +17,9 @@
 #ifndef _CALL_H
 #define _CALL_H
 
-#define CALL_ERROR g_quark_from_static_string("ophonekitd-call")
+#define CALL_ERROR g_quark_from_static_string(CALL_INTERFACE)
+static void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data);
 
+static DBusGProxy *callBus = NULL;
 
 #endif

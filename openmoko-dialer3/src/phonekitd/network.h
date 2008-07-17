@@ -17,7 +17,11 @@
 #ifndef _NETWORK_H
 #define _NETWORK_H
 
-#define NETWORK_ERROR g_quark_from_static_string("ophonekitd-network")
+#define NETWORK_ERROR g_quark_from_static_string(NETWORK_INTERFACE)
 
+static DBusGProxy *networkBus = NULL;
+
+static void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data);
+static void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data);
 
 #endif

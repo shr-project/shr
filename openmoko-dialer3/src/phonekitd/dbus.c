@@ -22,8 +22,12 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include "dbus.h"
+#include "call.h"
+#include "sim.h"
+#include "network.h"
+#include "device.h"
 	
-static void lose (const char *str, ...)
+void lose (const char *str, ...)
 {
 	va_list args;
 
@@ -37,7 +41,7 @@ static void lose (const char *str, ...)
 	exit (1);
 }
 
-static void lose_gerror (const char *prefix, GError *error)
+void lose_gerror (const char *prefix, GError *error)
 {
 	lose ("%s: %s", prefix, error->message);
 }
@@ -97,5 +101,23 @@ int main(int argc, char ** argv) {
 
 	exit(EXIT_SUCCESS);
 
+}
+
+GError* dbus_handle_errors(GError *dbus_error) {
+	const char *error_name = dbus_g_error_get_name(dbus_error);
+	GError *error = NULL;
+	if(strncmp(error_name, SIM_INTERFACE, strlen(SIM_INTERFACE))) {
+		error = sim_handle_errors(dbus_error);
+	} else if(strncmp(error_name, CALL_INTERFACE, strlen(CALL_INTERFACE))) {
+		error = call_handle_errors(dbus_error);
+	} else if(strncmp(error_name, NETWORK_INTERFACE, strlen(NETWORK_INTERFACE))) {
+		error =  network_handle_errors(dbus_error);
+	} else if(strncmp(error_name, DEVICE_INTERFACE, strlen(DEVICE_INTERFACE))) {
+		error = device_handle_errors(dbus_error);
+	} else {
+		lose_gerror ("Failed to handle device error", dbus_error);
+	}
+	g_error_free(dbus_error);
+	return error;
 }
 

@@ -21,7 +21,7 @@
 #define DBUS_DEVICE_ERROR_TIMEOUT "org.freesmartphone.GSM.Device.Timeout"
 #define DBUS_DEVICE_ERROR_FAILED "org.freesmartphone.GSM.Device.Failed"
 
-#define DEVICE_ERROR g_quark_from_static_string("ophonekitd-device")
+#define DEVICE_ERROR g_quark_from_static_string(DEVICE_INTERFACE)
 
 typedef enum {
 	DEVICE_ERROR_NOT_PRESENT = -1,
@@ -30,6 +30,8 @@ typedef enum {
 } DeviceErrors;
 
 GError* device_handle_errors(GError *dbus_error);
-gboolean device_set_antenna_power(GError* error, gboolean power);
+gboolean device_set_antenna_power(GError** error, gboolean power);
+
+static DBusGProxy *deviceBus = NULL;
 
 #endif

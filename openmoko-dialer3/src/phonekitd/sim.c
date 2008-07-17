@@ -21,9 +21,10 @@
 
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
-#include "sim.h"
+
 #include "dbus.h"
 #include "dbus/sim.h"
+#include "sim.h"
 
 static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
@@ -47,14 +48,15 @@ static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpoi
 }
 
 
-gboolean sim_get_authentication_state(GError *error, int *code) {
+gboolean sim_get_authentication_state(GError **error, int *code) {
 
 	char *status = NULL;
-	GError *dbus_error = NULL;
+	GError *dbus_error = NULL, *tmperror = NULL;
 	gboolean result = FALSE;
-	if (!(result = org_freesmartphone_GSM_SIM_get_auth_status(simBus, &status, &dbus_error))) 
-		 error = sim_handle_errors(dbus_error);
-	else {	
+	if (!(result = org_freesmartphone_GSM_SIM_get_auth_status(simBus, &status, &dbus_error))) {
+		 tmperror = dbus_handle_errors(dbus_error);
+		 g_propagate_error(error, tmperror);
+	} else {	
 		if(strcmp(status,DBUS_SIM_READY))
 			*code = SIM_READY;
 		else if(strcmp(status,DBUS_SIM_PIN_REQUIRED))
@@ -89,23 +91,25 @@ void sim_display_puk_UI(int codeToSet) {
 	/* TODO */
 }
 
-gboolean sim_send_pin_code(GError* error, int *codeToSet, const char* pin) {
+gboolean sim_send_pin_code(GError** error, int *codeToSet, const char* pin) {
         
-	GError *dbus_error = NULL;
+	GError *dbus_error = NULL, *tmperror = NULL;
 
 	if(!org_freesmartphone_GSM_SIM_send_auth_code (simBus, pin, &dbus_error)) {
-		error = sim_handle_errors(dbus_error);
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error,tmperror);
 	}
 
 	return sim_handle_sim_auth(error, codeToSet);
 }
 
-gboolean sim_set_puk_code(GError* error, int* codeToSet, const char* puk, const char* pin) {
+gboolean sim_set_puk_code(GError** error, int* codeToSet, const char* puk, const char* pin) {
         
-	GError *dbus_error = NULL;
+	GError *dbus_error = NULL, *tmperror = NULL;
 
 	if(!org_freesmartphone_GSM_SIM_unlock (simBus, puk, pin, &dbus_error)) {
-		error = sim_handle_errors(dbus_error);
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error,tmperror);
 	}
 
 
@@ -113,12 +117,12 @@ gboolean sim_set_puk_code(GError* error, int* codeToSet, const char* puk, const 
 
 }
 
-gboolean sim_handle_sim_auth(GError* error, int *codeToSet) {
+gboolean sim_handle_sim_auth(GError** error, int *codeToSet) {
 	gboolean result = TRUE;
-	if(error  != NULL) {
-		if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED))
+	if(error  != NULL && *error != NULL) {
+		if(IS_SIM_ERROR(*error, SIM_ERROR_AUTH_FAILED))
 			result = FALSE;
-		else if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
+		else if(IS_SIM_ERROR(*error, SIM_ERROR_BLOCKED)) {
 			/* We know there's a signal for that but we thought
 			 * it was worth the round trip to dbus in order to
 			 * prevent an UI rebuild */
@@ -150,9 +154,7 @@ GError* sim_handle_errors(GError *error) {
 	} else if(strcmp(error_name, DBUS_SIM_ERROR_INVALID_INDEX)) {
 		simError = SIM_ERROR_INVALID_INDEX;
 	} else {
-        	lose_gerror ("Failed to complete SendAuthCode", error);
+        	lose_gerror ("Unknown SIM error", error);
 	}
-	g_error_free(error);
-	free(error_name);
 	return g_error_new (SIM_ERROR, simError, "TODO");
 }

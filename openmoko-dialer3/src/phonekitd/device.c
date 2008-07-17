@@ -23,6 +23,7 @@
 #include <dbus/dbus-glib-bindings.h>
 #include "device.h"
 #include "dbus.h"
+#include "dbus/device.h"
 
 GError* device_handle_errors(GError *dbus_error) {
 	const char *error_name = dbus_g_error_get_name(dbus_error);
@@ -35,21 +36,20 @@ GError* device_handle_errors(GError *dbus_error) {
 	} else if(strcmp(error_name, DBUS_DEVICE_ERROR_FAILED)) {
 		deviceError = DEVICE_ERROR_FAILED;
 	} else {
-		lose_gerror ("Failed to handle device error", dbus_error);
+		lose_gerror ("Unknown device error", dbus_error);
 	}
-	g_error_free(dbus_error);
-	free(error_name);
 	return g_error_new (DEVICE_ERROR, deviceError, "TODO");
 }
 
 
-gboolean device_set_antenna_power(GError* error, gboolean power) {
+gboolean device_set_antenna_power(GError** error, gboolean power) {
 
-	GError *dbus_error = NULL;
+	GError *dbus_error = NULL, *tmperror = NULL;
 	gboolean result = FALSE;
 	
 	if(!(result = org_freesmartphone_GSM_Device_set_antenna_power (deviceBus, power, &dbus_error))) {
-		error = device_handle_errors(dbus_error);
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error, tmperror);
 	}
 
 	return result;

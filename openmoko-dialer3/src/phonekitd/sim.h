@@ -30,7 +30,7 @@
 #define DBUS_SIM_ERROR_MEMORY_FULL "org.freesmartphone.GSM.SIM.MemoryFull"
 #define DBUS_SIM_ERROR_INVALID_INDEX "org.freesmartphone.GSM.SIM.InvalidIndex"
 
-#define SIM_ERROR g_quark_from_static_string("ophonekitd-sim")
+#define SIM_ERROR g_quark_from_static_string(SIM_INTERFACE)
 #define IS_SIM_ERROR(error, code) g_error_matches(error, SIM_ERROR, code)
 typedef enum {
 	SIM_READY,
@@ -50,12 +50,16 @@ typedef enum {
 } SimErrors;
 
 
+static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
+
 int sim_get_authentication_state();
-gboolean sim_send_pin_code(GError *error, int *codeToSet, const char* pin);
-gboolean sim_send_puk_code(GError *error, int *codeToSet, const char* puk, const char* pin);
-GError* sim_handle_errors(GError *error);
-gboolean sim_handle_sim_auth(GError *error, int *codeToSet);
+gboolean sim_send_pin_code(GError **error, int *codeToSet, const char* pin);
+gboolean sim_send_puk_code(GError **error, int *codeToSet, const char* puk, const char* pin);
+GError* sim_handle_errors(GError *dbus_error);
+gboolean sim_handle_sim_auth(GError **error, int *codeToSet);
 void sim_display_pin_UI(int codeToSet);
 void sim_display_puk_UI(int codeToSet);
+
+static DBusGProxy *simBus = NULL;
 
 #endif
