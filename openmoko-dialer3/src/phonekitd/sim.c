@@ -47,30 +47,28 @@ static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpoi
 }
 
 
-int sim_get_authentication_state() {
+gboolean sim_get_authentication_state(GError *error, int *code) {
 
 	char *status = NULL;
-	GError *error = NULL;
-	int result = 0;
-	if (!org_freesmartphone_GSM_SIM_get_auth_status(simBus, &status, &error))
-		result = sim_handle_errors(error);
-	
-	// There's been an error.
-	if(result < 0) {
-		return -1;
+	GError *dbus_error = NULL;
+	gboolean result = FALSE;
+	if (!(result = org_freesmartphone_GSM_SIM_get_auth_status(simBus, &status, &dbus_error))) 
+		 error = sim_handle_errors(dbus_error);
+	else {	
+		if(strcmp(status,DBUS_SIM_READY))
+			*code = SIM_READY;
+		else if(strcmp(status,DBUS_SIM_PIN_REQUIRED))
+			*code = SIM_PIN_REQUIRED;
+		else if(strcmp(status,DBUS_SIM_PUK_REQUIRED))
+			*code = SIM_PUK_REQUIRED;
+		else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED))
+			*code = SIM_PIN2_REQUIRED;
+		else
+			*code = SIM_PUK2_REQUIRED;
+
 	}
 
-	if(strcmp(status,DBUS_SIM_READY))
-		result = SIM_READY;
-	else if(strcmp(status,DBUS_SIM_PIN_REQUIRED))
-		result = SIM_PIN_REQUIRED;
-	else if(strcmp(status,DBUS_SIM_PUK_REQUIRED))
-		result = SIM_PUK_REQUIRED;
-	else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED))
-		result = SIM_PIN2_REQUIRED;
-	else
-		result = SIM_PUK2_REQUIRED;
-	free(status);
+	free(status);	
 	return result;
 }
 
@@ -91,61 +89,53 @@ void sim_display_puk_UI(int codeToSet) {
 	/* TODO */
 }
 
-int sim_send_pin_code(int codeToSet, const char* pin) {
+gboolean sim_send_pin_code(GError* error, int *codeToSet, const char* pin) {
         
 	char *status = NULL;
-	GError *error = NULL;
-	int result = 0;
+	GError *dbus_error = NULL;
 
-	if(!org_freesmartphone_GSM_SIM_set_auth_code (simBus, pin, &error)) {
-		result = sim_handle_errors(error);
+	if(!org_freesmartphone_GSM_SIM_set_auth_code (simBus, pin, &dbus_error)) {
+		error = sim_handle_errors(dbus_error);
 	}
 
-	return sim_handle_sim_auth(result, codeToSet);
+	return sim_handle_sim_auth(error, codeToSet);
 }
 
-int sim_set_puk_code(int codeToSet, const char* puk, const char* pin) {
+gboolean sim_set_puk_code(GError* error, int* codeToSet, const char* puk, const char* pin) {
         
 	char *status = NULL;
-	GError *error = NULL;
-	int result = 0;
+	GError *dbus_error = NULL;
 
-	if(!org_freesmartphone_GSM_SIM_unlock (simBus, puk, pin, &error)) {
-		result = sim_handle_errors(error);
+	if(!org_freesmartphone_GSM_SIM_unlock (simBus, puk, pin, &dbus_error)) {
+		error = sim_handle_errors(dbus_error);
 	}
 
 
-	return sim_handle_sim_auth(result, codeToSet);
+	return sim_handle_sim_auth(error, codeToSet);
 
 }
 
-int sim_handle_sim_auth(int result, int codeToSet) {
-	if(result  < 0) {
-		switch(result) {
-			case SIM_ERROR_AUTH_FAILED:
-				result = codeToSet;
-				break;
-			case SIM_ERROR_BLOCKED:
-				/* We know there's a signal for that but we thought
-				 * it was worth the round trip to dbus in order to
-				 * prevent an UI rebuild */
-				result = sim_get_authentication_state();
-				if(result < 0) {
-					return -1;
-				}
-				break;
-			default:
-				/* Unhandled or SIM_BLOCKED. */
-				result = -1;
+gboolean sim_handle_sim_auth(GError* error, int *codeToSet) {
+	gboolean result = TRUE;
+	if(error  != NULL) {
+		if(g_error_matches(error, SIM_ERROR, SIM_ERROR_AUTH_FAILED))
+			result = FALSE;
+		else if(g_error_matches(error, SIM_ERROR, SIM_ERROR_BLOCKED)) {
+			/* We know there's a signal for that but we thought
+			 * it was worth the round trip to dbus in order to
+			 * prevent an UI rebuild */
+			int needed_code;
+			if(result = sim_get_authentication_state(error, &needed_code))
+				*codeToSet = needed_code;			
+		
 		}
 	}
-
 	return result;
 
 }
 
 
-int sim_handle_errors(GError *error) {
+GError* sim_handle_errors(GError *error) {
 	const char *error_name = dbus_g_error_get_name(error);
 	int simError = 0;
 
@@ -166,5 +156,5 @@ int sim_handle_errors(GError *error) {
 	}
 	g_error_free(error);
 	free(error_name);
-	return simError;	
+	return g_error_new (SIM_ERROR, simError, "TODO");
 }

@@ -30,6 +30,8 @@
 #define DBUS_SIM_ERROR_MEMORY_FULL "org.freesmartphone.GSM.SIM.MemoryFull"
 #define DBUS_SIM_ERROR_INVALID_INDEX "org.freesmartphone.GSM.SIM.InvalidIndex"
 
+#define SIM_ERROR g_quark_from_static_string("ophonekitd-sim")
+
 typedef enum {
 	SIM_READY,
 	SIM_PIN_REQUIRED,
@@ -49,10 +51,10 @@ typedef enum {
 
 
 int sim_get_authentication_state();
-int sim_send_pin_code(int codeToSet, const char* pin);
-int sim_send_puk_code(int codeToSet, const char* puk, const char* pin);
-int sim_handle_errors(GError *error);
-int sim_handle_sim_auth(int result, int codeToSet);
+gboolean sim_send_pin_code(GError *error, int *codeToSet, const char* pin);
+gboolean sim_send_puk_code(GError *error, int *codeToSet, const char* puk, const char* pin);
+GError* sim_handle_errors(GError *error);
+gboolean sim_handle_sim_auth(GError *error, int *codeToSet);
 void sim_display_pin_UI(int codeToSet);
 void sim_display_puk_UI(int codeToSet);
 
