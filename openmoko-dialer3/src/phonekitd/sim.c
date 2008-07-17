@@ -43,8 +43,9 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
 	else {
 		sim_display_puk_UI(SIM_PUK2_REQUIRED);
 	}
-
-	printf ("Received sim auth status");
+#ifdef DEBUG
+	printf ("Received sim auth status %s", status);
+#endif
 }
 
 
@@ -91,18 +92,18 @@ void sim_display_code_UI() {
 	}
 }
 void sim_display_pin_UI(int codeToSet) {
-	int result = -1;
-
-	while(result < 0) {
+#ifdef DEBUG
+	printf("Displaying PIN UI for %i",codeToSet);
+#endif
 	/* TODO.
 	 * Launch the UI.
 	 * Don't forget the "cancel" button */
-	
-	}
-
 }
 
 void sim_display_puk_UI(int codeToSet) {
+#ifdef DEBUG
+	printf("Displaying PUK UI for %i",codeToSet);
+#endif
 
 	/* TODO */
 }
