@@ -26,6 +26,8 @@
 #include "dbus/sim.h"
 #include "sim.h"
 
+DBusGProxy *simBus = NULL;
+
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
 	if(strcmp(status,DBUS_SIM_READY)) {

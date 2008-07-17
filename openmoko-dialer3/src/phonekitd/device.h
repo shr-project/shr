@@ -32,6 +32,6 @@ typedef enum {
 GError* device_handle_errors(GError *dbus_error);
 gboolean device_set_antenna_power(GError** error, gboolean power);
 
-static DBusGProxy *deviceBus = NULL;
+extern DBusGProxy *deviceBus ;
 
 #endif

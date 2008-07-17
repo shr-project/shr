@@ -19,7 +19,7 @@
 
 #define NETWORK_ERROR g_quark_from_static_string(NETWORK_INTERFACE)
 
-static DBusGProxy *networkBus = NULL;
+extern DBusGProxy *networkBus;
 
 void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data);
 void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data);

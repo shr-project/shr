@@ -25,6 +25,8 @@
 #include "dbus.h"
 #include "dbus/call.h"
 
+DBusGProxy *callBus = NULL;
+
 void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data)
 {
   printf ("Received call status");

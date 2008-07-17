@@ -59,6 +59,6 @@ gboolean sim_handle_sim_auth(GError **error, int *codeToSet);
 void sim_display_pin_UI(int codeToSet);
 void sim_display_puk_UI(int codeToSet);
 
-static DBusGProxy *simBus = NULL;
+extern DBusGProxy *simBus;
 
 #endif

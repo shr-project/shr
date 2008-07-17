@@ -24,6 +24,8 @@
 #include "network.h"
 #include "dbus.h"
 
+DBusGProxy *networkBus = NULL;
+
 void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
 {
 	printf ("Received network status");

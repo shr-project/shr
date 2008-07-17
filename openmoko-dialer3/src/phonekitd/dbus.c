@@ -26,7 +26,8 @@
 #include "sim.h"
 #include "network.h"
 #include "device.h"
-	
+#include "dialer-marshal.h"
+
 void lose (const char *str, ...)
 {
 	va_list args;
@@ -94,14 +95,17 @@ void dbus_connect_to_bus() {
 	simBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SIM_INTERFACE);
 	callBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
 	deviceBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, DEVICE_INTERFACE);
-	if(!networkBus ||!simBus || !callBus ||!deviceBus) {
+	if(!(networkBus && simBus && callBus && deviceBus)) {
 		printf("Couln't connect to the interfaces");
 		exit(-1);
 	}
+
+	dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+
 #ifdef DEBUG
 	printf("Adding signals.\n");
 #endif
-     
+
 	dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
 			NULL, NULL);

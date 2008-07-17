@@ -25,6 +25,8 @@
 #include "dbus.h"
 #include "dbus/device.h"
 
+DBusGProxy *deviceBus = NULL;
+
 GError* device_handle_errors(GError *dbus_error) {
 	const char *error_name = dbus_g_error_get_name(dbus_error);
 	int deviceError = 0;

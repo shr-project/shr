@@ -34,6 +34,7 @@ int main(int argc, char ** argv) {
 #ifdef DEBUG
 	printf("Starting...\n");
 #endif
+	mainloop = g_main_loop_new (NULL, FALSE);
 	dbus_connect_to_bus();
 #ifdef DEBUG
 	printf("Connected to the buses\n");
