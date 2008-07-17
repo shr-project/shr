@@ -47,11 +47,28 @@ void lose_gerror (const char *prefix, GError *error)
 }
 
 
-int main(int argc, char ** argv) {
+GError* dbus_handle_errors(GError *dbus_error) {
+	const char *error_name = dbus_g_error_get_name(dbus_error);
+	GError *error = NULL;
+	if(strncmp(error_name, SIM_INTERFACE, strlen(SIM_INTERFACE))) {
+		error = sim_handle_errors(dbus_error);
+	} else if(strncmp(error_name, CALL_INTERFACE, strlen(CALL_INTERFACE))) {
+		error = call_handle_errors(dbus_error);
+	} else if(strncmp(error_name, NETWORK_INTERFACE, strlen(NETWORK_INTERFACE))) {
+		error =  network_handle_errors(dbus_error);
+	} else if(strncmp(error_name, DEVICE_INTERFACE, strlen(DEVICE_INTERFACE))) {
+		error = device_handle_errors(dbus_error);
+	} else {
+		lose_gerror ("Failed to handle device error", dbus_error);
+	}
+	g_error_free(dbus_error);
+	return error;
+}
+
+void dbus_connect_to_bus() {
 	DBusGConnection *bus;
 
 	GError *error = NULL;
-	GMainLoop *mainloop = NULL;
 	g_type_init ();
 
 	{
@@ -73,12 +90,10 @@ int main(int argc, char ** argv) {
 	callBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
 	deviceBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, DEVICE_INTERFACE);
 
-  	mainloop = g_main_loop_new (NULL, FALSE);
-	
 
 	dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
-                                     NULL, NULL);
+			NULL, NULL);
 
 	dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
@@ -92,32 +107,7 @@ int main(int argc, char ** argv) {
 	dbus_g_proxy_connect_signal (simBus, "AuthStatus", G_CALLBACK (sim_auth_status_handler),
 			NULL, NULL);
 
-	dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID); 
+	dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (network_status_handler),
 			NULL, NULL);
-
-
-	g_main_loop_run (mainloop);
-
-	exit(EXIT_SUCCESS);
-
 }
-
-GError* dbus_handle_errors(GError *dbus_error) {
-	const char *error_name = dbus_g_error_get_name(dbus_error);
-	GError *error = NULL;
-	if(strncmp(error_name, SIM_INTERFACE, strlen(SIM_INTERFACE))) {
-		error = sim_handle_errors(dbus_error);
-	} else if(strncmp(error_name, CALL_INTERFACE, strlen(CALL_INTERFACE))) {
-		error = call_handle_errors(dbus_error);
-	} else if(strncmp(error_name, NETWORK_INTERFACE, strlen(NETWORK_INTERFACE))) {
-		error =  network_handle_errors(dbus_error);
-	} else if(strncmp(error_name, DEVICE_INTERFACE, strlen(DEVICE_INTERFACE))) {
-		error = device_handle_errors(dbus_error);
-	} else {
-		lose_gerror ("Failed to handle device error", dbus_error);
-	}
-	g_error_free(dbus_error);
-	return error;
-}
-

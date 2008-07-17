@@ -26,10 +26,10 @@
 #include "dbus/sim.h"
 #include "sim.h"
 
-static void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
+void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
 	if(strcmp(status,DBUS_SIM_READY)) {
-		// TODO Set Antenna Power 
+		// TODO
 	}
 	else if(strcmp(status,DBUS_SIM_PIN_REQUIRED)) {
 		sim_display_pin_UI(SIM_PIN_REQUIRED);
@@ -74,6 +74,22 @@ gboolean sim_get_authentication_state(GError **error, int *code) {
 	return result;
 }
 
+void sim_display_code_UI() {
+	int needed_code;
+	GError *error = NULL;
+	if(sim_get_authentication_state(&error, &needed_code)) {
+		switch(needed_code) {
+			case SIM_PIN_REQUIRED:
+			case SIM_PIN2_REQUIRED:
+				sim_display_pin_UI(needed_code);
+				break;
+			default:
+				sim_display_puk_UI(needed_code);
+		}
+	} else {
+		// What can we do ?
+	}
+}
 void sim_display_pin_UI(int codeToSet) {
 	int result = -1;
 

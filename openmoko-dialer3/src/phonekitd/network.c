@@ -24,12 +24,12 @@
 #include "network.h"
 #include "dbus.h"
 
-static void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
+void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
 {
 	printf ("Received network status");
 }
 
-static void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data)
+void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data)
 {
 	printf ("Received network signal strength");
 }
