@@ -78,19 +78,27 @@ void dbus_connect_to_bus() {
 		fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
 		g_log_set_always_fatal (fatal_mask);
 	}
-
+#ifdef DEBUG
+	printf("Trying to get the system bus\n");
+#endif
 	bus = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
 
 
 	if (!bus)
 		lose_gerror ("Couldn't connect to system bus", error);
+#ifdef DEBUG
+	printf("Getting the interfaces\n");
+#endif
 
 	networkBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, NETWORK_INTERFACE);
 	simBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SIM_INTERFACE);
 	callBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
 	deviceBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, DEVICE_INTERFACE);
 
-
+#ifdef DEBUG
+	printf("Adding signals.\n");
+#endif
+     
 	dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
 			NULL, NULL);

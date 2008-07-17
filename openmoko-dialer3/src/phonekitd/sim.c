@@ -102,7 +102,7 @@ void sim_display_pin_UI(int codeToSet) {
 
 void sim_display_puk_UI(int codeToSet) {
 #ifdef DEBUG
-	printf("Displaying PUK UI for %i",codeToSet);
+	printf("Displaying PUK UI for %i\n",codeToSet);
 #endif
 
 	/* TODO */

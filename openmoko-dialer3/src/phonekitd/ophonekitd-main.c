@@ -31,10 +31,17 @@
 
 int main(int argc, char ** argv) {
 	GMainLoop *mainloop = NULL;
+#ifdef DEBUG
+	printf("Starting...\n");
+#endif
 	dbus_connect_to_bus();
-
+#ifdef DEBUG
+	printf("Connected to the buses\n");
+#endif
 	g_timeout_add(2000, register_to_network, NULL);
-
+#ifdef DEBUG
+	printf("Entering mainloop.\n");
+#endif
 	g_main_loop_run (mainloop);
 
 	exit(EXIT_SUCCESS);
