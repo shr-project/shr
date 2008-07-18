@@ -18,6 +18,20 @@
 #define _NETWORK_H
 
 #define NETWORK_ERROR g_quark_from_static_string(NETWORK_INTERFACE)
+#define DBUS_NETWORK_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Network.NotPresent"
+#define DBUS_NETWORK_ERROR_UNAUTHORIZED "org.freesmartphone.GSM.Network.Unauthorized"
+#define DBUS_NETWORK_ERROR_NOT_SUPPORTED "org.freesmartphone.GSM.Network.NotSupported"
+#define DBUS_NETWORK_ERROR_NOT_FOUND "org.freesmartphone.GSM.Network.NotFound"
+
+
+typedef enum {
+	NETWORK_ERROR_NOT_PRESENT = -1,
+	NETWORK_ERROR_UNAUTHORIZED = -2,
+	NETWORK_ERROR_NOT_FOUND = -3,
+	NETWORK_ERROR_NOT_SUPPORTED = -4,
+} NetworkErrors;
+
+
 
 extern DBusGProxy *networkBus;
 

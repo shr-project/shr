@@ -41,3 +41,27 @@ GError* call_handle_errors(GError *dbus_error) {
 	return g_error_new (CALL_ERROR, callError, "TODO");
 }
 
+gboolean initiate_call(GError* error, const char *number, const char* call_type, int*id_call) {
+	GError *dbus_error = NULL, *tmperror = NULL;
+	gboolean result = FALSE;
+
+	if(!(result = org_freesmartphone_GSM_Call_initiate (callBus, number, call_type, id_call, &dbus_error))) {
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error, tmperror);
+	}
+
+	return result;
+}
+
+gboolean release_call(GError* error, const char *message, int*id_call) {
+	GError *dbus_error = NULL, *tmperror = NULL;
+	gboolean result = FALSE;
+
+	if(!(result = org_freesmartphone_GSM_Call_release (callBus, message, id_call, &dbus_error))) {
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error, tmperror);
+	}
+
+	return result;
+}
+

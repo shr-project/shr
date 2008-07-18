@@ -18,7 +18,21 @@
 #define _CALL_H
 
 #define CALL_ERROR g_quark_from_static_string(CALL_INTERFACE)
+#define DBUS_CALL_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Call.NoCarrier"
+#define DBUS_CALL_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Call.NotFound"
+
+#define CALL_TYPE_VOICE "voice"
+#define CALL_TYPE_DATA "data"
+
+typedef enum {
+	CALL_ERROR_NO_CARRIER = -1,
+	CALL_ERROR_NOT_FOUND = -2,
+} CallErrors;
+
+
 void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data);
+gboolean initiate_call(GError* error, const char *number, const char* call_type, int*id_call);
+gboolean release_call(GError* error, const char *message, int*id_call);
 
 extern DBusGProxy *callBus;
 
