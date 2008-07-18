@@ -24,6 +24,7 @@
 #define SIM_INTERFACE		"org.freesmartphone.GSM.SIM"
 #define NETWORK_INTERFACE 	"org.freesmartphone.GSM.Network"
 #define	DEVICE_INTERFACE	"org.freesmartphone.GSM.Device"
+#define	SMS_INTERFACE		"org.freesmartphone.GSM.SMS"
 
 #define DBUS_TYPE_G_STRING_VARIANT_HASHTABLE (dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE))
 

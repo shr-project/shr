@@ -18,7 +18,7 @@ BUILT_SOURCES= dialer-marshal.c dialer-marshal.h
 noinst_LIBRARIES = libdialer-common.a
 
 libdialer_common_a_SOURCES = \
-	dbus.c dbus.h sim.c sim.h network.c network.h call.c call.h device.c device.h $(BUILT_SOURCES)
+	dbus.c dbus.h sim.c sim.h network.c network.h call.c call.h device.c device.h sms.h sms.c $(BUILT_SOURCES)
 
 bin_PROGRAMS = ophonekitd
 

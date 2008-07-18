@@ -26,6 +26,7 @@
 #include "sim.h"
 #include "network.h"
 #include "device.h"
+#include "sms.h"
 #include "dialer-marshal.h"
 
 void lose (const char *str, ...)
@@ -95,6 +96,7 @@ void dbus_connect_to_bus() {
 	simBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SIM_INTERFACE);
 	callBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
 	deviceBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, DEVICE_INTERFACE);
+	smsBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SMS_INTERFACE);
 	if(!(networkBus && simBus && callBus && deviceBus)) {
 		printf("Couln't connect to the interfaces");
 		exit(-1);
@@ -133,4 +135,19 @@ void dbus_connect_to_bus() {
 #ifdef DEBUG
 	printf("Added call CallStatus.\n");
 #endif
+
+	dbus_g_proxy_add_signal (smsBus, "MessageSent", G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (smsBus, "MessageSent", G_CALLBACK (sms_message_sent_handler),
+			NULL, NULL);
+#ifdef DEBUG
+	printf("Added sms MessageSent.\n");
+#endif
+
+	dbus_g_proxy_add_signal (smsBus, "IncomingMessage", G_TYPE_UINT, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (smsBus, "IncomingMessage", G_CALLBACK (sms_incoming_message_handler),
+			NULL, NULL);
+#ifdef DEBUG
+	printf("Added sms IncomingMessage.\n");
+#endif
+
 }

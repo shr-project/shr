@@ -41,7 +41,7 @@ GError* call_handle_errors(GError *dbus_error) {
 	return g_error_new (CALL_ERROR, callError, "TODO");
 }
 
-gboolean initiate_call(GError** error, const char *number, const char* call_type, int*id_call) {
+gboolean call_initiate(GError** error, const char *number, const char* call_type, int*id_call) {
 	GError *dbus_error = NULL, *tmperror = NULL;
 	gboolean result = FALSE;
 
@@ -53,7 +53,7 @@ gboolean initiate_call(GError** error, const char *number, const char* call_type
 	return result;
 }
 
-gboolean release_call(GError** error, const char *message, const int id_call) {
+gboolean call_release(GError** error, const char *message, const int id_call) {
 	GError *dbus_error = NULL, *tmperror = NULL;
 	gboolean result = FALSE;
 
@@ -65,7 +65,7 @@ gboolean release_call(GError** error, const char *message, const int id_call) {
 	return result;
 }
 
-gboolean activate_call(GError** error, int id_call) {
+gboolean call_activate(GError** error, int id_call) {
 	GError *dbus_error = NULL, *tmperror = NULL;
 	gboolean result = FALSE;
 
