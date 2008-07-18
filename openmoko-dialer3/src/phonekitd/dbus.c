@@ -47,7 +47,7 @@ void lose_gerror (const char *prefix, GError *error)
 	lose ("%s: %s", prefix, error->message);
 }
 
-
+/* Be careful with this function. Dbus error is freed ! */
 GError* dbus_handle_errors(GError *dbus_error) {
 	const char *error_name = dbus_g_error_get_name(dbus_error);
 	GError *error = NULL;

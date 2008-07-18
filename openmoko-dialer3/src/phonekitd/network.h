@@ -37,5 +37,6 @@ extern DBusGProxy *networkBus;
 
 void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data);
 void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data);
-
+gboolean network_register(GError** error);
+gboolean network_register_with_provider(GError** error, int provider_id);
 #endif

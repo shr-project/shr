@@ -23,6 +23,7 @@
 #include <dbus/dbus-glib-bindings.h>
 #include "network.h"
 #include "dbus.h"
+#include "dbus/network.h"
 
 DBusGProxy *networkBus = NULL;
 
@@ -45,3 +46,26 @@ GError* network_handle_errors(GError *dbus_error) {
 	return g_error_new (NETWORK_ERROR, networkError, "TODO");
 }
 
+gboolean network_register(GError** error) {
+
+	GError *dbus_error = NULL, *tmperror = NULL;
+	gboolean result = FALSE;
+	if(!(result = org_freesmartphone_GSM_Network_register(networkBus, &dbus_error))) {
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error,tmperror);
+	}
+
+	return result;
+}
+
+gboolean network_register_with_provider(GError** error, int provider_id) {
+	GError *dbus_error = NULL, *tmperror = NULL;
+	gboolean result = FALSE;
+	if(!(result = org_freesmartphone_GSM_Network_register_with_provider(networkBus, provider_id, &dbus_error))) {
+		tmperror = dbus_handle_errors(dbus_error);
+		g_propagate_error(error,tmperror);
+	}
+
+	return result;
+
+}
