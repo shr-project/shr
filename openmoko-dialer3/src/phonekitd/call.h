@@ -18,11 +18,21 @@
 #define _CALL_H
 
 #define CALL_ERROR g_quark_from_static_string(CALL_INTERFACE)
-#define DBUS_CALL_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Call.NoCarrier"
-#define DBUS_CALL_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Call.NotFound"
+#define DBUS_CALL_ERROR_NO_CARRIER "org.freesmartphone.GSM.Call.NoCarrier"
+#define DBUS_CALL_ERROR_NOT_FOUND "org.freesmartphone.GSM.Call.NotFound"
+#define IS_CALL_ERROR(error, code) g_error_matches(error, CALL_ERROR, code)
 
 #define CALL_TYPE_VOICE "voice"
 #define CALL_TYPE_DATA "data"
+
+#define CALL_STATUS_INCOMING "incoming"
+#define CALL_STATUS_OUTGOING "outgoing"
+#define CALL_STATUS_ACTIVE "active"
+#define CALL_STATUS_HELD "held"
+#define CALL_STATUS_RELEASED "released"
+
+#define CALL_PROPERTIES_REASON "reason"
+#define CALL_PROPERTIES_NUMBER "number"
 
 typedef enum {
 	CALL_ERROR_NO_CARRIER = -1,
