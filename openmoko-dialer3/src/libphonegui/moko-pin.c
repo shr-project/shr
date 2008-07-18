@@ -26,7 +26,7 @@ typedef struct
 {
   GtkWidget *display;
   GtkWidget *dialog;
-  gchar *pin;
+  gchar *code;
 } MokoPinData;
 
 static void
@@ -34,7 +34,7 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
                    MokoPinData *data)
 {
   gchar buf[2];
-  gchar *new_pin;
+  gchar *new_code;
 
   /* Phones use '#' for PIN 'entered' signal */
   if (digit == '#')
@@ -47,7 +47,7 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
   if (digit == '*')
   {
     moko_dialer_textview_delete (MOKO_DIALER_TEXTVIEW (data->display));
-    data->pin[strlen(data->pin)-1] = '\0';
+    data->code[strlen(data->code)-1] = '\0';
     return;
   }
 
@@ -55,28 +55,31 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
   buf[0] = digit;
   buf[1] = '\0';
   
-  if (!data->pin)
+  if (!data->code)
   {
     new_pin = g_strdup (buf);
   }
   else
   {
-    new_pin = g_strconcat (data->pin, buf, NULL);
-    g_free (data->pin);
+    new_pin = g_strconcat (data->code, buf, NULL);
+    g_free (data->code);
   }
-  data->pin = new_pin;
+  data->code = new_pin;
 
   moko_dialer_textview_insert (MOKO_DIALER_TEXTVIEW (data->display), "*");
 }
 
-
-
 void
-get_pin_from_user (const char *message)
+get_sim_code_from_user (int needed_code)
 {
   GtkWidget *pad;
   MokoPinData data;
-  
+  int codeToSet = needed_code;
+  GError *error = NULL;
+
+  /* Set a beacon around here to state that the GUI is active */
+
+  /* Build the GUI */
   data.dialog = gtk_dialog_new_with_buttons (message, NULL, 0,
                                              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                              GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
@@ -90,13 +93,44 @@ get_pin_from_user (const char *message)
   g_signal_connect (pad, "user_input", G_CALLBACK (on_pad_user_input), &data);
   
   gtk_widget_show_all (GTK_DIALOG (data.dialog)->vbox);
-  
-  data.pin = NULL;
-  if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+
+  /* The PIN/PUK conversation */
+  while (codeToSet != SIM_READY)
   {
-    send_pin_to_ophonekitd (data.pin);
+    data.code = NULL;
+    switch (codeToSet)
+    {
+      case SIM_PIN_REQUIRED:
+        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+        {
+          sim_send_pin_code (&error, &codeToSet, data.code);
+        }
+      break;
+      case SIM_PUK_REQUIRED:
+        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+        {
+          sim_send_puk_code (&error, &codeToSet, data.code);
+        }
+      break;
+      case SIM_PIN2_REQUIRED:
+        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+        {
+          sim_send_pin_code (&error, &codeToSet, data.code);
+        }
+      break;
+      case SIM_PUK2_REQUIRED:
+        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+        {
+          sim_send_puk_code (&error, &codeToSet, data.code);
+        }
+      break;
+    }
+    
   }
 
+  /* Unset the beacon here to state that the GUI is no longer active */
+
+  /* Now we can close the window */
   gtk_widget_destroy (data.dialog);
 }
 
