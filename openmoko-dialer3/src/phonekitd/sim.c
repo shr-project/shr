@@ -77,37 +77,17 @@ gboolean sim_get_authentication_state(GError **error, int *code) {
 	return result;
 }
 
-void sim_display_code_UI() {
+void 
+sim_display_code_UI () {
 	int needed_code;
 	GError *error = NULL;
-	if(sim_get_authentication_state(&error, &needed_code)) {
-		switch(needed_code) {
-			case SIM_PIN_REQUIRED:
-			case SIM_PIN2_REQUIRED:
-				sim_display_pin_UI(needed_code);
-				break;
-			default:
-				sim_display_puk_UI(needed_code);
+	if (sim_get_authentication_state (&error, &needed_code))
+  {
+		if (needed_code != SIM_READY)
+    {
+      get_sim_code_from_user (needed_code);
 		}
-	} else {
-		// What can we do ?
 	}
-}
-void sim_display_pin_UI(int codeToSet) {
-#ifdef DEBUG
-	printf("Displaying PIN UI for %i",codeToSet);
-#endif
-	/* TODO.
-	 * Launch the UI.
-	 * Don't forget the "cancel" button */
-}
-
-void sim_display_puk_UI(int codeToSet) {
-#ifdef DEBUG
-	printf("Displaying PUK UI for %i\n",codeToSet);
-#endif
-
-	/* TODO */
 }
 
 gboolean sim_send_pin_code(GError** error, int *codeToSet, const char* pin) {
