@@ -1,0 +1,20 @@
+#!/bin/sh
+
+CMD=""
+
+if [ "" = "1" ]; then
+    if [ "" = "1" -a "" = "0" ]; then
+        CMD="matchbox-keyboard -d -o landscape"
+    elif [ "" = "1" -a "" = "0" ]; then
+        CMD="matchbox-keyboard -d -o portrait"
+    fi
+else
+    CMD="matchbox-keyboard -d"
+fi
+
+
+# Delay to make sure the window manager is active
+
+if [ "" ]; then
+    (sleep 2 && ) &
+fi
