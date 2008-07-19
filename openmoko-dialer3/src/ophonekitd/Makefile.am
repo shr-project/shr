@@ -17,10 +17,16 @@ dialer-marshal.c: dialer-marshal.list dialer-marshal.h
 
 BUILT_SOURCES= dialer-marshal.c dialer-marshal.h
 
-noinst_LIBRARIES = libdialer-common.a
+noinst_LIBRARIES = libphonekit-common.a
 
-libdialer_common_a_SOURCES = \
-	dbus.c dbus.h sim.c sim.h network.c network.h call.c call.h device.c device.h sms.h sms.c $(BUILT_SOURCES)
+libphonekit_common_a_SOURCES = \
+	dbus.c dbus.h \
+  sim.c sim.h \
+  network.c network.h \
+  call.c call.h \
+  device.c device.h \
+  sms.h sms.c \
+  $(BUILT_SOURCES)
 
 bin_PROGRAMS = ophonekitd
 
@@ -28,5 +34,6 @@ ophonekitd_SOURCES = \
 	ophonekitd-main.c ophonekitd-main.h
 
 ophonekitd_LDADD = @DIALER_LIBS@ @JANA_LIBS@ @NOTIFY_LIBS@ @ALSA_LIBS@ \
+                   $(top_srcdir)/src/common/libdialer-common.a \
                    $(top_srcdir)/src/libphonegui/libphonegui.a \
-                   libdialer-common.a 
+                   libphonekit-common.a

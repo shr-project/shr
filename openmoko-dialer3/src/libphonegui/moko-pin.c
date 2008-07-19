@@ -17,10 +17,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "moko-pin.h"
 #include "moko-dialer-textview.h"
 #include "moko-dialer-panel.h"
 #include "sim.h"
+#include "moko-pin.h"
 
 static gboolean is_sim_code_gui_active = FALSE;
 
