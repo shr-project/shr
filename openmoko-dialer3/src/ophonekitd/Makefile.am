@@ -27,4 +27,4 @@ bin_PROGRAMS = ophonekitd
 ophonekitd_SOURCES = \
 	ophonekitd-main.c ophonekitd-main.h
 
-ophonekitd_LDADD = libdialer-common.a @DIALER_LIBS@ @JANA_LIBS@ @NOTIFY_LIBS@ @ALSA_LIBS@ 
+ophonekitd_LDADD = $(top_srcdir)/src/libphonegui/libphonegui.a libdialer-common.a @DIALER_LIBS@ @JANA_LIBS@ @NOTIFY_LIBS@ @ALSA_LIBS@ 
