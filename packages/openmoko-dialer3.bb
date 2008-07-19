@@ -11,5 +11,6 @@ S = "${WORKDIR}/openmoko-dialer3/"
 SVNREV = "r${SRCREV}"
  
 inherit autotools pkgconfig
- 
-DEPENDS += " eds-dbus libgsmd"
+
+PACKAGE = "openmoko-dialer3"
+DEPENDS += " libmokoui2 libmokojournal2 pulseaudio dbus-glib"
