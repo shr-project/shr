@@ -17,6 +17,8 @@
 #ifndef _SIM_H
 #define _SIM_H
 
+#include <dbus/dbus-glib.h>
+
 #define DBUS_SIM_READY "READY"
 #define DBUS_SIM_PIN_REQUIRED "SIM PIN"
 #define DBUS_SIM_PUK_REQUIRED "SIM PUK"
