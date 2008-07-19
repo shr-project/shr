@@ -1,1 +1,1 @@
-SUBDIRS = phonekitd
+SUBDIRS = ophonekitd libphonegui common dialer

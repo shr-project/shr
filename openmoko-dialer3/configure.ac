@@ -50,8 +50,9 @@ fi
 # output stuff
 AC_OUTPUT([
 Makefile
+data/Makefile
 libhito/Makefile
 src/Makefile
-src/phonekitd/Makefile
-data/Makefile
+src/libphonegui/Makefile
+src/ophonekitd/Makefile
 ])
