@@ -56,6 +56,8 @@ Makefile
 data/Makefile
 libhito/Makefile
 src/Makefile
+src/common/Makefile
+src/dialer/Makefile
 src/libphonegui/Makefile
 src/ophonekitd/Makefile
 ])
