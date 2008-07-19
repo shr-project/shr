@@ -14,4 +14,4 @@
  *  GNU Lesser Public License for more details.
  */
 
-gboolean is_sim_code_gui_active = FALSE;
+

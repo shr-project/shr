@@ -14,14 +14,15 @@
  */
 
 #include <gtk/gtk.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "moko-pin.h"
-#include "phonegui.h"
 #include "moko-dialer-textview.h"
 #include "moko-dialer-panel.h"
 #include "sim.h"
 
-#include <string.h>
+static gboolean is_sim_code_gui_active = FALSE;
 
 typedef struct
 {
@@ -72,14 +73,14 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
   
   if (!data->code)
   {
-    new_pin = g_strdup (buf);
+    new_code = g_strdup (buf);
   }
   else
   {
-    new_pin = g_strconcat (data->code, buf, NULL);
+    new_code = g_strconcat (data->code, buf, NULL);
     g_free (data->code);
   }
-  data->code = new_pin;
+  data->code = new_code;
 
   moko_dialer_textview_insert (MOKO_DIALER_TEXTVIEW (data->display), "*");
 }
@@ -98,7 +99,7 @@ get_sim_code_from_user (const int initial_status)
   is_sim_code_gui_active = TRUE;
 
   /* Build the GUI */
-  data.dialog = gtk_dialog_new_with_buttons (message, NULL, 0,
+  data.dialog = gtk_dialog_new_with_buttons ("Enter PIN code", NULL, 0,
                                              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                              GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
   gtk_dialog_set_has_separator (GTK_DIALOG (data.dialog), FALSE);
@@ -125,10 +126,21 @@ get_sim_code_from_user (const int initial_status)
         }
       break;
       case SIM_PUK_REQUIRED:
+        /* I need to set a new title to the dialog here */
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          result = sim_send_puk_code (&error, &current_status, puk, pin);
+          puk = malloc (sizeof (char) * strlen (data.code));
+          strcpy (puk, data.code);
         }
+        /* I need to set a new title to the dialog here */
+        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+        {
+          pin = malloc (sizeof (char) * strlen (data.code));
+          strcpy (pin, data.code);
+        }
+        result = sim_send_puk_code (&error, &current_status, puk, pin);
+        free (pin);
+        free (puk);
       break;
       case SIM_PIN2_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
@@ -137,10 +149,21 @@ get_sim_code_from_user (const int initial_status)
         }
       break;
       case SIM_PUK2_REQUIRED:
+        /* I need to set a new title to the dialog here */
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          result = sim_send_puk_code (&error, &current_status, puk, pin);
+          puk = malloc (sizeof (char) * strlen (data.code));
+          strcpy (puk, data.code);
         }
+        /* I need to set a new title to the dialog here */
+        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
+        {
+          pin = malloc (sizeof (char) * strlen (data.code));
+          strcpy (pin, data.code);
+        }
+        result = sim_send_puk_code (&error, &current_status, puk, pin);
+        free (pin);
+        free (puk);
       break;
     }
     
