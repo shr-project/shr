@@ -25,6 +25,7 @@
 #include "dbus.h"
 #include "dbus/sim.h"
 #include "sim.h"
+#include "phonegui.h"
 
 DBusGProxy *simBus = NULL;
 
@@ -83,7 +84,7 @@ sim_display_code_UI () {
 	GError *error = NULL;
 	if (sim_get_authentication_state (&error, &needed_code))
   {
-		if (needed_code != SIM_READY)
+		if (!is_sim_code_gui_active && needed_code != SIM_READY)
     {
       get_sim_code_from_user (needed_code);
 		}

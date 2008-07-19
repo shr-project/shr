@@ -16,6 +16,7 @@
 #include <gtk/gtk.h>
 
 #include "moko-pin.h"
+#include "phonegui.h"
 #include "moko-dialer-textview.h"
 #include "moko-dialer-panel.h"
 #include "sim.h"
@@ -70,14 +71,16 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
 }
 
 void
-get_sim_code_from_user (int needed_code)
+get_sim_code_from_user (const int initial_status)
 {
   GtkWidget *pad;
   MokoPinData data;
-  int codeToSet = needed_code;
+  int current_status = initial_status;
+  gboolean result = TRUE;
   GError *error = NULL;
 
   /* Set a beacon around here to state that the GUI is active */
+  is_sim_code_gui_active = TRUE;
 
   /* Build the GUI */
   data.dialog = gtk_dialog_new_with_buttons (message, NULL, 0,
@@ -95,43 +98,44 @@ get_sim_code_from_user (int needed_code)
   gtk_widget_show_all (GTK_DIALOG (data.dialog)->vbox);
 
   /* The PIN/PUK conversation */
-  while (codeToSet != SIM_READY)
+  while (result || current_status != SIM_READY)
   {
     data.code = NULL;
-    switch (codeToSet)
+    switch (current_status)
     {
       case SIM_PIN_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          sim_send_pin_code (&error, &codeToSet, data.code);
+          result = sim_send_pin_code (&error, &current_status, data.code);
         }
       break;
       case SIM_PUK_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          sim_send_puk_code (&error, &codeToSet, data.code);
+          result = sim_send_puk_code (&error, &current_status, data.code);
         }
       break;
       case SIM_PIN2_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          sim_send_pin_code (&error, &codeToSet, data.code);
+          result = sim_send_pin_code (&error, &current_status, data.code);
         }
       break;
       case SIM_PUK2_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          sim_send_puk_code (&error, &codeToSet, data.code);
+          result = sim_send_puk_code (&error, &current_status, data.code);
         }
       break;
     }
     
   }
 
-  /* Unset the beacon here to state that the GUI is no longer active */
-
   /* Now we can close the window */
   gtk_widget_destroy (data.dialog);
+
+  /* Unset the beacon here to state that the GUI is no longer active */
+  is_sim_code_gui_active = FALSE;
 }
 
 void
