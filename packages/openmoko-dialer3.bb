@@ -12,5 +12,4 @@ SVNREV = "r${SRCREV}"
  
 inherit autotools pkgconfig
 
-PACKAGE = "openmoko-dialer3"
 DEPENDS += " libmokoui2 libmokojournal2 pulseaudio dbus-glib"
