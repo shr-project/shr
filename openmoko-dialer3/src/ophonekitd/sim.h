@@ -51,7 +51,7 @@ typedef enum {
 
 
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
-int sim_get_authentication_state();
+int sim_get_authentication_state(GError **error, int *code);
 gboolean sim_send_pin_code(GError **error, int *codeToSet, const char* pin);
 gboolean sim_send_puk_code(GError **error, int *codeToSet, const char* puk, const char* pin);
 GError* sim_handle_errors(GError *dbus_error);
