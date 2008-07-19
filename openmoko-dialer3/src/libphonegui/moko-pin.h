@@ -16,6 +16,7 @@
 #ifndef MOKO_PIN_H
 #define MOKO_PIN_H
 
+void sim_display_code_UI ();
 void get_sim_code_from_user (int needed_code);
 void display_pin_error (const char *message);
 

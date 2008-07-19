@@ -25,7 +25,7 @@
 #include "dbus.h"
 #include "dbus/sim.h"
 #include "sim.h"
-#include "phonegui.h"
+#include "moko-pin.h"
 
 DBusGProxy *simBus = NULL;
 
@@ -34,18 +34,10 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
 	if(strcmp(status,DBUS_SIM_READY)) {
 		// TODO
 	}
-	else if(strcmp(status,DBUS_SIM_PIN_REQUIRED)) {
-		sim_display_pin_UI(SIM_PIN_REQUIRED);
-	}
-	else if(strcmp(status,DBUS_SIM_PUK_REQUIRED)) {
-		sim_display_puk_UI(SIM_PUK_REQUIRED);
-	}
-	else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED)) {
-		sim_display_pin_UI(SIM_PIN2_REQUIRED);
-	}
-	else {
-		sim_display_puk_UI(SIM_PUK2_REQUIRED);
-	}
+  else {
+    sim_display_code_UI ();
+  }
+
 #ifdef DEBUG
 	printf ("Received sim auth status %s", status);
 #endif
@@ -76,19 +68,6 @@ gboolean sim_get_authentication_state(GError **error, int *code) {
 
 	free(status);	
 	return result;
-}
-
-void 
-sim_display_code_UI () {
-	int needed_code;
-	GError *error = NULL;
-	if (sim_get_authentication_state (&error, &needed_code))
-  {
-		if (!is_sim_code_gui_active && needed_code != SIM_READY)
-    {
-      get_sim_code_from_user (needed_code);
-		}
-	}
 }
 
 gboolean sim_send_pin_code(GError** error, int *codeToSet, const char* pin) {

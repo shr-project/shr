@@ -3,6 +3,8 @@ AM_CFLAGS = -Wall @DIALER_CFLAGS@
 
 AM_LDFLAGS = @DIALER_LIBS@
 
+INCLUDES = -I$(top_srcdir)/src/libphonegui
+
 dialer-marshal.h: dialer-marshal.list
 	( @GLIB_GENMARSHAL@ $< --header > dialer-marshal.tmp \
 	&& mv dialer-marshal.tmp dialer-marshal.h ) \

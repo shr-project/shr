@@ -30,6 +30,20 @@ typedef struct
   gchar *code;
 } MokoPinData;
 
+void 
+sim_display_code_UI ()
+{
+	int needed_code;
+	GError *error = NULL;
+	if (sim_get_authentication_state (&error, &needed_code))
+  {
+		if (!is_sim_code_gui_active && needed_code != SIM_READY)
+    {
+      get_sim_code_from_user (needed_code);
+		}
+	}
+}
+
 static void
 on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
                    MokoPinData *data)
@@ -78,6 +92,7 @@ get_sim_code_from_user (const int initial_status)
   int current_status = initial_status;
   gboolean result = TRUE;
   GError *error = NULL;
+  char *puk, *pin;
 
   /* Set a beacon around here to state that the GUI is active */
   is_sim_code_gui_active = TRUE;
@@ -112,7 +127,7 @@ get_sim_code_from_user (const int initial_status)
       case SIM_PUK_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          result = sim_send_puk_code (&error, &current_status, data.code);
+          result = sim_send_puk_code (&error, &current_status, puk, pin);
         }
       break;
       case SIM_PIN2_REQUIRED:
@@ -124,7 +139,7 @@ get_sim_code_from_user (const int initial_status)
       case SIM_PUK2_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          result = sim_send_puk_code (&error, &current_status, data.code);
+          result = sim_send_puk_code (&error, &current_status, puk, pin);
         }
       break;
     }
