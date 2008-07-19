@@ -10,6 +10,9 @@ AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 AC_GNU_SOURCE
 
+dnl glib-genmarshal
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+
 # base deps
 PKG_CHECK_MODULES(DIALER,
                   dbus-glib-1
