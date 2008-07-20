@@ -9,4 +9,4 @@ noinst_LIBRARIES = libphonegui.a
 libphonegui_a_SOURCES = \
 	moko-pin.h moko-pin.c
 
-libphonegui_a_LIBADD = $(top_srcdir)/src/common/libdialer-common.a
+#libphonegui_a_LIBADD = $(top_srcdir)/src/common/libdialer-common.a
