@@ -28,11 +28,16 @@ libphonekit_common_a_SOURCES = \
   sms.h sms.c \
   $(BUILT_SOURCES)
 
+libphonekit_common_a_LIBADD = $(top_srcdir)/src/libphonegui/libphonegui.a
+
 bin_PROGRAMS = ophonekitd
 
 ophonekitd_SOURCES = \
 	ophonekitd-main.c ophonekitd-main.h
 
-ophonekitd_LDADD = @DIALER_LIBS@ @JANA_LIBS@ @NOTIFY_LIBS@ @ALSA_LIBS@ \
-                   $(top_srcdir)/src/libphonegui/libphonegui.a \
-                   libphonekit-common.a
+ophonekitd_LDADD = \
+  @DIALER_LIBS@ \
+  @JANA_LIBS@ \
+  @NOTIFY_LIBS@ \
+  @ALSA_LIBS@ \
+  libphonekit-common.a
