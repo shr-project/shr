@@ -34,6 +34,5 @@ ophonekitd_SOURCES = \
 	ophonekitd-main.c ophonekitd-main.h
 
 ophonekitd_LDADD = @DIALER_LIBS@ @JANA_LIBS@ @NOTIFY_LIBS@ @ALSA_LIBS@ \
-                   $(top_srcdir)/src/common/libdialer-common.a \
                    $(top_srcdir)/src/libphonegui/libphonegui.a \
                    libphonekit-common.a

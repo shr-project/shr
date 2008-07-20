@@ -7,3 +7,5 @@ INCLUDES = -I$(top_srcdir)/src/common -I$(top_srcdir)/src/ophonekitd
 noinst_LIBRARIES = libphonegui.a
 libphonegui_a_SOURCES = \
 	moko-pin.h moko-pin.c
+
+libphonegui_a_LIBADD = $(top_srcdir)/src/common/libdialer-common.a
