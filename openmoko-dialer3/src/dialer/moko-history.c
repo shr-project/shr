@@ -256,7 +256,7 @@ create_new_contact_from_number (gchar *number)
     /* create contact */
     contact = e_contact_new ();
     /* add name */
-    e_contact_set (contact, E_CONTACT_FULL_NAME, gtk_entry_get_text (GTK_ENTRY (name)));
+    e_contact_set (contact, E_CONTACT_FULL_NAME, (const gpointer)gtk_entry_get_text (GTK_ENTRY (name))); /* (const gpointer) removes a useless warning) */
     /* add number */
     attr = e_vcard_attribute_new ("", EVC_TEL);
     e_vcard_add_attribute_with_value (E_VCARD (contact), attr, number);
