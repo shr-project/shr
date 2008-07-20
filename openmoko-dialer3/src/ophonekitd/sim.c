@@ -82,7 +82,7 @@ gboolean sim_send_pin_code(GError** error, int *codeToSet, const char* pin) {
 	return sim_handle_sim_auth(error, codeToSet);
 }
 
-gboolean sim_set_puk_code(GError** error, int* codeToSet, const char* puk, const char* pin) {
+gboolean sim_send_puk_code(GError** error, int* codeToSet, const char* puk, const char* pin) {
         
 	GError *dbus_error = NULL, *tmperror = NULL;
 
