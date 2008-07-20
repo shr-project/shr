@@ -105,7 +105,7 @@ int main (int argc, char **argv)
   GtkWidget *window, *keypad;
   MokoJournal *journal;
   DBusGConnection *connection;
-  GError *error = NULL, *phonekit_error = NULL;
+  GError *error = NULL;
   DialerData *data;
 
   program_log ("start dialer");

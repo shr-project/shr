@@ -40,7 +40,7 @@ typedef enum {
 } CallErrors;
 
 
-void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data);
+void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable ** properties, gpointer user_data);
 gboolean call_initiate(GError** error, const char *number, const char* call_type, int*id_call);
 gboolean call_release(GError** error, const char *message, int id_call);
 gboolean call_activate(GError** error, int id_call);

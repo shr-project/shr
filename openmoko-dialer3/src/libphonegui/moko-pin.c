@@ -129,18 +129,21 @@ get_sim_code_from_user (const int initial_status)
         /* I need to set a new title to the dialog here */
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          puk = malloc (sizeof (char) * strlen (data.code));
-          strcpy (puk, data.code);
-        }
+          puk = g_strdup (data.code);
+        } else {
+	  break;
+	}
         /* I need to set a new title to the dialog here */
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          pin = malloc (sizeof (char) * strlen (data.code));
-          strcpy (pin, data.code);
-        }
+          pin = g_strdup (data.code);
+        } else {
+	  g_free (puk);
+	  break;
+	}
         result = sim_send_puk_code (&error, &current_status, puk, pin);
-        free (pin);
-        free (puk);
+        g_free (pin);
+        g_free (puk);
       break;
       case SIM_PIN2_REQUIRED:
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
@@ -152,18 +155,21 @@ get_sim_code_from_user (const int initial_status)
         /* I need to set a new title to the dialog here */
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          puk = malloc (sizeof (char) * strlen (data.code));
-          strcpy (puk, data.code);
-        }
+          puk = g_strdup (data.code);
+        } else {
+	  break;
+	}
         /* I need to set a new title to the dialog here */
         if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
         {
-          pin = malloc (sizeof (char) * strlen (data.code));
-          strcpy (pin, data.code);
-        }
+          pin = g_strdup (data.code);
+        } else {
+	  g_free (puk);
+	  break;
+	}
         result = sim_send_puk_code (&error, &current_status, puk, pin);
-        free (pin);
-        free (puk);
+        g_free (pin);
+        g_free (puk);
       break;
     }
     

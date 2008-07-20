@@ -370,7 +370,7 @@ on_btn_save_clicked (GtkWidget *button, SaveButtonInfo *info)
 {
   gint action = info->response_id;
   gchar *number = g_strdup (info->number);
-  MokoHistory *history = info->history;
+  /* MokoHistory *history = info->history; */
     
   /* this also destroys info data */
   gtk_widget_destroy (info->dialog);
@@ -947,7 +947,7 @@ moko_history_init (MokoHistory *history)
   priv->sms_button = item;
 
   item = gtk_tool_button_new (NULL, NULL);
-  gtk_tool_button_set_icon_name (item, "contact-new");
+  gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "contact-new");
   gtk_tool_item_set_expand (item, TRUE);
   g_signal_connect (item, "clicked", 
                     G_CALLBACK (on_save_clicked), history); 

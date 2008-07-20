@@ -27,7 +27,7 @@
 
 DBusGProxy *callBus = NULL;
 
-void call_status_handler (DBusGProxy *proxy, const int id, const char *status, const GHashTable ** properties, gpointer user_data)
+void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable ** properties, gpointer user_data)
 {
   if(strcmp(status, CALL_STATUS_INCOMING)) {
 	char *number = NULL;
@@ -53,7 +53,7 @@ GError* call_handle_errors(GError *dbus_error) {
 
 	lose_gerror ("Unknown call error", dbus_error);
 	
-	return g_error_new (CALL_ERROR, callError, "TODO");
+	return g_error_new (CALL_ERROR, callError, "TODO %s", error_name);
 }
 
 gboolean call_initiate(GError** error, const char *number, const char* call_type, int*id_call) {

@@ -43,7 +43,7 @@ GError* network_handle_errors(GError *dbus_error) {
 
 	lose_gerror ("Unknown network error", dbus_error);
 
-	return g_error_new (NETWORK_ERROR, networkError, "TODO");
+	return g_error_new (NETWORK_ERROR, networkError, "TODO: %s", error_name);
 }
 
 gboolean network_register(GError** error) {
