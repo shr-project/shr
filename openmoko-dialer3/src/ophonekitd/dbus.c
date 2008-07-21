@@ -103,6 +103,7 @@ void dbus_connect_to_bus() {
 	}
 
 	dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+	dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_BOOLEAN_STRING, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
 
 #ifdef DEBUG
 	printf("Adding signals.\n");
