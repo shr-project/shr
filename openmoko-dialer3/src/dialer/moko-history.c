@@ -178,6 +178,7 @@ on_sms_clicked (GtkWidget *button, MokoHistory *history)
   GtkTreeIter iter;
   GtkTreeModel *model;
   gchar *number;
+  guint transaction;
   
   g_debug ("sms clicked");
 
@@ -217,14 +218,15 @@ on_sms_clicked (GtkWidget *button, MokoHistory *history)
   dbus_g_proxy_call (proxy, "SendMessage", &err,
                      G_TYPE_STRING, NULL, G_TYPE_STRING, number,
                      G_TYPE_STRING, NULL,
-                     G_TYPE_INVALID, G_TYPE_INVALID);
+                     G_TYPE_INVALID, G_TYPE_UINT, &transaction, G_TYPE_INVALID);
 
   if (err)
   {
     g_warning (err->message);
     g_error_free (err);
-  }
-  
+  } else {
+    g_debug ( "sms: transaction %u started\n", transaction);
+  } 
 }
 
 static void
