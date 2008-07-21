@@ -9,7 +9,7 @@ openmoko_dialer_SOURCES = \
 	moko-history.c moko-history.h \
 	moko-keypad.c moko-keypad.h \
 	moko-tips.c moko-tips.h \
-	dialer-main.c
+	dialer-main.c dialer-main.h
 
 openmoko_dialer_LDADD = @DIALER_LIBS@ @JANA_LIBS@ \
 			$(top_srcdir)/src/common/libdialer-common.a \

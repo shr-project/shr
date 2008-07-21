@@ -35,6 +35,9 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
 		// TODO
 	}
   else {
+#ifdef DEBUG
+	printf ("Auth status handler calling the UI on a %s signal", status);
+#endif
     sim_display_code_UI ();
   }
 

@@ -24,6 +24,7 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 
+#include "dialer-main.h"
 #include "moko-keypad.h"
 #include "moko-history.h"
 
@@ -133,7 +134,7 @@ int main (int argc, char **argv)
   g_set_application_name ("OpenMoko Dialer");
 
   program_log ("open connection to dbus");
-  connection = dbus_g_bus_get (DBUS_BUS_SESSION,
+  connection = dbus_g_bus_get (DBUS_BUS_SYSTEM,
                                &error);
   if (connection == NULL)
   {
@@ -149,9 +150,7 @@ int main (int argc, char **argv)
   }
 
   program_log ("get PhoneKit dbus proxy object");
-  data->dialer_proxy = dbus_g_proxy_new_for_name (connection,
-      "org.freesmartphone.ogsmd",
-      "/org/freesmartphone/GSM/Device", "org.freesmartphone.GSM.Call");
+  data->dialer_proxy = dbus_g_proxy_new_for_name (connection, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
   
   /* Set up the journal */
   program_log ("load journal");

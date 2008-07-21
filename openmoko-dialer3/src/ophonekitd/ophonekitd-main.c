@@ -54,6 +54,9 @@ gboolean register_to_network() {
 	GError* error = NULL;
 	if(!device_set_antenna_power(&error, TRUE)) {
 		if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+#ifdef DEBUG
+	printf("Calling the UI on an AUTH_FAILED exception\n");
+#endif
 			sim_display_code_UI();
 			do {
 				sleep(5);
