@@ -19,7 +19,7 @@
 
 #include "moko-dialer-textview.h"
 #include "moko-dialer-panel.h"
-#include "sim.h"
+#include "../ophonekitd/sim.h"
 #include "moko-pin.h"
 
 static gboolean is_sim_code_gui_active = FALSE;
@@ -30,20 +30,6 @@ typedef struct
   GtkWidget *dialog;
   gchar *code;
 } MokoPinData;
-
-void 
-sim_display_code_UI ()
-{
-	int needed_code;
-	GError *error = NULL;
-	if (sim_get_authentication_state (&error, &needed_code))
-  {
-		if (!is_sim_code_gui_active && needed_code != SIM_READY)
-    {
-      get_sim_code_from_user (needed_code);
-		}
-	}
-}
 
 static void
 on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
@@ -85,9 +71,11 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
   moko_dialer_textview_insert (MOKO_DIALER_TEXTVIEW (data->display), "*");
 }
 
-void
-get_sim_code_from_user (const int initial_status)
-{
+void get_sim_code_from_user (const int initial_status) {
+  if (is_sim_code_gui_active || initial_status == SIM_READY) {
+    return;
+  }
+
   GtkWidget *pad;
   MokoPinData data;
   int current_status = initial_status;

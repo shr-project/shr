@@ -58,6 +58,7 @@ gboolean sim_send_pin_code(GError **error, int *codeToSet, const char* pin);
 gboolean sim_send_puk_code(GError **error, int *codeToSet, const char* puk, const char* pin);
 GError* sim_handle_errors(GError *dbus_error);
 gboolean sim_handle_sim_auth(GError **error, int *codeToSet);
+void sim_display_code_UI ();
 
 extern DBusGProxy *simBus;
 

@@ -31,19 +31,35 @@ DBusGProxy *simBus = NULL;
 
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
-	if(strcmp(status,DBUS_SIM_READY)) {
-		// TODO
-	}
+  if(strcmp(status,DBUS_SIM_READY)) {
+          // TODO
+  }
+  else if(strcmp(status,DBUS_SIM_PIN_REQUIRED)) {
+          get_sim_code_from_user(SIM_PIN_REQUIRED);
+  }
+  else if(strcmp(status,DBUS_SIM_PUK_REQUIRED)) {
+          get_sim_code_from_user(SIM_PUK_REQUIRED);
+  }
+  else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED)) {
+          get_sim_code_from_user(SIM_PIN2_REQUIRED);
+  }
   else {
+          get_sim_code_from_user(SIM_PUK2_REQUIRED);
+  }
 #ifdef DEBUG
 	printf ("Auth status handler calling the UI on a %s signal", status);
 #endif
-    sim_display_code_UI ();
-  }
 
-#ifdef DEBUG
-	printf ("Received sim auth status %s", status);
-#endif
+}
+
+void sim_display_code_UI ()
+{   
+        int needed_code;
+        GError *error = NULL;
+        if (sim_get_authentication_state (&error, &needed_code))
+        {
+                get_sim_code_from_user (needed_code);
+        }
 }
 
 
