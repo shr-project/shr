@@ -228,7 +228,7 @@ static gchar*
 normalize (const gchar *string)
 {
   gint len = strlen (string);
-  gchar buf[len];
+  gchar buf[len+1];
   gint i;
   gint j = 0;
 
