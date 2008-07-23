@@ -30,7 +30,8 @@ typedef enum {
 } DeviceErrors;
 
 GError* device_handle_errors(GError *dbus_error);
-gboolean device_set_antenna_power(GError** error, gboolean power);
+void device_set_antenna_power(gboolean power, void (*callback)(GError *));
+void device_set_antenna_power_callback(DBusGProxy* bus, GError *error, gpointer userdata);
 
 extern DBusGProxy *deviceBus ;
 

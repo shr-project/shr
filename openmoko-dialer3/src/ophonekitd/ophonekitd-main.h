@@ -16,5 +16,7 @@
 
 #ifndef _OPHONEKITD_MAIN_H
 #define _OPHONEKITD_MAIN_H
-gboolean register_to_network();
+gboolean power_up_antenna();
+void power_up_antenna_callback(GError *error);
+void register_to_network_callback(GError *error);
 #endif

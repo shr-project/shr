@@ -43,18 +43,20 @@ GError* device_handle_errors(GError *dbus_error) {
 	return g_error_new (DEVICE_ERROR, deviceError, "TODO");
 }
 
+void device_set_antenna_power(gboolean power, void (*callback)(GError *)) {
+    if(callback != NULL)
+        org_freesmartphone_GSM_Device_set_antenna_power_async (deviceBus, power, device_set_antenna_power_callback, callback);
+}
 
-gboolean device_set_antenna_power(GError** error, gboolean power) {
+void device_set_antenna_power_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*) = NULL;
+        GError *error = NULL;
 
-	GError *dbus_error = NULL, *tmperror = NULL;
-	gboolean result = FALSE;
-	
-	if(!(result = org_freesmartphone_GSM_Device_set_antenna_power (deviceBus, power, &dbus_error))) {
-		tmperror = dbus_handle_errors(dbus_error);
-		g_propagate_error(error, tmperror);
-	}
+        callback = userdata;
 
-	return result;
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
 
+        (*(callback)) (error);
 }
 

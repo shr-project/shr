@@ -46,26 +46,38 @@ GError* network_handle_errors(GError *dbus_error) {
 	return g_error_new (NETWORK_ERROR, networkError, "TODO: %s", error_name);
 }
 
-gboolean network_register(GError** error) {
-
-	GError *dbus_error = NULL, *tmperror = NULL;
-	gboolean result = FALSE;
-	if(!(result = org_freesmartphone_GSM_Network_register(networkBus, &dbus_error))) {
-		tmperror = dbus_handle_errors(dbus_error);
-		g_propagate_error(error,tmperror);
-	}
-
-	return result;
+void network_register(void (*callback)(GError *)) {
+    if(callback != NULL) 
+	    org_freesmartphone_GSM_Network_register_async(networkBus, network_register_callback, callback);
 }
 
-gboolean network_register_with_provider(GError** error, int provider_id) {
-	GError *dbus_error = NULL, *tmperror = NULL;
-	gboolean result = FALSE;
-	if(!(result = org_freesmartphone_GSM_Network_register_with_provider(networkBus, provider_id, &dbus_error))) {
-		tmperror = dbus_handle_errors(dbus_error);
-		g_propagate_error(error,tmperror);
-	}
+void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*) = NULL;
+        GError *error = NULL;
 
-	return result;
+        callback = userdata;
+
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
+
+        (*(callback)) (error);
+}
+
+void network_register_with_provider(int provider_id, void (*callback)(GError *)) {
+    if(callback != NULL)
+            org_freesmartphone_GSM_Network_register_with_provider_async(networkBus, provider_id, network_register_callback, callback);
+}
+
+void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*) = NULL;
+        GError *error = NULL;
+
+        callback = userdata;
+
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
+
+        (*(callback)) (error);
 
 }
+

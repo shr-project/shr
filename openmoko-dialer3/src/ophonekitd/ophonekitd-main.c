@@ -28,6 +28,8 @@
 #include "device.h"
 #include "ophonekitd-main.h"	
 
+static gboolean connected_to_network = FALSE;
+
 int main(int argc, char ** argv) {
 	GMainLoop *mainloop = NULL;
 #ifdef DEBUG
@@ -38,7 +40,7 @@ int main(int argc, char ** argv) {
 #ifdef DEBUG
 	printf("Connected to the buses\n");
 #endif
-	g_timeout_add(2000, register_to_network, NULL);
+	g_timeout_add(5000, power_up_antenna, NULL);
 #ifdef DEBUG
 	printf("Entering mainloop.\n");
 #endif
@@ -48,20 +50,26 @@ int main(int argc, char ** argv) {
 
 }
 
-gboolean register_to_network() {
+gboolean power_up_antenna() {
+    device_set_antenna_power(TRUE, power_up_antenna_callback);
 
-	GError* error = NULL;
-	if(!device_set_antenna_power(&error, TRUE)) {
-		if(error != NULL && IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
-#ifdef DEBUG
-	printf("Calling the UI on an AUTH_FAILED exception\n");
-#endif
-			sim_display_code_UI();
-			do {
-				sleep(5);
-			} while(!device_set_antenna_power(&error, TRUE));
-		}
-	}
+	return connected_to_network; // End timeout
+}
 
-	return FALSE; // End timeout
+void power_up_antenna_callback(GError *error) {
+    if(error != NULL) {
+        /* TODO */
+    }
+    else {
+        network_register(register_to_network_callback);
+    }
+}
+
+void register_to_network_callback(GError *error) {
+    if(error != NULL) {
+        /* TODO */
+    } else {
+        /* Antenna works, registered to network */
+        connected_to_network = TRUE;
+    }
 }
