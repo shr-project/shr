@@ -32,6 +32,7 @@ void display_pin_error (const char *message);
 void display_pin_dialog();
 void display_puk_dialog();
 void sim_pin_puk_callback(GError *error);
+void set_code_ui_state_busy ();
+void set_code_ui_state_ready ();
 
 #endif
-
