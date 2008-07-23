@@ -25,7 +25,7 @@
 #include "dbus.h"
 #include "dbus/sim.h"
 #include "sim.h"
-#include "moko-pin-ophonekitd.h"
+#include "phonegui.h"
 
 DBusGProxy *simBus = NULL;
 

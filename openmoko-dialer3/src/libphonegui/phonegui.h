@@ -18,5 +18,6 @@
 #define PHONEGUI_H
 
 void get_sim_code_from_user (const int initial_status);
+void destroy_pin_UI ();
 
 #endif
