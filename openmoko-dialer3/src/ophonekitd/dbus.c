@@ -50,8 +50,12 @@ void lose_gerror (const char *prefix, GError *error)
 
 /* Be careful with this function. Dbus error is freed ! */
 GError* dbus_handle_errors(GError *dbus_error) {
-	const char *error_name = dbus_g_error_get_name(dbus_error);
+	const char *error_name;
 	GError *error = NULL;
+	if ((dbus_error->domain==DBUS_GERROR)&&(dbus_error->code==DBUS_GERROR_REMOTE_EXCEPTION))
+		error_name = dbus_g_error_get_name(dbus_error);
+	else
+		error_name = "";
 	if(strncmp(error_name, SIM_INTERFACE, strlen(SIM_INTERFACE))) {
 		error = sim_handle_errors(dbus_error);
 	} else if(strncmp(error_name, CALL_INTERFACE, strlen(CALL_INTERFACE))) {
