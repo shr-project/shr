@@ -14,4 +14,9 @@
  *  GNU Lesser Public License for more details.
  */
 
+#ifndef MOKO_PIN_OPHONEKITD_H
+#define MOKO_PIN_OPHONEKITD_H
 
+void get_sim_code_from_user (const int initial_status);
+
+#endif
