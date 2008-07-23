@@ -97,7 +97,7 @@ void get_sim_code_from_user (const int initial_status) {
 
   /* The PIN/PUK conversation */
   display_pin_puk_dialog(current_status);
-  
+  gtk_main();
 }
 
 void display_pin_puk_dialog() {
@@ -174,11 +174,12 @@ void sim_pin_puk_callback(GError *error) {
     }
 }
 
-void destroy_pin_dialog() {
+void destroy_pin_UI() {
         /* Now we can close the window */
         gtk_widget_destroy (staticData.dialog);
 
         /* Unset the beacon here to state that the GUI is no longer active */
         is_sim_code_gui_active = FALSE;
-
+        
+        gtk_main_quit();
 }

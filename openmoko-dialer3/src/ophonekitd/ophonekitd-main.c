@@ -37,6 +37,7 @@ int main(int argc, char ** argv) {
 #endif
 	mainloop = g_main_loop_new (NULL, FALSE);
 	dbus_connect_to_bus();
+    gtk_init(&argc,&argv);
 #ifdef DEBUG
 	printf("Connected to the buses\n");
 #endif
@@ -67,6 +68,8 @@ void power_up_antenna_callback(GError *error) {
 
 void register_to_network_callback(GError *error) {
     if(error != NULL) {
+        if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) 
+            sim_display_code_UI();
         /* TODO */
     } else {
         /* Antenna works, registered to network */

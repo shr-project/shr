@@ -33,7 +33,7 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
 { 
     int st = sim_handle_authentication_state(status);
     if(st == SIM_READY) {
-          // TODO
+        destroy_pin_UI();       
     }
     else {
           get_sim_code_from_user(st);
