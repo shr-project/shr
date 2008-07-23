@@ -16,8 +16,23 @@
 #ifndef MOKO_PIN_H
 #define MOKO_PIN_H
 
-void get_sim_code_from_user (int needed_code);
+typedef struct
+{
+        GtkWidget *display;
+        GtkWidget *dialog;
+        gchar *code;
+} MokoPinData;
+
+
+static void
+on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
+                MokoPinData *data);
+void display_pin_puk_dialog();
 void display_pin_error (const char *message);
+void display_pin_dialog();
+void display_puk_dialog();
+void sim_pin_puk_callback(GError *error);
+void destroy_pin_dialog();
 
 #endif
 

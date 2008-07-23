@@ -36,4 +36,5 @@ GError* network_handle_errors(GError *dbus_error);
 GError* call_handle_errors(GError *dbus_error);
 GError* sim_handle_errors(GError *dbus_error);
 void dbus_connect_to_bus();
+
 #endif

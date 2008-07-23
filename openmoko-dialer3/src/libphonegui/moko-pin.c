@@ -20,16 +20,13 @@
 #include "moko-dialer-textview.h"
 #include "moko-dialer-panel.h"
 #include "../ophonekitd/sim.h"
+#include "../ophonekitd/dbus.h"
 #include "moko-pin.h"
+#include "moko-pin-ophonekitd.h"
 
 static gboolean is_sim_code_gui_active = FALSE;
-
-typedef struct
-{
-  GtkWidget *display;
-  GtkWidget *dialog;
-  gchar *code;
-} MokoPinData;
+static int code_to_ask = 0;
+static MokoPinData staticData;
 
 static void
 on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
@@ -72,102 +69,53 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
 }
 
 void get_sim_code_from_user (const int initial_status) {
-  if (is_sim_code_gui_active || initial_status == SIM_READY) {
+  code_to_ask = initial_status;
+  if (is_sim_code_gui_active) {
     return;
   }
 
   GtkWidget *pad;
-  MokoPinData data;
   int current_status = initial_status;
-  gboolean result = TRUE;
-  GError *error = NULL;
-  char *puk, *pin;
 
   /* Set a beacon around here to state that the GUI is active */
   is_sim_code_gui_active = TRUE;
 
   /* Build the GUI */
-  data.dialog = gtk_dialog_new_with_buttons ("Enter PIN code", NULL, 0,
+  staticData.dialog = gtk_dialog_new_with_buttons ("Enter PIN code", NULL, 0,
                                              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                              GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
-  gtk_dialog_set_has_separator (GTK_DIALOG (data.dialog), FALSE);
+  gtk_dialog_set_has_separator (GTK_DIALOG (staticData.dialog), FALSE);
 
-  data.display = moko_dialer_textview_new ();
-  gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (data.dialog)->vbox), data.display);
+  staticData.display = moko_dialer_textview_new ();
+  gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (staticData.dialog)->vbox), staticData.display);
   
   pad = moko_dialer_panel_new ();
-  gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (data.dialog)->vbox), pad);
-  g_signal_connect (pad, "user_input", G_CALLBACK (on_pad_user_input), &data);
+  gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (staticData.dialog)->vbox), pad);
+  g_signal_connect (pad, "user_input", G_CALLBACK (on_pad_user_input), &staticData);
   
-  gtk_widget_show_all (GTK_DIALOG (data.dialog)->vbox);
+  gtk_widget_show_all (GTK_DIALOG (staticData.dialog)->vbox);
 
   /* The PIN/PUK conversation */
-  while (result || current_status != SIM_READY)
-  {
-    data.code = NULL;
-    switch (current_status)
-    {
-      case SIM_PIN_REQUIRED:
-        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
-        {
-          result = sim_send_pin_code (&error, &current_status, data.code);
-        }
-      break;
-      case SIM_PUK_REQUIRED:
-        /* I need to set a new title to the dialog here */
-        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
-        {
-          puk = g_strdup (data.code);
-        } else {
-	  break;
-	}
-        /* I need to set a new title to the dialog here */
-        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
-        {
-          pin = g_strdup (data.code);
-        } else {
-	  g_free (puk);
-	  break;
-	}
-        result = sim_send_puk_code (&error, &current_status, puk, pin);
-        g_free (pin);
-        g_free (puk);
-      break;
-      case SIM_PIN2_REQUIRED:
-        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
-        {
-          result = sim_send_pin_code (&error, &current_status, data.code);
-        }
-      break;
-      case SIM_PUK2_REQUIRED:
-        /* I need to set a new title to the dialog here */
-        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
-        {
-          puk = g_strdup (data.code);
-        } else {
-	  break;
-	}
-        /* I need to set a new title to the dialog here */
-        if (gtk_dialog_run (GTK_DIALOG (data.dialog)) == GTK_RESPONSE_OK)
-        {
-          pin = g_strdup (data.code);
-        } else {
-	  g_free (puk);
-	  break;
-	}
-        result = sim_send_puk_code (&error, &current_status, puk, pin);
-        g_free (pin);
-        g_free (puk);
-      break;
-    }
-    
-  }
+  display_pin_puk_dialog(current_status);
+  
+}
 
-  /* Now we can close the window */
-  gtk_widget_destroy (data.dialog);
+void display_pin_puk_dialog() {
+        staticData.code = NULL;
 
-  /* Unset the beacon here to state that the GUI is no longer active */
-  is_sim_code_gui_active = FALSE;
+        switch (code_to_ask)
+        {
+                case SIM_PIN_REQUIRED:
+                case SIM_PIN2_REQUIRED:
+                        display_pin_dialog();
+                        break;
+                case SIM_PUK_REQUIRED:
+                case SIM_PUK2_REQUIRED:
+                        display_puk_dialog();
+                        break;
+
+        }
+
 }
 
 void
@@ -181,3 +129,56 @@ display_pin_error (const char *message)
   gtk_widget_destroy (dlg);
 }
 
+void display_pin_dialog() {
+        if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
+        {
+                sim_send_pin_code (staticData.code, sim_pin_puk_callback);
+               /* Here, display a progress screen */ 
+        }
+}
+
+void display_puk_dialog() {
+        char *puk = NULL, *pin = NULL;
+
+        /* I need to set a new title to the dialog here */
+        if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
+        {
+                puk = g_strdup (staticData.code);
+        } else {
+                return;
+        }
+        /* I need to set a new title to the dialog here */
+        if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
+        {
+                pin = g_strdup (staticData.code);
+        } else {
+                g_free (puk);
+                return;
+        }
+        sim_send_puk_code (puk, pin, sim_pin_puk_callback);
+        g_free (pin);
+        g_free (puk);
+        /* Here, display a progress screen */
+}
+
+void sim_pin_puk_callback(GError *error) {
+    if(error != NULL) {
+        if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
+            /* display_pin_error("") */                    
+        } else if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+            /* display_pin_error("") */
+        }
+        display_pin_puk_dialog();
+    } else {
+        /* We should have SIM_READY then UI should be destroyed. */
+    }
+}
+
+void destroy_pin_dialog() {
+        /* Now we can close the window */
+        gtk_widget_destroy (staticData.dialog);
+
+        /* Unset the beacon here to state that the GUI is no longer active */
+        is_sim_code_gui_active = FALSE;
+
+}

@@ -51,14 +51,22 @@ typedef enum {
 	SIM_ERROR_INVALID_INDEX = -6
 } SimErrors;
 
-
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
-int sim_get_authentication_state(GError **error, int *code);
-gboolean sim_send_pin_code(GError **error, int *codeToSet, const char* pin);
-gboolean sim_send_puk_code(GError **error, int *codeToSet, const char* puk, const char* pin);
-GError* sim_handle_errors(GError *dbus_error);
-gboolean sim_handle_sim_auth(GError **error, int *codeToSet);
+int sim_handle_authentication_state(const char*status);
+
+void sim_get_authentication_state(void (*callback)(GError*, int));
+void sim_get_authentication_state_callback(DBusGProxy *bus, char* status, GError* dbus_error, gpointer userdata);
+
+void sim_send_pin_code(const char* pin, void (*callback)(GError*));
+void sim_send_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
+
+void sim_send_puk_code(const char* puk, const char* pin, void (*callback)(GError*));
+void sim_send_puk_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
+
 void sim_display_code_UI ();
+void sim_display_code_UI_callback(GError* error, int status);
+
+GError* sim_handle_errors(GError *dbus_error);
 
 extern DBusGProxy *simBus;
 

@@ -27,7 +27,6 @@
 #include "network.h"
 #include "device.h"
 #include "ophonekitd-main.h"	
-#include "moko-pin.h"
 
 int main(int argc, char ** argv) {
 	GMainLoop *mainloop = NULL;
