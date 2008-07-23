@@ -60,6 +60,7 @@ gboolean power_up_antenna() {
 void power_up_antenna_callback(GError *error) {
     if(error != NULL) {
         /* TODO */
+        g_error_free(error);
     }
     else {
         network_register(register_to_network_callback);
@@ -71,6 +72,7 @@ void register_to_network_callback(GError *error) {
         if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) 
             sim_display_code_UI();
         /* TODO */
+        g_error_free(error);
     } else {
         /* Antenna works, registered to network */
         connected_to_network = TRUE;

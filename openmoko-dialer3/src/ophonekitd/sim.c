@@ -79,7 +79,8 @@ void sim_get_authentication_state_callback(DBusGProxy *bus, char* status, GError
         error = dbus_handle_errors(dbus_error);
     else
         st = sim_handle_authentication_state(status);
-
+    
+    free(status);
     (*(callback)) (error, st);
 
 }
