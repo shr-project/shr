@@ -56,13 +56,13 @@ GError* dbus_handle_errors(GError *dbus_error) {
 		error_name = dbus_g_error_get_name(dbus_error);
 	else
 		error_name = "";
-	if(strncmp(error_name, SIM_INTERFACE, strlen(SIM_INTERFACE))) {
+	if(!strncmp(error_name, SIM_INTERFACE, strlen(SIM_INTERFACE))) {
 		error = sim_handle_errors(dbus_error);
-	} else if(strncmp(error_name, CALL_INTERFACE, strlen(CALL_INTERFACE))) {
+	} else if(!strncmp(error_name, CALL_INTERFACE, strlen(CALL_INTERFACE))) {
 		error = call_handle_errors(dbus_error);
-	} else if(strncmp(error_name, NETWORK_INTERFACE, strlen(NETWORK_INTERFACE))) {
+	} else if(!strncmp(error_name, NETWORK_INTERFACE, strlen(NETWORK_INTERFACE))) {
 		error =  network_handle_errors(dbus_error);
-	} else if(strncmp(error_name, DEVICE_INTERFACE, strlen(DEVICE_INTERFACE))) {
+	} else if(!strncmp(error_name, DEVICE_INTERFACE, strlen(DEVICE_INTERFACE))) {
 		error = device_handle_errors(dbus_error);
 	} else {
 		lose_gerror ("Failed to handle device error", dbus_error);

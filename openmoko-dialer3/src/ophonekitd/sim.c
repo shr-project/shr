@@ -31,16 +31,16 @@ DBusGProxy *simBus = NULL;
 
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
-  if(strcmp(status,DBUS_SIM_READY)) {
+  if(!strcmp(status,DBUS_SIM_READY)) {
           // TODO
   }
-  else if(strcmp(status,DBUS_SIM_PIN_REQUIRED)) {
+  else if(!strcmp(status,DBUS_SIM_PIN_REQUIRED)) {
           get_sim_code_from_user(SIM_PIN_REQUIRED);
   }
-  else if(strcmp(status,DBUS_SIM_PUK_REQUIRED)) {
+  else if(!strcmp(status,DBUS_SIM_PUK_REQUIRED)) {
           get_sim_code_from_user(SIM_PUK_REQUIRED);
   }
-  else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED)) {
+  else if(!strcmp(status,DBUS_SIM_PIN2_REQUIRED)) {
           get_sim_code_from_user(SIM_PIN2_REQUIRED);
   }
   else {
@@ -53,7 +53,7 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
 }
 
 void sim_display_code_UI ()
-{   
+{
         int needed_code;
         GError *error = NULL;
         if (sim_get_authentication_state (&error, &needed_code))
@@ -71,26 +71,26 @@ gboolean sim_get_authentication_state(GError **error, int *code) {
 	if (!(result = org_freesmartphone_GSM_SIM_get_auth_status(simBus, &status, &dbus_error))) {
 		 tmperror = dbus_handle_errors(dbus_error);
 		 g_propagate_error(error, tmperror);
-	} else {	
-		if(strcmp(status,DBUS_SIM_READY))
+	} else {
+		if(!strcmp(status,DBUS_SIM_READY))
 			*code = SIM_READY;
-		else if(strcmp(status,DBUS_SIM_PIN_REQUIRED))
+		else if(!strcmp(status,DBUS_SIM_PIN_REQUIRED))
 			*code = SIM_PIN_REQUIRED;
-		else if(strcmp(status,DBUS_SIM_PUK_REQUIRED))
+		else if(!strcmp(status,DBUS_SIM_PUK_REQUIRED))
 			*code = SIM_PUK_REQUIRED;
-		else if(strcmp(status,DBUS_SIM_PIN2_REQUIRED))
+		else if(!strcmp(status,DBUS_SIM_PIN2_REQUIRED))
 			*code = SIM_PIN2_REQUIRED;
 		else
 			*code = SIM_PUK2_REQUIRED;
 
 	}
 
-	free(status);	
+	free(status);
 	return result;
 }
 
 gboolean sim_send_pin_code(GError** error, int *codeToSet, const char* pin) {
-        
+
 	GError *dbus_error = NULL, *tmperror = NULL;
 
 	if(!org_freesmartphone_GSM_SIM_send_auth_code (simBus, pin, &dbus_error)) {
@@ -126,8 +126,7 @@ gboolean sim_handle_sim_auth(GError** error, int *codeToSet) {
 			 * prevent an UI rebuild */
 			int needed_code;
 			if((result = sim_get_authentication_state(error, &needed_code)))
-				*codeToSet = needed_code;			
-		
+				*codeToSet = needed_code;
 		}
 	}
 	return result;
@@ -139,17 +138,17 @@ GError* sim_handle_errors(GError *error) {
 	const char *error_name = dbus_g_error_get_name(error);
 	int simError = 0;
 
-	if(strcmp(error_name, DBUS_SIM_ERROR_NOT_PRESENT)) {
+	if(!strcmp(error_name, DBUS_SIM_ERROR_NOT_PRESENT)) {
 		simError = SIM_ERROR_NOT_PRESENT;
-	} else if(strcmp(error_name, DBUS_SIM_ERROR_AUTH_FAILED)) {
+	} else if(!strcmp(error_name, DBUS_SIM_ERROR_AUTH_FAILED)) {
 		simError = SIM_ERROR_AUTH_FAILED;
-	} else if(strcmp(error_name, DBUS_SIM_ERROR_BLOCKED)) {
+	} else if(!strcmp(error_name, DBUS_SIM_ERROR_BLOCKED)) {
 		simError = SIM_ERROR_BLOCKED;
-	} else if(strcmp(error_name, DBUS_SIM_ERROR_NOT_FOUND)) {
+	} else if(!strcmp(error_name, DBUS_SIM_ERROR_NOT_FOUND)) {
 		simError = SIM_ERROR_NOT_FOUND;
-	} else if(strcmp(error_name, DBUS_SIM_ERROR_MEMORY_FULL)) {
+	} else if(!strcmp(error_name, DBUS_SIM_ERROR_MEMORY_FULL)) {
 		simError = SIM_ERROR_MEMORY_FULL;
-	} else if(strcmp(error_name, DBUS_SIM_ERROR_INVALID_INDEX)) {
+	} else if(!strcmp(error_name, DBUS_SIM_ERROR_INVALID_INDEX)) {
 		simError = SIM_ERROR_INVALID_INDEX;
 	} else {
         	lose_gerror ("Unknown SIM error", error);

@@ -29,18 +29,18 @@ DBusGProxy *callBus = NULL;
 
 void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable ** properties, gpointer user_data)
 {
-  if(strcmp(status, CALL_STATUS_INCOMING)) {
+  if(!strcmp(status, CALL_STATUS_INCOMING)) {
 	char *number = NULL;
 	if(!(properties && *properties && (number = (char*)g_hash_table_lookup(*properties,(gconstpointer)CALL_PROPERTIES_NUMBER)))) {
 		// No properties ?!
 	}
 
   	// Display incoming UI
-  } else if(strcmp(status, CALL_STATUS_OUTGOING)) {
+  } else if(!strcmp(status, CALL_STATUS_OUTGOING)) {
   	// Display outgoing UI
-  } else if(strcmp(status, CALL_STATUS_ACTIVE)) {
+  } else if(!strcmp(status, CALL_STATUS_ACTIVE)) {
   	// TODO
-  } else if(strcmp(status, CALL_STATUS_RELEASED)) {
+  } else if(!strcmp(status, CALL_STATUS_RELEASED)) {
   	// Close UI
   } else { // HELD
   }

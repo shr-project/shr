@@ -31,11 +31,11 @@ GError* device_handle_errors(GError *dbus_error) {
 	const char *error_name = dbus_g_error_get_name(dbus_error);
 	int deviceError = 0;
 
-	if(strcmp(error_name, DBUS_DEVICE_ERROR_TIMEOUT)) {
+	if(!strcmp(error_name, DBUS_DEVICE_ERROR_TIMEOUT)) {
 		deviceError = DEVICE_ERROR_TIMEOUT;
-	} else if(strcmp(error_name, DBUS_DEVICE_ERROR_NOT_PRESENT)) {
+	} else if(!strcmp(error_name, DBUS_DEVICE_ERROR_NOT_PRESENT)) {
 		deviceError = DEVICE_ERROR_NOT_PRESENT;
-	} else if(strcmp(error_name, DBUS_DEVICE_ERROR_FAILED)) {
+	} else if(!strcmp(error_name, DBUS_DEVICE_ERROR_FAILED)) {
 		deviceError = DEVICE_ERROR_FAILED;
 	} else {
 		lose_gerror ("Unknown device error", dbus_error);
