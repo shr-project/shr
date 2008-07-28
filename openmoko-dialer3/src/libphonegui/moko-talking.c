@@ -86,6 +86,16 @@ enum
   LAST_SIGNAL
 };
 
+void phonegui_display_call_UI(const int id_call, const int status, const char *number) { 
+    /* TODO */
+    return;
+}
+
+void phonegui_destroy_call_UI(const int id_call) { 
+    /* TODO */
+    return;
+}
+
 static guint talking_signals[LAST_SIGNAL] = {0, };
 
 void

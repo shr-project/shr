@@ -33,10 +33,10 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
 { 
     int st = sim_handle_authentication_state(status);
     if(st == SIM_READY) {
-        destroy_pin_UI();       
+        phonegui_destroy_pin_UI();       
     }
     else {
-          get_sim_code_from_user(st);
+          phonegui_display_pin_UI(st);
     }
 #ifdef DEBUG
 	printf ("Auth status handler calling the UI on a %s signal", status);
@@ -121,6 +121,62 @@ void sim_send_puk_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer us
 
 }
 
+void sim_change_pin_code(const char* old, const char* new, void (*callback)(GError*)) {
+    if(old != NULL && new != NULL && callback != NULL)
+        org_freesmartphone_GSM_SIM_change_auth_code_async(simBus, old, new, sim_change_pin_code_callback, callback);
+}
+
+void sim_change_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*) = NULL;
+        GError *error = NULL;
+
+        callback = userdata;
+
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
+
+        (*(callback)) (error);
+
+}
+
+
+void sim_retrieve_phonebook_entry(const int index, void (*callback)(GError*, char*, char*)) {
+    if(callback != NULL)
+        org_freesmartphone_GSM_SIM_retrieve_entry_async(simBus, index, sim_retrieve_phonebook_entry_callback, callback);
+}
+
+void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* number, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*, char*, char*) = NULL;
+        GError *error = NULL;
+
+        callback = userdata;
+
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
+
+        (*(callback)) (error, name, number);
+
+}
+
+
+void sim_retrieve_message(const int index, void (*callback)(GError*, char*, char*)) {
+    if(callback != NULL)
+        org_freesmartphone_GSM_SIM_retrieve_message_async(simBus, index, sim_retrieve_message_callback, callback);
+}
+
+void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*, char*, char*) = NULL;
+        GError *error = NULL;
+
+        callback = userdata;
+
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
+
+        (*(callback)) (error, number, content);
+}
+
+
 void sim_display_code_UI () {
         sim_get_authentication_state (sim_display_code_UI_callback);
 }
@@ -129,7 +185,7 @@ void sim_display_code_UI_callback(GError* error, int status) {
     if(error != NULL) {
         /* TODO */
     } else if (status != SIM_READY) {
-        get_sim_code_from_user(status);
+        phonegui_display_pin_UI(status);
     }
 }
 

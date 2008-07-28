@@ -22,23 +22,40 @@
 #define DBUS_CALL_ERROR_NOT_FOUND "org.freesmartphone.GSM.Call.NotFound"
 #define IS_CALL_ERROR(error, code) g_error_matches(error, CALL_ERROR, code)
 
-#define CALL_TYPE_VOICE "voice"
-#define CALL_TYPE_DATA "data"
+#define DBUS_CALL_TYPE_VOICE "voice"
+#define DBUS_CALL_TYPE_DATA "data"
 
-#define CALL_STATUS_INCOMING "incoming"
-#define CALL_STATUS_OUTGOING "outgoing"
-#define CALL_STATUS_ACTIVE "active"
-#define CALL_STATUS_HELD "held"
-#define CALL_STATUS_RELEASED "released"
+#define DBUS_CALL_STATUS_INCOMING "incoming"
+#define DBUS_CALL_STATUS_OUTGOING "outgoing"
+#define DBUS_CALL_STATUS_ACTIVE "active"
+#define DBUS_CALL_STATUS_HELD "held"
+#define DBUS_CALL_STATUS_RELEASED "released"
 
-#define CALL_PROPERTIES_REASON "reason"
-#define CALL_PROPERTIES_NUMBER "number"
+#define DBUS_CALL_PROPERTIES_REASON "reason"
+#define DBUS_CALL_PROPERTIES_NUMBER "number"
 
 typedef enum {
 	CALL_ERROR_NO_CARRIER = -1,
 	CALL_ERROR_NOT_FOUND = -2,
 } CallErrors;
 
+typedef enum {
+    CALL_TYPE_VOICE,
+    CALL_TYPE_DATA
+} CallTypes;
+
+typedef enum {
+    CALL_STATUS_INCOMING,
+    CALL_STATUS_OUTGOING,
+    CALL_STATUS_ACTIVE,
+    CALL_STATUS_HELD,
+    CALL_STATUS_RELEASED
+} CallStatus;
+
+typedef enum {
+    CALL_PROPERTIES_REASON,
+    CALL_PROPERTIES_NUMBER
+} CallProperties;
 
 void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable ** properties, gpointer user_data);
 

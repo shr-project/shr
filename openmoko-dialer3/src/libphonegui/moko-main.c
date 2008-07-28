@@ -14,14 +14,11 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef PHONEGUI_H
-#define PHONEGUI_H
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-void phonegui_init(int argc, char** argv);
-
-void phonegui_display_pin_UI (const int initial_status);
-void phonegui_destroy_pin_UI ();
-
-//void phonegui_display_call_UI(const int id_call, const int status, const char *number);
-//void phonegui_destroy_call_UI(const int id_call);
-#endif
+void phonegui_init(int argc, char** argv) {
+    gtk_init(&argc,&argv);    
+}

@@ -28,13 +28,26 @@
 DBusGProxy *smsBus = NULL;
 
 void sms_message_sent_handler (DBusGProxy *proxy, const int id, const gboolean success, const char* reason, gpointer user_data) {
-	printf ("Received message sent status");
+        printf ("Received message sent status");
 }
 
 void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer user_data) {
-	printf ("Received incoming message status");
+        printf ("Received incoming message status");
 }
 
-gboolean sms_send_message(GError** error, const char *number, const char*content, const gboolean report, int* transaction_index) {
-	return FALSE;
+        void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int)) {
+                if(number != NULL && content != NULL && callback != NULL)
+                        org_freesmartphone_GSM_SMS_send_message_async(smsBus, number, content, report, sms_send_message_callback, callback);
+        }
+
+void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*, int) = NULL;
+        GError *error = NULL;
+
+        callback = userdata;
+
+        if(dbus_error != NULL)
+                error = dbus_handle_errors(dbus_error);
+
+        (*(callback)) (error, transaction_index);
 }

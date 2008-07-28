@@ -22,7 +22,9 @@
 void sms_message_sent_handler (DBusGProxy *proxy, const int id, const gboolean success, const char* reason, gpointer user_data);
 void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer user_data);
 
-gboolean sms_send_message(GError** error, const char *number, const char*content, const gboolean report, int* transaction_index);
+void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int));
+void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *dbus_error, gpointer userdata);
+
 extern DBusGProxy *smsBus;
 
 #endif

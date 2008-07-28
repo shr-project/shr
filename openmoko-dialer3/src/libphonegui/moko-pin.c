@@ -28,7 +28,7 @@ static gboolean is_sim_code_gui_active = FALSE;
 static int code_to_ask = 0;
 static MokoPinData staticData;
 
-static void
+        static void
 on_pad_user_input (MokoDialerPanel *panel, const gchar digit, MokoPinData *data)
 {
         gchar buf[2];
@@ -40,7 +40,7 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit, MokoPinData *data)
                 gtk_dialog_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
                 return;
         }
-  
+
         /* "*" acts as delete for now */
         if (digit == '*')
         {
@@ -52,7 +52,7 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit, MokoPinData *data)
         /* Create a string from the new digit */
         buf[0] = digit;
         buf[1] = '\0';
-  
+
         if (!data->code)
         {
                 new_code = g_strdup (buf);
@@ -67,7 +67,7 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit, MokoPinData *data)
         moko_dialer_textview_insert (MOKO_DIALER_TEXTVIEW (data->display), "*");
 }
 
-void get_sim_code_from_user (const int initial_status) {
+void phonegui_display_pin_UI (const int initial_status) {
         code_to_ask = initial_status;
 
         /* First, let's check if we have anything to do here */
@@ -88,17 +88,17 @@ void get_sim_code_from_user (const int initial_status) {
 
         /* Build the GUI */
         staticData.dialog = gtk_dialog_new_with_buttons ("Enter PIN code", NULL, 0,
-                                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                             GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                        GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
         gtk_dialog_set_has_separator (GTK_DIALOG (staticData.dialog), FALSE);
 
         staticData.display = moko_dialer_textview_new ();
         gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (staticData.dialog)->vbox), staticData.display);
-  
+
         pad = moko_dialer_panel_new ();
         gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (staticData.dialog)->vbox), pad);
         g_signal_connect (pad, "user_input", G_CALLBACK (on_pad_user_input), &staticData);
-  
+
         gtk_widget_show_all (GTK_DIALOG (staticData.dialog)->vbox);
 
         /* The PIN/PUK conversation */
@@ -123,23 +123,23 @@ void display_pin_puk_dialog() {
 
 }
 
-void
+        void
 display_pin_error (const char *message)
 {
         GtkWidget *dlg;
-  
+
         dlg = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
         gtk_dialog_run (GTK_DIALOG (dlg));
         gtk_widget_destroy (dlg);
 }
 
-void display_pin_dialog() {
-        if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
-        {
-                set_code_ui_state_busy ();
-                sim_send_pin_code (staticData.code, sim_pin_puk_callback);
+        void display_pin_dialog() {
+                if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
+                {
+                        set_code_ui_state_busy ();
+                        sim_send_pin_code (staticData.code, sim_pin_puk_callback);
+                }
         }
-}
 
 void display_puk_dialog() {
         char *puk = NULL, *pin = NULL;
@@ -165,23 +165,23 @@ void display_puk_dialog() {
         g_free (puk);
 }
 
-void
+        void
 sim_pin_puk_callback (GError *error)
 {
-    if(error != NULL) {
-        if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
-            /* display_pin_error("") */                    
-        } else if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
-            /* display_pin_error("") */
+        if(error != NULL) {
+                if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
+                        /* display_pin_error("") */                    
+                } else if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+                        /* display_pin_error("") */
+                }
+                display_pin_puk_dialog();
+        } else {
+                /* We should have SIM_READY then UI should be destroyed. */
         }
-        display_pin_puk_dialog();
-    } else {
-        /* We should have SIM_READY then UI should be destroyed. */
-    }
 }
 
-void
-destroy_pin_UI ()
+        void
+phonegui_destroy_pin_UI ()
 {
         /* Now we can close the window */
         gtk_widget_destroy (staticData.dialog);
@@ -190,20 +190,20 @@ destroy_pin_UI ()
         is_sim_code_gui_active = FALSE;        
 }
 
-void
+        void
 set_code_ui_state_busy ()
 {
 #ifdef DEBUG
-	printf("Setting UI state to BUSY\n");
+        printf("Setting UI state to BUSY\n");
 #endif
         /* TODO */
 }
 
-void
+        void
 set_code_ui_state_ready ()
 {
 #ifdef DEBUG
-	printf("Setting UI state to READY.\n");
+        printf("Setting UI state to READY.\n");
 #endif
         /* TODO */
 }
