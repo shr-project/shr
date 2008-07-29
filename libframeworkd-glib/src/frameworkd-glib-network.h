@@ -23,6 +23,18 @@
 #define DBUS_NETWORK_ERROR_NOT_SUPPORTED "org.freesmartphone.GSM.Network.NotSupported"
 #define DBUS_NETWORK_ERROR_NOT_FOUND "org.freesmartphone.GSM.Network.NotFound"
 
+#define DBUS_NETWORK_PROPERTY_REGISTRATION "registration"
+#define DBUS_NETWORK_PROPERTY_PROVIDER "provider"
+#define DBUS_NETWORK_PROPERTY_STRENGTH "strength"
+#define DBUS_NETWORK_PROPERTY_LOCATION_AREA "lac"
+#define DBUS_NETWORK_PROPERTY_CELL_ID "cid"
+
+#define DBUS_NETWORK_PROPERTY_REGISTRATION_UNREGISTERED "unregistered"
+#define DBUS_NETWORK_PROPERTY_REGISTRATION_HOME "home"
+#define DBUS_NETWORK_PROPERTY_REGISTRATION_BUSY "busy"
+#define DBUS_NETWORK_PROPERTY_REGISTRATION_DENIED "denied"
+#define DBUS_NETWORK_PROPERTY_REGISTRATION_UNKNOWN "unknown"
+#define DBUS_NETWORK_PROPERTY_REGISTRATION_ROAMING "roaming"
 
 typedef enum {
 	NETWORK_ERROR_NOT_PRESENT = -1,
@@ -31,7 +43,14 @@ typedef enum {
 	NETWORK_ERROR_NOT_SUPPORTED = -4,
 } NetworkErrors;
 
-
+typedef enum {
+    NETWORK_PROPERTY_REGISTRATION_UNREGISTERED,
+    NETWORK_PROPERTY_REGISTRATION_HOME,
+    NETWORK_PROPERTY_REGISTRATION_BUSY,
+    NETWORK_PROPERTY_REGISTRATION_DENIED,
+    NETWORK_PROPERTY_REGISTRATION_UNKNOWN,
+    NETWORK_PROPERTY_REGISTRATION_ROAMING    
+} NetworkRegistrationProperties;
 
 extern DBusGProxy *networkBus;
 
@@ -43,4 +62,9 @@ void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer use
 
 void network_register_with_provider(int provider_id, void (*callback)(GError *));
 void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata);
+
+int network_get_registration_status(GHashTable **properties);
+char* network_get_location_area(GHashTable **properties);
+char* network_get_cell_id(GHashTable **properties);
+int network_get_signal_strength(GHashTable **properties);
 #endif

@@ -54,9 +54,35 @@ void device_set_antenna_power_callback(DBusGProxy* bus, GError *dbus_error, gpoi
 
         callback = userdata;
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+        if(callback != NULL) {
 
-        (*(callback)) (error);
+                if(dbus_error != NULL)
+                        error = dbus_handle_errors(dbus_error);
+
+
+                (*(callback)) (error);
+        } else {
+                g_error_free(dbus_error);
+        }
+}
+
+void device_get_antenna_power(void (*callback)(GError *, gboolean)) {
+    if(callback != NULL)
+        org_freesmartphone_GSM_Device_get_antenna_power_async(deviceBus, device_get_antenna_power_callback, callback);
+}
+
+void device_get_antenna_power_callback(DBusGProxy* bus, gboolean power, GError *dbus_error, gpointer userdata) {
+        void (*callback)(GError*, gboolean) = NULL;
+        GError *error = NULL;
+
+        callback = userdata;
+        if(callback != NULL) {
+                if(dbus_error != NULL)
+                        error = dbus_handle_errors(dbus_error);
+
+                (*(callback)) (error, power);
+        } else {
+            g_error_free(dbus_error);
+        }
 }
 
