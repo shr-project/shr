@@ -27,9 +27,9 @@
 
 DBusGProxy *networkBus = NULL;
 
-void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
+void network_status_handler (DBusGProxy *proxy, const  GHashTable * status, gpointer user_data)
 {
-    void (*callback)(const GHashTable **) = NULL;
+    void (*callback)(const GHashTable *) = NULL;
 
     callback = user_data;
 
@@ -99,10 +99,10 @@ void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error
 
 }
 
-int network_get_registration_status(GHashTable **properties) {
+int network_get_registration_status(GHashTable *properties) {
     char *registration = NULL;
 
-    if(properties == NULL || ((registration = g_hash_table_lookup(*properties, DBUS_NETWORK_PROPERTY_REGISTRATION)) == NULL))
+    if(properties == NULL || ((registration = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_REGISTRATION)) == NULL))
         return NETWORK_PROPERTY_REGISTRATION_UNKNOWN;
 
 
@@ -121,21 +121,21 @@ int network_get_registration_status(GHashTable **properties) {
     return NETWORK_PROPERTY_REGISTRATION_UNKNOWN;
 }
 
-char* network_get_location_area(GHashTable **properties) {
-    return properties == NULL ? NULL : g_hash_table_lookup(*properties, DBUS_NETWORK_PROPERTY_LOCATION_AREA);
+char* network_get_location_area(GHashTable *properties) {
+    return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_LOCATION_AREA);
 }
 
-char* network_get_cell_id(GHashTable **properties) {
-        return properties == NULL ? NULL : g_hash_table_lookup(*properties, DBUS_NETWORK_PROPERTY_CELL_ID);
+char* network_get_cell_id(GHashTable *properties) {
+        return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_CELL_ID);
 }
 
-int network_get_signal_strength(GHashTable **properties) {
+int network_get_signal_strength(GHashTable *properties) {
         int *strength = NULL;
 
         if(properties == NULL)
                 return 0;
 
-        strength = g_hash_table_lookup(*properties, DBUS_NETWORK_PROPERTY_STRENGTH);
+        strength = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_STRENGTH);
         return strength == NULL ? 0 : *strength;
 }
 

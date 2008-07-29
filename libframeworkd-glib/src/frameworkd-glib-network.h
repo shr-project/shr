@@ -54,7 +54,7 @@ typedef enum {
 
 extern DBusGProxy *networkBus;
 
-void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data);
+void network_status_handler (DBusGProxy *proxy, const  GHashTable * status, gpointer user_data);
 void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data);
 
 void network_register(void (*callback)(GError *));
@@ -63,8 +63,8 @@ void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer use
 void network_register_with_provider(int provider_id, void (*callback)(GError *));
 void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata);
 
-int network_get_registration_status(GHashTable **properties);
-char* network_get_location_area(GHashTable **properties);
-char* network_get_cell_id(GHashTable **properties);
-int network_get_signal_strength(GHashTable **properties);
+int network_get_registration_status(GHashTable *properties);
+char* network_get_location_area(GHashTable *properties);
+char* network_get_cell_id(GHashTable *properties);
+int network_get_signal_strength(GHashTable *properties);
 #endif

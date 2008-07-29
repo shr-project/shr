@@ -27,10 +27,10 @@
 
 DBusGProxy *callBus = NULL;
 
-void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable ** properties, gpointer user_data)
+void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable * properties, gpointer user_data)
 {
         int st;
-        void (*callback)(const int, const int, GHashTable **) = NULL;
+        void (*callback)(const int, const int, GHashTable*) = NULL;
         if(!strcmp(status, DBUS_CALL_STATUS_INCOMING)) {
                 st = CALL_STATUS_INCOMING;
                 // Display incoming UI
