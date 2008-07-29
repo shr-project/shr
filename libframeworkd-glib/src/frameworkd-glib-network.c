@@ -125,6 +125,10 @@ char* network_get_location_area(GHashTable *properties) {
     return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_LOCATION_AREA);
 }
 
+char* network_get_provider(GHashTable *properties) {
+        return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_PROVIDER);
+}
+
 char* network_get_cell_id(GHashTable *properties) {
         return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_CELL_ID);
 }

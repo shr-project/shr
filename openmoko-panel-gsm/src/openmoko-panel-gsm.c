@@ -63,7 +63,7 @@ gsm_applet_power_up_antenna(GtkWidget* menu, GsmApplet* applet);
 
 void connect_to_frameworkd();
 void gsmpanel_network_signal_strength_handler (const int signal_strength);
-void gsmpanel_network_status_handler (GHashTable ** status);
+void gsmpanel_network_status_handler (GHashTable * status);
 /* internal */
 static void
 gsm_applet_free(GsmApplet *applet)
@@ -343,7 +343,7 @@ void connect_to_frameworkd() {
         dbus_connect_to_bus(&fwHandler);
 }
 
-void gsmpanel_network_status_handler (GHashTable ** status)
+void gsmpanel_network_status_handler (GHashTable * status)
 {
     char *provider = NULL;
     char *lac = NULL;
@@ -354,7 +354,7 @@ void gsmpanel_network_status_handler (GHashTable ** status)
     
     lac = network_get_location_area(status);
     cell = network_get_cell_id(status);
-
+    provider = network_get_provider(status);
     switch(regStatus) {
         case NETWORK_PROPERTY_REGISTRATION_UNREGISTERED:
             type = 0;

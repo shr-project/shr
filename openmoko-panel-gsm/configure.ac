@@ -11,7 +11,7 @@ AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
 # base deps
-PKG_CHECK_MODULES(OPENMOKO, libmokopanelui2 libnotify libframeworkd-glib)
+PKG_CHECK_MODULES(OPENMOKO, libmokopanelui2 libnotify libframeworkd-glib libframeworkd-glib-phonegui-gtk)
 
 LIBS="$LIBS $OPENMOKO_LIBS"
 CFLAGS="$CFLAGS $OPENMOKO_CFLAGS"
