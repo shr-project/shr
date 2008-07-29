@@ -1,6 +1,7 @@
 /*  openmoko-panel-gsm.c
  *
  *  Authored by Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ *  Adapted and modified for SHR/Frameworkd by Julien Cassignol <ainulindale@gmail.com>
  *  Copyright (C) 2007 OpenMoko Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -25,8 +26,11 @@
 #include <string.h>
 #include <time.h>
 
-#include <frameworkd-glib/frameworkd-glib-network.h>
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
+#include <frameworkd-glib/frameworkd-glib-network.h>
+#include <frameworkd-glib/frameworkd-glib-device.h>
 
 #define GSM_PWOERON_FILENAME "/sys/bus/platform/devices/neo1973-pm-gsm.0/power_on"
 #define QUERY_FREQ 5
@@ -57,6 +61,9 @@ gsm_applet_update_signal_strength(int, GsmApplet* );
 static void
 gsm_applet_power_up_antenna(GtkWidget* menu, GsmApplet* applet);
 
+void connect_to_frameworkd();
+void gsmpanel_network_signal_strength_handler (const int signal_strength);
+void gsmpanel_network_status_handler (GHashTable ** status);
 /* internal */
 static void
 gsm_applet_free(GsmApplet *applet)
@@ -326,7 +333,6 @@ mb_panel_applet_create(const char* id, GtkOrientation orientation)
 }
 
 void connect_to_frameworkd() {
-        GError *error = NULL;
         FrameworkdHandlers fwHandler;
         fwHandler.networkStatus = gsmpanel_network_status_handler;
         fwHandler.simAuthStatus = NULL;
@@ -337,10 +343,9 @@ void connect_to_frameworkd() {
         dbus_connect_to_bus(&fwHandler);
 }
 
-void gsmpanel_network_status_handler (const GHashTable ** status)
+void gsmpanel_network_status_handler (GHashTable ** status)
 {
     char *provider = NULL;
-    int strength = 0;
     char *lac = NULL;
     char *cell = NULL;
     
