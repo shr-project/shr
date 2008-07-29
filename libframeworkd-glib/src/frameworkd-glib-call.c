@@ -83,10 +83,10 @@ void call_initiate_callback(DBusGProxy* proxy, int id_call, GError *dbus_error, 
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error, id_call);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         } 
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
 void call_release(const char *message, const int id_call, void (*callback)(GError *)) {
@@ -104,10 +104,10 @@ void call_release_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userd
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         } 
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
 
@@ -126,8 +126,8 @@ void call_activate_callback(DBusGProxy* proxy, GError *dbus_error, gpointer user
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         } 
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }

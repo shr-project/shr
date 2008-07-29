@@ -71,10 +71,10 @@ void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer use
                     error = dbus_handle_errors(dbus_error);
         
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
 
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
 void network_register_with_provider(int provider_id, void (*callback)(GError *)) {
@@ -92,10 +92,10 @@ void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error
                 error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
 
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 
 }
 

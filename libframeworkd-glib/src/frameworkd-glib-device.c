@@ -58,10 +58,10 @@ void device_set_antenna_power_callback(DBusGProxy* bus, GError *dbus_error, gpoi
                         error = dbus_handle_errors(dbus_error);
 
                 (*(callback)) (error);
-                g_error_free(error);
+                if(error != NULL) g_error_free(error);
         } 
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
 void device_get_antenna_power(void (*callback)(GError *, gboolean)) {
@@ -78,9 +78,9 @@ void device_get_antenna_power_callback(DBusGProxy* bus, gboolean power, GError *
                         error = dbus_handle_errors(dbus_error);
 
                 (*(callback)) (error, power);
-                g_error_free(error);
+                if(error != NULL) g_error_free(error);
         } 
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 

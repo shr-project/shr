@@ -77,11 +77,11 @@ void sim_get_authentication_state_callback(DBusGProxy *bus, char* status, GError
             st = sim_handle_authentication_state(status);
 
         (*(callback)) (error, st);
-        g_error_free(error);
+        if(error != NULL) g_error_free(error);
     } 
     
     free(status);
-    g_error_free(dbus_error);
+    if(dbus_error != NULL) g_error_free(dbus_error);
     
 }
 
@@ -101,10 +101,10 @@ void sim_send_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer us
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         } 
         
-        g_error_free(dbus_error);        
+        if(dbus_error != NULL) g_error_free(dbus_error);        
 }
 
 void sim_send_puk_code(const char* puk, const char* pin, void (*callback)(GError*)) {
@@ -123,10 +123,10 @@ void sim_send_puk_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer us
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
 void sim_change_pin_code(const char* old, const char* new, void (*callback)(GError*)) {
@@ -145,10 +145,10 @@ void sim_change_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer 
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
 
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
 
@@ -167,10 +167,10 @@ void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* num
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error, name, number);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
         
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
         free(name);
         free(number);
 }
@@ -191,10 +191,10 @@ void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, 
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error, number, content);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
 
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
         free(number);
         free(content);
 }

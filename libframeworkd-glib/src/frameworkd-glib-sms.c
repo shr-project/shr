@@ -63,8 +63,8 @@ void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *
                     error = dbus_handle_errors(dbus_error);
 
             (*(callback)) (error, transaction_index);
-            g_error_free(error);
+            if(error != NULL) g_error_free(error);
         }
 
-        g_error_free(dbus_error);
+        if(dbus_error != NULL) g_error_free(dbus_error);
 }
