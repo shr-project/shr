@@ -31,7 +31,8 @@ libframeworkd_glib_HEADERS = frameworkd-glib-dbus.h \
   				  frameworkd-glib-network.h \
 				  frameworkd-glib-call.h \
 				  frameworkd-glib-device.h \
-				  frameworkd-glib-sms.h 
+				  frameworkd-glib-phonegui.h \
+				  frameworkd-glib-sms.h
 
 libframeworkd_glibdir = $(includedir)/frameworkd-glib
 
