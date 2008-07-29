@@ -9,7 +9,7 @@ PE = "1"
 inherit shr autotools pkgconfig
 
 do_stage () {
-        oe_libinstall -so -C frameworkd-glib libframeworkd-glib ${STAGING_LIBDIR}
+        oe_libinstall -so libframeworkd-glib ${STAGING_LIBDIR}
 
         autotools_stage_includes
 }
