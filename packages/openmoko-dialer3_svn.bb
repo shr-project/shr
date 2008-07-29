@@ -6,4 +6,9 @@ PV = "0.0.1+svnr${SRCDATE}"
 PR = "r8"
 PE = "1"
 
-inherit shr
+inherit shr pkgconfig autotools
+
+do_stage () {
+        oe_libinstall -so libframeworkd-glib-phonegui-gtk ${STAGING_LIBDIR}
+}
+
