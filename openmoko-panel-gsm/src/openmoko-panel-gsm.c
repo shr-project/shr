@@ -14,7 +14,6 @@
  *
  *  Current Version: $Rev$ ($Date$) [$Author: mickey $]
  */
-#include <libmokogsmd2/moko-gsmd-connection.h>
 #include <libmokopanelui2/moko-panel-applet.h>
 
 #include <libnotify/notify.h>
@@ -26,23 +25,24 @@
 #include <string.h>
 #include <time.h>
 
+#include <frameworkd-glib/frameworkd-glib-network.h>
+#include <frameworkd-glib/frameworkd-glib-dbus.h>
+
 #define GSM_PWOERON_FILENAME "/sys/bus/platform/devices/neo1973-pm-gsm.0/power_on"
 #define QUERY_FREQ 5
-
 /* Just change this is gsmd changes */
 #define _MAX_SIGNAL 30.0
 
 typedef struct {
     MokoPanelApplet* mokoapplet;
     gboolean gprs_mode;
-    MokoGsmdConnection* gsm;
     int strength;
     int type;
-    int lac;
-    int cell;
+    char* lac;
+    char* cell;
     char operator_name[255];
+
     GtkMenuItem* information;
-    gboolean cipher;
     guint timeout_id;
     int state;
 } GsmApplet;
@@ -53,7 +53,7 @@ static GsmApplet* theApplet = NULL;
 static void
 gsm_applet_show_status(GtkWidget* menu, GsmApplet* applet);
 static void
-gsm_applet_update_signal_strength(MokoGsmdConnection* connection, int, GsmApplet* );
+gsm_applet_update_signal_strength(int, GsmApplet* );
 static void
 gsm_applet_power_up_antenna(GtkWidget* menu, GsmApplet* applet);
 
@@ -65,33 +65,23 @@ gsm_applet_free(GsmApplet *applet)
 }
 
 static void
-gsm_applet_autoregister_trigger(GsmApplet* applet)
-{
-    moko_gsmd_connection_network_register( applet->gsm );
-}
-
-static void
-gsm_applet_gsmd_connection_status(MokoGsmdConnection* connection, gboolean status)
+gsm_applet_gsmd_connection_status(gboolean status)
 {
     g_debug( "gsm_applet_gsmd_connection_status: status = %s", status ? "TRUE" : "FALSE" );
     if ( status )
     {
-#ifdef GSM_APPLET_HANDLES_PIN_DIALOG
-        gsm_applet_power_up_antenna( NULL, theApplet );
-#endif
+    
     }
     else
     {
         strcpy( theApplet->operator_name, "<unknown>" );
-        gsm_applet_update_signal_strength(connection, 99, theApplet );
+        gsm_applet_update_signal_strength(99, theApplet );
         gsm_applet_show_status(NULL, theApplet);
     }
 }
 
 static void
-gsm_applet_update_signal_strength(MokoGsmdConnection* connection,
-                                  int strength,
-                                  GsmApplet* applet)
+gsm_applet_update_signal_strength(int strength,  GsmApplet* applet)
 {
     gint pixmap = 0;
     gchar *image = NULL;
@@ -130,75 +120,46 @@ gsm_applet_update_signal_strength(MokoGsmdConnection* connection,
     g_free( image );
 }
 
-static void gsm_applet_update_cipher_status(MokoGsmdConnection* self, int status)
-{
-    g_debug( "gsm_applet_update_cipher_status: status = %d", status );
-    /* bug#1248 gsm_applet_show_status( 0, theApplet ); */
-}
-
 static void
-gsm_applet_gsm_antenna_status(MokoGsmdConnection* self, gboolean status)
+gsm_applet_gsm_antenna_status(gboolean status)
 {
     g_debug( "gsm_applet_gsm_antenna_status: status = %s", status ? "ON" : "OFF" );
     if(status) {
 	    theApplet->type = 6;
-	    gsm_applet_update_signal_strength( self, theApplet->strength, theApplet );
+	    gsm_applet_update_signal_strength( theApplet->strength, theApplet );
 	    gsm_applet_show_status( 0, theApplet );
     }
     else {
 	    /* notify user antenna is OFF */
 	    theApplet->type = 7;
-	    gsm_applet_update_signal_strength( self, 99, theApplet );
+	    gsm_applet_update_signal_strength( 99, theApplet );
 	    gsm_applet_show_status( 0, theApplet );
     }
 
    
 }
 
-static void gsm_applet_network_current_operator_cb(MokoGsmdConnection *self, const gchar* name)
+static void gsm_applet_network_current_operator_cb( const gchar* name)
 {
     if ( strcmp( name, theApplet->operator_name ) != 0 )
     {
         strcpy( theApplet->operator_name, name );
-        gsm_applet_update_signal_strength( self, theApplet->strength, theApplet );
+        gsm_applet_update_signal_strength( theApplet->strength, theApplet );
         gsm_applet_show_status( 0, theApplet );
     }
 }
 
 static void
-gsm_applet_network_registration_cb(MokoGsmdConnection *self,
-                                  int type,
-                                  int lac,
-                                  int cell)
+gsm_applet_network_registration_cb(int type,
+                                  char* lac,
+                                  char* cell)
 {
     g_debug( "gsm_applet_network_registration_cb: updating netreg values" );
     theApplet->type = type;
     theApplet->lac = lac;
     theApplet->cell = cell;
 
-    if ( (type == MOKO_GSMD_CONNECTION_NETREG_HOME) || (type == MOKO_GSMD_CONNECTION_NETREG_ROAMING) )
-    {
-        g_debug( "gsm_applet_network_registration_cb: NETREG type = %d", type );
-        moko_gsmd_connection_trigger_current_operator_event( self );
-    }
 }
-
-#ifdef GSM_APPLET_HANDLES_PIN_DIALOG
-static void
-gsm_applet_sim_pin_requested(MokoGsmdConnection* self, int type)
-{
-    static pin_requested = 0;
-    pin_requested++;
-    g_debug( "gsm_applet_sim_pin_requested: PIN type = %d", type );
-    if ( pin_requested == 1 )
-    {
-        const char* thePIN = get_pin_from_user();
-        moko_gsmd_connection_send_pin( self, thePIN );
-
-        g_timeout_add_seconds( 1, (GSourceFunc)gsm_applet_autoregister_trigger, theApplet );
-    }
-}
-#endif
 
 static void
 gsm_applet_show_status(GtkWidget* menu, GsmApplet* applet)
@@ -213,7 +174,7 @@ gsm_applet_show_status(GtkWidget* menu, GsmApplet* applet)
 
         case 1:
             summary = g_strdup_printf( "Connected to '%s'", applet->operator_name );
-            details = g_strdup_printf( "Type: Home Network\nCell ID: %04x : %04x\nSignal: %i dbM\nCipher Status: %s", applet->lac, applet->cell, -113 + applet->strength*2, applet->cipher ? "Encrypted" : "No Encryption" );
+            details = g_strdup_printf( "Type: Home Network\nCell ID: %s : %s\nSignal: %i dbM", applet->lac, applet->cell, -113 + applet->strength*2 );
         break;
 
         case 2: summary = g_strdup( "Searching for Service" );
@@ -224,7 +185,7 @@ gsm_applet_show_status(GtkWidget* menu, GsmApplet* applet)
 
         case 5:
             summary = g_strdup_printf( "Connected to '%s'", applet->operator_name );
-            details = g_strdup_printf( "Type: Roaming\nCell ID: %04x : %04x\nSignal: %i dbM", applet->lac, applet->cell, -113 + applet->strength*2 );
+            details = g_strdup_printf( "Type: Roaming\nCell ID: %s : %s\nSignal: %i dbM", applet->lac, applet->cell, -113 + applet->strength*2 );
         break;
 	
         case 6: summary = g_strdup( "GSM Antenna Power-Up" );
@@ -249,26 +210,23 @@ gsm_applet_show_status(GtkWidget* menu, GsmApplet* applet)
 static void
 gsm_applet_power_up_antenna(GtkWidget* menu, GsmApplet* applet)
 {
-    moko_gsmd_connection_set_antenna_power( applet->gsm, TRUE, NULL );
+    device_set_antenna_power(TRUE, NULL);
+    gsm_applet_gsm_antenna_status(TRUE);
 }
 
 static void
 gsm_applet_autoregister_network(GtkWidget* menu, GsmApplet* applet)
 {
-    moko_gsmd_connection_network_register( applet->gsm );
+    network_register(NULL);
 }
 
 static void
 gsm_applet_power_down_antenna(GtkWidget* menu, GsmApplet* applet)
 {
-    moko_gsmd_connection_set_antenna_power( applet->gsm, FALSE, NULL );
+    device_set_antenna_power(FALSE, NULL);
+    gsm_applet_gsm_antenna_status(FALSE);
 }
 
-static void
-gsm_applet_test_operation(GtkWidget* menu, GsmApplet* applet)
-{
-    moko_gsmd_connection_trigger_current_operator_event( applet->gsm );
-}
 
 static int 
 gsm_applet_power_get() 
@@ -296,12 +254,12 @@ gsm_applet_update_visibility (GsmApplet *applet)
 
     if (!gsm_applet_power_get()) {
 	    theApplet->type = 8;
-	    gsm_applet_update_signal_strength( applet->gsm, 99, applet );
+	    gsm_applet_update_signal_strength( 99, applet );
 	    gsm_applet_show_status( 0, applet );
 	    applet->state = 0;
     } else {
 	    theApplet->type = 9;
-	    gsm_applet_update_signal_strength( applet->gsm, 0, applet );
+	    gsm_applet_update_signal_strength( 0, applet );
 	    gsm_applet_show_status( 0, applet );
 	    applet->state = 1;
     }
@@ -320,7 +278,6 @@ G_MODULE_EXPORT GtkWidget*
 mb_panel_applet_create(const char* id, GtkOrientation orientation)
 {
     GsmApplet* applet = g_slice_new0(GsmApplet);
-    applet->cipher = TRUE; // default GSM is ciphered
     theApplet = applet; // nasty global variable
     strcpy( applet->operator_name, "<unknown>" );
     MokoPanelApplet* mokoapplet = applet->mokoapplet = MOKO_PANEL_APPLET(moko_panel_applet_new());
@@ -333,17 +290,9 @@ mb_panel_applet_create(const char* id, GtkOrientation orientation)
     gtk_widget_show_all( GTK_WIDGET(mokoapplet) );
 
     applet->state = 1;
-    applet->gsm = moko_gsmd_connection_new();
-    g_signal_connect( G_OBJECT(applet->gsm), "gmsd-connection-status", G_CALLBACK(gsm_applet_gsmd_connection_status), applet );
-    g_signal_connect( G_OBJECT(applet->gsm), "signal-strength-changed", G_CALLBACK(gsm_applet_update_signal_strength), applet );
-    g_signal_connect( G_OBJECT(applet->gsm), "network-registration", G_CALLBACK(gsm_applet_network_registration_cb), applet );
-    g_signal_connect( G_OBJECT(applet->gsm), "network-current-operator", G_CALLBACK(gsm_applet_network_current_operator_cb), applet );
-#ifdef GSM_APPLET_HANDLES_PIN_DIALOG
-    g_signal_connect( G_OBJECT(applet->gsm), "pin-requested", G_CALLBACK(gsm_applet_sim_pin_requested), applet );
-#endif
-    g_signal_connect( G_OBJECT(applet->gsm), "cipher-status-changed", G_CALLBACK(gsm_applet_update_cipher_status), applet );
-    g_signal_connect( G_OBJECT(applet->gsm), "gsmd-antenna-status", G_CALLBACK(gsm_applet_gsm_antenna_status), applet );
-    
+
+    connect_to_frameworkd();
+
     // tap-with-hold menu (NOTE: temporary: left button atm.)
     GtkMenu* menu = GTK_MENU (gtk_menu_new());
 
@@ -366,11 +315,7 @@ mb_panel_applet_create(const char* id, GtkOrientation orientation)
     GtkWidget* item3 = gtk_menu_item_new_with_label( "Power-Down GSM Antenna" );
     g_signal_connect( G_OBJECT(item3), "activate", G_CALLBACK(gsm_applet_power_down_antenna), applet );
     gtk_menu_shell_append( GTK_MENU_SHELL(menu), item3 );
-#if 0
-    GtkWidget* item4 = gtk_menu_item_new_with_label( "Trigger Operation (TEST)" );
-    g_signal_connect( G_OBJECT(item4), "activate", G_CALLBACK(gsm_applet_test_operation), applet );
-    gtk_menu_shell_append( GTK_MENU_SHELL(menu), item4 );
-#endif
+    
     gtk_widget_show_all( GTK_WIDGET(menu) );
     moko_panel_applet_set_popup( mokoapplet, GTK_WIDGET (menu), MOKO_PANEL_APPLET_CLICK_POPUP );
 
@@ -379,3 +324,58 @@ mb_panel_applet_create(const char* id, GtkOrientation orientation)
       
     return GTK_WIDGET(mokoapplet);
 }
+
+void connect_to_frameworkd() {
+        GError *error = NULL;
+        FrameworkdHandlers fwHandler;
+        fwHandler.networkStatus = gsmpanel_network_status_handler;
+        fwHandler.simAuthStatus = NULL;
+        fwHandler.callCallStatus = NULL;
+        fwHandler.smsMessageSent = NULL;
+        fwHandler.smsIncomingMessage = NULL;
+        fwHandler.networkSignalStrength = gsmpanel_network_signal_strength_handler;
+        dbus_connect_to_bus(&fwHandler);
+}
+
+void gsmpanel_network_status_handler (const GHashTable ** status)
+{
+    char *provider = NULL;
+    int strength = 0;
+    char *lac = NULL;
+    char *cell = NULL;
+    
+    int regStatus = network_get_registration_status(status); 
+    int type = -1;
+    
+    lac = network_get_location_area(status);
+    cell = network_get_cell_id(status);
+
+    switch(regStatus) {
+        case NETWORK_PROPERTY_REGISTRATION_UNREGISTERED:
+            type = 0;
+            break;
+        case NETWORK_PROPERTY_REGISTRATION_HOME:
+            type = 1;
+            gsm_applet_network_current_operator_cb(provider);        
+            break;
+        case NETWORK_PROPERTY_REGISTRATION_BUSY:
+            type = 2;
+            break;
+        case NETWORK_PROPERTY_REGISTRATION_DENIED:
+            type = 3;
+            break;
+        case NETWORK_PROPERTY_REGISTRATION_ROAMING:
+            type = 5;
+            gsm_applet_network_current_operator_cb(provider);
+            break;
+    }
+    gsm_applet_network_registration_cb(type, lac, cell);
+   
+}
+
+void gsmpanel_network_signal_strength_handler (const int signal_strength)
+{
+    gsm_applet_update_signal_strength(signal_strength, theApplet);
+}
+
+
