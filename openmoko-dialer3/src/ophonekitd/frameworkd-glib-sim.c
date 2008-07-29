@@ -22,10 +22,10 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 
-#include "dbus.h"
+#include "frameworkd-glib-dbus.h"
 #include "dbus/sim.h"
-#include "sim.h"
-#include "phonegui.h"
+#include "frameworkd-glib-sim.h"
+#include "frameworkd-glib-phonegui.h"
 
 DBusGProxy *simBus = NULL;
 

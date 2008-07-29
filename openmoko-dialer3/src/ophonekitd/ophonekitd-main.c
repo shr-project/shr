@@ -21,13 +21,13 @@
 
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
-#include "dbus.h"
-#include "call.h"
-#include "sim.h"
-#include "network.h"
-#include "device.h"
+#include "frameworkd-glib-dbus.h"
+#include "frameworkd-glib-call.h"
+#include "frameworkd-glib-sim.h"
+#include "frameworkd-glib-network.h"
+#include "frameworkd-glib-device.h"
 #include "ophonekitd-main.h"	
-#include "../libphonegui/phonegui.h"
+#include "../libphonegui/frameworkd-glib-phonegui.h"
 
 static gboolean connected_to_network = FALSE;
 

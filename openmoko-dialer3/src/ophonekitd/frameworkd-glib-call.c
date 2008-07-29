@@ -21,8 +21,8 @@
 
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
-#include "call.h"
-#include "dbus.h"
+#include "frameworkd-glib-call.h"
+#include "frameworkd-glib-dbus.h"
 #include "dbus/call.h"
 
 DBusGProxy *callBus = NULL;

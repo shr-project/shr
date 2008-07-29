@@ -21,8 +21,8 @@
 
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
-#include "device.h"
-#include "dbus.h"
+#include "frameworkd-glib-device.h"
+#include "frameworkd-glib-dbus.h"
 #include "dbus/device.h"
 
 DBusGProxy *deviceBus = NULL;

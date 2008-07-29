@@ -17,18 +17,27 @@ dialer-marshal.c: dialer-marshal.list dialer-marshal.h
 
 BUILT_SOURCES= dialer-marshal.c dialer-marshal.h
 
-noinst_LIBRARIES = libphonekit-common.a
+lib_LTLIBRARIES = libframeworkd-glib.la
 
-libphonekit_common_a_SOURCES = \
-	dbus.c dbus.h \
-  sim.c sim.h \
-  network.c network.h \
-  call.c call.h \
-  device.c device.h \
-  sms.h sms.c \
+libframeworkd_glib_la_SOURCES = \
+	frameworkd-glib-dbus.c frameworkd-glib-dbus.h \
+  frameworkd-glib-sim.c frameworkd-glib-sim.h \
+  frameworkd-glib-network.c frameworkd-glib-network.h \
+  frameworkd-glib-call.c frameworkd-glib-call.h \
+  frameworkd-glib-device.c frameworkd-glib-device.h \
+  frameworkd-glib-sms.h frameworkd-glib-sms.c \
   $(BUILT_SOURCES)
 
-# libphonekit_common_a_LIBADD = $(top_srcdir)/src/libphonegui/libphonegui.a
+libframeworkd_glib_HEADERS = frameworkd-glib-dbus.h \
+  				  frameworkd-glib-sim.h \
+  				  frameworkd-glib-network.h \
+				  frameworkd-glib-call.h \
+				  frameworkd-glib-device.h \
+				  frameworkd-glib-sms.h
+
+libframeworkd_glibdir = $(includedir)/frameworkd-glib
+
+libframeworkd_glib_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 
 bin_PROGRAMS = ophonekitd
 
@@ -40,6 +49,7 @@ ophonekitd_LDADD = \
   @JANA_LIBS@ \
   @NOTIFY_LIBS@ \
   @ALSA_LIBS@ \
-  libphonekit-common.a \
+  libframeworkd-glib.la \
   $(top_srcdir)/src/libphonegui/libphonegui.a \
   $(top_srcdir)/src/common/libdialer-common.a
+
