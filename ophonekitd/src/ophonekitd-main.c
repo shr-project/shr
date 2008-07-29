@@ -72,8 +72,10 @@ gboolean power_up_antenna() {
 
 void power_up_antenna_callback(GError *error) {
         if(error != NULL) {
+            if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+                sim_display_code_UI();
+            }
                 /* TODO */
-                g_error_free(error);
         }
         else {
                 network_register(register_to_network_callback);
@@ -89,10 +91,10 @@ void register_to_network_callback(GError *error) {
         }
 }
 
-void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable **properties) {
+void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) {
 }
 
-void ophonekitd_network_status_handler(GHashTable **status) {
+void ophonekitd_network_status_handler(GHashTable *status) {
 }
 
 void ophonekitd_sim_auth_status_handler(const int status) {
