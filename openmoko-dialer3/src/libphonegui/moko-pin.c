@@ -19,10 +19,10 @@
 
 #include "moko-dialer-textview.h"
 #include "moko-dialer-panel.h"
-#include "sim.h"
-#include "dbus.h"
+#include "frameworkd-glib-sim.h"
+#include "frameworkd-glib-dbus.h"
 #include "moko-pin.h"
-#include "phonegui.h"
+#include "frameworkd-glib-phonegui.h"
 
 static gboolean is_sim_code_gui_active = FALSE;
 static int code_to_ask = 0;
