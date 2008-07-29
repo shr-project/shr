@@ -51,7 +51,7 @@ if test $ac_cv_type_EContactPhotoType = yes; then
 fi
 
 # output stuff
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 data/Makefile
 libhito/Makefile
@@ -59,5 +59,7 @@ src/Makefile
 src/common/Makefile
 src/dialer/Makefile
 src/libphonegui/Makefile
-src/ophonekitd/Makefile
+libframeworkd-glib-phonegui-gtk.pc
 ])
+
+AC_OUTPUT

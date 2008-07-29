@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "frameworkd-glib-phonegui.h"
+#include <frameworkd-glib/frameworkd-glib-phonegui.h>
 
 void phonegui_init(int argc, char** argv) {
     gtk_init(&argc,&argv);    
