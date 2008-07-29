@@ -21,7 +21,10 @@ AC_SUBST(DIALER_CFLAGS)
 AC_SUBST(DIALER_LIBS)
 
 # output stuff
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 src/Makefile
+libframeworkd-glib.pc
 ])
+
+AC_OUTPUT
