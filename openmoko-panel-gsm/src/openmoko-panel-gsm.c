@@ -361,7 +361,6 @@ void gsmpanel_network_status_handler (GHashTable * status)
             break;
         case NETWORK_PROPERTY_REGISTRATION_HOME:
             type = 1;
-            gsm_applet_network_current_operator_cb(provider);        
             break;
         case NETWORK_PROPERTY_REGISTRATION_BUSY:
             type = 2;
@@ -371,10 +370,12 @@ void gsmpanel_network_status_handler (GHashTable * status)
             break;
         case NETWORK_PROPERTY_REGISTRATION_ROAMING:
             type = 5;
-            gsm_applet_network_current_operator_cb(provider);
             break;
     }
     gsm_applet_network_registration_cb(type, lac, cell);
+    if(regStatus == NETWORK_PROPERTY_REGISTRATION_HOME || regStatus == NETWORK_PROPERTY_REGISTRATION_ROAMING) {
+            gsm_applet_network_current_operator_cb(provider);
+    }
    
 }
 
