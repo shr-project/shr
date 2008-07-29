@@ -67,7 +67,6 @@ GError* dbus_handle_errors(GError *dbus_error) {
         } else {
                 lose_gerror ("Failed to handle device error", dbus_error);
         }
-        g_error_free(dbus_error);
         return error;
 }
 

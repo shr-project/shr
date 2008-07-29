@@ -60,7 +60,6 @@ int sim_handle_authentication_state(const char*status) {
 }
 
 void sim_get_authentication_state(void (*callback)(GError*, int)) {
-    if(callback != NULL)
         org_freesmartphone_GSM_SIM_get_auth_status_async(simBus, sim_get_authentication_state_callback, callback);
 }
 
@@ -70,19 +69,24 @@ void sim_get_authentication_state_callback(DBusGProxy *bus, char* status, GError
     int st = 0;
 
     callback = userdata;
-    
-    if(dbus_error != NULL)
-        error = dbus_handle_errors(dbus_error);
-    else
-        st = sim_handle_authentication_state(status);
+   
+    if(callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
+        else
+            st = sim_handle_authentication_state(status);
+
+        (*(callback)) (error, st);
+        g_error_free(error);
+    } 
     
     free(status);
-    (*(callback)) (error, st);
-
+    g_error_free(dbus_error);
+    
 }
 
 void sim_send_pin_code(const char* pin, void (*callback)(GError*)) {
-        if(pin != NULL && callback != NULL)
+        if(pin != NULL)
             org_freesmartphone_GSM_SIM_send_auth_code_async(simBus, pin, sim_send_pin_code_callback, callback);
 }
 
@@ -91,16 +95,20 @@ void sim_send_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer us
         GError *error = NULL;
 
         callback = userdata;
+        
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
-
-        (*(callback)) (error);
-
+            (*(callback)) (error);
+            g_error_free(error);
+        } 
+        
+        g_error_free(dbus_error);        
 }
 
 void sim_send_puk_code(const char* puk, const char* pin, void (*callback)(GError*)) {
-        if(puk != NULL && pin != NULL && callback != NULL)
+        if(puk != NULL && pin != NULL)
             org_freesmartphone_GSM_SIM_unlock_async(simBus, puk, pin, sim_send_puk_code_callback, callback);
 }
 
@@ -110,15 +118,19 @@ void sim_send_puk_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer us
 
         callback = userdata;
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
 
-        (*(callback)) (error);
-
+            (*(callback)) (error);
+            g_error_free(error);
+        }
+        
+        g_error_free(dbus_error);
 }
 
 void sim_change_pin_code(const char* old, const char* new, void (*callback)(GError*)) {
-    if(old != NULL && new != NULL && callback != NULL)
+    if(old != NULL && new != NULL)
         org_freesmartphone_GSM_SIM_change_auth_code_async(simBus, old, new, sim_change_pin_code_callback, callback);
 }
 
@@ -127,17 +139,20 @@ void sim_change_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer 
         GError *error = NULL;
 
         callback = userdata;
+        
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+            (*(callback)) (error);
+            g_error_free(error);
+        }
 
-        (*(callback)) (error);
-
+        g_error_free(dbus_error);
 }
 
 
 void sim_retrieve_phonebook_entry(const int index, void (*callback)(GError*, char*, char*)) {
-    if(callback != NULL)
         org_freesmartphone_GSM_SIM_retrieve_entry_async(simBus, index, sim_retrieve_phonebook_entry_callback, callback);
 }
 
@@ -147,16 +162,21 @@ void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* num
 
         callback = userdata;
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
 
-        (*(callback)) (error, name, number);
-
+            (*(callback)) (error, name, number);
+            g_error_free(error);
+        }
+        
+        g_error_free(dbus_error);
+        free(name);
+        free(number);
 }
 
 
 void sim_retrieve_message(const int index, void (*callback)(GError*, char*, char*)) {
-    if(callback != NULL)
         org_freesmartphone_GSM_SIM_retrieve_message_async(simBus, index, sim_retrieve_message_callback, callback);
 }
 
@@ -165,11 +185,18 @@ void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, 
         GError *error = NULL;
 
         callback = userdata;
+        
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+            (*(callback)) (error, number, content);
+            g_error_free(error);
+        }
 
-        (*(callback)) (error, number, content);
+        g_error_free(dbus_error);
+        free(number);
+        free(content);
 }
 
 

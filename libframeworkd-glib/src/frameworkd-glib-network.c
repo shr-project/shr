@@ -56,10 +56,9 @@ GError* network_handle_errors(GError *dbus_error) {
         return g_error_new (NETWORK_ERROR, networkError, "TODO: %s", error_name);
 }
 
-        void network_register(void (*callback)(GError *)) {
-                if(callback != NULL) 
-                        org_freesmartphone_GSM_Network_register_async(networkBus, network_register_callback, callback);
-        }
+void network_register(void (*callback)(GError *)) {
+    org_freesmartphone_GSM_Network_register_async(networkBus, network_register_callback, callback);
+}
 
 void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
         void (*callback)(GError*) = NULL;
@@ -67,17 +66,20 @@ void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer use
 
         callback = userdata;
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
         
-        if(callback != NULL)
             (*(callback)) (error);
+            g_error_free(error);
+        }
+
+        g_error_free(dbus_error);
 }
 
-        void network_register_with_provider(int provider_id, void (*callback)(GError *)) {
-                if(callback != NULL)
-                        org_freesmartphone_GSM_Network_register_with_provider_async(networkBus, provider_id, network_register_callback, callback);
-        }
+void network_register_with_provider(int provider_id, void (*callback)(GError *)) {
+    org_freesmartphone_GSM_Network_register_with_provider_async(networkBus, provider_id, network_register_callback, callback);
+}
 
 void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
         void (*callback)(GError*) = NULL;
@@ -85,10 +87,15 @@ void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error
 
         callback = userdata;
 
-        if(dbus_error != NULL)
+        if(callback != NULL) {
+            if(dbus_error != NULL)
                 error = dbus_handle_errors(dbus_error);
 
-        (*(callback)) (error);
+            (*(callback)) (error);
+            g_error_free(error);
+        }
+
+        g_error_free(dbus_error);
 
 }
 

@@ -47,19 +47,24 @@ void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer use
 
 }
 
-        void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int)) {
-                if(number != NULL && content != NULL && callback != NULL)
-                        org_freesmartphone_GSM_SMS_send_message_async(smsBus, number, content, report, sms_send_message_callback, callback);
-        }
+void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int)) {
+    if(number != NULL && content != NULL)
+        org_freesmartphone_GSM_SMS_send_message_async(smsBus, number, content, report, sms_send_message_callback, callback);
+}
 
 void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *dbus_error, gpointer userdata) {
         void (*callback)(GError*, int) = NULL;
         GError *error = NULL;
 
         callback = userdata;
+        
+        if(callback != NULL) {
+            if(dbus_error != NULL)
+                    error = dbus_handle_errors(dbus_error);
 
-        if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+            (*(callback)) (error, transaction_index);
+            g_error_free(error);
+        }
 
-        (*(callback)) (error, transaction_index);
+        g_error_free(dbus_error);
 }
