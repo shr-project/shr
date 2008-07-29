@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd" doc:id="freesmartphone-gsm-device-interface">
+
+<doc:doc>
+  <doc:summary>freesmartphone.org GSM Device Interface</doc:summary>
+</doc:doc>
+
+<interface name="org.freesmartphone.GSM.Device">
+
+  <doc:doc>
+    <doc:para>
+    The Device object is used to give information about the GSM device
+    and its capabilities. Use it also to enable or disable the RF
+    subsystem (which is mandatory for implementing a flight mode).
+    </doc:para>
+  </doc:doc>
+
+  <method name="GetInfo">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_device" />
+    <doc:doc>
+      <doc:description>Get information about the GSM device.</doc:description>
+      <doc:inote>
+      This can map to the following GSM 07.07 commands:
+      +CGMI (see 3GPP TS 07.07 Chapter 5.1)
+      +CGMM (see 3GPP TS 07.07 Chapter 5.2)
+      +CGMR (see 3GPP TS 07.07 Chapter 5.3)
+      +CGSN (see 3GPP TS 07.07 Chapter 5.4)
+      </doc:inote>
+    </doc:doc>
+    <arg type="a{sv}" name="info" direction="out">
+      <doc:doc>
+        <doc:summary>
+          Information about this GSM device. Expected tuples are:
+          ("vendor", string), ("name", string), ("revision", string), ("serial", string:).
+        </doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="GetAntennaPower">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_device" />
+    <doc:doc>
+        <doc:inote>This maps to the GSM 07.07 command +CFUN=?, see 3GPP TS 07.07 Chapter 8.2.</doc:inote>
+    </doc:doc>
+    <arg type="b" name="antenna_power" direction="out">
+      <doc:doc>
+        <doc:summary>True, when the antenna is powered on. False, otherwise.</doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="SetAntennaPower">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_device" />
+    <doc:doc>
+        <doc:inote>This maps to the GSM 07.07 command +CFUN=(antenna_power), see 3GPP TS 07.07 Chapter 8.2</doc:inote>
+    </doc:doc>
+    <arg type="b" name="antenna_power" direction="in">
+      <doc:doc>
+        <doc:summary>True, for powering on the antenna. False, otherwise.</doc:summary>
+      </doc:doc>
+    </arg>
+  </method>
+
+  <method name="GetFeatures">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_device" />
+    <doc:doc>
+      <doc:description>Get information about the telephony features supported by this device.</doc:description>
+      <doc:inote>This maps to the GSM 07.07 command +GCAP, see 3GPP TS 07.07 Chapter 5.8.</doc:inote>
+    </doc:doc>
+    <arg type="a{sv}" name="features" direction="out">
+    <doc:doc>
+      <doc:summary>
+        The telephony features supported by this device. Expected tuples are:
+        ("GSM", string), ("FAX", string), ("WS", string), ("GPRS", string).
+      </doc:summary>
+      <doc:inote>
+        This also maps to the GSM 07.07 commands +FCLASS=?, +WS46=?, and +CGCLASS=?,
+        see 3GPP TS 07.07 Chapters 5.10, 5.10, and 10.1.11.
+      </doc:inote>
+    </doc:doc>
+    </arg>
+  </method>
+
+  <method name="PrepareToSuspend">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_device" />
+    <doc:doc>
+      <doc:description>Prepare the GSM device for a suspend.</doc:description>
+      <doc:inote>This can be used to (temporarily) turn off unsolicited messages.</doc:inote>
+    </doc:doc>
+  </method>
+
+  <method name="RecoverFromSuspend">
+    <annotation name="org.freedesktop.DBus.GLib.Async" value="fso_gsm_device" />
+    <doc:doc>
+      <doc:description>Recover the GSM device from a suspend.</doc:description>
+      <doc:inote>This can be used to turn on unsolicited messages and catch up with the status.</doc:inote>
+    </doc:doc>
+</method>
+
+</interface>
+</node>
