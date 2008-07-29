@@ -17,7 +17,7 @@ BUILT_SOURCES= dialer-marshal.c dialer-marshal.h
 
 lib_LTLIBRARIES = libframeworkd-glib.la
 
-libframeworkd_glib_la_SOURCES = frameworkd-glib-phonegui.h \
+libframeworkd_glib_la_SOURCES = \
 	frameworkd-glib-dbus.c frameworkd-glib-dbus.h \
   frameworkd-glib-sim.c frameworkd-glib-sim.h \
   frameworkd-glib-network.c frameworkd-glib-network.h \
@@ -31,8 +31,7 @@ libframeworkd_glib_HEADERS = frameworkd-glib-dbus.h \
   				  frameworkd-glib-network.h \
 				  frameworkd-glib-call.h \
 				  frameworkd-glib-device.h \
-				  frameworkd-glib-sms.h \
-				  frameworkd-glib-phonegui.h
+				  frameworkd-glib-sms.h 
 
 libframeworkd_glibdir = $(includedir)/frameworkd-glib
 

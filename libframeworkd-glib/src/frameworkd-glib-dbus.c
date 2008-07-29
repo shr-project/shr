@@ -71,7 +71,7 @@ GError* dbus_handle_errors(GError *dbus_error) {
         return error;
 }
 
-void dbus_connect_to_bus() {
+void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
         DBusGConnection *bus;
 
         GError *error = NULL;
@@ -92,6 +92,7 @@ void dbus_connect_to_bus() {
 
         if (!bus)
                 lose_gerror ("Couldn't connect to system bus", error);
+
 #ifdef DEBUG
         printf("Getting the interfaces\n");
 #endif
@@ -109,50 +110,64 @@ void dbus_connect_to_bus() {
         dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
         dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_BOOLEAN_STRING, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
 
+        if(fwHandler != NULL) {
 #ifdef DEBUG
-        printf("Adding signals.\n");
+                printf("Adding signals.\n");
 #endif
+                if(fwHandler->networkStatus != NULL) {
+                        dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+                        dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
+                                        fwHandler->networkStatus, NULL);
 
-        dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
-                        NULL, NULL);
 #ifdef DEBUG
-        printf("Added network Status.\n");
+                        printf("Added network Status.\n");
 #endif
-
-        dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_UINT , G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal (networkBus, "SignalStrength", G_CALLBACK (network_signal_strength_handler),
-                        NULL, NULL);
+                }
+                if(fwHandler->networkSignalStrength != NULL) {
+                        dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_UINT , G_TYPE_INVALID);
+                        dbus_g_proxy_connect_signal (networkBus, "SignalStrength", G_CALLBACK (network_signal_strength_handler),
+                                        fwHandler->networkSignalStrength, NULL);
 #ifdef DEBUG
-        printf("Added network SignalStrength.\n");
+                        printf("Added network SignalStrength.\n");
 #endif
+                }
+                if(fwHandler->simAuthStatus != NULL) {
 
-        dbus_g_proxy_add_signal (simBus, "AuthStatus", G_TYPE_STRING, G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal (simBus, "AuthStatus", G_CALLBACK (sim_auth_status_handler),
-                        NULL, NULL);
+                        dbus_g_proxy_add_signal (simBus, "AuthStatus", G_TYPE_STRING, G_TYPE_INVALID);
+                        dbus_g_proxy_connect_signal (simBus, "AuthStatus", G_CALLBACK (sim_auth_status_handler),
+                                        fwHandler->simAuthStatus, NULL);
 #ifdef DEBUG
-        printf("Added sim AuthStatus.\n");
+                        printf("Added sim AuthStatus.\n");
 #endif
+                }
+                if(fwHandler->callCallStatus != NULL) {
 
-        dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (call_status_handler),
-                        NULL, NULL);
+                        dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+                        dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (call_status_handler),
+                                        fwHandler->callCallStatus, NULL);
 #ifdef DEBUG
-        printf("Added call CallStatus.\n");
+                        printf("Added call CallStatus.\n");
 #endif
+                }
 
-        dbus_g_proxy_add_signal (smsBus, "MessageSent", G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal (smsBus, "MessageSent", G_CALLBACK (sms_message_sent_handler),
-                        NULL, NULL);
+                if(fwHandler->smsMessageSent != NULL) {
+
+                        dbus_g_proxy_add_signal (smsBus, "MessageSent", G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
+                        dbus_g_proxy_connect_signal (smsBus, "MessageSent", G_CALLBACK (sms_message_sent_handler),
+                                        fwHandler->smsMessageSent, NULL);
 #ifdef DEBUG
-        printf("Added sms MessageSent.\n");
+                        printf("Added sms MessageSent.\n");
 #endif
+                }
+                if(fwHandler->smsIncomingMessage != NULL) {
 
-        dbus_g_proxy_add_signal (smsBus, "IncomingMessage", G_TYPE_UINT, G_TYPE_INVALID);
-        dbus_g_proxy_connect_signal (smsBus, "IncomingMessage", G_CALLBACK (sms_incoming_message_handler),
-                        NULL, NULL);
+
+                        dbus_g_proxy_add_signal (smsBus, "IncomingMessage", G_TYPE_UINT, G_TYPE_INVALID);
+                        dbus_g_proxy_connect_signal (smsBus, "IncomingMessage", G_CALLBACK (sms_incoming_message_handler),
+                                        fwHandler->smsIncomingMessage, NULL);
 #ifdef DEBUG
-        printf("Added sms IncomingMessage.\n");
+                        printf("Added sms IncomingMessage.\n");
 #endif
-
+                }
+        }
 }

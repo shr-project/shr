@@ -28,11 +28,23 @@
 DBusGProxy *smsBus = NULL;
 
 void sms_message_sent_handler (DBusGProxy *proxy, const int id, const gboolean success, const char* reason, gpointer user_data) {
-        printf ("Received message sent status");
+    void (*callback)(const int, const gboolean, const char*) = NULL;
+
+    callback = user_data;
+
+    if(callback != NULL)
+        (*callback)(id, success, reason);
+
 }
 
 void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer user_data) {
-        printf ("Received incoming message status");
+        void (*callback)(const int) = NULL;
+
+        callback = user_data;
+
+        if(callback != NULL)
+                (*callback)(id);
+
 }
 
         void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int)) {

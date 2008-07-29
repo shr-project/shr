@@ -28,6 +28,15 @@
 
 #define DBUS_TYPE_G_STRING_VARIANT_HASHTABLE (dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE))
 
+typedef struct {
+    void (*networkStatus)(GHashTable **);
+    void (*networkSignalStrength)(const int);
+    void (*simAuthStatus)(const int);
+    void (*callCallStatus)(const int, const int, GHashTable **);
+    void (*smsMessageSent)(const int, gboolean, const char*) ;
+    void (*smsIncomingMessage)(const int);
+} FrameworkdHandlers;
+
 void lose (const char *str, ...);
 void lose_gerror (const char *prefix, GError *error);
 GError* dbus_handle_errors(GError *dbus_error); 

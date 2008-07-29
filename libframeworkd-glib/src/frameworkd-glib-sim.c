@@ -31,16 +31,12 @@ DBusGProxy *simBus = NULL;
 
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data)
 { 
-    int st = sim_handle_authentication_state(status);
-    if(st == SIM_READY) {
-        phonegui_destroy_pin_UI();       
-    }
-    else {
-          phonegui_display_pin_UI(st);
-    }
-#ifdef DEBUG
-	printf ("Auth status handler calling the UI on a %s signal", status);
-#endif
+    int st;
+    void (*callback)(const int) = NULL;
+    
+    st = sim_handle_authentication_state(status);
+    if(callback != NULL)
+        (*callback)(st);
 
 }
 

@@ -33,6 +33,7 @@ static gboolean connected_to_network = FALSE;
 
 int main(int argc, char ** argv) {
         GMainLoop *mainloop = NULL;
+        FrameworkdHandlers fwHandler;
 
         g_type_init();
 
@@ -40,7 +41,15 @@ int main(int argc, char ** argv) {
         printf("Starting...\n");
 #endif
         mainloop = g_main_loop_new (NULL, FALSE);
-        dbus_connect_to_bus();
+
+        fwHandler.networkStatus = ophonekitd_network_status_handler;
+        fwHandler.simAuthStatus = ophonekitd_sim_auth_status_handler;
+        fwHandler.callCallStatus = ophonekitd_call_status_handler;
+        fwHandler.smsMessageSent = ophonekitd_sms_message_sent_handler;
+        fwHandler.smsIncomingMessage = ophonekitd_sms_incoming_message_handler;
+        fwHandler.networkSignalStrength = NULL;
+
+        dbus_connect_to_bus(&fwHandler);
         phonegui_init(argc, argv);
 #ifdef DEBUG
         printf("Connected to the buses\n");
@@ -78,4 +87,29 @@ void register_to_network_callback(GError *error) {
                 /* Antenna works, registered to network */
                 connected_to_network = TRUE;
         }
+}
+
+void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable **properties) {
+}
+
+void ophonekitd_network_status_handler(GHashTable **status) {
+}
+
+void ophonekitd_sim_auth_status_handler(const int status) {
+        if(status == SIM_READY) {
+                phonegui_destroy_pin_UI();
+        }
+        else {
+                phonegui_display_pin_UI(status);
+        }
+#ifdef DEBUG
+        printf ("Auth status handler calling the UI on a %i signal", status);
+#endif
+
+}
+
+void ophonekitd_sms_message_sent_handler(const int id, gboolean success, const char* reason) {
+}
+
+void ophonekitd_sms_incoming_message_handler(const int id) {
 }

@@ -29,12 +29,22 @@ DBusGProxy *networkBus = NULL;
 
 void network_status_handler (DBusGProxy *proxy, const  GHashTable ** status, gpointer user_data)
 {
-        printf ("Received network status");
+    void (*callback)(GHashTable **) = NULL;
+
+    callback = user_data;
+
+    if(callback != NULL)
+        (*callback)(status);
 }
 
 void network_signal_strength_handler (DBusGProxy *proxy, const int signal_strength, gpointer user_data)
 {
-        printf ("Received network signal strength");
+    void (*callback)(const int) = NULL;
+
+    callback = user_data;
+
+    if(callback != NULL)
+         (*callback)(signal_strength);
 }
 
 GError* network_handle_errors(GError *dbus_error) {
