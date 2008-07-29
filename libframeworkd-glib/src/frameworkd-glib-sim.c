@@ -35,6 +35,8 @@ void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer us
     void (*callback)(const int) = NULL;
     
     st = sim_handle_authentication_state(status);
+    callback = user_data;
+
     if(callback != NULL)
         (*callback)(st);
 
