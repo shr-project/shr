@@ -240,20 +240,40 @@ gboolean is_desktop_window( Window window )
     return FALSE;
 }
 
+static void neod_buttonaction_add_input ( int input, const char *syspath, const char *name)
+{
+    char* filename = g_strdup_printf( "/dev/input/event%d", input ); /* we currently assume that eventX == /sys/class/input/inputX */
+    input_fd[max_input_fd].fd = open( filename, O_RDONLY );
+    if ( input_fd[max_input_fd].fd < 0 )
+        g_debug ( "Failed to open /dev/input/event%d for input %s %s\n", input, syspath, name);
+    else {
+        g_debug( "%s open OK, fd = '%d' (input %s %s)", filename, input_fd[max_input_fd].fd, syspath, name);
+        max_input_fd ++;
+    }
+    g_free ( filename );
+}
+
 gboolean neod_buttonactions_install_watcher()
 {
     int i = 0;
     for ( ; i < 10; ++i )
     {
-        char* filename = g_strdup_printf( "/dev/input/event%d", i );
-        input_fd[i].fd = open( filename, O_RDONLY );
-        if ( input_fd[i].fd < 0 )
-            break;
-        else
-            g_debug( "'%s' open OK, fd = '%d'", filename, input_fd[i].fd );
+        char *filename = g_strdup_printf( "/sys/class/input/input%d/name", i );
+        gchar *content;
+        if ( g_file_get_contents ( filename, &content, NULL, NULL ) )
+        {
+            if ( ( ! strcmp ( content, "Neo1973 Buttons" ) ) ||
+               ( ! strcmp ( content, "s3c2410 TouchScreen" ) ) ||
+               ( ! strcmp ( content, "FIC Neo1973 PMU events" ) ) ||
+               ( ! strcmp ( content, "GTA02 PMU events" ) ) )
+            {
+                neod_buttonaction_add_input ( i, filename, content );
+            }
+            g_free(content);
+        }
+        g_free (filename);
     }
 
-    max_input_fd = i - 1;
     g_debug( "opened %d input nodes.", max_input_fd + 1 );
     if ( max_input_fd <= 0 )
     {
@@ -294,7 +314,9 @@ gboolean neod_buttonactions_install_watcher()
 
 gboolean neod_buttonactions_input_dispatch ( GIOChannel *source, GIOCondition condition, gpointer data )
 {
+    /*
     input_fd_t *input = data;
+    */
     if ( condition & G_IO_IN )
     {
         struct input_event event;
@@ -756,6 +778,7 @@ void neod_buttonactions_show_power_menu()
     static GtkWidget* gpspower = 0;
     static GtkWidget* wifipower = 0;
     static GtkWidget* pmprofile = 0;
+    gchar *tmp;
 
     // remember last active window before showing popup menu
     last_active_window = get_window_property( gdk_x11_get_default_root_xwindow(), gdk_x11_get_xatom_by_name("_NET_ACTIVE_WINDOW") );
@@ -826,10 +849,14 @@ void neod_buttonactions_show_power_menu()
         gtk_box_pack_start_defaults( GTK_BOX(GTK_DIALOG(power_menu)->vbox), box );
     }
 
-    gtk_button_set_label( GTK_BUTTON(gsmpower), g_strdup_printf( "Turn %s GSM", is_turned_on( GSM ) ? "off" : "on" ) );
-    gtk_button_set_label( GTK_BUTTON(btpower), g_strdup_printf( "Turn %s Bluetooth", is_turned_on( BLUETOOTH ) ? "off" : "on" ) );
-    gtk_button_set_label( GTK_BUTTON(gpspower), g_strdup_printf( "Turn %s GPS", is_turned_on( GPS ) ? "off" : "on" ) );
-    gtk_button_set_label( GTK_BUTTON(wifipower), g_strdup_printf( "Turn %s Wifi", is_turned_on( WIFI ) ? "off" : "on" ) );
+    gtk_button_set_label( GTK_BUTTON(gsmpower), tmp = g_strdup_printf( "Turn %s GSM", is_turned_on( GSM ) ? "off" : "on" ) );
+    g_free ( tmp );
+    gtk_button_set_label( GTK_BUTTON(btpower), tmp = g_strdup_printf( "Turn %s Bluetooth", is_turned_on( BLUETOOTH ) ? "off" : "on" ) );
+    g_free ( tmp );
+    gtk_button_set_label( GTK_BUTTON(gpspower), tmp = g_strdup_printf( "Turn %s GPS", is_turned_on( GPS ) ? "off" : "on" ) );
+    g_free ( tmp );
+    gtk_button_set_label( GTK_BUTTON(wifipower), tmp = g_strdup_printf( "Turn %s Wifi", is_turned_on( WIFI ) ? "off" : "on" ) );
+    g_free ( tmp );
 
     int response = gtk_dialog_run( GTK_DIALOG(power_menu) );
     g_debug( "gtk_dialog_run completed, response = %d", response );
@@ -1001,15 +1028,17 @@ void neod_buttonactions_set_display( int brightness )
                 g_debug( "backlight_node_dir = %s", backlight_node_dir );
                 backlight_node = g_strdup_printf( SYS_CLASS_BACKLIGHT "%s/brightness", backlight_node_dir );
                 g_debug( "detected backlight in sysfs as '%s'", backlight_node );
-                const gchar* backlight_node_max_brightness = g_strdup_printf( SYS_CLASS_BACKLIGHT "%s/max_brightness", backlight_node_dir );
+                gchar* backlight_node_max_brightness = g_strdup_printf( SYS_CLASS_BACKLIGHT "%s/max_brightness", backlight_node_dir );
 
                 FILE* f = fopen( backlight_node_max_brightness, "r" );
                 if ( f == NULL )
                 {
                     g_debug( "can't open max brightness '%s': (%s), aborting.", backlight_node_max_brightness, strerror( errno ) );
                     g_dir_close( backlight_class_dir );
+		    g_free ( backlight_node_max_brightness );
                     return;
                 }
+		g_free ( backlight_node_max_brightness );
                 fscanf( f, "%d", &backlight_max_brightness );
                 fclose( f );
                 g_debug( "scanned maximum brightness for '%s' = '%d'", backlight_node, backlight_max_brightness );
