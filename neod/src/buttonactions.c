@@ -251,10 +251,10 @@ gboolean neod_buttonactions_install_watcher()
 	g_free ( filename );
         if ( input_fd[max_input_fd].fd < 0 )
 	{
-            g_debug ( "Failed to open %s\n", filename);
+            g_debug ( "Failed to open input%d", i);
 	    continue;
         }
-        g_debug( "input%d open OK, fd = '%d - ", i, input_fd[max_input_fd].fd);
+        g_debug( "input%d open OK, fd = '%d", i, input_fd[max_input_fd].fd);
 
         if( ioctl( input_fd[i].fd, EVIOCGNAME(sizeof(name)), name ) < 0)
         {
@@ -263,18 +263,17 @@ gboolean neod_buttonactions_install_watcher()
             continue;
         }
 
-        g_debug( "input%d node corresponds to %s - ", i, name );
 
         if ( strcmp ( name, "Neo1973 Buttons" ) &&
              strcmp ( name, "s3c2410 TouchScreen" ) &&
              strcmp ( name, "FIC Neo1973 PMU events" ) &&
              strcmp ( name, "GTA02 PMU events" ) )
         {
-	    g_debug ( "skipped\n" );
+            g_debug( "input%d node corresponds to %s - skipped", i, name );
 	    close ( input_fd[i].fd );
 	    continue;
-        } 
-	g_debug ( " kept\n" );
+        }
+        g_debug( "input%d node corresponds to %s - kept", i, name );
         max_input_fd ++;
     }
 
