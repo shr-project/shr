@@ -298,7 +298,7 @@ mb_panel_applet_create(const char* id, GtkOrientation orientation)
 
     applet->state = 1;
 
-    connect_to_frameworkd();
+
 
     // tap-with-hold menu (NOTE: temporary: left button atm.)
     GtkMenu* menu = GTK_MENU (gtk_menu_new());
@@ -328,7 +328,7 @@ mb_panel_applet_create(const char* id, GtkOrientation orientation)
 
     applet->timeout_id = g_timeout_add_seconds (QUERY_FREQ, gsm_applet_timeout_cb, 
       applet);
-      
+    connect_to_frameworkd();      
     return GTK_WIDGET(mokoapplet);
 }
 
@@ -343,6 +343,11 @@ void connect_to_frameworkd() {
         dbus_connect_to_bus(&fwHandler);
 }
 
+void display_hash_value(gpointer key, gpointer value, gpointer user_data) {
+    printf("Key : %s, Value : %s\n",key,value);
+}
+
+
 void gsmpanel_network_status_handler (GHashTable * status)
 {
     char *provider = NULL;
@@ -351,10 +356,14 @@ void gsmpanel_network_status_handler (GHashTable * status)
     
     int regStatus = network_get_registration_status(status); 
     int type = -1;
-    
+    int strength = 99;
+
+    //g_hash_table_foreach(status,display_hash_value,NULL);
     lac = network_get_location_area(status);
     cell = network_get_cell_id(status);
     provider = network_get_provider(status);
+    strength = network_get_signal_strength(status);
+
     switch(regStatus) {
         case NETWORK_PROPERTY_REGISTRATION_UNREGISTERED:
             type = 0;
@@ -376,7 +385,9 @@ void gsmpanel_network_status_handler (GHashTable * status)
     if(regStatus == NETWORK_PROPERTY_REGISTRATION_HOME || regStatus == NETWORK_PROPERTY_REGISTRATION_ROAMING) {
             gsm_applet_network_current_operator_cb(provider);
     }
-   
+    if(strength != 0) {
+        gsm_applet_update_signal_strength(strength, theApplet);
+    }
 }
 
 void gsmpanel_network_signal_strength_handler (const int signal_strength)

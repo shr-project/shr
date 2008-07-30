@@ -100,11 +100,13 @@ void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error
 }
 
 int network_get_registration_status(GHashTable *properties) {
+    GValue* reg = NULL;
     char *registration = NULL;
 
-    if(properties == NULL || ((registration = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_REGISTRATION)) == NULL))
+    if(properties == NULL || ((reg = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_REGISTRATION)) == NULL))
         return NETWORK_PROPERTY_REGISTRATION_UNKNOWN;
 
+    registration = g_value_get_string(reg);
 
     if(!strcmp(registration, DBUS_NETWORK_PROPERTY_REGISTRATION_UNREGISTERED)) {
         return NETWORK_PROPERTY_REGISTRATION_UNREGISTERED;
@@ -122,24 +124,44 @@ int network_get_registration_status(GHashTable *properties) {
 }
 
 char* network_get_location_area(GHashTable *properties) {
-    return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_LOCATION_AREA);
+    GValue* lac;
+    
+    if(properties != NULL) {
+        lac = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_LOCATION_AREA);
+        return lac == NULL ? NULL : g_value_get_string(lac);
+    }
+
+    return NULL;
 }
 
 char* network_get_provider(GHashTable *properties) {
-        return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_PROVIDER);
+    GValue* provider;
+    
+    if(properties != NULL) {
+        provider = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_PROVIDER);
+        return provider == NULL ?  NULL : g_value_get_string(provider);
+    }
+    return NULL;
 }
 
 char* network_get_cell_id(GHashTable *properties) {
-        return properties == NULL ? NULL : g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_CELL_ID);
+    GValue* cid;
+    
+    if(properties != NULL) {
+        cid = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_CELL_ID);
+        return cid == NULL ? NULL : g_value_get_string(cid);
+    }
+
+    return NULL;
 }
 
 int network_get_signal_strength(GHashTable *properties) {
-        int *strength = NULL;
+        GValue* strength = NULL;
 
         if(properties == NULL)
                 return 0;
 
         strength = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_STRENGTH);
-        return strength == NULL ? 0 : *strength;
+        return strength == NULL ? 0 : g_value_get_int(strength);
 }
 
