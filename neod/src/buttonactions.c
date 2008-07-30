@@ -81,10 +81,15 @@ static int backlight_max_brightness = 1;
 
 static gboolean moko_debug = TRUE;
 
-GPollFD input_fd[10];
-int max_input_fd = 0;
+typedef struct input_fd_t
+{
+	int fd;
+	GIOChannel *gc;
+	guint watch;
+} input_fd_t;
 
-GIOChannel* touchscreen_io;
+input_fd_t input_fd[10];
+int max_input_fd = 0;
 
 int aux_timer = -1;
 int power_timer = -1;
@@ -255,23 +260,15 @@ gboolean neod_buttonactions_install_watcher()
         g_debug( "can't open ANY input node. no watcher installed." );
         return FALSE;
     }
-    static GSourceFuncs funcs = {
-        neod_buttonactions_input_prepare,
-        neod_buttonactions_input_check,
-        neod_buttonactions_input_dispatch,
-    NULL,
-    };
-    GSource* button_watcher = g_source_new( &funcs, sizeof (GSource) );
 
     for ( i = 0; i <= max_input_fd; ++i )
     {
-        input_fd[i].events = G_IO_IN | G_IO_HUP | G_IO_ERR;
-        input_fd[i].revents = 0;
-        g_source_add_poll( button_watcher, &input_fd[i] );
+        input_fd[i].gc = g_io_channel_unix_new ( input_fd[i].fd );
+        g_io_channel_set_encoding ( input_fd[i].gc, NULL, NULL );
+        input_fd[i].watch = g_io_add_watch ( input_fd[i].gc, G_IO_IN | G_IO_HUP | G_IO_ERR, neod_buttonactions_input_dispatch, &input_fd[i] );
         g_debug( "added fd %d to list of watchers", input_fd[i].fd );
     }
-    g_source_attach( button_watcher, NULL );
-
+    
     // get PM profile setting from gconf and listen for changes
     gconfc = gconf_client_get_default();
     if (!gconfc)
@@ -295,35 +292,21 @@ gboolean neod_buttonactions_install_watcher()
     return TRUE;
 }
 
-gboolean neod_buttonactions_input_prepare( GSource* source, gint* timeout )
+gboolean neod_buttonactions_input_dispatch ( GIOChannel *source, GIOCondition condition, gpointer data )
 {
-    return FALSE;
-}
-
-
-gboolean neod_buttonactions_input_check( GSource* source )
-{
-    for ( int i = 0; i <= max_input_fd; ++i )
-        if ( input_fd[i].revents & G_IO_IN )
-            return TRUE;
-    return FALSE;
-}
-
-
-gboolean neod_buttonactions_input_dispatch( GSource* source, GSourceFunc callback, gpointer data )
-{
-    for ( int i = 0; i <= max_input_fd; ++i )
+    input_fd_t *input = data;
+    if ( condition & G_IO_IN )
     {
-        if ( input_fd[i].revents & G_IO_IN )
+        struct input_event event;
+	gsize size;
+        GIOStatus status = g_io_channel_read_chars ( source, (gchar *)&event, sizeof( struct input_event ), &size, NULL );
+        if ( moko_debug )
         {
-            struct input_event event;
-            int size = read( input_fd[i].fd, &event, sizeof( struct input_event ) );
-            if ( moko_debug )
-            {
-                g_debug( "read %d bytes from fd %d", size, input_fd[i].fd );
-                g_debug( "input event = ( %0x, %0x, %0x )", event.type, event.code, event.value );
-            }
-
+            g_debug( "read %d bytes. status = %d. ", size, status);
+            g_debug( "input event = ( %0x, %0x, %0x )", event.type, event.code, event.value );
+        }
+	if ( status == G_IO_STATUS_NORMAL)
+	{
             if ( event.type == 1 && event.code == AUX_BUTTON_KEYCODE )
             {
                 if ( event.value == 1 ) /* pressed */
