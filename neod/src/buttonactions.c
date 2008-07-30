@@ -256,10 +256,10 @@ gboolean neod_buttonactions_install_watcher()
         }
         g_debug( "input%d open OK, fd = '%d", i, input_fd[max_input_fd].fd);
 
-        if( ioctl( input_fd[i].fd, EVIOCGNAME(sizeof(name)), name ) < 0)
+        if( ioctl( input_fd[max_input_fd].fd, EVIOCGNAME(sizeof(name)), name ) < 0)
         {
             perror("evdev ioctl");
-	    close ( input_fd[i].fd );
+	    close ( input_fd[max_input_fd].fd );
             continue;
         }
 
@@ -270,7 +270,7 @@ gboolean neod_buttonactions_install_watcher()
              strcmp ( name, "GTA02 PMU events" ) )
         {
             g_debug( "input%d node corresponds to %s - skipped", i, name );
-	    close ( input_fd[i].fd );
+	    close ( input_fd[max_input_fd].fd );
 	    continue;
         }
         g_debug( "input%d node corresponds to %s - kept", i, name );
