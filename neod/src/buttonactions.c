@@ -240,38 +240,42 @@ gboolean is_desktop_window( Window window )
     return FALSE;
 }
 
-static void neod_buttonaction_add_input ( int input, const char *syspath, const char *name)
-{
-    char* filename = g_strdup_printf( "/dev/input/event%d", input ); /* we currently assume that eventX == /sys/class/input/inputX */
-    input_fd[max_input_fd].fd = open( filename, O_RDONLY );
-    if ( input_fd[max_input_fd].fd < 0 )
-        g_debug ( "Failed to open /dev/input/event%d for input %s %s\n", input, syspath, name);
-    else {
-        g_debug( "%s open OK, fd = '%d' (input %s %s)", filename, input_fd[max_input_fd].fd, syspath, name);
-        max_input_fd ++;
-    }
-    g_free ( filename );
-}
-
 gboolean neod_buttonactions_install_watcher()
 {
     int i = 0;
     for ( ; i < 10; ++i )
     {
-        char *filename = g_strdup_printf( "/sys/class/input/input%d/name", i );
-        gchar *content;
-        if ( g_file_get_contents ( filename, &content, NULL, NULL ) )
-        {
-            if ( ( ! strcmp ( content, "Neo1973 Buttons" ) ) ||
-               ( ! strcmp ( content, "s3c2410 TouchScreen" ) ) ||
-               ( ! strcmp ( content, "FIC Neo1973 PMU events" ) ) ||
-               ( ! strcmp ( content, "GTA02 PMU events" ) ) )
-            {
-                neod_buttonaction_add_input ( i, filename, content );
-            }
-            g_free(content);
+        char name[256] = "Unknown";
+        char* filename = g_strdup_printf( "/dev/input/event%d", i ); /* we currently assume that eventX == /sys/class/input/inputX */
+        input_fd[max_input_fd].fd = open( filename, O_RDONLY );
+	g_free ( filename );
+        if ( input_fd[max_input_fd].fd < 0 )
+	{
+            g_debug ( "Failed to open %s\n", filename);
+	    continue;
         }
-        g_free (filename);
+        g_debug( "input%d open OK, fd = '%d - ", i, input_fd[max_input_fd].fd);
+
+        if( ioctl( input_fd[i].fd, EVIOCGNAME(sizeof(name)), name ) < 0)
+        {
+            perror("evdev ioctl");
+	    close ( input_fd[i].fd );
+            continue;
+        }
+
+        g_debug( "input%d node corresponds to %s - ", i, name );
+
+        if ( strcmp ( name, "Neo1973 Buttons" ) &&
+             strcmp ( name, "s3c2410 TouchScreen" ) &&
+             strcmp ( name, "FIC Neo1973 PMU events" ) &&
+             strcmp ( name, "GTA02 PMU events" ) )
+        {
+	    g_debug ( "skipped\n" );
+	    close ( input_fd[i].fd );
+	    continue;
+        } 
+	g_debug ( " kept\n" );
+        max_input_fd ++;
     }
 
     g_debug( "opened %d input nodes.", max_input_fd + 1 );
