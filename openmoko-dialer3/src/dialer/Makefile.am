@@ -13,7 +13,6 @@ openmoko_dialer_SOURCES = \
 
 openmoko_dialer_LDADD = @DIALER_LIBS@ \
                         @JANA_LIBS@ \
-                        @FRAMEWORKD_GLIB_LIBS@ \
 			$(top_srcdir)/src/common/libdialer-common.a \
 			$(top_srcdir)/libhito/libhito.a
 
