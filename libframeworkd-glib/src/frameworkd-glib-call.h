@@ -59,14 +59,11 @@ typedef enum {
 
 void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable * properties, gpointer user_data);
 
-void call_initiate(const char *number, const char* call_type, void (*callback)(GError *, int));
-void call_initiate_callback(DBusGProxy* proxy, int id_call, GError *dbus_error, gpointer userdata);
+void call_initiate(const char *number, const char* call_type, void (*callback)(GError *, int id_call, gpointer userdata), gpointer userdata);
 
-void call_release(const char *message, const int id_call, void (*callback)(GError *));
-void call_release_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userdata);
+void call_release(const char *message, const int id_call, void (*callback)(GError *, gpointer userdata), gpointer userdata);
 
-void call_activate(const int id_call, void (*callback)(GError *));
-void call_activate_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userdata);
+void call_activate(const int id_call, void (*callback)(GError *, gpointer userdata), gpointer userdata);
 
 extern DBusGProxy *callBus;
 
