@@ -52,8 +52,6 @@ struct _omp_config omp_default_config =
 	10000,                      // seek_distance
 	10000,                      // prev_track_treshold
 	TRUE,                       // show_numbers_in_pl
-	500000,                     // pulsesink_buffer_time
-	100000,                     // pulsesink_latency_time
 	TRUE,                       // main_ui_show_cover
 	OMP_MAIN_LABEL_HIDDEN,      // main_ui_label1
 	OMP_MAIN_LABEL_ARTIST,      // main_ui_label2
@@ -374,24 +372,6 @@ guint
 omp_config_get_prev_track_treshold()
 {
 	return omp_config->prev_track_treshold;
-}
-
-/**
- * Returns the value pulsesink's "buffer-time" property should be set to
- */
-gulong
-omp_config_get_pulsesink_buffer_time()
-{
-	return omp_config->pulsesink_buffer_time;
-}
-
-/**
- * Returns the value pulsesink's "latency-time" property should be set to
- */
-gulong
-omp_config_get_pulsesink_latency_time()
-{
-	return omp_config->pulsesink_latency_time;
 }
 
 /**

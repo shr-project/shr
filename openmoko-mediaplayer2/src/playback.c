@@ -39,9 +39,6 @@
 /// Our ticket to the gstreamer world
 GstElement *omp_gst_playbin = NULL;
 
-/// gstreamer audio output element
-GstElement *omp_gst_audiosink = NULL;
-
 /// Handle of the UI-updating timeout
 guint omp_playback_ui_timeout = 0;
 
@@ -112,16 +109,6 @@ omp_playback_init()
 		G_SIGNAL_RUN_FIRST, 0, 0, NULL, g_cclosure_marshal_VOID__STRING,
 		G_TYPE_NONE, 1, G_TYPE_STRING);
 
-	// Create audio sink for PulseAudio
-	omp_gst_audiosink = gst_element_factory_make("pulsesink", NULL);
-
-	if (!omp_gst_audiosink)
-	{
-		error_dialog_modal(_("Error: gstreamer failed to create the PulseAudio sink.\nPlease make sure gstreamer and its modules are properly installed (esp. gst-plugin-pulse)."));
-
-		return FALSE;
-	}
-
 	// Set up gstreamer pipe
 	omp_gst_playbin = gst_element_factory_make("playbin", NULL);
 
@@ -131,13 +118,6 @@ omp_playback_init()
 
 		return FALSE;
 	}
-
-	// Force playbin to use our own sink
-	g_object_set(G_OBJECT(omp_gst_playbin), "audio-sink", omp_gst_audiosink, NULL);
-
-	// Let's have gstreamer and PulseAudio meet embedded requirements
-	g_object_set(G_OBJECT(omp_gst_audiosink), "buffer-time", omp_config_get_pulsesink_buffer_time(), NULL);
-	g_object_set(G_OBJECT(omp_gst_audiosink), "latency-time", omp_config_get_pulsesink_latency_time(), NULL);
 
 	// Set up message hooks
 	bus = gst_pipeline_get_bus(GST_PIPELINE(omp_gst_playbin));

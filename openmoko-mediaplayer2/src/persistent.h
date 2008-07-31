@@ -70,8 +70,6 @@ struct _omp_config
 	gint seek_distance;               ///< Determines how many milliseconds the engine will seek when FFWD/REW'ing
 	guint prev_track_treshold;        ///< Amount of milliseconds a track must have been playing to jump back to track beginning on "prev track" event
 	gboolean show_numbers_in_pl;      ///< Show numbers in playlist?
-	gulong pulsesink_buffer_time;     ///< Value to set pulsesink's buffer-time property to
-	gulong pulsesink_latency_time;    ///< Value to set pulsesink's latency-time property to
 	gboolean main_ui_show_cover;      ///< Flag determining whether cover is shown or not
 	guint main_ui_label1;             ///< Contents of main UI's label #1
 	guint main_ui_label2;             ///< Contents of main UI's label #2
@@ -126,8 +124,6 @@ guint omp_config_get_repeat_mode();
 
 guint omp_config_get_seek_distance();
 guint omp_config_get_prev_track_treshold();
-gulong omp_config_get_pulsesink_buffer_time();
-gulong omp_config_get_pulsesink_latency_time();
 
 gboolean omp_config_get_main_ui_show_cover();
 guint omp_config_get_main_ui_label1();
