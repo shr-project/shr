@@ -64,8 +64,8 @@ void network_register_with_provider(int provider_id, void (*callback)(GError *))
 void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata);
 
 int network_get_registration_status(GHashTable *properties);
-char* network_get_location_area(GHashTable *properties);
-char* network_get_provider(GHashTable *properties);
-char* network_get_cell_id(GHashTable *properties);
+const char* network_get_location_area(GHashTable *properties);
+const char* network_get_provider(GHashTable *properties);
+const char* network_get_cell_id(GHashTable *properties);
 int network_get_signal_strength(GHashTable *properties);
 #endif

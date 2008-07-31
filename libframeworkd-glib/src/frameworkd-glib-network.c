@@ -101,7 +101,7 @@ void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error
 
 int network_get_registration_status(GHashTable *properties) {
     GValue* reg = NULL;
-    char *registration = NULL;
+    const char *registration = NULL;
 
     if(properties == NULL || ((reg = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_REGISTRATION)) == NULL))
         return NETWORK_PROPERTY_REGISTRATION_UNKNOWN;
@@ -123,7 +123,7 @@ int network_get_registration_status(GHashTable *properties) {
     return NETWORK_PROPERTY_REGISTRATION_UNKNOWN;
 }
 
-char* network_get_location_area(GHashTable *properties) {
+const char* network_get_location_area(GHashTable *properties) {
     GValue* lac;
     
     if(properties != NULL) {
@@ -134,7 +134,7 @@ char* network_get_location_area(GHashTable *properties) {
     return NULL;
 }
 
-char* network_get_provider(GHashTable *properties) {
+const char* network_get_provider(GHashTable *properties) {
     GValue* provider;
     
     if(properties != NULL) {
@@ -144,7 +144,7 @@ char* network_get_provider(GHashTable *properties) {
     return NULL;
 }
 
-char* network_get_cell_id(GHashTable *properties) {
+const char* network_get_cell_id(GHashTable *properties) {
     GValue* cid;
     
     if(properties != NULL) {
