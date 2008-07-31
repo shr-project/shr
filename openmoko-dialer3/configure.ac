@@ -21,8 +21,7 @@ PKG_CHECK_MODULES(DIALER,
                   libmokojournal2
                   libmokoui2
                   libpulse
-                  libframeworkd-glib
-                  libframeworkd-glib-phonegui-gtk)
+                  libframeworkd-glib)
 
 PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 PKG_CHECK_MODULES(NOTIFY, libnotify)
