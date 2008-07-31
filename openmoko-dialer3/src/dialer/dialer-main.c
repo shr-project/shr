@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 #include <gtk/gtk.h>
-//#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib.h>
 //#include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include <frameworkd-glib/frameworkd-glib-call.h>
@@ -61,13 +61,13 @@ void connect_to_frameworkd() {
 
 /* Callbacks from widgets */
 
-static DialerData *async_data;
-static void dial_clicked_call_initiated_done (GError *error, int call_id)
+static void dial_clicked_call_initiated_done (GError *error, int call_id, gpointer userdata)
 {
+  DialerData *data = userdata;
   if (error)
   {
     GtkWidget *dlg;
-    dlg = gtk_message_dialog_new (GTK_WINDOW (async_data->main_window), GTK_DIALOG_MODAL,
+    dlg = gtk_message_dialog_new (GTK_WINDOW (data->main_window), GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
                                   "Dialer Error:\n%s", error->message);
     g_warning (error->message);
@@ -95,8 +95,7 @@ dial_clicked_cb (GtkWidget *widget, const gchar *number, DialerData *data)
 
   g_debug ("Dial %s", number);
 
-  async_data = data;
-  call_initiate(number, CALL_TYPE_VOICE, dial_clicked_call_initiated_done);
+  call_initiate(number, CALL_TYPE_VOICE, dial_clicked_call_initiated_done, data);
 }
 
 static void
@@ -124,7 +123,7 @@ int main (int argc, char **argv)
   GtkWidget *window, *keypad;
   MokoJournal *journal;
 //  DBusGConnection *connection;
-  GError *error = NULL;
+  /* GError *error = NULL; */
   DialerData *data;
 
   program_log ("start dialer");
@@ -157,7 +156,6 @@ int main (int argc, char **argv)
 /*
   connection = dbus_g_bus_get (DBUS_BUS_SYSTEM,
                                &error);
-*/
 
   if (connection == NULL)
   {
@@ -171,7 +169,7 @@ int main (int argc, char **argv)
     g_error_free (error);
     exit (1);
   }
-
+*/
 /*
   program_log ("get PhoneKit dbus proxy object");
   data->dialer_proxy = dbus_g_proxy_new_for_name (connection, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
