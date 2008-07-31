@@ -17,7 +17,5 @@
 #ifndef _DIALER_MAIN_H
 #define _DIALER_MAIN_H
 #define DEBUG
-#define GSMD_BUS		"org.freesmartphone.ogsmd"
-#define BUS_PATH		"/org/freesmartphone/GSM/Device"
-#define CALL_INTERFACE		"org.freesmartphone.GSM.Call"
+
 #endif

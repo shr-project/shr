@@ -11,7 +11,9 @@ openmoko_dialer_SOURCES = \
 	moko-tips.c moko-tips.h \
 	dialer-main.c dialer-main.h
 
-openmoko_dialer_LDADD = @DIALER_LIBS@ @JANA_LIBS@ \
+openmoko_dialer_LDADD = @DIALER_LIBS@ \
+                        @JANA_LIBS@ \
+                        @FRAMEWORKD_GLIB_LIBS@ \
 			$(top_srcdir)/src/common/libdialer-common.a \
 			$(top_srcdir)/libhito/libhito.a
 

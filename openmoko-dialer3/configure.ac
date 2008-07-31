@@ -14,6 +14,11 @@ dnl glib-genmarshal
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 # base deps
+PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
+                  libframeworkd-glib,
+		  [],
+		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
+		 )
 PKG_CHECK_MODULES(DIALER,
                   dbus-glib-1
                   gtk+-2.0 
