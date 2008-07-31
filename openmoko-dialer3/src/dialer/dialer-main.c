@@ -61,11 +61,31 @@ void connect_to_frameworkd() {
 
 /* Callbacks from widgets */
 
+static DialerData *async_data;
+static void dial_clicked_call_initiated_done (GError *error, int call_id)
+{
+  if (error)
+  {
+    GtkWidget *dlg;
+    dlg = gtk_message_dialog_new (GTK_WINDOW (async_data->main_window), GTK_DIALOG_MODAL,
+                                  GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+                                  "Dialer Error:\n%s", error->message);
+    g_warning (error->message);
+    gtk_dialog_run (GTK_DIALOG (dlg));
+    gtk_widget_destroy (dlg);
+  }
+  else
+  {
+    g_debug ( "Call setup, call_id = %d\n", call_id);
+    /* the dbus object takes over now */
+    gtk_main_quit();
+  }
+
+}
+
 static void
 dial_clicked_cb (GtkWidget *widget, const gchar *number, DialerData *data)
 {
-  GError *error = NULL;
-
   if (!number)
   {
     gtk_notebook_set_current_page (GTK_NOTEBOOK (data->notebook), 1);
@@ -75,23 +95,8 @@ dial_clicked_cb (GtkWidget *widget, const gchar *number, DialerData *data)
 
   g_debug ("Dial %s", number);
 
-  call_initiate(number, CALL_TYPE_VOICE, &error);
-
-  if (error)
-  {
-    GtkWidget *dlg;
-    dlg = gtk_message_dialog_new (GTK_WINDOW (data->main_window), GTK_DIALOG_MODAL,
-                                  GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-                                  "Dialer Error:\n%s", error->message);
-    g_warning (error->message);
-    gtk_dialog_run (GTK_DIALOG (dlg));
-    gtk_widget_destroy (dlg);
-  }
-  else
-  {
-    /* the dbus object takes over now */
-    gtk_main_quit();
-  }
+  async_data = data;
+  call_initiate(number, CALL_TYPE_VOICE, dial_clicked_call_initiated_done);
 }
 
 static void
