@@ -37,7 +37,7 @@ typedef struct
   
   GtkWidget *main_window;
   
-  DBusGProxy *dialer_proxy;
+//  DBusGProxy *dialer_proxy;
 } DialerData;
 
 static gboolean show_missed;
@@ -118,7 +118,7 @@ int main (int argc, char **argv)
 {
   GtkWidget *window, *keypad;
   MokoJournal *journal;
-  DBusGConnection *connection;
+//  DBusGConnection *connection;
   GError *error = NULL;
   DialerData *data;
 
