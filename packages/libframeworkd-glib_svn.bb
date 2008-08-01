@@ -10,6 +10,7 @@ inherit shr autotools pkgconfig
 
 do_stage () {
         oe_libinstall -so libframeworkd-glib ${STAGING_LIBDIR}
+	oe_libinstall -so dialer-common ${STAGING_LIBDIR}
 
         autotools_stage_includes
 }
