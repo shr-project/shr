@@ -11,4 +11,4 @@ libframeworkd_glib_phonegui_gtk_la_SOURCES = \
 
 libframeworkd_glib_phonegui_gtk_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 
-libframeworkd_glib_phonegui_gtk_la_LIBADD = $(top_srcdir)/src/common/libdialer-common.a @DIALER_LIBS@
+libframeworkd_glib_phonegui_gtk_la_LIBADD = @DIALER_LIBS@
