@@ -7,7 +7,7 @@ Name: libframeworkd-glib-phonegui-gtk
 Description: GTK UI phone library for frameworkd
 Version: @VERSION@
 Requires: dbus-glib-1 glib-2.0 gobject-2.0 libframeworkd-glib
-Libs: -L${libdir} -lframeworkd-glib-phonegui-gtk
+Libs: -L${libdir} -ldialer-common -lframeworkd-glib-phonegui-gtk
 Cflags: -I${includedir}/frameworkd-glib
 
 
