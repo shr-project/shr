@@ -29,6 +29,8 @@
 #include "frameworkd-glib-sms.h"
 #include "dialer-marshal.h"
 
+static DBusGConnection* bus;
+
 void lose (const char *str, ...)
 {
         va_list args;
@@ -48,7 +50,8 @@ void lose_gerror (const char *prefix, GError *error)
         lose ("%s: %s", prefix, error->message);
 }
 
-/* Be careful with this function. Dbus error is freed ! */
+DBusGProxy *dbus_connect_to_interface(char *bus_name, char *path, char *interface, char *interface_name);
+
 GError* dbus_handle_errors(GError *dbus_error) {
         const char *error_name;
         GError *error = NULL;
@@ -71,7 +74,6 @@ GError* dbus_handle_errors(GError *dbus_error) {
 }
 
 void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
-        DBusGConnection *bus;
 
         GError *error = NULL;
         g_type_init ();
@@ -92,20 +94,6 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
         if (!bus)
                 lose_gerror ("Couldn't connect to system bus", error);
 
-#ifdef DEBUG
-        printf("Getting the interfaces\n");
-#endif
-
-        networkBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, NETWORK_INTERFACE);
-        simBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SIM_INTERFACE);
-        callBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
-        deviceBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, DEVICE_INTERFACE);
-        smsBus = dbus_g_proxy_new_for_name (bus, GSMD_BUS, BUS_PATH, SMS_INTERFACE);
-        if(!(networkBus && simBus && callBus && deviceBus)) {
-                printf("Couln't connect to the interfaces");
-                exit(-1);
-        }
-
         dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
         dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_BOOLEAN_STRING, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
 
@@ -114,6 +102,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
                 printf("Adding signals.\n");
 #endif
                 if(fwHandler->networkStatus != NULL) {
+                        dbus_connect_to_gsm_network();
                         dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
                         dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
                                         fwHandler->networkStatus, NULL);
@@ -123,6 +112,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 #endif
                 }
                 if(fwHandler->networkSignalStrength != NULL) {
+                        dbus_connect_to_gsm_network();
                         dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_UINT , G_TYPE_INVALID);
                         dbus_g_proxy_connect_signal (networkBus, "SignalStrength", G_CALLBACK (network_signal_strength_handler),
                                         fwHandler->networkSignalStrength, NULL);
@@ -131,7 +121,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 #endif
                 }
                 if(fwHandler->simAuthStatus != NULL) {
-
+                        dbus_connect_to_gsm_sim();
                         dbus_g_proxy_add_signal (simBus, "AuthStatus", G_TYPE_STRING, G_TYPE_INVALID);
                         dbus_g_proxy_connect_signal (simBus, "AuthStatus", G_CALLBACK (sim_auth_status_handler),
                                         fwHandler->simAuthStatus, NULL);
@@ -140,7 +130,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 #endif
                 }
                 if(fwHandler->callCallStatus != NULL) {
-
+                        dbus_connect_to_gsm_call();
                         dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
                         dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (call_status_handler),
                                         fwHandler->callCallStatus, NULL);
@@ -150,7 +140,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
                 }
 
                 if(fwHandler->smsMessageSent != NULL) {
-
+                        dbus_connect_to_gsm_sms();
                         dbus_g_proxy_add_signal (smsBus, "MessageSent", G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
                         dbus_g_proxy_connect_signal (smsBus, "MessageSent", G_CALLBACK (sms_message_sent_handler),
                                         fwHandler->smsMessageSent, NULL);
@@ -159,8 +149,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 #endif
                 }
                 if(fwHandler->smsIncomingMessage != NULL) {
-
-
+                        dbus_connect_to_gsm_sms();
                         dbus_g_proxy_add_signal (smsBus, "IncomingMessage", G_TYPE_UINT, G_TYPE_INVALID);
                         dbus_g_proxy_connect_signal (smsBus, "IncomingMessage", G_CALLBACK (sms_incoming_message_handler),
                                         fwHandler->smsIncomingMessage, NULL);
@@ -169,4 +158,38 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 #endif
                 }
         }
+}
+
+void dbus_connect_to_gsm_call() {
+    if(callBus == NULL)
+        callBus = dbus_connect_to_interface (GSMD_BUS, BUS_PATH, CALL_INTERFACE, "GSM.Call");
+}
+
+void dbus_connect_to_gsm_network() {
+    if(networkBus == NULL)
+        networkBus = dbus_connect_to_interface (GSMD_BUS, BUS_PATH, NETWORK_INTERFACE, "GSM.Network");
+}
+
+void dbus_connect_to_gsm_sim() {
+    if(simBus == NULL)
+        simBus = dbus_connect_to_interface (GSMD_BUS, BUS_PATH, SIM_INTERFACE, "GSM.SIM");
+}
+void dbus_connect_to_gsm_device() {
+    if(deviceBus == NULL)
+        deviceBus = dbus_connect_to_interface (GSMD_BUS, BUS_PATH, DEVICE_INTERFACE, "GSM.Device"); 
+}
+void dbus_connect_to_gsm_sms() {
+    if(smsBus == NULL)
+        smsBus = dbus_connect_to_interface(GSMD_BUS, BUS_PATH, SMS_INTERFACE, "GSM.SMS");
+}
+
+DBusGProxy *dbus_connect_to_interface(char *bus_name, char *path, char *interface, char *interface_name) {
+    DBusGProxy *itf = NULL;
+    if(bus == NULL) {
+        itf = dbus_g_proxy_new_for_name (bus, bus_name, path, interface);
+        if(itf == NULL) {
+            printf("Couln't connect to the %s Interface", interface_name);
+        }
+    }
+    return itf;
 }

@@ -47,24 +47,35 @@ void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer use
 
 }
 
-void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int)) {
+typedef struct
+{
+    void (*callback)(GError *, int, gpointer);
+    gpointer userdata;
+} sms_send_message_data_t;
+
+void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int, gpointer), gpointer userdata) {
+    dbus_connect_to_gsm_sms();
+
+    sms_send_message_data_t *data = g_malloc (sizeof (sms_send_message_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+
     if(number != NULL && content != NULL)
-        org_freesmartphone_GSM_SMS_send_message_async(smsBus, number, content, report, sms_send_message_callback, callback);
+        org_freesmartphone_GSM_SMS_send_message_async(smsBus, number, content, report, sms_send_message_callback, data);
 }
 
 void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *dbus_error, gpointer userdata) {
-        void (*callback)(GError*, int) = NULL;
+        sms_send_message_data_t *data = userdata;
         GError *error = NULL;
 
-        callback = userdata;
-        
-        if(callback != NULL) {
+        if(data->callback != NULL) {
             if(dbus_error != NULL)
                     error = dbus_handle_errors(dbus_error);
 
-            (*(callback)) (error, transaction_index);
+            data->callback (error, transaction_index, data->userdata);
             if(error != NULL) g_error_free(error);
         }
 
         if(dbus_error != NULL) g_error_free(dbus_error);
+        g_free(data);
 }

@@ -43,44 +43,68 @@ GError* device_handle_errors(GError *dbus_error) {
         return g_error_new (DEVICE_ERROR, deviceError, "TODO");
 }
 
-void device_set_antenna_power(gboolean power, void (*callback)(GError *)) {
-    org_freesmartphone_GSM_Device_set_antenna_power_async (deviceBus, power, device_set_antenna_power_callback, callback);
+typedef struct
+{
+    void (*callback)(GError *, gpointer);
+    gpointer userdata;
+} device_set_antenna_power_data_t;
+
+
+void device_set_antenna_power(gboolean power, void (*callback)(GError *, gpointer), gpointer userdata) {
+    dbus_connect_to_gsm_device();
+    
+    device_set_antenna_power_data_t *data = g_malloc (sizeof (device_set_antenna_power_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+
+    org_freesmartphone_GSM_Device_set_antenna_power_async (deviceBus, power, device_set_antenna_power_callback, data);
 }
 
 void device_set_antenna_power_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata) {
-        void (*callback)(GError*) = NULL;
+        device_set_antenna_power_data_t *data = userdata;
         GError *error = NULL;
 
-        callback = userdata;
-
-        if(callback != NULL) {
+        if(data->callback != NULL) {
                 if(dbus_error != NULL)
                         error = dbus_handle_errors(dbus_error);
 
-                (*(callback)) (error);
+                data->callback (error, data->userdata);
                 if(error != NULL) g_error_free(error);
         } 
         
         if(dbus_error != NULL) g_error_free(dbus_error);
+        g_free(data);
 }
 
-void device_get_antenna_power(void (*callback)(GError *, gboolean)) {
-    org_freesmartphone_GSM_Device_get_antenna_power_async(deviceBus, device_get_antenna_power_callback, callback);
+typedef struct
+{
+    void (*callback)(GError *, gboolean, gpointer);
+    gpointer userdata;
+} device_get_antenna_power_data_t;
+
+void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gpointer userdata) {
+    dbus_connect_to_gsm_device();
+    
+    device_get_antenna_power_data_t *data = g_malloc (sizeof (device_get_antenna_power_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+
+    org_freesmartphone_GSM_Device_get_antenna_power_async(deviceBus, device_get_antenna_power_callback, data);
 }
 
 void device_get_antenna_power_callback(DBusGProxy* bus, gboolean power, GError *dbus_error, gpointer userdata) {
-        void (*callback)(GError*, gboolean) = NULL;
+        device_get_antenna_power_data_t *data = userdata;
         GError *error = NULL;
 
-        callback = userdata;
-        if(callback != NULL) {
+        if(data->callback != NULL) {
                 if(dbus_error != NULL)
                         error = dbus_handle_errors(dbus_error);
 
-                (*(callback)) (error, power);
+                data->callback (error, power, data->userdata);
                 if(error != NULL) g_error_free(error);
         } 
         
         if(dbus_error != NULL) g_error_free(dbus_error);
+        g_free(data);
 }
 

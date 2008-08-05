@@ -89,19 +89,20 @@ GError* call_handle_errors(GError *dbus_error) {
 static void call_initiate_callback(DBusGProxy* proxy, int id_call, GError *dbus_error, gpointer userdata) {
         call_initiate_data_t *data = userdata;
         GError *error = NULL;
-
+    if(data->callback != NULL) {
         if(dbus_error != NULL)
                 error = dbus_handle_errors(dbus_error);
 
         data->callback (error, id_call, data->userdata);
         if(error != NULL) g_error_free(error);
-        
+        }
         if(dbus_error != NULL) g_error_free(dbus_error);
 
 	g_free (userdata);
 }
 
 void call_initiate(const char *number, const char* call_type, void (*callback)(GError *, int id_call, gpointer userdata), gpointer userdata) {
+        dbus_connect_to_gsm_call();
         call_initiate_data_t *data = g_malloc (sizeof (call_initiate_data_t));
         data->callback = callback;
         data->userdata = userdata;
@@ -111,20 +112,22 @@ void call_initiate(const char *number, const char* call_type, void (*callback)(G
 static void call_release_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userdata) {
 	call_release_data_t *data = userdata;
         GError *error = NULL;
-        
+    
+    if(data->callback != NULL) {
         if(dbus_error != NULL)
                 error = dbus_handle_errors(dbus_error);
 
         data->callback (error, data->userdata);
         if(error != NULL) g_error_free(error);
-        
+    }
         if(dbus_error != NULL) g_error_free(dbus_error);
 
 	g_free (data);
 }
 
 void call_release(const char *message, const int id_call, void (*callback)(GError *, gpointer userdata), gpointer userdata) {
-	call_release_data_t *data = g_malloc (sizeof (call_release_data_t));
+    dbus_connect_to_gsm_call();
+    call_release_data_t *data = g_malloc (sizeof (call_release_data_t));
 	data->callback = callback;
 	data->userdata = userdata;
         org_freesmartphone_GSM_Call_release_async(callBus, message, id_call, call_release_callback, data);
@@ -134,20 +137,23 @@ static void call_activate_callback(DBusGProxy* proxy, GError *dbus_error, gpoint
         call_activate_data_t *data = userdata;
 	GError *error = NULL;
 
+    if(data->callback != NULL) {
         if(dbus_error != NULL)
                 error = dbus_handle_errors(dbus_error);
 
-        data->callback (error, userdata);
+        data->callback (error, data->userdata);
         if(error != NULL) g_error_free(error);
-        
-        if(dbus_error != NULL) g_error_free(dbus_error);
+    }
+   
+    if(dbus_error != NULL) g_error_free(dbus_error);
 
 	g_free (data);
 }
 
 void call_activate(const int id_call, void (*callback)(GError *, gpointer userdata), gpointer userdata) {
-        call_activate_data_t *data = g_malloc (sizeof (call_activate_data_t));
+    dbus_connect_to_gsm_call();
+    call_activate_data_t *data = g_malloc (sizeof (call_activate_data_t));
 	data->callback = callback;
 	data->userdata = userdata;
-        org_freesmartphone_GSM_Call_activate_async(callBus, id_call, call_activate_callback, data);
+    org_freesmartphone_GSM_Call_activate_async(callBus, id_call, call_activate_callback, data);
 }

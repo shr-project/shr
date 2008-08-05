@@ -56,42 +56,65 @@ GError* network_handle_errors(GError *dbus_error) {
         return g_error_new (NETWORK_ERROR, networkError, "TODO: %s", error_name);
 }
 
-void network_register(void (*callback)(GError *)) {
-    org_freesmartphone_GSM_Network_register_async(networkBus, network_register_callback, callback);
+typedef struct
+{
+    void (*callback)(GError *, gpointer);
+    gpointer userdata;
+} network_register_data_t;
+
+
+void network_register(void (*callback)(GError *, gpointer), gpointer userdata) {
+    dbus_connect_to_gsm_network();
+
+    network_register_data_t *data = g_malloc (sizeof (network_register_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+
+    org_freesmartphone_GSM_Network_register_async(networkBus, network_register_callback, data);
 }
 
 void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
-        void (*callback)(GError*) = NULL;
+        network_register_data_t *data = userdata;
         GError *error = NULL;
 
-        callback = userdata;
-
-        if(callback != NULL) {
+        if(data->callback != NULL) {
             if(dbus_error != NULL)
                     error = dbus_handle_errors(dbus_error);
         
-            (*(callback)) (error);
+            data->callback (error, data->userdata);
             if(error != NULL) g_error_free(error);
         }
 
         if(dbus_error != NULL) g_error_free(dbus_error);
+        g_free(data);
 }
 
-void network_register_with_provider(int provider_id, void (*callback)(GError *)) {
-    org_freesmartphone_GSM_Network_register_with_provider_async(networkBus, provider_id, network_register_callback, callback);
+
+typedef struct
+{
+    void (*callback)(GError *, gpointer);
+    gpointer userdata;
+} network_register_with_provider_data_t;
+
+void network_register_with_provider(int provider_id, void (*callback)(GError *, gpointer), gpointer userdata) {
+    dbus_connect_to_gsm_network();
+
+    network_register_with_provider_data_t *data = g_malloc (sizeof (network_register_with_provider_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+
+    org_freesmartphone_GSM_Network_register_with_provider_async(networkBus, provider_id, network_register_callback, data);
 }
 
 void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
-        void (*callback)(GError*) = NULL;
+        network_register_with_provider_data_t *data = userdata;
         GError *error = NULL;
 
-        callback = userdata;
-
-        if(callback != NULL) {
+        if(data->callback != NULL) {
             if(dbus_error != NULL)
                 error = dbus_handle_errors(dbus_error);
 
-            (*(callback)) (error);
+            data->callback (error, data->userdata);
             if(error != NULL) g_error_free(error);
         }
 

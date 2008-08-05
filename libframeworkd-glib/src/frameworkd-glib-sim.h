@@ -54,26 +54,26 @@ typedef enum {
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
 int sim_handle_authentication_state(const char*status);
 
-void sim_get_authentication_state(void (*callback)(GError*, int));
+void sim_get_authentication_state(void (*callback)(GError*, int, gpointer), gpointer userdata);
 void sim_get_authentication_state_callback(DBusGProxy *bus, char* status, GError* dbus_error, gpointer userdata);
 
-void sim_send_pin_code(const char* pin, void (*callback)(GError*));
+void sim_send_pin_code(const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
 void sim_send_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
 
-void sim_send_puk_code(const char* puk, const char* pin, void (*callback)(GError*));
+void sim_send_puk_code(const char* puk, const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
 void sim_send_puk_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
 
-void sim_change_pin_code(const char* old, const char* new, void (*callback)(GError*));
+void sim_change_pin_code(const char* old, const char* new, void (*callback)(GError*, gpointer), gpointer userdata);
 void sim_change_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
 
-void sim_retrieve_message(const int index, void (*callback)(GError*, char*, char*));
+void sim_retrieve_message(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata);
 void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, GError *dbus_error, gpointer userdata) ;
 
-void sim_retrieve_phonebook_entry(const int index, void (*callback)(GError*, char*, char*));
+void sim_retrieve_phonebook_entry(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata);
 void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* number, GError *dbus_error, gpointer userdata);
 
 void sim_display_code_UI ();
-void sim_display_code_UI_callback(GError* error, int status);
+void sim_display_code_UI_callback(GError* error, int status, gpointer userdata);
 
 GError* sim_handle_errors(GError *dbus_error);
 
