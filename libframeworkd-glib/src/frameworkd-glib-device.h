@@ -24,9 +24,9 @@
 #define DEVICE_ERROR g_quark_from_static_string(DEVICE_INTERFACE)
 
 typedef enum {
-	DEVICE_ERROR_NOT_PRESENT = -1,
-	DEVICE_ERROR_TIMEOUT = -2,
-	DEVICE_ERROR_FAILED = -3
+    DEVICE_ERROR_NOT_PRESENT = -1,
+    DEVICE_ERROR_TIMEOUT = -2,
+    DEVICE_ERROR_FAILED = -3
 } DeviceErrors;
 
 GError* device_handle_errors(GError *dbus_error);

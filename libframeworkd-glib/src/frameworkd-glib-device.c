@@ -28,19 +28,19 @@
 DBusGProxy *deviceBus = NULL;
 
 GError* device_handle_errors(GError *dbus_error) {
-        const char *error_name = dbus_g_error_get_name(dbus_error);
-        int deviceError = 0;
+    const char *error_name = dbus_g_error_get_name(dbus_error);
+    int deviceError = 0;
 
-        if(!strcmp(error_name, DBUS_DEVICE_ERROR_TIMEOUT)) {
-                deviceError = DEVICE_ERROR_TIMEOUT;
-        } else if(!strcmp(error_name, DBUS_DEVICE_ERROR_NOT_PRESENT)) {
-                deviceError = DEVICE_ERROR_NOT_PRESENT;
-        } else if(!strcmp(error_name, DBUS_DEVICE_ERROR_FAILED)) {
-                deviceError = DEVICE_ERROR_FAILED;
-        } else {
-                lose_gerror ("Unknown device error", dbus_error);
-        }
-        return g_error_new (DEVICE_ERROR, deviceError, "TODO");
+    if(!strcmp(error_name, DBUS_DEVICE_ERROR_TIMEOUT)) {
+        deviceError = DEVICE_ERROR_TIMEOUT;
+    } else if(!strcmp(error_name, DBUS_DEVICE_ERROR_NOT_PRESENT)) {
+        deviceError = DEVICE_ERROR_NOT_PRESENT;
+    } else if(!strcmp(error_name, DBUS_DEVICE_ERROR_FAILED)) {
+        deviceError = DEVICE_ERROR_FAILED;
+    } else {
+        lose_gerror ("Unknown device error", dbus_error);
+    }
+    return g_error_new (DEVICE_ERROR, deviceError, "TODO");
 }
 
 typedef struct
@@ -52,7 +52,7 @@ typedef struct
 
 void device_set_antenna_power(gboolean power, void (*callback)(GError *, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_device();
-    
+
     device_set_antenna_power_data_t *data = g_malloc (sizeof (device_set_antenna_power_data_t));
     data->callback = callback;
     data->userdata = userdata;
@@ -61,19 +61,19 @@ void device_set_antenna_power(gboolean power, void (*callback)(GError *, gpointe
 }
 
 void device_set_antenna_power_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata) {
-        device_set_antenna_power_data_t *data = userdata;
-        GError *error = NULL;
+    device_set_antenna_power_data_t *data = userdata;
+    GError *error = NULL;
 
-        if(data->callback != NULL) {
-                if(dbus_error != NULL)
-                        error = dbus_handle_errors(dbus_error);
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
 
-                data->callback (error, data->userdata);
-                if(error != NULL) g_error_free(error);
-        } 
-        
-        if(dbus_error != NULL) g_error_free(dbus_error);
-        g_free(data);
+        data->callback (error, data->userdata);
+        if(error != NULL) g_error_free(error);
+    } 
+
+    if(dbus_error != NULL) g_error_free(dbus_error);
+    g_free(data);
 }
 
 typedef struct
@@ -84,7 +84,7 @@ typedef struct
 
 void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_device();
-    
+
     device_get_antenna_power_data_t *data = g_malloc (sizeof (device_get_antenna_power_data_t));
     data->callback = callback;
     data->userdata = userdata;
@@ -93,18 +93,18 @@ void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gp
 }
 
 void device_get_antenna_power_callback(DBusGProxy* bus, gboolean power, GError *dbus_error, gpointer userdata) {
-        device_get_antenna_power_data_t *data = userdata;
-        GError *error = NULL;
+    device_get_antenna_power_data_t *data = userdata;
+    GError *error = NULL;
 
-        if(data->callback != NULL) {
-                if(dbus_error != NULL)
-                        error = dbus_handle_errors(dbus_error);
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
 
-                data->callback (error, power, data->userdata);
-                if(error != NULL) g_error_free(error);
-        } 
-        
-        if(dbus_error != NULL) g_error_free(dbus_error);
-        g_free(data);
+        data->callback (error, power, data->userdata);
+        if(error != NULL) g_error_free(error);
+    } 
+
+    if(dbus_error != NULL) g_error_free(dbus_error);
+    g_free(data);
 }
 

@@ -38,12 +38,12 @@ void sms_message_sent_handler (DBusGProxy *proxy, const int id, const gboolean s
 }
 
 void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer user_data) {
-        void (*callback)(const int) = NULL;
+    void (*callback)(const int) = NULL;
 
-        callback = user_data;
+    callback = user_data;
 
-        if(callback != NULL)
-                (*callback)(id);
+    if(callback != NULL)
+        (*callback)(id);
 
 }
 
@@ -65,17 +65,17 @@ void sms_send_message(const char* number, const char* content, const gboolean re
 }
 
 void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *dbus_error, gpointer userdata) {
-        sms_send_message_data_t *data = userdata;
-        GError *error = NULL;
+    sms_send_message_data_t *data = userdata;
+    GError *error = NULL;
 
-        if(data->callback != NULL) {
-            if(dbus_error != NULL)
-                    error = dbus_handle_errors(dbus_error);
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
 
-            data->callback (error, transaction_index, data->userdata);
-            if(error != NULL) g_error_free(error);
-        }
+        data->callback (error, transaction_index, data->userdata);
+        if(error != NULL) g_error_free(error);
+    }
 
-        if(dbus_error != NULL) g_error_free(dbus_error);
-        g_free(data);
+    if(dbus_error != NULL) g_error_free(dbus_error);
+    g_free(data);
 }

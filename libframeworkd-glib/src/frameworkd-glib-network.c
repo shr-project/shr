@@ -44,16 +44,16 @@ void network_signal_strength_handler (DBusGProxy *proxy, const int signal_streng
     callback = user_data;
 
     if(callback != NULL)
-         (*callback)(signal_strength);
+        (*callback)(signal_strength);
 }
 
 GError* network_handle_errors(GError *dbus_error) {
-        const char *error_name = dbus_g_error_get_name(dbus_error);
-        int networkError = 0;
+    const char *error_name = dbus_g_error_get_name(dbus_error);
+    int networkError = 0;
 
-        lose_gerror ("Unknown network error", dbus_error);
+    lose_gerror ("Unknown network error", dbus_error);
 
-        return g_error_new (NETWORK_ERROR, networkError, "TODO: %s", error_name);
+    return g_error_new (NETWORK_ERROR, networkError, "TODO: %s", error_name);
 }
 
 typedef struct
@@ -74,19 +74,19 @@ void network_register(void (*callback)(GError *, gpointer), gpointer userdata) {
 }
 
 void network_register_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
-        network_register_data_t *data = userdata;
-        GError *error = NULL;
+    network_register_data_t *data = userdata;
+    GError *error = NULL;
 
-        if(data->callback != NULL) {
-            if(dbus_error != NULL)
-                    error = dbus_handle_errors(dbus_error);
-        
-            data->callback (error, data->userdata);
-            if(error != NULL) g_error_free(error);
-        }
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
 
-        if(dbus_error != NULL) g_error_free(dbus_error);
-        g_free(data);
+        data->callback (error, data->userdata);
+        if(error != NULL) g_error_free(error);
+    }
+
+    if(dbus_error != NULL) g_error_free(dbus_error);
+    g_free(data);
 }
 
 
@@ -107,18 +107,18 @@ void network_register_with_provider(int provider_id, void (*callback)(GError *, 
 }
 
 void network_register_with_provider_callback(DBusGProxy *bus, GError *dbus_error, gpointer userdata) {
-        network_register_with_provider_data_t *data = userdata;
-        GError *error = NULL;
+    network_register_with_provider_data_t *data = userdata;
+    GError *error = NULL;
 
-        if(data->callback != NULL) {
-            if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
 
-            data->callback (error, data->userdata);
-            if(error != NULL) g_error_free(error);
-        }
+        data->callback (error, data->userdata);
+        if(error != NULL) g_error_free(error);
+    }
 
-        if(dbus_error != NULL) g_error_free(dbus_error);
+    if(dbus_error != NULL) g_error_free(dbus_error);
 
 }
 
@@ -148,7 +148,7 @@ int network_get_registration_status(GHashTable *properties) {
 
 const char* network_get_location_area(GHashTable *properties) {
     GValue* lac;
-    
+
     if(properties != NULL) {
         lac = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_LOCATION_AREA);
         return lac == NULL ? NULL : g_value_get_string(lac);
@@ -159,7 +159,7 @@ const char* network_get_location_area(GHashTable *properties) {
 
 const char* network_get_provider(GHashTable *properties) {
     GValue* provider;
-    
+
     if(properties != NULL) {
         provider = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_PROVIDER);
         return provider == NULL ?  NULL : g_value_get_string(provider);
@@ -169,7 +169,7 @@ const char* network_get_provider(GHashTable *properties) {
 
 const char* network_get_cell_id(GHashTable *properties) {
     GValue* cid;
-    
+
     if(properties != NULL) {
         cid = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_CELL_ID);
         return cid == NULL ? NULL : g_value_get_string(cid);
@@ -179,12 +179,12 @@ const char* network_get_cell_id(GHashTable *properties) {
 }
 
 int network_get_signal_strength(GHashTable *properties) {
-        GValue* strength = NULL;
+    GValue* strength = NULL;
 
-        if(properties == NULL)
-                return 0;
+    if(properties == NULL)
+        return 0;
 
-        strength = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_STRENGTH);
-        return strength == NULL ? 0 : g_value_get_int(strength);
+    strength = g_hash_table_lookup(properties, DBUS_NETWORK_PROPERTY_STRENGTH);
+    return strength == NULL ? 0 : g_value_get_int(strength);
 }
 

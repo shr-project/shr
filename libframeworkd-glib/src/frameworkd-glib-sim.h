@@ -35,20 +35,20 @@
 #define SIM_ERROR g_quark_from_static_string(SIM_INTERFACE)
 #define IS_SIM_ERROR(error, code) g_error_matches(error, SIM_ERROR, code)
 typedef enum {
-	SIM_READY,
-	SIM_PIN_REQUIRED,
-	SIM_PUK_REQUIRED,
-	SIM_PIN2_REQUIRED,
-	SIM_PUK2_REQUIRED
+    SIM_READY,
+    SIM_PIN_REQUIRED,
+    SIM_PUK_REQUIRED,
+    SIM_PIN2_REQUIRED,
+    SIM_PUK2_REQUIRED
 } SimStatus;
 
 typedef enum {
-	SIM_ERROR_NOT_PRESENT = -1,
-	SIM_ERROR_AUTH_FAILED = -2,
-	SIM_ERROR_BLOCKED = -3,
-	SIM_ERROR_NOT_FOUND = -4,
-	SIM_ERROR_MEMORY_FULL = -5,
-	SIM_ERROR_INVALID_INDEX = -6
+    SIM_ERROR_NOT_PRESENT = -1,
+    SIM_ERROR_AUTH_FAILED = -2,
+    SIM_ERROR_BLOCKED = -3,
+    SIM_ERROR_NOT_FOUND = -4,
+    SIM_ERROR_MEMORY_FULL = -5,
+    SIM_ERROR_INVALID_INDEX = -6
 } SimErrors;
 
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);

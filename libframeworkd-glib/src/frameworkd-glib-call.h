@@ -35,8 +35,8 @@
 #define DBUS_CALL_PROPERTIES_NUMBER "number"
 
 typedef enum {
-	CALL_ERROR_NO_CARRIER = -1,
-	CALL_ERROR_NOT_FOUND = -2,
+    CALL_ERROR_NO_CARRIER = -1,
+    CALL_ERROR_NOT_FOUND = -2,
 } CallErrors;
 
 typedef enum {

@@ -47,113 +47,113 @@ typedef struct
 
 void call_status_handler (DBusGProxy *proxy, const int id, const char *status, GHashTable * properties, gpointer user_data)
 {
-        int st;
-        void (*callback)(const int, const int, GHashTable*) = NULL;
-        if(!strcmp(status, DBUS_CALL_STATUS_INCOMING)) {
-                st = CALL_STATUS_INCOMING;
-                // Display incoming UI
-        } else if(!strcmp(status, DBUS_CALL_STATUS_OUTGOING)) {
-                // Display outgoing UI
-                st = CALL_STATUS_OUTGOING;
-        } else if(!strcmp(status, DBUS_CALL_STATUS_ACTIVE)) {
-                // TODO
-                st = CALL_STATUS_ACTIVE;
-        } else if(!strcmp(status, DBUS_CALL_STATUS_RELEASED)) {
-                // Close UI
-                st = CALL_STATUS_RELEASED;
-        } else { // HELD
-                st = CALL_STATUS_HELD;
-        }
+    int st;
+    void (*callback)(const int, const int, GHashTable*) = NULL;
+    if(!strcmp(status, DBUS_CALL_STATUS_INCOMING)) {
+        st = CALL_STATUS_INCOMING;
+        // Display incoming UI
+    } else if(!strcmp(status, DBUS_CALL_STATUS_OUTGOING)) {
+        // Display outgoing UI
+        st = CALL_STATUS_OUTGOING;
+    } else if(!strcmp(status, DBUS_CALL_STATUS_ACTIVE)) {
+        // TODO
+        st = CALL_STATUS_ACTIVE;
+    } else if(!strcmp(status, DBUS_CALL_STATUS_RELEASED)) {
+        // Close UI
+        st = CALL_STATUS_RELEASED;
+    } else { // HELD
+        st = CALL_STATUS_HELD;
+    }
 
-        callback = user_data;
-        
-        if(callback != NULL)
-            (*callback)(id,st, properties);
+    callback = user_data;
+
+    if(callback != NULL)
+        (*callback)(id,st, properties);
 }
 
 GError* call_handle_errors(GError *dbus_error) {
-        const char *error_name = dbus_g_error_get_name(dbus_error);
-        int callError = 0;
+    const char *error_name = dbus_g_error_get_name(dbus_error);
+    int callError = 0;
 
-        if(!strcmp(error_name, DBUS_CALL_ERROR_NO_CARRIER)) {
-                callError = CALL_ERROR_NO_CARRIER;
-        } else if(!strcmp(error_name, DBUS_CALL_ERROR_NOT_FOUND)) {
-                callError = CALL_ERROR_NOT_FOUND;
-        } else {
-                lose_gerror ("Unknown call error", dbus_error);
-        }
+    if(!strcmp(error_name, DBUS_CALL_ERROR_NO_CARRIER)) {
+        callError = CALL_ERROR_NO_CARRIER;
+    } else if(!strcmp(error_name, DBUS_CALL_ERROR_NOT_FOUND)) {
+        callError = CALL_ERROR_NOT_FOUND;
+    } else {
+        lose_gerror ("Unknown call error", dbus_error);
+    }
 
-        return g_error_new (CALL_ERROR, callError, "TODO %s", error_name);
+    return g_error_new (CALL_ERROR, callError, "TODO %s", error_name);
 }
 
 static void call_initiate_callback(DBusGProxy* proxy, int id_call, GError *dbus_error, gpointer userdata) {
-        call_initiate_data_t *data = userdata;
-        GError *error = NULL;
+    call_initiate_data_t *data = userdata;
+    GError *error = NULL;
     if(data->callback != NULL) {
         if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+            error = dbus_handle_errors(dbus_error);
 
         data->callback (error, id_call, data->userdata);
         if(error != NULL) g_error_free(error);
-        }
-        if(dbus_error != NULL) g_error_free(dbus_error);
+    }
+    if(dbus_error != NULL) g_error_free(dbus_error);
 
-	g_free (userdata);
+    g_free (userdata);
 }
 
 void call_initiate(const char *number, const char* call_type, void (*callback)(GError *, int id_call, gpointer userdata), gpointer userdata) {
-        dbus_connect_to_gsm_call();
-        call_initiate_data_t *data = g_malloc (sizeof (call_initiate_data_t));
-        data->callback = callback;
-        data->userdata = userdata;
-        org_freesmartphone_GSM_Call_initiate_async(callBus,number, call_type, call_initiate_callback, data);
+    dbus_connect_to_gsm_call();
+    call_initiate_data_t *data = g_malloc (sizeof (call_initiate_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+    org_freesmartphone_GSM_Call_initiate_async(callBus,number, call_type, call_initiate_callback, data);
 }
 
 static void call_release_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userdata) {
-	call_release_data_t *data = userdata;
-        GError *error = NULL;
-    
+    call_release_data_t *data = userdata;
+    GError *error = NULL;
+
     if(data->callback != NULL) {
         if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+            error = dbus_handle_errors(dbus_error);
 
         data->callback (error, data->userdata);
         if(error != NULL) g_error_free(error);
     }
-        if(dbus_error != NULL) g_error_free(dbus_error);
+    if(dbus_error != NULL) g_error_free(dbus_error);
 
-	g_free (data);
+    g_free (data);
 }
 
 void call_release(const char *message, const int id_call, void (*callback)(GError *, gpointer userdata), gpointer userdata) {
     dbus_connect_to_gsm_call();
     call_release_data_t *data = g_malloc (sizeof (call_release_data_t));
-	data->callback = callback;
-	data->userdata = userdata;
-        org_freesmartphone_GSM_Call_release_async(callBus, message, id_call, call_release_callback, data);
+    data->callback = callback;
+    data->userdata = userdata;
+    org_freesmartphone_GSM_Call_release_async(callBus, message, id_call, call_release_callback, data);
 }
 
 static void call_activate_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userdata) {
-        call_activate_data_t *data = userdata;
-	GError *error = NULL;
+    call_activate_data_t *data = userdata;
+    GError *error = NULL;
 
     if(data->callback != NULL) {
         if(dbus_error != NULL)
-                error = dbus_handle_errors(dbus_error);
+            error = dbus_handle_errors(dbus_error);
 
         data->callback (error, data->userdata);
         if(error != NULL) g_error_free(error);
     }
-   
+
     if(dbus_error != NULL) g_error_free(dbus_error);
 
-	g_free (data);
+    g_free (data);
 }
 
 void call_activate(const int id_call, void (*callback)(GError *, gpointer userdata), gpointer userdata) {
     dbus_connect_to_gsm_call();
     call_activate_data_t *data = g_malloc (sizeof (call_activate_data_t));
-	data->callback = callback;
-	data->userdata = userdata;
+    data->callback = callback;
+    data->userdata = userdata;
     org_freesmartphone_GSM_Call_activate_async(callBus, id_call, call_activate_callback, data);
 }
