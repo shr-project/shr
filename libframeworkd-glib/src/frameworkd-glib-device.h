@@ -31,10 +31,17 @@ typedef enum {
 
 GError* device_handle_errors(GError *dbus_error);
 void device_set_antenna_power(gboolean power, void (*callback)(GError *, gpointer), gpointer userdata);
-void device_set_antenna_power_callback(DBusGProxy* bus, GError *error, gpointer userdata);
 
 void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gpointer userdata);
-void device_get_antenna_power_callback(DBusGProxy* bus, gboolean power, GError *dbus_error, gpointer userdata);
+
+void device_get_info(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata);
+
+void device_get_features(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata);
+
+void device_prepare_to_suspend(void (*callback)(GError *, gpointer), gpointer userdata);
+
+void device_recover_from_suspend(void (*callback)(GError *, gpointer), gpointer userdata);
+
 extern DBusGProxy *deviceBus ;
 
 #endif

@@ -424,22 +424,21 @@ static
 inline
 #endif
 gboolean
-org_freesmartphone_GSM_Call_send_dtmf (DBusGProxy *proxy, char ** OUT_tones, GError **error)
+org_freesmartphone_GSM_Call_send_dtmf (DBusGProxy *proxy, const char * IN_tones, GError **error)
 
 {
-  return dbus_g_proxy_call (proxy, "SendDtmf", error, G_TYPE_INVALID, G_TYPE_STRING, OUT_tones, G_TYPE_INVALID);
+  return dbus_g_proxy_call (proxy, "SendDtmf", error, G_TYPE_STRING, IN_tones, G_TYPE_INVALID, G_TYPE_INVALID);
 }
 
-typedef void (*org_freesmartphone_GSM_Call_send_dtmf_reply) (DBusGProxy *proxy, char * OUT_tones, GError *error, gpointer userdata);
+typedef void (*org_freesmartphone_GSM_Call_send_dtmf_reply) (DBusGProxy *proxy, GError *error, gpointer userdata);
 
 static void
 org_freesmartphone_GSM_Call_send_dtmf_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
 {
   DBusGAsyncData *data = (DBusGAsyncData*) user_data;
   GError *error = NULL;
-  char * OUT_tones;
-  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_STRING, &OUT_tones, G_TYPE_INVALID);
-  (*(org_freesmartphone_GSM_Call_send_dtmf_reply)data->cb) (proxy, OUT_tones, error, data->userdata);
+  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_INVALID);
+  (*(org_freesmartphone_GSM_Call_send_dtmf_reply)data->cb) (proxy, error, data->userdata);
   return;
 }
 
@@ -448,14 +447,14 @@ static
 inline
 #endif
 DBusGProxyCall*
-org_freesmartphone_GSM_Call_send_dtmf_async (DBusGProxy *proxy, org_freesmartphone_GSM_Call_send_dtmf_reply callback, gpointer userdata)
+org_freesmartphone_GSM_Call_send_dtmf_async (DBusGProxy *proxy, const char * IN_tones, org_freesmartphone_GSM_Call_send_dtmf_reply callback, gpointer userdata)
 
 {
   DBusGAsyncData *stuff;
   stuff = g_new (DBusGAsyncData, 1);
   stuff->cb = G_CALLBACK (callback);
   stuff->userdata = userdata;
-  return dbus_g_proxy_begin_call (proxy, "SendDtmf", org_freesmartphone_GSM_Call_send_dtmf_async_callback, stuff, g_free, G_TYPE_INVALID);
+  return dbus_g_proxy_begin_call (proxy, "SendDtmf", org_freesmartphone_GSM_Call_send_dtmf_async_callback, stuff, g_free, G_TYPE_STRING, IN_tones, G_TYPE_INVALID);
 }
 #endif /* defined DBUS_GLIB_CLIENT_WRAPPERS_org_freesmartphone_GSM_Call */
 
