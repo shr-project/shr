@@ -137,7 +137,7 @@ display_pin_error (const char *message)
                 if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
                 {
                         set_code_ui_state_busy ();
-                        sim_send_pin_code (staticData.code, sim_pin_puk_callback);
+                        sim_send_pin_code (staticData.code, sim_pin_puk_callback, NULL);
                 }
         }
 
@@ -160,13 +160,13 @@ void display_puk_dialog() {
                 return;
         }
         set_code_ui_state_busy ();
-        sim_send_puk_code (puk, pin, sim_pin_puk_callback);
+        sim_send_puk_code (puk, pin, sim_pin_puk_callback, NULL);
         g_free (pin);
         g_free (puk);
 }
 
         void
-sim_pin_puk_callback (GError *error)
+sim_pin_puk_callback (GError *error, gpointer userdata)
 {
         if(error != NULL) {
                 if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
