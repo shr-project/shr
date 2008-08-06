@@ -65,12 +65,12 @@ int main(int argc, char ** argv) {
 }
 
 gboolean power_up_antenna() {
-        device_set_antenna_power(TRUE, power_up_antenna_callback);
+        device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
 
         return connected_to_network; // End timeout
 }
 
-void power_up_antenna_callback(GError *error) {
+void power_up_antenna_callback(GError *error, gpointer userdata) {
         if(error != NULL) {
             if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
                 sim_display_code_UI();
@@ -78,11 +78,11 @@ void power_up_antenna_callback(GError *error) {
                 /* TODO */
         }
         else {
-                network_register(register_to_network_callback);
+                network_register(register_to_network_callback, NULL);
         }
 }
 
-void register_to_network_callback(GError *error) {
+void register_to_network_callback(GError *error, gpointer userdata) {
         if(error != NULL) {
                 /* TODO */
         } else {
