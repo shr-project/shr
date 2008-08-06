@@ -378,3 +378,35 @@ void call_send_dtmf(const char* tones, void (*callback)(GError *, gpointer userd
     org_freesmartphone_GSM_Call_send_dtmf_async(callBus, tones, call_send_dtmf_callback, data);
 }
 
+typedef struct
+{
+    void (*callback)(GError *, GPtrArray *, gpointer);
+    gpointer userdata;
+} call_list_calls_data_t;
+
+static void call_list_calls_callback(DBusGProxy* proxy, GPtrArray * calls, GError *dbus_error, gpointer userdata) {
+    call_list_calls_data_t *data = userdata;
+    GError *error = NULL;
+
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
+
+        data->callback (error, calls, data->userdata);
+        if(error != NULL) g_error_free(error);
+    }
+
+    if(dbus_error != NULL) g_error_free(dbus_error);
+
+    g_free (data);
+}
+
+void call_list_calls(void (*callback)(GError *, GPtrArray*, gpointer userdata), gpointer userdata) {
+    dbus_connect_to_gsm_call();
+    call_list_calls_data_t *data = g_malloc (sizeof (call_list_calls_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+    org_freesmartphone_GSM_Call_list_calls_async(callBus, call_list_calls_callback, data);
+}
+
+

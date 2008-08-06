@@ -77,7 +77,7 @@ void call_join(void(*callback)(GError *, gpointer), gpointer userdata);
 
 void call_transfer(const char *number, void (*callback)(GError *, gpointer), gpointer userdata);
 
-//TODO : void call_list_calls(
+void call_list_calls(void (*callback)(GError *, GPtrArray*, gpointer), gpointer userdata);
 
 void call_send_dtmf(const char *tones, void (*callback)(GError *, gpointer), gpointer userdata);
 
