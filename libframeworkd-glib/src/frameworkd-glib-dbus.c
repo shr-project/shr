@@ -185,7 +185,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 
 DBusGProxy *dbus_connect_to_interface(char *bus_name, char *path, char *interface, char *interface_name) {
     DBusGProxy *itf = NULL;
-    if(bus == NULL) {
+    if(bus != NULL) {
         itf = dbus_g_proxy_new_for_name (bus, bus_name, path, interface);
         if(itf == NULL) {
             printf("Couln't connect to the %s Interface", interface_name);
