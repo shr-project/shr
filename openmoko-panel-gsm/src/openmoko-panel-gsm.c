@@ -42,8 +42,8 @@ typedef struct {
     gboolean gprs_mode;
     int strength;
     int type;
-    char* lac;
-    char* cell;
+    const char* lac;
+    const char* cell;
     char operator_name[255];
 
     GtkMenuItem* information;
@@ -156,8 +156,8 @@ static void gsm_applet_network_current_operator_cb( const gchar* name)
 
 static void
 gsm_applet_network_registration_cb(int type,
-                                  char* lac,
-                                  char* cell)
+                                  const char* lac,
+                                  const char* cell)
 {
     g_debug( "gsm_applet_network_registration_cb: updating netreg values" );
     theApplet->type = type;
@@ -215,20 +215,20 @@ gsm_applet_show_status(GtkWidget* menu, GsmApplet* applet)
 static void
 gsm_applet_power_up_antenna(GtkWidget* menu, GsmApplet* applet)
 {
-    device_set_antenna_power(TRUE, NULL);
+    device_set_antenna_power(TRUE, NULL, NULL);
     gsm_applet_gsm_antenna_status(TRUE);
 }
 
 static void
 gsm_applet_autoregister_network(GtkWidget* menu, GsmApplet* applet)
 {
-    network_register(NULL);
+    network_register(NULL, NULL);
 }
 
 static void
 gsm_applet_power_down_antenna(GtkWidget* menu, GsmApplet* applet)
 {
-    device_set_antenna_power(FALSE, NULL);
+    device_set_antenna_power(FALSE, NULL, NULL);
     gsm_applet_gsm_antenna_status(FALSE);
 }
 
@@ -341,26 +341,27 @@ void connect_to_frameworkd() {
         dbus_connect_to_bus(&fwHandler);
 }
 
+/*
 void display_hash_value(gpointer key, gpointer value, gpointer user_data) {
-    printf("Key : %s, Value : %s\n",key,value);
+    printf("Key : %s, Value : %s\n", key, value);
 }
-
+*/
 
 void gsmpanel_network_status_handler (GHashTable * status)
 {
-    char *provider = NULL;
-    char *lac = NULL;
-    char *cell = NULL;
+    const char *provider = NULL;
+    const char *lac = NULL;
+    const char *cell = NULL;
     
-    int regStatus = network_get_registration_status(status); 
+    int regStatus = network_get_registration_status_from_dbus(status); 
     int type = -1;
     int strength = -1;
 
-    //g_hash_table_foreach(status,display_hash_value,NULL);
-    lac = network_get_location_area(status);
-    cell = network_get_cell_id(status);
-    provider = network_get_provider(status);
-    strength = network_get_signal_strength(status);
+    /* g_hash_table_foreach(status,display_hash_value,NULL); */
+    lac = network_get_location_area_from_dbus(status);
+    cell = network_get_cell_id_from_dbus(status);
+    provider = network_get_provider_from_dbus(status);
+    strength = network_get_signal_strength_from_dbus(status);
 
     switch(regStatus) {
         case NETWORK_PROPERTY_REGISTRATION_UNREGISTERED:
