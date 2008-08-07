@@ -14,81 +14,6 @@ static
 inline
 #endif
 gboolean
-org_freesmartphone_GSM_SIM_set_enable_auth_code_check (DBusGProxy *proxy, const gboolean IN_check, GError **error)
-
-{
-  return dbus_g_proxy_call (proxy, "SetEnableAuthCodeCheck", error, G_TYPE_BOOLEAN, IN_check, G_TYPE_INVALID, G_TYPE_INVALID);
-}
-
-typedef void (*org_freesmartphone_GSM_SIM_set_enable_auth_code_check_reply) (DBusGProxy *proxy, GError *error, gpointer userdata);
-
-static void
-org_freesmartphone_GSM_SIM_set_enable_auth_code_check_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
-{
-  DBusGAsyncData *data = (DBusGAsyncData*) user_data;
-  GError *error = NULL;
-  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_INVALID);
-  (*(org_freesmartphone_GSM_SIM_set_enable_auth_code_check_reply)data->cb) (proxy, error, data->userdata);
-  return;
-}
-
-static
-#ifdef G_HAVE_INLINE
-inline
-#endif
-DBusGProxyCall*
-org_freesmartphone_GSM_SIM_set_enable_auth_code_check_async (DBusGProxy *proxy, const gboolean IN_check, org_freesmartphone_GSM_SIM_set_enable_auth_code_check_reply callback, gpointer userdata)
-
-{
-  DBusGAsyncData *stuff;
-  stuff = g_new (DBusGAsyncData, 1);
-  stuff->cb = G_CALLBACK (callback);
-  stuff->userdata = userdata;
-  return dbus_g_proxy_begin_call (proxy, "SetEnableAuthCodeCheck", org_freesmartphone_GSM_SIM_set_enable_auth_code_check_async_callback, stuff, g_free, G_TYPE_BOOLEAN, IN_check, G_TYPE_INVALID);
-}
-static
-#ifdef G_HAVE_INLINE
-inline
-#endif
-gboolean
-org_freesmartphone_GSM_SIM_get_enable_auth_code_check (DBusGProxy *proxy, gboolean* OUT_check, GError **error)
-
-{
-  return dbus_g_proxy_call (proxy, "GetEnableAuthCodeCheck", error, G_TYPE_INVALID, G_TYPE_BOOLEAN, OUT_check, G_TYPE_INVALID);
-}
-
-typedef void (*org_freesmartphone_GSM_SIM_get_enable_auth_code_check_reply) (DBusGProxy *proxy, gboolean OUT_check, GError *error, gpointer userdata);
-
-static void
-org_freesmartphone_GSM_SIM_get_enable_auth_code_check_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
-{
-  DBusGAsyncData *data = (DBusGAsyncData*) user_data;
-  GError *error = NULL;
-  gboolean OUT_check;
-  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_BOOLEAN, &OUT_check, G_TYPE_INVALID);
-  (*(org_freesmartphone_GSM_SIM_get_enable_auth_code_check_reply)data->cb) (proxy, OUT_check, error, data->userdata);
-  return;
-}
-
-static
-#ifdef G_HAVE_INLINE
-inline
-#endif
-DBusGProxyCall*
-org_freesmartphone_GSM_SIM_get_enable_auth_code_check_async (DBusGProxy *proxy, org_freesmartphone_GSM_SIM_get_enable_auth_code_check_reply callback, gpointer userdata)
-
-{
-  DBusGAsyncData *stuff;
-  stuff = g_new (DBusGAsyncData, 1);
-  stuff->cb = G_CALLBACK (callback);
-  stuff->userdata = userdata;
-  return dbus_g_proxy_begin_call (proxy, "GetEnableAuthCodeCheck", org_freesmartphone_GSM_SIM_get_enable_auth_code_check_async_callback, stuff, g_free, G_TYPE_INVALID);
-}
-static
-#ifdef G_HAVE_INLINE
-inline
-#endif
-gboolean
 org_freesmartphone_GSM_SIM_get_auth_status (DBusGProxy *proxy, char ** OUT_status, GError **error)
 
 {
@@ -238,6 +163,81 @@ static
 inline
 #endif
 gboolean
+org_freesmartphone_GSM_SIM_set_auth_code_required (DBusGProxy *proxy, const gboolean IN_check, const char * IN_pin, GError **error)
+
+{
+  return dbus_g_proxy_call (proxy, "SetAuthCodeRequired", error, G_TYPE_BOOLEAN, IN_check, G_TYPE_STRING, IN_pin, G_TYPE_INVALID, G_TYPE_INVALID);
+}
+
+typedef void (*org_freesmartphone_GSM_SIM_set_auth_code_required_reply) (DBusGProxy *proxy, GError *error, gpointer userdata);
+
+static void
+org_freesmartphone_GSM_SIM_set_auth_code_required_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
+{
+  DBusGAsyncData *data = (DBusGAsyncData*) user_data;
+  GError *error = NULL;
+  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_INVALID);
+  (*(org_freesmartphone_GSM_SIM_set_auth_code_required_reply)data->cb) (proxy, error, data->userdata);
+  return;
+}
+
+static
+#ifdef G_HAVE_INLINE
+inline
+#endif
+DBusGProxyCall*
+org_freesmartphone_GSM_SIM_set_auth_code_required_async (DBusGProxy *proxy, const gboolean IN_check, const char * IN_pin, org_freesmartphone_GSM_SIM_set_auth_code_required_reply callback, gpointer userdata)
+
+{
+  DBusGAsyncData *stuff;
+  stuff = g_new (DBusGAsyncData, 1);
+  stuff->cb = G_CALLBACK (callback);
+  stuff->userdata = userdata;
+  return dbus_g_proxy_begin_call (proxy, "SetAuthCodeRequired", org_freesmartphone_GSM_SIM_set_auth_code_required_async_callback, stuff, g_free, G_TYPE_BOOLEAN, IN_check, G_TYPE_STRING, IN_pin, G_TYPE_INVALID);
+}
+static
+#ifdef G_HAVE_INLINE
+inline
+#endif
+gboolean
+org_freesmartphone_GSM_SIM_get_auth_code_required (DBusGProxy *proxy, gboolean* OUT_check, GError **error)
+
+{
+  return dbus_g_proxy_call (proxy, "GetAuthCodeRequired", error, G_TYPE_INVALID, G_TYPE_BOOLEAN, OUT_check, G_TYPE_INVALID);
+}
+
+typedef void (*org_freesmartphone_GSM_SIM_get_auth_code_required_reply) (DBusGProxy *proxy, gboolean OUT_check, GError *error, gpointer userdata);
+
+static void
+org_freesmartphone_GSM_SIM_get_auth_code_required_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
+{
+  DBusGAsyncData *data = (DBusGAsyncData*) user_data;
+  GError *error = NULL;
+  gboolean OUT_check;
+  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_BOOLEAN, &OUT_check, G_TYPE_INVALID);
+  (*(org_freesmartphone_GSM_SIM_get_auth_code_required_reply)data->cb) (proxy, OUT_check, error, data->userdata);
+  return;
+}
+
+static
+#ifdef G_HAVE_INLINE
+inline
+#endif
+DBusGProxyCall*
+org_freesmartphone_GSM_SIM_get_auth_code_required_async (DBusGProxy *proxy, org_freesmartphone_GSM_SIM_get_auth_code_required_reply callback, gpointer userdata)
+
+{
+  DBusGAsyncData *stuff;
+  stuff = g_new (DBusGAsyncData, 1);
+  stuff->cb = G_CALLBACK (callback);
+  stuff->userdata = userdata;
+  return dbus_g_proxy_begin_call (proxy, "GetAuthCodeRequired", org_freesmartphone_GSM_SIM_get_auth_code_required_async_callback, stuff, g_free, G_TYPE_INVALID);
+}
+static
+#ifdef G_HAVE_INLINE
+inline
+#endif
+gboolean
 org_freesmartphone_GSM_SIM_get_sim_info (DBusGProxy *proxy, GHashTable** OUT_info, GError **error)
 
 {
@@ -276,21 +276,22 @@ static
 inline
 #endif
 gboolean
-org_freesmartphone_GSM_SIM_send_generic_sim_command (DBusGProxy *proxy, const char * IN_command, const char * IN_result, GError **error)
+org_freesmartphone_GSM_SIM_send_generic_sim_command (DBusGProxy *proxy, const char * IN_command, char ** OUT_result, GError **error)
 
 {
-  return dbus_g_proxy_call (proxy, "SendGenericSimCommand", error, G_TYPE_STRING, IN_command, G_TYPE_STRING, IN_result, G_TYPE_INVALID, G_TYPE_INVALID);
+  return dbus_g_proxy_call (proxy, "SendGenericSimCommand", error, G_TYPE_STRING, IN_command, G_TYPE_INVALID, G_TYPE_STRING, OUT_result, G_TYPE_INVALID);
 }
 
-typedef void (*org_freesmartphone_GSM_SIM_send_generic_sim_command_reply) (DBusGProxy *proxy, GError *error, gpointer userdata);
+typedef void (*org_freesmartphone_GSM_SIM_send_generic_sim_command_reply) (DBusGProxy *proxy, char * OUT_result, GError *error, gpointer userdata);
 
 static void
 org_freesmartphone_GSM_SIM_send_generic_sim_command_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
 {
   DBusGAsyncData *data = (DBusGAsyncData*) user_data;
   GError *error = NULL;
-  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_INVALID);
-  (*(org_freesmartphone_GSM_SIM_send_generic_sim_command_reply)data->cb) (proxy, error, data->userdata);
+  char * OUT_result;
+  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_STRING, &OUT_result, G_TYPE_INVALID);
+  (*(org_freesmartphone_GSM_SIM_send_generic_sim_command_reply)data->cb) (proxy, OUT_result, error, data->userdata);
   return;
 }
 
@@ -299,35 +300,36 @@ static
 inline
 #endif
 DBusGProxyCall*
-org_freesmartphone_GSM_SIM_send_generic_sim_command_async (DBusGProxy *proxy, const char * IN_command, const char * IN_result, org_freesmartphone_GSM_SIM_send_generic_sim_command_reply callback, gpointer userdata)
+org_freesmartphone_GSM_SIM_send_generic_sim_command_async (DBusGProxy *proxy, const char * IN_command, org_freesmartphone_GSM_SIM_send_generic_sim_command_reply callback, gpointer userdata)
 
 {
   DBusGAsyncData *stuff;
   stuff = g_new (DBusGAsyncData, 1);
   stuff->cb = G_CALLBACK (callback);
   stuff->userdata = userdata;
-  return dbus_g_proxy_begin_call (proxy, "SendGenericSimCommand", org_freesmartphone_GSM_SIM_send_generic_sim_command_async_callback, stuff, g_free, G_TYPE_STRING, IN_command, G_TYPE_STRING, IN_result, G_TYPE_INVALID);
+  return dbus_g_proxy_begin_call (proxy, "SendGenericSimCommand", org_freesmartphone_GSM_SIM_send_generic_sim_command_async_callback, stuff, g_free, G_TYPE_STRING, IN_command, G_TYPE_INVALID);
 }
 static
 #ifdef G_HAVE_INLINE
 inline
 #endif
 gboolean
-org_freesmartphone_GSM_SIM_send_restricted_sim_command (DBusGProxy *proxy, const gint IN_command, const gint IN_fileid, const gint IN_p1, const gint IN_p2, const gint IN_p3, const char * IN_data, const char * IN_result, GError **error)
+org_freesmartphone_GSM_SIM_send_restricted_sim_command (DBusGProxy *proxy, const gint IN_command, const gint IN_fileid, const gint IN_p1, const gint IN_p2, const gint IN_p3, const char * IN_data, char ** OUT_result, GError **error)
 
 {
-  return dbus_g_proxy_call (proxy, "SendRestrictedSimCommand", error, G_TYPE_INT, IN_command, G_TYPE_INT, IN_fileid, G_TYPE_INT, IN_p1, G_TYPE_INT, IN_p2, G_TYPE_INT, IN_p3, G_TYPE_STRING, IN_data, G_TYPE_STRING, IN_result, G_TYPE_INVALID, G_TYPE_INVALID);
+  return dbus_g_proxy_call (proxy, "SendRestrictedSimCommand", error, G_TYPE_INT, IN_command, G_TYPE_INT, IN_fileid, G_TYPE_INT, IN_p1, G_TYPE_INT, IN_p2, G_TYPE_INT, IN_p3, G_TYPE_STRING, IN_data, G_TYPE_INVALID, G_TYPE_STRING, OUT_result, G_TYPE_INVALID);
 }
 
-typedef void (*org_freesmartphone_GSM_SIM_send_restricted_sim_command_reply) (DBusGProxy *proxy, GError *error, gpointer userdata);
+typedef void (*org_freesmartphone_GSM_SIM_send_restricted_sim_command_reply) (DBusGProxy *proxy, char * OUT_result, GError *error, gpointer userdata);
 
 static void
 org_freesmartphone_GSM_SIM_send_restricted_sim_command_async_callback (DBusGProxy *proxy, DBusGProxyCall *call, void *user_data)
 {
   DBusGAsyncData *data = (DBusGAsyncData*) user_data;
   GError *error = NULL;
-  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_INVALID);
-  (*(org_freesmartphone_GSM_SIM_send_restricted_sim_command_reply)data->cb) (proxy, error, data->userdata);
+  char * OUT_result;
+  dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_STRING, &OUT_result, G_TYPE_INVALID);
+  (*(org_freesmartphone_GSM_SIM_send_restricted_sim_command_reply)data->cb) (proxy, OUT_result, error, data->userdata);
   return;
 }
 
@@ -336,14 +338,14 @@ static
 inline
 #endif
 DBusGProxyCall*
-org_freesmartphone_GSM_SIM_send_restricted_sim_command_async (DBusGProxy *proxy, const gint IN_command, const gint IN_fileid, const gint IN_p1, const gint IN_p2, const gint IN_p3, const char * IN_data, const char * IN_result, org_freesmartphone_GSM_SIM_send_restricted_sim_command_reply callback, gpointer userdata)
+org_freesmartphone_GSM_SIM_send_restricted_sim_command_async (DBusGProxy *proxy, const gint IN_command, const gint IN_fileid, const gint IN_p1, const gint IN_p2, const gint IN_p3, const char * IN_data, org_freesmartphone_GSM_SIM_send_restricted_sim_command_reply callback, gpointer userdata)
 
 {
   DBusGAsyncData *stuff;
   stuff = g_new (DBusGAsyncData, 1);
   stuff->cb = G_CALLBACK (callback);
   stuff->userdata = userdata;
-  return dbus_g_proxy_begin_call (proxy, "SendRestrictedSimCommand", org_freesmartphone_GSM_SIM_send_restricted_sim_command_async_callback, stuff, g_free, G_TYPE_INT, IN_command, G_TYPE_INT, IN_fileid, G_TYPE_INT, IN_p1, G_TYPE_INT, IN_p2, G_TYPE_INT, IN_p3, G_TYPE_STRING, IN_data, G_TYPE_STRING, IN_result, G_TYPE_INVALID);
+  return dbus_g_proxy_begin_call (proxy, "SendRestrictedSimCommand", org_freesmartphone_GSM_SIM_send_restricted_sim_command_async_callback, stuff, g_free, G_TYPE_INT, IN_command, G_TYPE_INT, IN_fileid, G_TYPE_INT, IN_p1, G_TYPE_INT, IN_p2, G_TYPE_INT, IN_p3, G_TYPE_STRING, IN_data, G_TYPE_INVALID);
 }
 static
 #ifdef G_HAVE_INLINE
