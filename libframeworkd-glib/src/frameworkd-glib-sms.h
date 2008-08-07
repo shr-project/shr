@@ -19,11 +19,14 @@
 
 //#define SMS_ERROR g_quark_from_static_string(CALL_INTERFACE
 
-void sms_message_sent_handler (DBusGProxy *proxy, const int id, const gboolean success, const char* reason, gpointer user_data);
-void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer user_data);
+void sms_message_sent_handler (DBusGProxy *proxy, const int id, const gboolean success, const char* reason, gpointer userdata);
+void sms_incoming_message_handler (DBusGProxy *proxy, const int id, gpointer userdata);
 
-void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int, gpointer), gpointer userdata);
-void sms_send_message_callback(DBusGProxy* bus, gint transaction_index, GError *dbus_error, gpointer userdata);
+void sms_send_message(const char* number, const char* content, const gboolean report, void (*callback)(GError*, int transaction_index, gpointer), gpointer userdata);
+
+void sms_get_service_bearer(void (*callback)(GError*, char*mode, gpointer), gpointer userdata);
+
+void sms_set_service_bearer(const char* mode, void (*callback)(GError*, gpointer), gpointer userdata);
 
 extern DBusGProxy *smsBus;
 

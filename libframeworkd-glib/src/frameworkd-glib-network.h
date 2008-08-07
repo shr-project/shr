@@ -125,15 +125,15 @@ void network_register_with_provider(int provider_id, void (*callback)(GError *, 
 
 void network_unregister(void (*callback)(GError *, gpointer), gpointer userdata);
 
-void network_get_status(void (*callback)(GError *, GHashTable*, gpointer), gpointer userdata);
+void network_get_status(void (*callback)(GError *, GHashTable* status, gpointer), gpointer userdata);
 
-void network_get_signal_strength(void (*callback)(GError *, int, gpointer), gpointer userdata);
+void network_get_signal_strength(void (*callback)(GError *, int strength, gpointer), gpointer userdata);
 
-void network_list_providers(void (*callback)(GError *, GPtrArray*, gpointer), gpointer userdata);
+void network_list_providers(void (*callback)(GError *, GPtrArray* providers, gpointer), gpointer userdata);
 
-void network_get_country_code(void (*callback)(GError *, char*, gpointer), gpointer userdata);
+void network_get_country_code(void (*callback)(GError *, char* country_code, gpointer), gpointer userdata);
 
-void network_get_call_forwarding(void (*callback)(GError *, GHashTable*, gpointer), gpointer userdata);
+void network_get_call_forwarding(void (*callback)(GError *, GHashTable* forwards, gpointer), gpointer userdata);
 
 void network_enable_call_forwarding(int reason, int forward_class, char *number, int timeout, void (*callback)(GError *, gpointer), gpointer userdata);
 
@@ -141,7 +141,7 @@ void network_disable_call_forwarding(int reason, int forward_class, void (*callb
 
 void network_set_calling_identification(int visible, void (*callback)(GError *, gpointer), gpointer userdata);
 
-void network_get_calling_identification(void (*callback)(GError *, int, gpointer), gpointer userdata);
+void network_get_calling_identification(void (*callback)(GError *, int visible, gpointer), gpointer userdata);
 
 int network_get_registration_status_from_dbus(GHashTable *properties);
 const char* network_get_location_area_from_dbus(GHashTable *properties);

@@ -29,7 +29,7 @@ DBusGProxy *callBus = NULL;
 
 typedef struct
 {
-    void (*callback)(GError *, int, gpointer);
+    void (*callback)(GError *, int id_call, gpointer);
     gpointer userdata;
 } call_initiate_data_t;
 
@@ -380,7 +380,7 @@ void call_send_dtmf(const char* tones, void (*callback)(GError *, gpointer userd
 
 typedef struct
 {
-    void (*callback)(GError *, GPtrArray *, gpointer);
+    void (*callback)(GError *, GPtrArray *calls, gpointer);
     gpointer userdata;
 } call_list_calls_data_t;
 
@@ -401,7 +401,7 @@ static void call_list_calls_callback(DBusGProxy* proxy, GPtrArray * calls, GErro
     g_free (data);
 }
 
-void call_list_calls(void (*callback)(GError *, GPtrArray*, gpointer userdata), gpointer userdata) {
+void call_list_calls(void (*callback)(GError *, GPtrArray* calls, gpointer userdata), gpointer userdata) {
     dbus_connect_to_gsm_call();
     call_list_calls_data_t *data = g_malloc (sizeof (call_list_calls_data_t));
     data->callback = callback;

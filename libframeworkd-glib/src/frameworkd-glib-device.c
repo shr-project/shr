@@ -77,7 +77,7 @@ void device_set_antenna_power(gboolean power, void (*callback)(GError *, gpointe
 
 typedef struct
 {
-    void (*callback)(GError *, gboolean, gpointer);
+    void (*callback)(GError *, gboolean power, gpointer);
     gpointer userdata;
 } device_get_antenna_power_data_t;
 
@@ -97,7 +97,7 @@ void device_get_antenna_power_callback(DBusGProxy* bus, gboolean power, GError *
     g_free(data);
 }
 
-void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gpointer userdata) {
+void device_get_antenna_power(void (*callback)(GError *, gboolean power, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_device();
 
     device_get_antenna_power_data_t *data = g_malloc (sizeof (device_get_antenna_power_data_t));
@@ -109,7 +109,7 @@ void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gp
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable* info, gpointer);
     gpointer userdata;
 } device_get_info_data_t;
 
@@ -130,7 +130,7 @@ void device_get_info_callback(DBusGProxy* bus, GHashTable *info, GError *dbus_er
     g_hash_table_destroy(info);
 }
 
-void device_get_info(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata) {
+void device_get_info(void (*callback)(GError *, GHashTable *info, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_device();
 
     device_get_info_data_t *data = g_malloc (sizeof (device_get_info_data_t));
@@ -142,7 +142,7 @@ void device_get_info(void (*callback)(GError *, GHashTable *, gpointer), gpointe
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable* features, gpointer);
     gpointer userdata;
 } device_get_features_data_t;
 
@@ -163,7 +163,7 @@ void device_get_features_callback(DBusGProxy* bus, GHashTable *features, GError 
     g_hash_table_destroy(features);
 }
 
-void device_get_features(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata) {
+void device_get_features(void (*callback)(GError *, GHashTable *features, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_device();
 
     device_get_features_data_t *data = g_malloc (sizeof (device_get_features_data_t));

@@ -32,11 +32,11 @@ typedef enum {
 GError* device_handle_errors(GError *dbus_error);
 void device_set_antenna_power(gboolean power, void (*callback)(GError *, gpointer), gpointer userdata);
 
-void device_get_antenna_power(void (*callback)(GError *, gboolean, gpointer), gpointer userdata);
+void device_get_antenna_power(void (*callback)(GError *, gboolean power, gpointer), gpointer userdata);
 
-void device_get_info(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata);
+void device_get_info(void (*callback)(GError *, GHashTable *info, gpointer), gpointer userdata);
 
-void device_get_features(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata);
+void device_get_features(void (*callback)(GError *, GHashTable *features, gpointer), gpointer userdata);
 
 void device_prepare_to_suspend(void (*callback)(GError *, gpointer), gpointer userdata);
 

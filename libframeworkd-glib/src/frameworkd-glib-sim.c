@@ -64,7 +64,7 @@ int sim_handle_authentication_state(const char*status) {
 
 typedef struct
 {
-    void (*callback)(GError *, int, gpointer);
+    void (*callback)(GError *, int status, gpointer);
     gpointer userdata;
 } sim_get_auth_status_data_t;
 
@@ -89,7 +89,7 @@ void sim_get_auth_status_callback(DBusGProxy *bus, char* status, GError* dbus_er
     if(dbus_error != NULL) g_error_free(dbus_error);
 }
 
-void sim_get_auth_status(void (*callback)(GError*, int, gpointer), gpointer userdata) {
+void sim_get_auth_status(void (*callback)(GError*, int status, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_auth_status_data_t *data = g_malloc (sizeof (sim_get_auth_status_data_t));
@@ -202,12 +202,12 @@ void sim_change_auth_code(const char* old, const char* new, void (*callback)(GEr
 
 typedef struct
 {
-    void (*callback)(GError *, char*, char*, gpointer);
+    void (*callback)(GError *, char* name, char* number, gpointer);
     gpointer userdata;
-} sim_retrieve_phonebook_entry_data_t;
+} sim_retrieve_entry_data_t;
 
-void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* number, GError *dbus_error, gpointer userdata) {
-    sim_retrieve_phonebook_entry_data_t *data = userdata;
+void sim_retrieve_entry_callback(DBusGProxy* bus, char*name, char* number, GError *dbus_error, gpointer userdata) {
+    sim_retrieve_entry_data_t *data = userdata;
     GError *error = NULL;
 
     if(data->callback != NULL) {
@@ -224,19 +224,19 @@ void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* num
     g_free(data);
 }
 
-void sim_retrieve_phonebook_entry(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata) {
+void sim_retrieve_entry(const int index, void (*callback)(GError*, char* name, char*number, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
-    sim_retrieve_phonebook_entry_data_t *data = g_malloc (sizeof (sim_retrieve_phonebook_entry_data_t));
+    sim_retrieve_entry_data_t *data = g_malloc (sizeof (sim_retrieve_entry_data_t));
     data->callback = callback;
     data->userdata = userdata;
 
-    org_freesmartphone_GSM_SIM_retrieve_entry_async(simBus, index, sim_retrieve_phonebook_entry_callback, data);
+    org_freesmartphone_GSM_SIM_retrieve_entry_async(simBus, index, sim_retrieve_entry_callback, data);
 }
 
 typedef struct
 {
-    void (*callback)(GError *, char*, char*, gpointer);
+    void (*callback)(GError *, char*number, char*content, gpointer);
     gpointer userdata;
 } sim_retrieve_message_data_t;
 
@@ -258,7 +258,7 @@ void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, 
     g_free(data);
 }
 
-void sim_retrieve_message(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata) {
+void sim_retrieve_message(const int index, void (*callback)(GError*, char*number, char*content, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_retrieve_message_data_t *data = g_malloc (sizeof (sim_retrieve_message_data_t));
@@ -304,7 +304,7 @@ void sim_set_auth_code_required(gboolean check, const char* pin, void (*callback
 
 typedef struct
 {
-    void (*callback)(GError *, gboolean, gpointer);
+    void (*callback)(GError *, gboolean check, gpointer);
     gpointer userdata;
 } sim_get_auth_code_required_data_t;
 
@@ -325,7 +325,7 @@ void sim_get_auth_code_required_callback(DBusGProxy* bus, gboolean check, GError
     g_free(data);
 }
 
-void sim_get_auth_code_required(void (*callback)(GError*, gboolean, gpointer), gpointer userdata) {
+void sim_get_auth_code_required(void (*callback)(GError*, gboolean check, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_auth_code_required_data_t *data = g_malloc (sizeof (sim_get_auth_code_required_data_t));
@@ -337,7 +337,7 @@ void sim_get_auth_code_required(void (*callback)(GError*, gboolean, gpointer), g
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable*sim_info, gpointer);
     gpointer userdata;
 } sim_get_sim_info_data_t;
 
@@ -359,7 +359,7 @@ void sim_get_sim_info_callback(DBusGProxy* bus, GHashTable* sim_info, GError *db
     g_hash_table_destroy(sim_info);
 }
 
-void sim_get_sim_info(void (*callback)(GError*, GHashTable*, gpointer), gpointer userdata) {
+void sim_get_sim_info(void (*callback)(GError*, GHashTable*sim_info, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_sim_info_data_t *data = g_malloc (sizeof (sim_get_sim_info_data_t));
@@ -371,7 +371,7 @@ void sim_get_sim_info(void (*callback)(GError*, GHashTable*, gpointer), gpointer
 
 typedef struct
 {
-    void (*callback)(GError *, char*, gpointer);
+    void (*callback)(GError *, char* result, gpointer);
     gpointer userdata;
 } sim_send_generic_sim_command_data_t;
 
@@ -393,7 +393,7 @@ void sim_send_generic_sim_command_callback(DBusGProxy* bus, char* result, GError
     free(result);
 }
 
-void sim_send_generic_sim_command(char * command, void (*callback)(GError*, char*, gpointer), gpointer userdata) {
+void sim_send_generic_sim_command(char * command, void (*callback)(GError*, char*result, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_send_generic_sim_command_data_t *data = g_malloc (sizeof (sim_send_generic_sim_command_data_t));
@@ -405,7 +405,7 @@ void sim_send_generic_sim_command(char * command, void (*callback)(GError*, char
 
 typedef struct
 {
-    void (*callback)(GError *, char*, gpointer);
+    void (*callback)(GError *, char* result, gpointer);
     gpointer userdata;
 } sim_send_restricted_sim_command_data_t;
 
@@ -427,7 +427,7 @@ void sim_send_restricted_sim_command_callback(DBusGProxy* bus, char* result, GEr
     free(result);
 }
 
-void sim_send_restricted_sim_command(const int command, const int fileid, const int p1, const int p2, const int p3, char * sim_data, void (*callback)(GError*, char*, gpointer), gpointer userdata) {
+void sim_send_restricted_sim_command(const int command, const int fileid, const int p1, const int p2, const int p3, char * sim_data, void (*callback)(GError*, char* result, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_send_restricted_sim_command_data_t *data = g_malloc (sizeof (sim_send_restricted_sim_command_data_t));
@@ -440,11 +440,11 @@ void sim_send_restricted_sim_command(const int command, const int fileid, const 
 
 typedef struct
 {
-    void (*callback)(GError *, GPtrArray*, gpointer);
+    void (*callback)(GError *, GPtrArray*home_zones, gpointer);
     gpointer userdata;
 } sim_get_home_zones_data_t;
 
-void sim_get_home_zones_callback(DBusGProxy* bus, GPtrArray* homezones, GError *dbus_error, gpointer userdata) {
+void sim_get_home_zones_callback(DBusGProxy* bus, GPtrArray* home_zones, GError *dbus_error, gpointer userdata) {
     sim_get_home_zones_data_t *data = userdata;
     GError *error = NULL;
 
@@ -453,16 +453,16 @@ void sim_get_home_zones_callback(DBusGProxy* bus, GPtrArray* homezones, GError *
         if(dbus_error != NULL)
             error = dbus_handle_errors(dbus_error);
 
-        data->callback (error, homezones, data->userdata);
+        data->callback (error, home_zones, data->userdata);
         if(error != NULL) g_error_free(error);
     } 
 
     if(dbus_error != NULL) g_error_free(dbus_error);        
     g_free(data);
-    dbus_free_data(dbus_get_type_g_string_int_int_int_array(), homezones);
+    dbus_free_data(dbus_get_type_g_string_int_int_int_array(), home_zones);
 }
 
-void sim_get_home_zones(void (*callback)(GError*, GPtrArray*, gpointer), gpointer userdata) {
+void sim_get_home_zones(void (*callback)(GError*, GPtrArray*home_zones, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_home_zones_data_t *data = g_malloc (sizeof (sim_get_home_zones_data_t));
@@ -474,7 +474,7 @@ void sim_get_home_zones(void (*callback)(GError*, GPtrArray*, gpointer), gpointe
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable*phonebook_info, gpointer);
     gpointer userdata;
 } sim_get_phonebook_info_data_t;
 
@@ -496,7 +496,7 @@ void sim_get_phonebook_info_callback(DBusGProxy* bus, GHashTable* phonebook_info
     g_hash_table_destroy(phonebook_info);
 }
 
-void sim_get_phonebook_info(void (*callback)(GError*, GHashTable*, gpointer), gpointer userdata) {
+void sim_get_phonebook_info(void (*callback)(GError*, GHashTable*phonebook_info, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_phonebook_info_data_t *data = g_malloc (sizeof (sim_get_phonebook_info_data_t));
@@ -574,7 +574,7 @@ void sim_store_entry(const int index, char *name, char * number, void (*callback
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable*messagebook_info, gpointer);
     gpointer userdata;
 } sim_get_messagebook_info_data_t;
 
@@ -596,7 +596,7 @@ void sim_get_messagebook_info_callback(DBusGProxy* bus, GHashTable* messagebook_
     g_hash_table_destroy(messagebook_info);
 }
 
-void sim_get_messagebook_info(void (*callback)(GError*, GHashTable*, gpointer), gpointer userdata) {
+void sim_get_messagebook_info(void (*callback)(GError*, GHashTable*messagebook_info, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_messagebook_info_data_t *data = g_malloc (sizeof (sim_get_messagebook_info_data_t));
@@ -608,7 +608,7 @@ void sim_get_messagebook_info(void (*callback)(GError*, GHashTable*, gpointer), 
 
 typedef struct
 {
-    void (*callback)(GError *, char*, gpointer);
+    void (*callback)(GError *, char*number, gpointer);
     gpointer userdata;
 } sim_get_service_center_number_data_t;
 
@@ -630,7 +630,7 @@ void sim_get_service_center_number_callback(DBusGProxy* bus, char* number, GErro
     free(number);
 }
 
-void sim_get_service_center_number(void (*callback)(GError*, char*, gpointer), gpointer userdata) {
+void sim_get_service_center_number(void (*callback)(GError*, char*number, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_get_service_center_number_data_t *data = g_malloc (sizeof (sim_get_service_center_number_data_t));
@@ -708,7 +708,7 @@ void sim_delete_message(int index, void (*callback)(GError*, gpointer), gpointer
 
 typedef struct
 {
-    void (*callback)(GError *, int, gpointer);
+    void (*callback)(GError *, int index, gpointer);
     gpointer userdata;
 } sim_store_message_data_t;
 
@@ -729,7 +729,7 @@ void sim_store_message_callback(DBusGProxy* bus, int index, GError *dbus_error, 
     g_free(data);
 }
 
-void sim_store_message(char * number, char* content, void (*callback)(GError*, int, gpointer), gpointer userdata) {
+void sim_store_message(char * number, char* content, void (*callback)(GError*, int index, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_store_message_data_t *data = g_malloc (sizeof (sim_store_message_data_t));
@@ -741,7 +741,7 @@ void sim_store_message(char * number, char* content, void (*callback)(GError*, i
 
 typedef struct
 {
-    void (*callback)(GError *, int, gpointer);
+    void (*callback)(GError *, int transaction_index, gpointer);
     gpointer userdata;
 } sim_send_stored_message_data_t;
 
@@ -762,7 +762,7 @@ void sim_send_stored_message_callback(DBusGProxy* bus, int transaction_index, GE
     g_free(data);
 }
 
-void sim_send_stored_message(const int index, void (*callback)(GError*, int, gpointer), gpointer userdata) {
+void sim_send_stored_message(const int index, void (*callback)(GError*, int transaction_index, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_send_stored_message_data_t *data = g_malloc (sizeof (sim_send_stored_message_data_t));

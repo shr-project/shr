@@ -156,7 +156,7 @@ void network_unregister(void (*callback)(GError *, gpointer), gpointer userdata)
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable* status, gpointer);
     gpointer userdata;
 } network_get_status_data_t;
 
@@ -177,7 +177,7 @@ void network_get_status_callback(DBusGProxy *bus, GHashTable *status, GError *db
     g_hash_table_destroy(status);
 }
 
-void network_get_status(void (*callback)(GError *, GHashTable*, gpointer), gpointer userdata) {
+void network_get_status(void (*callback)(GError *, GHashTable* status, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_network();
 
     network_get_status_data_t *data = g_malloc (sizeof (network_get_status_data_t));
@@ -189,7 +189,7 @@ void network_get_status(void (*callback)(GError *, GHashTable*, gpointer), gpoin
 
 typedef struct
 {
-    void (*callback)(GError *, int, gpointer);
+    void (*callback)(GError *, int strength, gpointer);
     gpointer userdata;
 } network_get_signal_strength_data_t;
 
@@ -210,7 +210,7 @@ void network_get_signal_strength_callback(DBusGProxy *bus, int strength, GError 
 
 }
 
-void network_get_signal_strength(void (*callback)(GError *, int, gpointer), gpointer userdata) {
+void network_get_signal_strength(void (*callback)(GError *, int strength, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_network();
 
     network_get_signal_strength_data_t *data = g_malloc (sizeof (network_get_signal_strength_data_t));
@@ -222,7 +222,7 @@ void network_get_signal_strength(void (*callback)(GError *, int, gpointer), gpoi
 
 typedef struct
 {
-    void (*callback)(GError *, GPtrArray*, gpointer);
+    void (*callback)(GError *, GPtrArray* providers, gpointer);
     gpointer userdata;
 } network_list_providers_data_t;
 
@@ -243,7 +243,7 @@ void network_list_providers_callback(DBusGProxy *bus, GPtrArray* providers, GErr
     dbus_free_data(dbus_get_type_int_g_string_g_string_g_string_array(), providers);
 }
 
-void network_list_providers(void (*callback)(GError *, GPtrArray*, gpointer), gpointer userdata) {
+void network_list_providers(void (*callback)(GError *, GPtrArray* providers, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_network();
 
     network_list_providers_data_t *data = g_malloc (sizeof (network_list_providers_data_t));
@@ -255,7 +255,7 @@ void network_list_providers(void (*callback)(GError *, GPtrArray*, gpointer), gp
 
 typedef struct
 {
-    void (*callback)(GError *, char*, gpointer);
+    void (*callback)(GError *, char* country_code, gpointer);
     gpointer userdata;
 } network_get_country_code_data_t;
 
@@ -276,7 +276,7 @@ void network_get_country_code_callback(DBusGProxy *bus, char * country_code, GEr
     free(country_code);
 }
 
-void network_get_country_code(void (*callback)(GError *, char*, gpointer), gpointer userdata) {
+void network_get_country_code(void (*callback)(GError *, char* country_code, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_network();
 
     network_get_country_code_data_t *data = g_malloc (sizeof (network_get_country_code_data_t));
@@ -288,7 +288,7 @@ void network_get_country_code(void (*callback)(GError *, char*, gpointer), gpoin
 
 typedef struct
 {
-    void (*callback)(GError *, GHashTable*, gpointer);
+    void (*callback)(GError *, GHashTable* forwards, gpointer);
     gpointer userdata;
 } network_get_call_forwarding_data_t;
 
@@ -309,7 +309,7 @@ void network_get_call_forwarding_callback(DBusGProxy *bus, GHashTable* forwards,
     g_hash_table_destroy(forwards);
 }
 
-void network_get_call_forwarding(void (*callback)(GError *, GHashTable*, gpointer), gpointer userdata) {
+void network_get_call_forwarding(void (*callback)(GError *, GHashTable* forwards, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_network();
 
     network_get_call_forwarding_data_t *data = g_malloc (sizeof (network_get_call_forwarding_data_t));
@@ -420,7 +420,7 @@ void network_set_calling_identification(int visible, void (*callback)(GError *, 
 
 typedef struct
 {
-    void (*callback)(GError *, int, gpointer);
+    void (*callback)(GError *, int visible, gpointer);
     gpointer userdata;
 } network_get_calling_identification_data_t;
 
@@ -441,7 +441,7 @@ void network_get_calling_identification_callback(DBusGProxy *bus, char * visible
     free(visible);
 }
 
-void network_get_calling_identification(void (*callback)(GError *, int, gpointer), gpointer userdata) {
+void network_get_calling_identification(void (*callback)(GError *, int visible, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_network();
 
     network_get_calling_identification_data_t *data = g_malloc (sizeof (network_get_calling_identification_data_t));
