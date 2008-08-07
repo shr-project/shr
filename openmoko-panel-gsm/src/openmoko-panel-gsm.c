@@ -82,7 +82,7 @@ gsm_applet_gsmd_connection_status(gboolean status)
     else
     {
         strcpy( theApplet->operator_name, "<unknown>" );
-        gsm_applet_update_signal_strength(99, theApplet );
+        gsm_applet_update_signal_strength(-1, theApplet );
         gsm_applet_show_status(NULL, theApplet);
     }
 }
@@ -97,23 +97,21 @@ gsm_applet_update_signal_strength(int strength,  GsmApplet* applet)
     g_debug( "gsm_applet_update_signal_strength: signal strength = %d",
               strength );
 
-    if ( strength == 99 )
+    if ( strength == -1 )
     {
         moko_panel_applet_set_icon( applet->mokoapplet, PKGDATADIR "/SignalStrength_NR.png" );
         return;
     }
 
-    gfloat percent = (strength / _MAX_SIGNAL) * 100;
-
-    if ( percent == 0 )
+    if ( strength == 0 )
       pixmap = 0;
-    else if ( percent < 20 )
+    else if ( strength < 20 )
       pixmap = 1;
-    else if ( percent < 40 )
+    else if ( strength < 40 )
       pixmap = 2;
-    else if ( percent < 60 )
+    else if ( strength < 60 )
       pixmap = 3;
-    else if ( percent < 80 )
+    else if ( strength < 80 )
       pixmap = 4;
     else
       pixmap = 5;
@@ -139,7 +137,7 @@ gsm_applet_gsm_antenna_status(gboolean status)
     else {
 	    /* notify user antenna is OFF */
 	    theApplet->type = 7;
-	    gsm_applet_update_signal_strength( 99, theApplet );
+	    gsm_applet_update_signal_strength( -1, theApplet );
 	    gsm_applet_show_status( 0, theApplet );
     }
 
@@ -261,7 +259,7 @@ gsm_applet_update_visibility (GsmApplet *applet)
 
     if (!gsm_applet_power_get()) {
 	    theApplet->type = 8;
-	    gsm_applet_update_signal_strength( 99, applet );
+	    gsm_applet_update_signal_strength( -1, applet );
 	    gsm_applet_show_status( 0, applet );
 	    applet->state = 0;
     } else {
@@ -356,7 +354,7 @@ void gsmpanel_network_status_handler (GHashTable * status)
     
     int regStatus = network_get_registration_status(status); 
     int type = -1;
-    int strength = 99;
+    int strength = -1;
 
     //g_hash_table_foreach(status,display_hash_value,NULL);
     lac = network_get_location_area(status);
