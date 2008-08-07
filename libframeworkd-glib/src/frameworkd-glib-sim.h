@@ -54,26 +54,49 @@ typedef enum {
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
 int sim_handle_authentication_state(const char*status);
 
-void sim_get_authentication_state(void (*callback)(GError*, int, gpointer), gpointer userdata);
-void sim_get_authentication_state_callback(DBusGProxy *bus, char* status, GError* dbus_error, gpointer userdata);
+void sim_get_auth_status(void (*callback)(GError*, int, gpointer), gpointer userdata);
 
-void sim_send_pin_code(const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
-void sim_send_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
+void sim_send_auth_code(const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
 
-void sim_send_puk_code(const char* puk, const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
-void sim_send_puk_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
+void sim_unlock(const char* puk, const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
 
-void sim_change_pin_code(const char* old, const char* new, void (*callback)(GError*, gpointer), gpointer userdata);
-void sim_change_pin_code_callback(DBusGProxy* bus, GError *dbus_error, gpointer userdata);
+void sim_change_auth_code(const char* old, const char* new, void (*callback)(GError*, gpointer), gpointer userdata);
 
 void sim_retrieve_message(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata);
-void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, GError *dbus_error, gpointer userdata) ;
 
-void sim_retrieve_phonebook_entry(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata);
-void sim_retrieve_phonebook_entry_callback(DBusGProxy* bus, char*name, char* number, GError *dbus_error, gpointer userdata);
+void sim_retrieve_entry(const int index, void (*callback)(GError*, char*, char*, gpointer), gpointer userdata);
+
+void sim_set_auth_code_required(const gboolean check, const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
+
+void sim_get_auth_code_required(void (*callback)(GError*, gboolean, gpointer), gpointer userdata);
+
+void sim_get_sim_info(void (*callback)(GError *,GHashTable*, gpointer), gpointer userdata);
+
+void sim_send_generic_sim_command(char *command, void (*callback)(GError*, char*, gpointer), gpointer userdata);
+
+void sim_send_restricted_sim_command(const int command, const int fileid, const int p1, const int p2, const int p3, char *data, void (*callback)(GError*, char*, gpointer), gpointer userdata);
+
+void sim_get_home_zones(void (*callback)(GError*, GPtrArray*, gpointer), gpointer userdata);
+
+void sim_get_phonebook_info(void (*callback)(GError*, GHashTable*, gpointer), gpointer userdata);
+
+void sim_delete_entry(const int index, void (*callback)(GError*, gpointer), gpointer userdata);
+
+void sim_store_entry(const int index, char *name, char*number, void (*callback)(GError*, gpointer), gpointer userdata);
+
+void sim_get_messagebook_info( void (*callback)(GError*, GHashTable*, gpointer), gpointer userdata);
+
+void sim_get_service_center_number(void (*callback)(GError*, char*, gpointer), gpointer userdata);
+
+void sim_set_service_center_number(char *number,  void (*callback)(GError*, gpointer), gpointer userdata);
+
+void sim_delete_message(const int index, void (*callback)(GError*, gpointer), gpointer userdata);
+
+void sim_store_message(char *number, char* content, void (*callback)(GError*, int, gpointer), gpointer userdata);
+
+void sim_send_stored_message(const int index, void (*callback)(GError*, int, gpointer), gpointer userdata);
 
 void sim_display_code_UI ();
-void sim_display_code_UI_callback(GError* error, int status, gpointer userdata);
 
 GError* sim_handle_errors(GError *dbus_error);
 

@@ -127,6 +127,7 @@ void device_get_info_callback(DBusGProxy* bus, GHashTable *info, GError *dbus_er
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
+    g_hash_table_destroy(info);
 }
 
 void device_get_info(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata) {
@@ -159,6 +160,7 @@ void device_get_features_callback(DBusGProxy* bus, GHashTable *features, GError 
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
+    g_hash_table_destroy(features);
 }
 
 void device_get_features(void (*callback)(GError *, GHashTable *, gpointer), gpointer userdata) {

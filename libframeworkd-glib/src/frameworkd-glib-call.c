@@ -397,7 +397,7 @@ static void call_list_calls_callback(DBusGProxy* proxy, GPtrArray * calls, GErro
     }
 
     if(dbus_error != NULL) g_error_free(dbus_error);
-
+    dbus_free_data(dbus_get_type_int_g_string_g_string_variant_hashtable_array(), calls);
     g_free (data);
 }
 

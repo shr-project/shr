@@ -174,7 +174,7 @@ void network_get_status_callback(DBusGProxy *bus, GHashTable *status, GError *db
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
-
+    g_hash_table_destroy(status);
 }
 
 void network_get_status(void (*callback)(GError *, GHashTable*, gpointer), gpointer userdata) {
@@ -240,7 +240,7 @@ void network_list_providers_callback(DBusGProxy *bus, GPtrArray* providers, GErr
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
-
+    dbus_free_data(dbus_get_type_int_g_string_g_string_g_string_array(), providers);
 }
 
 void network_list_providers(void (*callback)(GError *, GPtrArray*, gpointer), gpointer userdata) {
@@ -273,7 +273,7 @@ void network_get_country_code_callback(DBusGProxy *bus, char * country_code, GEr
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
-
+    free(country_code);
 }
 
 void network_get_country_code(void (*callback)(GError *, char*, gpointer), gpointer userdata) {
@@ -306,7 +306,7 @@ void network_get_call_forwarding_callback(DBusGProxy *bus, GHashTable* forwards,
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
-
+    g_hash_table_destroy(forwards);
 }
 
 void network_get_call_forwarding(void (*callback)(GError *, GHashTable*, gpointer), gpointer userdata) {
@@ -424,7 +424,7 @@ typedef struct
     gpointer userdata;
 } network_get_calling_identification_data_t;
 
-void network_get_calling_identification_callback(DBusGProxy *bus, int visible, GError *dbus_error, gpointer userdata) {
+void network_get_calling_identification_callback(DBusGProxy *bus, char * visible, GError *dbus_error, gpointer userdata) {
     network_get_calling_identification_data_t *data = userdata;
     GError *error = NULL;
 
@@ -438,7 +438,7 @@ void network_get_calling_identification_callback(DBusGProxy *bus, int visible, G
 
     if(dbus_error != NULL) g_error_free(dbus_error);
     g_free(data);
-
+    free(visible);
 }
 
 void network_get_calling_identification(void (*callback)(GError *, int, gpointer), gpointer userdata) {

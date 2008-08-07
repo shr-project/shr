@@ -94,7 +94,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
     if (!bus)
         lose_gerror ("Couldn't connect to system bus", error);
 
-    dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+    dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
     dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_BOOLEAN_STRING, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
 
     if(fwHandler != NULL) {
@@ -103,7 +103,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 #endif
         if(fwHandler->networkStatus != NULL) {
             dbus_connect_to_gsm_network();
-            dbus_g_proxy_add_signal (networkBus, "Status", DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+            dbus_g_proxy_add_signal (networkBus, "Status", dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
             dbus_g_proxy_connect_signal (networkBus, "Status", G_CALLBACK (network_status_handler),
                     fwHandler->networkStatus, NULL);
 
@@ -131,7 +131,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
         }
         if(fwHandler->callCallStatus != NULL) {
             dbus_connect_to_gsm_call();
-            dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, DBUS_TYPE_G_STRING_VARIANT_HASHTABLE, G_TYPE_INVALID);
+            dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
             dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (call_status_handler),
                     fwHandler->callCallStatus, NULL);
 #ifdef DEBUG
@@ -192,4 +192,37 @@ DBusGProxy *dbus_connect_to_interface(char *bus_name, char *path, char *interfac
         }
     }
     return itf;
+}
+
+void dbus_free_data(GType type, gpointer data) {
+    GValue foo;
+    g_value_init(&foo, type);
+    g_value_take_boxed(&foo, data);
+    g_value_unset(&foo);
+}
+
+GType dbus_get_type_g_string_variant_hashtable() {
+    static GType foo = 0; 
+    if (G_UNLIKELY (foo ==0)) 
+        foo = dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE);
+    return foo;
+}
+GType dbus_get_type_g_string_int_int_int_array() {
+    static GType foo = 0;
+    if (G_UNLIKELY (foo ==0))
+        foo = dbus_g_type_get_collection ("GPtrArray", dbus_g_type_get_struct ("GValueArray", G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INVALID)); 
+    return foo;
+}
+GType dbus_get_type_int_g_string_g_string_variant_hashtable_array() {
+    static GType foo = 0;
+    if (G_UNLIKELY (foo ==0))
+        foo = dbus_g_type_get_collection ("GPtrArray", dbus_g_type_get_struct ("GValueArray", G_TYPE_INT, G_TYPE_STRING, dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), G_TYPE_INVALID)); 
+    return foo;
+}
+
+GType dbus_get_type_int_g_string_g_string_g_string_array() {
+    static GType foo = 0;
+    if (G_UNLIKELY (foo ==0))
+        foo = dbus_g_type_get_collection ("GPtrArray", dbus_g_type_get_struct ("GValueArray", G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INVALID));
+    return foo;
 }
