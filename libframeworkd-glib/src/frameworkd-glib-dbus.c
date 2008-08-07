@@ -29,7 +29,7 @@
 #include "frameworkd-glib-sms.h"
 #include "dialer-marshal.h"
 
-static DBusGConnection* bus;
+DBusGConnection* bus;
 
 void lose (const char *str, ...)
 {
