@@ -96,7 +96,7 @@ void sim_get_auth_status(void (*callback)(GError*, int status, gpointer), gpoint
     data->callback = callback;
     data->userdata = userdata;
 
-    org_freesmartphone_GSM_SIM_get_auth_status_async(simBus, sim_get_auth_status_callback, userdata);
+    org_freesmartphone_GSM_SIM_get_auth_status_async(simBus, sim_get_auth_status_callback, data);
 }
 
 typedef struct
