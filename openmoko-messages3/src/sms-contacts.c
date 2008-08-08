@@ -323,7 +323,7 @@ contacts_added_cb (EBookView *ebookview, GList *contacts, SmsData *data)
 		const gchar *category_string;
 		GList *categories;
 		
-		if (!contact) continue;
+		if (!e_contact_get_const (contact, E_CONTACT_FULL_NAME)) continue;
 		
 		iter = g_slice_new (GtkTreeIter);
 		gtk_list_store_append ((GtkListStore *)data->contacts_store,
@@ -357,7 +357,7 @@ contacts_changed_cb (EBookView *ebookview, GList *contacts, SmsData *data)
 		
 		EContact *contact = (EContact *)contacts->data;
 		
-		if (!contact) continue;
+		if (!e_contact_get_const (contact, E_CONTACT_FULL_NAME)) continue;
 		
 		uid = e_contact_get_const (contact, E_CONTACT_UID);
 		iter = g_hash_table_lookup (data->contacts, uid);
@@ -558,7 +558,7 @@ gboolean contacts_visible_func (GtkTreeModel *model, GtkTreeIter *iter,
 		if (!uid) return FALSE;
 		e_book_get_contact (data->ebook, uid, &contact, NULL);
 		g_free (uid);
-		if (!contact) {
+		if (!e_contact_get_const (contact, E_CONTACT_FULL_NAME)) {
 			g_free (category);
 			return FALSE;
 		}
