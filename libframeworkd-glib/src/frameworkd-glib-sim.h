@@ -96,8 +96,6 @@ void sim_store_message(char *number, char* content, void (*callback)(GError*, in
 
 void sim_send_stored_message(const int index, void (*callback)(GError*, int transaction_index, gpointer), gpointer userdata);
 
-void sim_display_code_UI ();
-
 GError* sim_handle_errors(GError *dbus_error);
 
 extern DBusGProxy *simBus;

@@ -772,18 +772,6 @@ void sim_send_stored_message(const int index, void (*callback)(GError*, int tran
     org_freesmartphone_GSM_SIM_send_stored_message_async(simBus, index, sim_send_stored_message_callback, data);
 }
 
-void sim_display_code_UI_callback(GError* error, int status, gpointer userdata) {
-    if(error != NULL) {
-        /* TODO */
-    } else if (status != SIM_READY) {
-        phonegui_display_pin_UI(status);
-    }
-}
-
-void sim_display_code_UI () {
-    sim_get_auth_status (sim_display_code_UI_callback, NULL);
-}
-
 GError* sim_handle_errors(GError *error) {
     const char *error_name = dbus_g_error_get_name(error);
     int simError = 0;

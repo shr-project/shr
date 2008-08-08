@@ -24,4 +24,5 @@ void ophonekitd_sms_message_sent_handler(const int id, gboolean success, const c
 void ophonekitd_sim_auth_status_handler(const int status);
 void ophonekitd_network_status_handler(GHashTable *status);
 void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties);
+void ophonekitd_display_code_UI ();
 #endif

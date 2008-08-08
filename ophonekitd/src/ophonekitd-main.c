@@ -31,6 +31,18 @@
 
 static gboolean connected_to_network = FALSE;
 
+/*static MokoJournal *journal = NULL;
+static MokoContacts *contacts = NULL;
+
+typedef struct {
+    int id;
+    int status;
+    MokoJournalEntry *journal_entry;
+    MokoTime *time;
+    MokoContactsEntry *contacts_entry;
+} OphonekitdCallStatus;
+*/
+
 int main(int argc, char ** argv) {
         GMainLoop *mainloop = NULL;
         FrameworkdHandlers fwHandler;
@@ -73,7 +85,7 @@ gboolean power_up_antenna() {
 void power_up_antenna_callback(GError *error, gpointer userdata) {
         if(error != NULL) {
             if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
-                sim_display_code_UI();
+                ophonekitd_display_code_UI();
             }
                 /* TODO */
         }
@@ -91,7 +103,12 @@ void register_to_network_callback(GError *error, gpointer userdata) {
         }
 }
 
-void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) {
+void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) { 
+    switch(status) {
+        case CALL_STATUS_INCOMING:
+        case CALL_STATUS_OUTGOING:
+           break; 
+    }
 }
 
 void ophonekitd_network_status_handler(GHashTable *status) {
@@ -115,3 +132,16 @@ void ophonekitd_sms_message_sent_handler(const int id, gboolean success, const c
 
 void ophonekitd_sms_incoming_message_handler(const int id) {
 }
+
+void ophonekitd_display_code_UI_callback(GError* error, int status, gpointer userdata) {
+    if(error != NULL) {
+        /* TODO */
+    } else if (status != SIM_READY) {
+        phonegui_display_pin_UI(status);
+    }
+}
+
+void ophonekitd_display_code_UI () {
+    sim_get_auth_status (ophonekitd_display_code_UI_callback, NULL);
+}
+
