@@ -18,6 +18,8 @@ libframeworkd_phonegui_gtk_la_SOURCES = \
 
 libframeworkd_phonegui_gtk_HEADERS = frameworkd-phonegui.h
 
+libframeworkd_phonegui_gtkdir = $(includedir)/frameworkd-phonegui-gtk
+
 libframeworkd_phonegui_gtk_la_LDFLAGS = $(all_libraries) -version-info 0:0:0
 
 libframeworkd_phonegui_gtk_la_LIBADD = @PHONEGUI_LIBS@ @JANA_LIBS@
