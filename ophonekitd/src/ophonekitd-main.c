@@ -103,12 +103,30 @@ void register_to_network_callback(GError *error, gpointer userdata) {
         }
 }
 
-void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) { 
+static void print_property(gpointer key, gpointer value, gpointer user_data)
+{
+	printf( "Call Property :: %s = %s\n", (char*) key, (char*) value );
+}
+
+void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) {
+	gchar *number = NULL;
+
     switch(status) {
         case CALL_STATUS_INCOMING:
         case CALL_STATUS_OUTGOING:
            break; 
     }
+
+	/* NOTE:
+	 *
+	 * This is just test code.
+	 */
+
+	if (properties)
+		g_hash_table_foreach(properties, print_property, NULL);
+
+	g_warning("Call status: %d", id_call);
+	phonegui_display_call_UI(id_call, status, number);
 }
 
 void ophonekitd_network_status_handler(GHashTable *status) {
