@@ -21,7 +21,7 @@
 
 #include <string.h>
 
-#include "moko-dialer-textview.h"
+#include "dialer-textview.h"
 #include "error.h"
 
 G_DEFINE_TYPE (MokoDialerTextview, moko_dialer_textview, GTK_TYPE_TEXT_VIEW)

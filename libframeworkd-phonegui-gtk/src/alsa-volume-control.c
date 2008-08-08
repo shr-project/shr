@@ -1,5 +1,5 @@
 
-#include "moko-alsa-volume-control.h"
+#include "alsa-volume-control.h"
 
 G_DEFINE_TYPE (MokoAlsaVolumeControl, moko_alsa_volume_control, \
 	G_TYPE_OBJECT)

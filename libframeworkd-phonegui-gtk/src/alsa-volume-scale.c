@@ -1,5 +1,5 @@
 
-#include "moko-alsa-volume-scale.h"
+#include "alsa-volume-scale.h"
 
 G_DEFINE_TYPE (MokoAlsaVolumeScale, moko_alsa_volume_scale, \
 	GTK_TYPE_EVENT_BOX)

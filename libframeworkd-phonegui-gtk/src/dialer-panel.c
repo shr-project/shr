@@ -15,9 +15,9 @@
  *
  *  Current Version: $Rev$ ($Date) [$Author: Tony Guan $]
  */
-#include "moko-dialer-panel.h"
+#include "dialer-panel.h"
 
-#include "moko-digit-button.h"
+#include "digit-button.h"
 
 G_DEFINE_TYPE (MokoDialerPanel, moko_dialer_panel, GTK_TYPE_VBOX)
 

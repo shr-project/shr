@@ -19,14 +19,14 @@
 
 #include <gtk/gtk.h>
 
-#include "moko-sound.h"
-#include "moko-talking.h"
-#include "moko-dialer-panel.h"
-#include "moko-dialer-textview.h"
-#include "moko-alsa-volume-control.h"
-#include "moko-alsa-volume-scale.h"
+#include "sound.h"
+#include "talking.h"
+#include "dialer-panel.h"
+#include "dialer-textview.h"
+#include "alsa-volume-control.h"
+#include "alsa-volume-scale.h"
 
-#include "moko-headset.h"
+#include "headset.h"
 
 G_DEFINE_TYPE (MokoTalking, moko_talking, GTK_TYPE_WIDGET)
 

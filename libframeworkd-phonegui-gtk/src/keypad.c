@@ -20,12 +20,12 @@
 #include <gtk/gtk.h>
 #include <gtk/gtk.h>
 
-#include "moko-keypad.h"
+#include "keypad.h"
 
-#include "moko-contacts.h"
-#include "moko-dialer-textview.h"
-#include "moko-dialer-panel.h"
-#include "moko-tips.h"
+#include "contacts.h"
+#include "dialer-textview.h"
+#include "dialer-panel.h"
+#include "tips.h"
 
 G_DEFINE_TYPE (MokoKeypad, moko_keypad, GTK_TYPE_VBOX)
 

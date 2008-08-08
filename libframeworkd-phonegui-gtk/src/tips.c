@@ -20,10 +20,10 @@
 #include <gtk/gtk.h>
 #include <moko-stock.h>
 
-#include "moko-tips.h"
+#include "tips.h"
 
 #include <gtk/gtk.h>
-#include "moko-contacts.h"
+#include "contacts.h"
 
 G_DEFINE_TYPE (MokoTips, moko_tips, GTK_TYPE_HBOX)
 

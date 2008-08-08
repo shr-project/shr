@@ -23,7 +23,7 @@
 #include <string.h>
 #include <libebook/e-book.h>
 
-#include "moko-contacts.h"
+#include "contacts.h"
 
 #include "dialer-defines.h"
 

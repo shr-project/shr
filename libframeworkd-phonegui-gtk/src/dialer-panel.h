@@ -23,7 +23,7 @@
 
 #include <gdk/gdk.h>
 #include <gtk/gtkvbox.h>
-#include "moko-digit-button.h"
+#include "digit-button.h"
 #include <glib-object.h>
 #include <gtk/gtktable.h>
 #include <gtk/gtkobject.h>
@@ -54,16 +54,11 @@ struct _MokoDialerPanelClass
                                   gchar parac);
 };
 
-
 void moko_dialer_panel_clear (MokoDialerPanel * moko_dialer_panel);
 
 GType moko_dialer_panel_get_type (void);
 
 GtkWidget *moko_dialer_panel_new ();
-
-
-
-
 
 G_END_DECLS
 #endif //

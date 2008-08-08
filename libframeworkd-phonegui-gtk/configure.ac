@@ -23,7 +23,7 @@ AC_PROG_LIBTOOL
 #                  libpulse
 #                  libframeworkd-glib)
 
-PKG_CHECK_MODULES(PHONEGUI, gtk+-2.0 libmokojournal2 libmokoui2 libframeworkd-glib)
+PKG_CHECK_MODULES(PHONEGUI, gtk+-2.0 libmokojournal2 libmokoui2 libframeworkd-glib libhito)
 # PKG_CHECK_MODULES(MOKO, libmokojournal2 libmokoui2)
 # PKG_CHECK_MODULES(EBOOK, libebook-1.2)
 # PKG_CHECK_MODULES(LFG, libframeworkd-glib)
@@ -31,7 +31,7 @@ PKG_CHECK_MODULES(PHONEGUI, gtk+-2.0 libmokojournal2 libmokoui2 libframeworkd-gl
 # PKG_CHECK_MODULES(NOTIFY, libnotify)
 # PKG_CHECK_MODULES(PULSE, libpulse)
 # PKG_CHECK_MODULES(ALSA, alsa)
-# PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
+PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 
 # old_cflags=$CFLAGS
 # CFLAGS=$DIALER_CFLAGS

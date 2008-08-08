@@ -16,7 +16,7 @@
  *  Current Version: $Rev$ ($Date) [$Author: Tony Guan $]
  */
 
-#include "moko-digit-button.h"
+#include "digit-button.h"
 #include <gtk/gtkwindow.h>
 #include <gtk/gtk.h>
 #include <gtk/gtkbutton.h>

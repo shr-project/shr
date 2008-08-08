@@ -32,18 +32,18 @@
 
 #include <libebook/e-book.h>
 
-#include "hito-contact-view.h"
-#include "hito-contact-store.h"
-#include "hito-group-store.h"
-#include "hito-group-combo.h"
-#include "hito-all-group.h"
-#include "hito-separator-group.h"
-#include "hito-group.h"
-#include "hito-no-category-group.h"
-#include "hito-vcard-util.h"
+#include <hito-contact-view.h>
+#include <hito-contact-store.h>
+#include <hito-group-store.h>
+#include <hito-group-combo.h>
+#include <hito-all-group.h>
+#include <hito-separator-group.h>
+#include <hito-group.h>
+#include <hito-no-category-group.h>
+#include <hito-vcard-util.h>
 
-#include "moko-contacts.h"
-#include "moko-history.h"
+#include "contacts.h"
+#include "history.h"
 
 G_DEFINE_TYPE (MokoHistory, moko_history, GTK_TYPE_VBOX)
 

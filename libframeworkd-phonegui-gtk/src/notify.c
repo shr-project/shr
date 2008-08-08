@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "moko-notify.h"
+#include "notify.h"
 
 #include <pulse/pulseaudio.h>
 
