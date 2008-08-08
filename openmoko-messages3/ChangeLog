@@ -1,0 +1,595 @@
+2008-04-10  Thomas Wood  <thomas@openedhand.com>
+
+	* src/moko-save-number.c:
+	(create_new_contact_from_number):  Correct dialog button order to be
+	consistent with other applications
+	(add_number_to_contact):  Set the initial selected group and remove
+	dialog separator.
+	(moko_save_number): Remove debug statement
+
+2008-04-07  Thomas Wood  <thomas@openedhand.com>
+
+	* src/moko-save-number.c: (moko_save_number): Check number is not blank,
+	and warn user if it is.
+
+	* src/sms-notes.c: (save_contact_clicked_cb): Add recipient number if
+	SMS was "Sent".
+
+2008-04-07  Thomas Wood  <thomas@openedhand.com>
+
+	* src/test-notes.c: (main): Add 
+
+2008-04-03  Thomas Wood  <thomas@openedhand.com>
+
+	* src/moko-save-number.c: (create_new_contact_from_number),
+	(btn_save_info_weak_notify), (moko_save_number):
+	* src/moko-save-number.h:
+	* src/sms-notes.c:
+
+	Fix some compiler warnings and possible double free
+
+2008-04-03  Thomas Wood  <thomas@openedhand.com>
+
+	* src/test-notes.c: (main): Add optional message and author command line
+	parameters
+
+2008-04-02  Thomas Wood  <thomas@openedhand.com>
+
+	* src/sms-contacts.c:
+	* src/sms-notes.c:
+	* src/sms-utils.c:
+
+	Re-add the New button to the notes pages.
+
+	Add a delete all button to the contacts page, to delete all selected
+	contact's messages
+
+2008-04-02  Thomas Wood  <thomas@openedhand.com>
+
+	* src/Makefile.am:
+	* src/test-notes.c:
+
+	Add a small test program to add notes to the system
+
+2008-04-02  Thomas Wood  <thomas@openedhand.com>
+
+	* src/sms-notes.c: Connect "Save Contact" button to moko-save-number.
+
+2008-04-01  Thomas Wood  <thomas@openedhand.com>
+
+	* src/Makefile.am:
+	* src/moko-save-number.c:
+	* src/moko-save-number.h:
+
+	Add moko-save-number.{c,h} for use in saving unknown numbers to contacts
+
+2008-04-01  Thomas Wood  <thomas@openedhand.com>
+
+	* src/sms-contacts.c: (openmoko_contacts_util_dial_number):
+	* src/sms-utils.c:
+
+	Remove functions copied from libhito which now conflict with built in
+	version of libhito.
+
+2008-04-01  Thomas Wood  <thomas@openedhand.com>
+
+	* configure.ac:
+	* src/Makefile.am:
+
+	Bring in libhito for future use
+
+2008-04-01  Erin Yueh  <erin_yueh@openmoko.com>
+
+	* src/sms-dbus.c: (sms_dbus_send_message):
+	fix unitialised variable error	
+
+2008-03-31  Thomas Wood  <thomas@openedhand.com>
+
+	* src/sms-notes.c: (page_shown), (sms_notes_page_new):
+	* src/sms.h:
+
+	Add a "new contact" button and display only when sender is unknown
+
+2008-03-31  Erin Yueh  <erin_yueh@openmoko.com>
+
+	* src/sms-compose.c: (sms_compose_page_new):
+	fix send key problem	
+
+2008-03-28  Thomas Wood  <thomas@openedhand.com>
+
+	* src/sms-compose.c: (page_shown), (sms_compose_page_new):
+	* src/sms-contacts.c: (contacts_changed_cb), (contacts_removed_cb),
+	(contacts_seq_complete_cb), (free_iter_slice),
+	(nophoto_filter_func), (contacts_iter_compare_func),
+	(contacts_visible_func), (malloc_list_free),
+	(selection_changed_cb), (sms_contacts_update_delete_all),
+	(sms_contacts_page_new):
+	* src/sms-main.c: (notebook_add_page_with_icon), (main):
+	* src/sms-notes.c: (page_shown), (page_hidden),
+	(sms_notes_page_new):
+	* src/sms.h:
+
+	Re-arrange toolbars to add dial button (bug 1306).
+
+2008-03-27  Erin Yueh  <erin_yueh@openmoko.com>
+
+	* src/sms-compose.c: (page_shown):
+	Display the recipient_number from Call logs (bug#1245)
+
+2008-03-24  Erin Yueh  <erin_yueh@openmoko.com>
+
+	* src/sms-compose.c: (page_shown), (sms_compose_refresh):
+	Display the recipient_number from Call logs (bug#1245)
+
+	* src/sms-compose.h: (sms_compose_refresh):	
+	* src/sms-dbus.c: (send_message_idle), (sms_dbus_send_message):
+
+2008-03-09  Erin Yueh  <erin_yueh@openmoko.com>	
+
+	* src/sms-notes.c: (notes_visible_func)	
+	fix the category filter (bug#1246)	
+
+2008-01-22  Chris Lord  <chris@openedhand.com>
+
+	* src/sms.h:
+	* src/sms-contacts.c: (sms_contacts_page_new):
+	Store the MokoFingerScroll the treeview is placed in
+
+	* src/sms-notes.c: (forward_clicked_cb):
+	Show a contacts chooser for picking which contact to forward to
+
+	* src/sms-utils.c: (sms_contact_picker_dialog):
+	* src/sms-utils.h:
+	Add a utility function to pop up a dialog with the contacts chooser
+	from the contacts page
+
+2008-01-17  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-main.c: (new_clicked_cb):
+	Don't clear the text input if the compose page is active
+
+	* src/sms-compose.c: (page_shown):
+	* src/sms-notes.c: (page_shown):
+	* src/sms-utils.c: (hito_vcard_get_named_attributes),
+	(hito_vcard_attribute_get_value_string),
+	(sms_delete_selected_contact_messages),
+	(sms_contacts_note_count_update):
+	* src/sms-utils.h:
+	Import two contacts-hito functions and use them to read numbers from
+	EVCard instead of EContact
+
+2008-01-14  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-main.c: (new_clicked_cb), (main):
+	Add a forward button, clear the text view when composing a new
+	message
+
+	* src/sms-notes.c: (page_shown), (page_hidden),
+	(forward_clicked_cb), (selection_changed_cb), (sms_notes_page_new):
+	Add basic forward message functionality (bug #1171)
+
+	* src/sms.h:
+	Add forward button
+
+2008-01-09  Chris Lord  <chris@openedhand.com>
+
+	* data/org.openmoko.OpenmokoMessages2.service.in:
+	Correct service name
+
+2008-01-09  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-utils.c: (sms_select_contact):
+	Clear current search/group and convert to filter iter before selecting
+	contact
+
+2008-01-09  Chris Lord  <chris@openedhand.com>
+
+	* configure.ac:
+	* data/Makefile.am:
+	* data/org.openmoko.OpenmokoMessages2.service.in:
+	* src/Makefile.am:
+	* src/sms-compose.c: (sms_compose_refresh):
+	* src/sms-compose.h:
+	* src/sms-contacts.c: (contacts_changed_cb),
+	(contacts_seq_complete_cb), (sms_contacts_page_new):
+	* src/sms-dbus.c: (sms_dbus_class_init), (sms_dbus_init),
+	(sms_dbus_new), (free_data), (view_messages_idle),
+	(send_message_idle), (sms_dbus_view_messages),
+	(sms_dbus_send_message), (sms_dbus_append_recipient):
+	* src/sms-dbus.h:
+	* src/sms-dbus.xml:
+	* src/sms-main.c: (main):
+	* src/sms-notes.c: (notes_treeview_scroll_to_bottom),
+	(note_progress_cb), (page_shown), (sms_notes_refresh):
+	* src/sms-notes.h:
+	* src/sms-utils.c: (sms_select_contact):
+	* src/sms-utils.h:
+	* src/sms.h:
+	Add DBus interface for viewing/sending SMS messages. Also, break
+	scrolling to bottom of messages (but it was even more broken before,
+	really)
+
+2008-01-07  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (scroll_notes_to_bottom_cb), (note_progress_cb),
+	(page_shown):
+	Scroll the notes treeview to the end of the list when switching to the
+	page
+
+2007-12-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-main.c:
+	* src/sms-notes.c: (sms_notes_data_func), (sms_notes_page_new):
+	* src/sms.h:
+	Add emblem support for sent/sending/rejected messages
+
+2007-12-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (mark_messages_read_idle):
+	Fix to possible crash actually caused infinite loop. Fix properly.
+
+2007-12-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms.h:
+	* src/sms-compose.c: (send_clicked_cb), (sms_compose_page_new):
+	Add a check-box for delivery status reports, adapt to altered API in
+	phone-kit
+
+	* src/sms-notes.c: (mark_messages_read_idle):
+	Fix possible crash when marking messages as read
+
+2007-12-20  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (sms_notes_data_func):
+	Disable showing of recipient's name on the notes view page
+
+2007-12-20  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (sms_notes_data_func):
+	Display contact names instead of phone numbers (fixes bug #1143)
+
+2007-12-20  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (note_changed_cb), (page_shown),
+	(sms_notes_data_func), (global_note_added_cb),
+	(notes_visible_func):
+	Only add messages once to the global note store, use Sent category to
+	decide whether to index on author/recipient (fixes incorrect unknown
+	messages count, bug #1144, #1142), fix avatar display, improve
+	sent/received filter.
+
+2007-12-20  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (note_changed_cb), (page_shown):
+	Fix avatars not appearing when viewing messages from unknown contacts
+
+2007-12-18  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (page_shown),
+	(sms_contacts_update_delete_all):
+	Fix warnings
+
+	* src/sms-notes.c: (notes_visible_func):
+	Don't allow NULL argument for author uid in strcmp
+
+2007-12-18  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (sms_contacts_page_new):
+	Update categories on start-up, in case there are no contacts
+
+2007-12-18  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (page_hidden):
+	* src/sms-contacts.c: (page_shown), (delete_clicked_cb),
+	(selection_changed_cb), (sms_contacts_update_delete_all),
+	(sms_contacts_page_new):
+	* src/sms-contacts.h:
+	* src/sms-main.c: (main):
+	* src/sms-notes.c: (page_shown), (row_inserted_cb),
+	(row_deleted_cb), (selection_changed_cb), (sms_notes_page_new):
+	* src/sms-utils.c: (sms_delete_selected_contact_messages),
+	(sms_contacts_note_count_update):
+	* src/sms-utils.h:
+	Set buttons insensitive when their actions are not valid
+
+2007-12-18  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (text_changed_cb), (sms_compose_page_new):
+	Add a message length indicator to the composition page
+
+2007-12-18  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (notes_visible_func), (sms_notes_page_new):
+	Add all/sent/received filter to notes page
+
+2007-12-18  Chris Lord  <chris@openedhand.com>
+
+	* src/sms.h:
+	* src/sms-contacts.c: (update_categories), (ref_category),
+	(categories_to_list), (contacts_added_cb), (contacts_changed_cb),
+	(contacts_removed_cb), (contacts_visible_func), (malloc_list_free),
+	(sms_contacts_page_new):
+	Add category filtering to contacts pane
+
+	* src/sms-utils.c: (sms_clear_combo_box_text):
+	* src/sms-utils.h:
+	Add function to clear a text GtkComboBox
+
+2007-12-17  Chris Lord  <chris@openedhand.com>
+
+	* configure.ac:
+	Add AC_GNU_SOURCE for strcasestr
+
+	* src/sms-contacts.c:
+	Include config.h first
+
+	* src/sms-notes.c: (search_toggled_cb), (search_text_changed_cb),
+	(search_combo_changed_cb), (notes_visible_func),
+	(sms_notes_page_new):
+	* src/sms.h:
+	Add notes filtering via search string
+
+2007-12-17  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (search_toggled_cb),
+	(search_text_changed_cb), (search_combo_changed_cb),
+	(contacts_visible_func), (sms_contacts_page_new):
+	* src/sms.h:
+	Add contacts filtering via search string
+
+2007-12-17  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (delete_clicked_cb):
+	Implement delete functionality in notes view (allows deleting of
+	individual messages)
+
+2007-12-17  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (delete_all_added_cb),
+	(delete_all_progress_cb), (delete_all_clicked_cb):
+	Implement delete-all functionality in the contacts view
+
+	* src/sms.h:
+	Remove unused variable
+
+2007-12-14  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (delete_clicked_cb):
+	Hook up the delete button to delete all messages from currently selected
+	contact
+
+	* src/sms-notes.c: (delete_all_clicked_cb):
+	Hook up the delete-all button to delete all messages from the currently
+	selected contact.
+
+	* src/sms-utils.c: (sms_delete_selected_contact_messages):
+	* src/sms-utils.h:
+	Add function to delete all messages from a contact, or from unknown
+	contacts
+
+2007-12-14  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (page_shown), (page_hidden):
+	Connect to delete/delete-all button clicks (doesn't do anything yet)
+
+	* src/sms-contacts.h:
+	* src/sms-contacts.c: (page_shown), (page_hidden),
+	(notify_visible_cb), (visibility_notify_event_cb), (unmap_cb),
+	(nophoto_filter_func), (delete_clicked_cb),
+	(delete_all_clicked_cb), (sms_contacts_page_new):
+	Connect to delete/delete-all button clicks (doesn't do anything yet),
+	add extra column to identify meta-contacts
+
+	* src/sms-main.c: (main):
+	Use MOKO_STOCK_FOLDER_DELETE for delete-all button
+
+	* src/sms.h:
+	* src/sms-notes.c: (mark_messages_read_idle), (scroll_changed_cb),
+	(page_shown), (page_hidden), (global_note_added_cb),
+	(global_note_modified_cb), (delete_clicked_cb),
+	(delete_all_clicked_cb), (sms_notes_page_new):
+	Mark messages as read when they get displayed
+
+	* src/sms-utils.c: (sms_contacts_note_count_update):
+	Disable sorting while iterating over the contacts to fix breakage when 
+	contact priority causes re-ordering during iteration
+
+2007-12-10  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (contacts_iter_compare_func),
+	(sms_contacts_page_new):
+	Sort higher priorities first, rather than last and add a special
+	'unknown' contact for messages from people not in the list
+
+	* src/sms-notes.c: (page_shown), (sms_notes_page_new):
+	Handle the 'unknown' contact
+
+	* src/sms-utils.c: (sms_get_selected_contact), (set_message_count),
+	(sms_contacts_note_count_update):
+	Add code to collect messages from contacts not in the contact list and
+	update the count for the 'unknown' contact
+
+	* src/sms.h:
+	Add a list for unassigned contacts, add an 'assigned' field to
+	SmsNoteCountData to detect when notes aren't assigned to a contact
+
+2007-12-07  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (contacts_added_cb), (contacts_changed_cb),
+	(contacts_removed_cb), (contacts_iter_compare_func),
+	(sms_contacts_page_new):
+	* src/sms-contacts.h:
+	* src/sms-notes.c: (global_note_added_cb),
+	(global_note_modified_cb), (global_note_removed_ghrfunc),
+	(global_note_removed_cb), (store_opened_cb), (free_count_data),
+	(sms_notes_page_new):
+	* src/sms-utils.c: (sms_contacts_note_count_update):
+	* src/sms-utils.h:
+	* src/sms.h:
+	Keep a count of read/unread notes per number and generate detail strings
+	for contacts to display their read/unread message count
+
+2007-12-06  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (send_clicked_cb):
+	* src/sms-main.c: (main):
+	Sync with phone-kit changes
+
+2007-11-26  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (page_shown):
+	* src/sms-notes.c: (page_shown):
+	* src/sms-utils.c: (sms_get_selected_contact):
+	* src/sms-utils.h:
+	Fix contacts without avatars not getting the stock_person icon
+
+2007-11-26  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (page_shown):
+	* src/sms-notes.c: (page_shown):
+	* src/sms-utils.c: (sms_get_selected_contact):
+	* src/sms-utils.h:
+	Fix leak in function to get selected contact
+
+2007-11-23  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (send_clicked_cb):
+	Don't try to get selected contact to send a message, unnecessary
+
+2007-11-22  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (send_clicked_cb):
+	* src/sms-main.c: (main):
+	Adjust due to phone-kit changes
+
+2007-11-22  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-compose.c: (send_clicked_cb):
+	Check if message is NULL, only switch page back on successful send and
+	empty text entry after sending text
+
+2007-11-22  Chris Lord  <chris@openedhand.com>
+
+	* Makefile.am:
+	* configure.ac:
+	* data/Makefile.am:
+	* data/openmoko-messages.desktop:
+	Add a .desktop entry
+
+2007-11-22  Chris Lord  <chris@openedhand.com>
+
+	* src/Makefile.am:
+	Add new files sms-compose.[ch] and sms-utils.[ch]
+
+	* src/sms-compose.c: (page_shown), (page_hidden),
+	(notify_visible_cb), (visibility_notify_event_cb), (unmap_cb),
+	(send_clicked_cb), (sms_compose_page_new):
+	* src/sms-compose.h:
+	Separate message sending in its own page, not enough room to do inline
+
+	* src/sms-contacts.c: (contacts_store), (sms_contacts_page_new):
+	* src/sms-contacts.h:
+	Move parts to sms-utils.[ch], lookup icon size instead of using fixed
+	for the missing photo image
+
+	* src/sms-main.c: (new_clicked_cb), (main):
+	Add callback for new button to switch to sending page, new button is a
+	button instead of a toggle-button
+
+	* src/sms-notes.c: (note_changed_cb), (page_shown), (page_hidden),
+	(sms_notes_data_func), (sms_notes_page_new):
+	Move SMS sending to separate page, move get_selected_contact function to
+	sms-utils.[ch], swap alignment of sent/received messages
+
+	* src/sms-utils.c: (sms_get_selected_contact),
+	(contact_photo_size), (sms_contact_load_photo):
+	* src/sms-utils.h:
+	New utility functions collected from other files
+
+	* src/sms.h:
+	New variables for sending page
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (sms_contacts_load_photo),
+	(clear_numbers_cb), (clear_numbers), (contacts_store),
+	(contacts_changed_cb), (contacts_removed_cb),
+	(sms_contacts_page_new):
+	Maintain a number->contact uid hash table
+
+	* src/sms-contacts.h:
+	Make contact photo-loading function public
+
+	* src/sms-notes.c: (get_selected_contact), (note_changed_cb),
+	(page_shown), (page_hidden), (send_clicked_cb),
+	(sms_notes_data_func), (sms_notes_page_new):
+	Don't use categories to determine outgoing status, retrieve avatars for
+	conversation participants
+
+	* src/sms.h:
+	Extra variables for new features
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (sms_notes_page_new):
+	Check if no-photo icon is NULL before reffing it
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* src/Makefile.am:
+	Remove spurious libhito bits
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-notes.c: (get_selected_contact), (page_hidden),
+	(sms_notes_data_func), (sms_notes_page_new):
+	* src/sms.h:
+	Add some code to show avatars/change justification depending on whether
+	a message was sent or received (unfinished)
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (contacts_iter_compare_func),
+	(sms_contacts_page_new):
+	Add a sort function for the contacts
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-contacts.c: (nophoto_filter_func),
+	(sms_contacts_page_new):
+	Use a filter modify func to set contacts with no photo to the
+	stock_person icon
+
+2007-11-21  Chris Lord  <chris@openedhand.com>
+
+	* configure.ac:
+	* Makefile.am:
+	Remove libhito
+
+	* src/sms.h:
+	* src/sms-contacts.[ch]:
+	Replace libhito code with ebook code, implement showing of contact
+	avatars.
+
+	* src/sms-notes.c:
+	Update due to new ebook code
+
+2007-11-20  Chris Lord  <chris@openedhand.com>
+
+	* configure.ac:
+	* src/Makefile.am:
+	* src/sms-main.c: (main):
+	* src/sms-notes.c: (get_selected_contact), (page_shown),
+	(new_toggled_cb), (send_clicked_cb), (sms_notes_page_new):
+	* src/sms.h:
+	Hook up send button, don't show all messages when a contact has no 
+	phone numbers, don't focus in text view when toggling off send
+
+2007-11-14  Chris Lord  <chris@openedhand.com>
+
+	* src/sms-main.c: (main):
+	* src/sms-notes.c: (page_hidden), (unmap_cb),
+	(sms_notes_data_func), (store_opened_cb), (sms_notes_page_new):
+	* src/sms.h:
+	Add a toggleable SMS input area
+
