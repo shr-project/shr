@@ -1,0 +1,17 @@
+phonekit-lib:
+* sends dbus events to ogsmd
+* the dialer application (the one used to place calls) is linked against it
+
+phonekit-daemon:
+* listens for incomming dbus events (like call recieved)
+
+phonegui-lib:
+* an incomming call dialog
+* a pin code prompt
+* other dialog raised by "incomming" dbus events
+* obviously the phonekit daemon is linked against it
+
+dialer:
+* the dialer application you use to place calls
+* can be launched to display the call history directly (when you clock on a
+missed call notification for instance, not sure about this one though)
