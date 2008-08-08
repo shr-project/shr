@@ -14,8 +14,8 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef _NETWORK_H
-#define _NETWORK_H
+#ifndef _FRAMEWORKD_GLIB_NETWORK_H
+#define _FRAMEWORKD_GLIB_NETWORK_H
 
 #define NETWORK_ERROR g_quark_from_static_string(NETWORK_INTERFACE)
 #define DBUS_NETWORK_ERROR_NOT_PRESENT "org.freesmartphone.GSM.Network.NotPresent"

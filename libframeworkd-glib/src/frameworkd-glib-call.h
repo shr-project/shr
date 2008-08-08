@@ -14,8 +14,8 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef _CALL_H
-#define _CALL_H
+#ifndef _FRAMEWORKD_GLIB_CALL_H
+#define _FRAMEWORKD_GLIB_CALL_H
 
 #define CALL_ERROR g_quark_from_static_string(CALL_INTERFACE)
 #define DBUS_CALL_ERROR_NO_CARRIER "org.freesmartphone.GSM.Call.NoCarrier"

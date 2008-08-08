@@ -14,8 +14,8 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef _DBUS_H
-#define _DBUS_H
+#ifndef _FRAMEWORKD_GLIB_DBUS_H
+#define _FRAMEWORKD_GLIB_DBUS_H
 #define DEBUG
 #define NETWORKD_BUS		"org.freesmartphone.onetworkd"
 #define GSMD_BUS		"org.freesmartphone.ogsmd"
