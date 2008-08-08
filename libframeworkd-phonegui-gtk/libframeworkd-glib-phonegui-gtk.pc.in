@@ -3,11 +3,11 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libframeworkd-glib-phonegui-gtk
+Name: libframeworkd-phonegui-gtk
 Description: GTK UI phone library for frameworkd
 Version: @VERSION@
 Requires: dbus-glib-1 glib-2.0 gobject-2.0 libframeworkd-glib
-Libs: -L${libdir} -lframeworkd-glib-phonegui-gtk
+Libs: -L${libdir} -lframeworkd-phonegui-gtk
 Cflags: -I${includedir}/frameworkd-glib
 
 

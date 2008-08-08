@@ -2,9 +2,9 @@ localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 AM_CFLAGS = -Wall @PHONEGUI_CFLAGS@ @JANA_CFLAGS@
 
-lib_LTLIBRARIES = libframeworkd-glib-phonegui-gtk.la
+lib_LTLIBRARIES = libframeworkd-phonegui-gtk.la
 
-libframeworkd_glib_phonegui_gtk_la_SOURCES = \
+libframeworkd_phonegui_gtk_la_SOURCES = \
     init.c \
 	pin.c pin.h \
 	history.c history.h \
@@ -16,6 +16,8 @@ libframeworkd_glib_phonegui_gtk_la_SOURCES = \
 	digit-button.c digit-button.h \
 	dialer-defines.h
 
-libframeworkd_glib_phonegui_gtk_la_LDFLAGS = $(all_libraries) -version-info 0:0:0
+libframeworkd_phonegui_gtk_HEADERS = frameworkd-phonegui.h
 
-libframeworkd_glib_phonegui_gtk_la_LIBADD = @PHONEGUI_LIBS@ @JANA_LIBS@
+libframeworkd_phonegui_gtk_la_LDFLAGS = $(all_libraries) -version-info 0:0:0
+
+libframeworkd_phonegui_gtk_la_LIBADD = @PHONEGUI_LIBS@ @JANA_LIBS@

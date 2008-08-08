@@ -24,6 +24,7 @@ AC_PROG_LIBTOOL
 #                  libframeworkd-glib)
 
 PKG_CHECK_MODULES(PHONEGUI, gtk+-2.0 libmokojournal2 libmokoui2 libframeworkd-glib libhito)
+PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 # PKG_CHECK_MODULES(MOKO, libmokojournal2 libmokoui2)
 # PKG_CHECK_MODULES(EBOOK, libebook-1.2)
 # PKG_CHECK_MODULES(LFG, libframeworkd-glib)
@@ -31,7 +32,7 @@ PKG_CHECK_MODULES(PHONEGUI, gtk+-2.0 libmokojournal2 libmokoui2 libframeworkd-gl
 # PKG_CHECK_MODULES(NOTIFY, libnotify)
 # PKG_CHECK_MODULES(PULSE, libpulse)
 # PKG_CHECK_MODULES(ALSA, alsa)
-PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
+
 
 # old_cflags=$CFLAGS
 # CFLAGS=$DIALER_CFLAGS
@@ -42,8 +43,8 @@ PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 #	AC_DEFINE(HAVE_ECONTACT_PHOTO_TYPE, 1, [Defined if EContactPhotoType exists])
 # fi
 
-AC_SUBST(PHONEGUI_CFLAGS)
-AC_SUBST(PHONEGUI_LIBS)
+#AC_SUBST(PHONEGUI_CFLAGS)
+#AC_SUBST(PHONEGUI_LIBS)
 
 # deps for libhito
 # PKG_CHECK_MODULES(CONTACTS, glib-2.0 glib-2.0 gtk+-2.0 libebook-1.2)
