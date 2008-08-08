@@ -25,6 +25,7 @@
 #include <libmokoui2/moko-stock.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
+#include <frameworkd-glib/frameworkd-glib-dbus.h>
 
 #define SMS_NAMESPACE "org.openmoko.OpenmokoMessages2"
 #define SMS_PATH "/org/openmoko/OpenmokoMessages2"
@@ -57,6 +58,8 @@ main (int argc, char **argv)
 	
 	gtk_init (&argc, &argv);
 	moko_stock_register ();
+		
+	dbus_connect_to_bus(NULL);
 	
 	/* Get SMS dbus proxy */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);

@@ -16,13 +16,26 @@ PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(MOKOUI, libmokoui2 >= 0.3)
 PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 PKG_CHECK_MODULES(DBUS, dbus-glib-1)
-
-
+PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
+          libframeworkd-glib,
+		  [],
+		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
+		 )
+PKG_CHECK_MODULES(FRAMEWORKD_GLIB_PHONEGUI,
+          libframeworkd-glib-phonegui-gtk,
+          [],
+          [AC_MSG_FAILURE([libframeworkd-glib-phonegui-gtk not found])]
+         )
+         		
 # CFLAGS and LIBS definitions for libhito
 CONTACTS_CFLAGS="$EBOOK_CFLAGS $GTK_CFLAGS"
 CONTACTS_LIBS="$EBOOK_LIBS $GTK_LIBS"
 AC_SUBST(CONTACTS_CFLAGS)
 AC_SUBST(CONTACTS_LIBS)
+AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
+AC_SUBST(FRAMEWORKD_GLIB_LIBS)
+AC_SUBST(FRAMEWORKD_GLIB_PHONEGUI_CFLAGS)
+AC_SUBST(FRAMEWORKD_GLIB_PHONEGUI_LIBS)
 
 old_cflags=$CFLAGS
 CFLAGS=$EBOOK_CFLAGS

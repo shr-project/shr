@@ -1,7 +1,20 @@
 INCLUDES = -I$(top_srcdir)/libhito
 
-AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" $(GTK_CFLAGS) $(JANA_CFLAGS) $(MOKOUI_CFLAGS) $(EBOOK_CFLAGS) $(DBUS_CFLAGS) -Wall
-AM_LDFLAGS = $(GTK_LIBS) $(JANA_LIBS) $(MOKOUI_LIBS) $(EBOOK_LIBS) $(DBUS_LIBS) $(top_builddir)/libhito/libhito.a
+AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" $(GTK_CFLAGS) \
+				$(JANA_CFLAGS)  \
+				$(MOKOUI_CFLAGS) \
+				$(EBOOK_CFLAGS) \
+				$(FRAMEWORKD_GLIB_CFLAGS) \
+				$(FRAMEWORKD_GLIB_PHONEGUI_CFLAGS) \
+				-Wall
+
+AM_LDFLAGS = $(GTK_LIBS) \
+             $(JANA_LIBS) \
+             $(MOKOUI_LIBS) \
+             $(EBOOK_LIBS) \
+			 $(FRAMEWORKD_GLIB_LIBS) \
+ 			 $(FRAMEWORKD_GLIB_PHONEGUI_LIBS) \
+			 $(top_builddir)/libhito/libhito.a
 
 bin_PROGRAMS=openmoko-messages
 
@@ -24,7 +37,9 @@ openmoko_messages_SOURCES = \
 	sms-dbus.c \
 	sms-dbus.h \
 	moko-save-number.c \
-	moko-save-number.h
+	moko-save-number.h \
+	moko-progressbar-window.c \
+	moko-progressbar-window.h
 
 %-glue.h: %.xml
 	$(LIBTOOL) --mode=execute $(DBUS_GLIB_BIN)/dbus-binding-tool --prefix=$(subst -,_,$*) --mode=glib-server --output=$@ $<

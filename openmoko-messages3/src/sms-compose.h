@@ -21,6 +21,7 @@
 #define SMS_COMPOSE_H
 
 #include "sms.h"
+#include <frameworkd-glib/frameworkd-glib-sim.h>
 
 GtkWidget *sms_compose_page_new (SmsData *data);
 void sms_compose_refresh (SmsData *data, const gchar *number);
