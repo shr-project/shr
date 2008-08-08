@@ -18,7 +18,9 @@
  */
 
 #include <gtk/gtk.h>
+#include <dbus/dbus-glib-bindings.h>
 
+#include "frameworkd-glib-call.h"
 #include "moko-sound.h"
 #include "moko-talking.h"
 #include "moko-dialer-panel.h"
@@ -27,6 +29,7 @@
 #include "moko-alsa-volume-scale.h"
 
 #include "moko-headset.h"
+
 
 G_DEFINE_TYPE (MokoTalking, moko_talking, GTK_TYPE_WIDGET)
 
@@ -70,7 +73,7 @@ struct _MokoTalkingPrivate
   guint timeout;
   
   gint call_direction;
-  
+
   MokoAlsaVolumeControl *headphone;
 };
 
@@ -86,13 +89,55 @@ enum
   LAST_SIGNAL
 };
 
-void phonegui_display_call_UI(const int id_call, const int status, const char *number) { 
-    /* TODO */
+/***********************************************************************
+ * NOTE:
+ *
+ * Currently, this is a singleton. Eventually, it'll require a 
+ * collection of some sort, selectable by id_call. For now, just worry
+ * about a single instance.
+ */
+
+static MokoTalking *global_talk = NULL;
+
+void phonegui_display_call_UI(const int id_call, const CallStatus status, const char *number) { 
+
+	g_return_if_fail (status >= CALL_STATUS_LAST );
+
+	if ( !global_talk )
+		global_talk = (MokoTalking*) moko_talking_new ();
+
+	switch (status)
+	{
+		case CALL_STATUS_INCOMING:
+			moko_talking_incoming_call (global_talk, number, NULL);
+			break;
+
+		case CALL_STATUS_OUTGOING:
+			moko_talking_outgoing_call (global_talk, number, NULL);
+			break;
+
+		case CALL_STATUS_ACTIVE:
+			moko_talking_accepted_call (global_talk, number, NULL);
+			break;
+
+		case CALL_STATUS_HELD:
+			break;
+
+		case CALL_STATUS_RELEASED:
+			break;
+
+		default:
+			g_warning( "Unhandled status type in %s", __func__ );
+			break;
+	}
+
     return;
 }
 
 void phonegui_destroy_call_UI(const int id_call) { 
-    /* TODO */
+	
+	gtk_widget_destroy ( (GtkWidget*) global_talk);
+	global_talk = NULL;
     return;
 }
 

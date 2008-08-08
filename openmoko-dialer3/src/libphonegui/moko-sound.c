@@ -17,8 +17,6 @@
  *  Current Version: $Rev$ ($Date$) [$Author$]
  */
 
-#include "moko-dialer.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 

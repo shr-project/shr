@@ -20,12 +20,12 @@ PKG_CHECK_MODULES(DIALER,
                   libebook-1.2 
                   libmokojournal2
                   libmokoui2
+                  alsa
                   libpulse
                   libframeworkd-glib)
 
 PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 PKG_CHECK_MODULES(NOTIFY, libnotify)
-PKG_CHECK_MODULES(ALSA, alsa)
 
 old_cflags=$CFLAGS
 CFLAGS=$DIALER_CFLAGS
@@ -38,6 +38,7 @@ fi
 
 AC_SUBST(DIALER_CFLAGS)
 AC_SUBST(DIALER_LIBS)
+
 
 # deps for libhito
 PKG_CHECK_MODULES(CONTACTS, glib-2.0 glib-2.0 gtk+-2.0 libebook-1.2)
