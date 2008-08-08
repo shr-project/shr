@@ -23,6 +23,7 @@
 
 #include "sms-contacts.h"
 #include "sms-utils.h"
+#include "../libhito/hito-vcard-util.h"
 #include <libmokoui2/moko-finger-scroll.h>
 #include <libmokoui2/moko-search-bar.h>
 #include <string.h>
@@ -638,13 +639,14 @@ selection_changed_cb (GtkTreeSelection *selection, SmsData *data)
 GtkWidget *
 sms_contacts_page_new (SmsData *data)
 {
-	EBookQuery *qrys[(E_CONTACT_LAST_PHONE_ID-E_CONTACT_FIRST_PHONE_ID)+1];
+	/*EBookQuery *qrys[(E_CONTACT_LAST_PHONE_ID-E_CONTACT_FIRST_PHONE_ID)+1];*/
 	GtkWidget *contacts_combo, *vbox, *toolbar;
 	GtkTreeSelection *selection;
 	GtkCellRenderer *renderer;
 	EBookQuery *tel_query;
 	EBookView *view;
-	gint i, width;
+	/* gint i, width; */
+	gint width;
 
 	GError *error = NULL;
 	

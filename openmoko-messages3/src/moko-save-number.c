@@ -17,7 +17,7 @@
  *
  */
 
-
+#include <string.h>
 #include <gtk/gtk.h>
 
 #include <moko-finger-scroll.h>

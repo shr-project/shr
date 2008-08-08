@@ -52,7 +52,7 @@ main (int argc, char **argv)
 	SmsData data;
 	DBusGConnection *connection;
 	DBusGProxy *proxy;
-	GtkWidget *vbox, *toolbar;
+	GtkWidget *vbox;
 	GError *error = NULL;
 	
 	gtk_init (&argc, &argv);

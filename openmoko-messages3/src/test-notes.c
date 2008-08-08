@@ -18,6 +18,7 @@
 
 #include <libjana/jana-note.h>
 #include <libjana-ecal/jana-ecal.h>
+#include <libjana/jana-utils.h>
 #include <glib/gprintf.h>
 
 int
