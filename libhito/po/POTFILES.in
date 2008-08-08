@@ -1,0 +1,6 @@
+data/contacts.desktop.in
+vanilla/contacts-callbacks-ui.c
+vanilla/contacts-edit-pane.c
+vanilla/contacts-main.c
+vanilla/contacts-utils.c
+vanilla/contacts-gtk.c
