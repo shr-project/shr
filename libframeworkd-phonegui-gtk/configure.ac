@@ -63,7 +63,7 @@ AC_CONFIG_FILES([
 Makefile
 data/Makefile
 src/Makefile
-libframeworkd-glib-phonegui-gtk.pc
+libframeworkd-phonegui-gtk.pc
 ])
 
 AC_OUTPUT
