@@ -32,15 +32,15 @@
 
 #include <libebook/e-book.h>
 
-#include <libhito/hito-contact-view.h>
-#include <libhito/hito-contact-store.h>
-#include <libhito/hito-group-store.h>
-#include <libhito/hito-group-combo.h>
-#include <libhito/hito-all-group.h>
-#include <libhito/hito-separator-group.h>
-#include <libhito/hito-group.h>
-#include <libhito/hito-no-category-group.h>
-#include <libhito/hito-vcard-util.h>
+#include <hito-contact-view.h>
+#include <hito-contact-store.h>
+#include <hito-group-store.h>
+#include <hito-group-combo.h>
+#include <hito-all-group.h>
+#include <hito-separator-group.h>
+#include <hito-group.h>
+#include <hito-no-category-group.h>
+#include <hito-vcard-util.h>
 
 #include "contacts.h"
 #include "history.h"
