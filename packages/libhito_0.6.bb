@@ -11,5 +11,7 @@ inherit shr pkgconfig autotools
 
 do_stage () {
         oe_libinstall -so libhito ${STAGING_LIBDIR}
+
+	autotools_stage_includes
 }
 
