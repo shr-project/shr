@@ -22,6 +22,16 @@ void phonegui_init(int argc, char** argv);
 void phonegui_display_pin_UI (const int initial_status);
 void phonegui_destroy_pin_UI ();
 
-//void phonegui_display_call_UI(const int id_call, const int status, const char *number);
-//void phonegui_destroy_call_UI(const int id_call);
+void phonegui_display_call_UI(const int id_call, const int status, const char *number);
+void phonegui_destroy_call_UI(const int id_call);
+
+void phonegui_display_call_UI(const int id_call, const int status, const char *number)
+{
+/* stub */
+}
+
+void phonegui_destroy_call_UI(const int id_call)
+{
+/* stub */
+}
 #endif
