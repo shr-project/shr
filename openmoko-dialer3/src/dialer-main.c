@@ -21,14 +21,13 @@
 #include <unistd.h>
 
 #include <gtk/gtk.h>
-#include <dbus/dbus-glib.h>
-//#include <dbus/dbus-glib-bindings.h>
+// #include <dbus/dbus-glib.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include <frameworkd-glib/frameworkd-glib-call.h>
 
 #include "dialer-main.h"
-#include "moko-keypad.h"
-#include "moko-history.h"
+#include <frameworkd-phonegui-gtk/keypad.h>
+#include <frameworkd-phonegui-gtk/history.h>
 
 typedef struct
 {
@@ -122,8 +121,6 @@ int main (int argc, char **argv)
 {
   GtkWidget *window, *keypad;
   MokoJournal *journal;
-//  DBusGConnection *connection;
-  /* GError *error = NULL; */
   DialerData *data;
 
   program_log ("start dialer");
@@ -153,28 +150,7 @@ int main (int argc, char **argv)
 
   program_log ("open connection to frameworkd");
   connect_to_frameworkd();
-/*
-  connection = dbus_g_bus_get (DBUS_BUS_SYSTEM,
-                               &error);
 
-  if (connection == NULL)
-  {
-    GtkWidget *dlg;
-
-    dlg = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-        "Failed to open connection to bus: %s", error->message);
-    gtk_dialog_run (GTK_DIALOG (dlg));
-    gtk_widget_destroy (dlg);
-
-    g_error_free (error);
-    exit (1);
-  }
-*/
-/*
-  program_log ("get PhoneKit dbus proxy object");
-  data->dialer_proxy = dbus_g_proxy_new_for_name (connection, GSMD_BUS, BUS_PATH, CALL_INTERFACE);
-*/
-  
   /* Set up the journal */
   program_log ("load journal");
   journal = moko_journal_open_default ();
