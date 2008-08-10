@@ -13,7 +13,6 @@ openmoko_dialer_SOURCES = \
 
 openmoko_dialer_LDADD = @DIALER_LIBS@ \
                         @JANA_LIBS@ \
-			$(top_srcdir)/src/libphonegui/libframeworkd-glib-phonegui-gtk.la \
 			$(top_srcdir)/src/common/libdialer-common.la \
 			$(top_srcdir)/libhito/libhito.a
 

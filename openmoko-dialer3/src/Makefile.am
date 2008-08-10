@@ -1,1 +1,1 @@
-SUBDIRS = common libphonegui dialer
+SUBDIRS = common dialer

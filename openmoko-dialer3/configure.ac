@@ -22,8 +22,9 @@ PKG_CHECK_MODULES(DIALER,
                   libmokoui2
                   alsa
                   libpulse
-                  libframeworkd-glib)
-
+                  libframeworkd-glib
+                  libframeworkd-phonegui-gtk)
+                                   
 PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 PKG_CHECK_MODULES(NOTIFY, libnotify)
 
@@ -60,8 +61,6 @@ libhito/Makefile
 src/Makefile
 src/common/Makefile
 src/dialer/Makefile
-src/libphonegui/Makefile
-libframeworkd-glib-phonegui-gtk.pc
 ])
 
 AC_OUTPUT
