@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 #include <gtk/gtk.h>
-// #include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include <frameworkd-glib/frameworkd-glib-call.h>
 

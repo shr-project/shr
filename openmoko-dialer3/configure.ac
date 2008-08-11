@@ -16,7 +16,9 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 # base deps
 PKG_CHECK_MODULES(DIALER,
                   libframeworkd-glib
-                  libframeworkd-phonegui-gtk)
+                  libframeworkd-phonegui-gtk
+		  libmokojournal2
+                  gtk+-2.0)
                                    
 #old_cflags=$CFLAGS
 #CFLAGS=$DIALER_CFLAGS

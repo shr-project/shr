@@ -16,9 +16,18 @@ libframeworkd_phonegui_gtk_la_SOURCES = \
 	digit-button.c digit-button.h \
 	dialer-defines.h
 
-libframeworkd_phonegui_gtk_HEADERS = frameworkd-phonegui.h
+libframeworkd_phonegui_gtk_HEADERS = frameworkd-phonegui.h \
+                                     pin.h \
+				     history.h \
+				     keypad.h \
+				     tips.h \
+				     contacts.h \
+				     dialer-panel.h \
+				     dialer-textview.h \
+				     digit-button.h
 
-libframeworkd_phonegui_gtkdir = $(includedir)/frameworkd-phonegui
+
+libframeworkd_phonegui_gtkdir = $(includedir)/frameworkd-phonegui-gtk
 
 libframeworkd_phonegui_gtk_la_LDFLAGS = $(all_libraries) -version-info 0:0:0
 
