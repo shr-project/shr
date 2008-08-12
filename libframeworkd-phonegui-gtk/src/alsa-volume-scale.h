@@ -3,7 +3,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include "moko-alsa-volume-control.h"
+#include "alsa-volume-control.h"
 
 G_BEGIN_DECLS
 

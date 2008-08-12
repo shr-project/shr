@@ -23,7 +23,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include "moko-contacts.h"
+#include "contacts.h"
 
 G_BEGIN_DECLS
 

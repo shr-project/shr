@@ -14,6 +14,8 @@ libframeworkd_phonegui_gtk_la_SOURCES = \
 	dialer-panel.c dialer-panel.h \
 	dialer-textview.c dialer-textview.h \
 	digit-button.c digit-button.h \
+	talking.c talking.h \
+	headset.c headset.h \
 	dialer-defines.h
 
 libframeworkd_phonegui_gtk_HEADERS = frameworkd-phonegui.h \
