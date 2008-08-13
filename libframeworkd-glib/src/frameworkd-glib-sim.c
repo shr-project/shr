@@ -251,9 +251,13 @@ void sim_retrieve_message_callback(DBusGProxy* bus, char*number, char* content, 
         if(error != NULL) g_error_free(error);
     }
 
-    if(dbus_error != NULL) g_error_free(dbus_error);
-    free(number);
-    free(content);
+    if(dbus_error != NULL) {
+        g_error_free(dbus_error);
+    } else {
+        free(number);
+        free(content);
+    }
+    
     g_free(data);
 }
 
