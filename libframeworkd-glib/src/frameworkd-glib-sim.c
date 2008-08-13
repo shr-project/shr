@@ -217,9 +217,13 @@ void sim_retrieve_entry_callback(DBusGProxy* bus, char*name, char* number, GErro
         if(error != NULL) g_error_free(error);
     }
 
-    if(dbus_error != NULL) g_error_free(dbus_error);
-    free(name);
-    free(number);
+    if(dbus_error != NULL) {
+        g_error_free(dbus_error);
+    } else {
+        free(name);
+        free(number);
+    }
+    
     g_free(data);
 }
 
