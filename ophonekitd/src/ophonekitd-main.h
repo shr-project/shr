@@ -21,6 +21,7 @@ void power_up_antenna_callback(GError *error, gpointer userdata);
 void register_to_network_callback(GError *error, gpointer userdata);
 void ophonekitd_sms_incoming_message_handler(const int id);
 void ophonekitd_sms_message_sent_handler(const int id, gboolean success, const char* reason);
+void ophonekitd_sim_incoming_message_handler(const int id);
 void ophonekitd_sim_auth_status_handler(const int status);
 void ophonekitd_network_status_handler(GHashTable *status);
 void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties);
