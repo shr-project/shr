@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
+ *              Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *
@@ -54,6 +55,8 @@ typedef enum {
 void sim_auth_status_handler (DBusGProxy *proxy, const char *status, gpointer user_data);
 int sim_handle_authentication_state(const char*status);
 
+void sim_incoming_message_handler (DBusGProxy *proxy, const int index, gpointer user_data);
+
 void sim_get_auth_status(void (*callback)(GError*, int status, gpointer), gpointer userdata);
 
 void sim_send_auth_code(const char* pin, void (*callback)(GError*, gpointer), gpointer userdata);
@@ -85,6 +88,8 @@ void sim_delete_entry(const int index, void (*callback)(GError*, gpointer), gpoi
 void sim_store_entry(const int index, char *name, char*number, void (*callback)(GError*, gpointer), gpointer userdata);
 
 void sim_get_messagebook_info( void (*callback)(GError*, GHashTable*messagebook_info, gpointer), gpointer userdata);
+
+void sim_retrieve_messagebook( const char* category, void (*callback)(GError*, GPtrArray* messages, gpointer), gpointer userdata);
 
 void sim_get_service_center_number(void (*callback)(GError*, char*number, gpointer), gpointer userdata);
 

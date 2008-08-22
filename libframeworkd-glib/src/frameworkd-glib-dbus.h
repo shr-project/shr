@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
+ *              Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *
@@ -30,6 +31,7 @@ typedef struct {
     void (*networkStatus)(GHashTable *);
     void (*networkSignalStrength)(const int);
     void (*simAuthStatus)(const int);
+    void (*simIncomingMessage)(const int);
     void (*callCallStatus)(const int, const int, GHashTable *);
     void (*smsMessageSent)(const int, gboolean, const char*) ;
     void (*smsIncomingMessage)(const int);

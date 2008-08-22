@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
+ *              Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *
@@ -113,7 +114,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
         }
         if(fwHandler->networkSignalStrength != NULL) {
             dbus_connect_to_gsm_network();
-            dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_UINT , G_TYPE_INVALID);
+            dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_INT , G_TYPE_INVALID);
             dbus_g_proxy_connect_signal (networkBus, "SignalStrength", G_CALLBACK (network_signal_strength_handler),
                     fwHandler->networkSignalStrength, NULL);
 #ifdef DEBUG
@@ -129,6 +130,15 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
             printf("Added sim AuthStatus.\n");
 #endif
         }
+        if(fwHandler->simIncomingMessage != NULL) {
+            dbus_connect_to_gsm_sim();
+            dbus_g_proxy_add_signal (simBus, "IncomingMessage", G_TYPE_INT, G_TYPE_INVALID);
+            dbus_g_proxy_connect_signal (simBus, "IncomingMessage", G_CALLBACK (sim_incoming_message_handler),
+                    fwHandler->simIncomingMessage, NULL);
+#ifdef DEBUG
+            printf("Added sim IncomingMessage.\n");
+#endif
+		}
         if(fwHandler->callCallStatus != NULL) {
             dbus_connect_to_gsm_call();
             dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);

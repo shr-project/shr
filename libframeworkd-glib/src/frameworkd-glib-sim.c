@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2008 
  *	Authors (alphabetical) : 
+ *		Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
  *		Marc-Olivier Barre <marco@marcochapeau.org>
  *		Julien Cassignol <ainulindale@gmail.com>
  *
@@ -59,6 +60,19 @@ int sim_handle_authentication_state(const char*status) {
         return SIM_PUK2_REQUIRED;
     }
 
+}
+
+void sim_incoming_message_handler (DBusGProxy *proxy, const int index, gpointer user_data)
+{ 
+	g_debug("start sim_incoming_message_handler");
+    void (*callback)(const int) = NULL;
+
+    callback = user_data;
+    
+    if(callback != NULL) {
+    	g_debug("callback sim_incoming_message_handler");
+        (*callback)(index);
+    }
 }
 
 typedef struct
@@ -611,6 +625,43 @@ void sim_get_messagebook_info(void (*callback)(GError*, GHashTable*messagebook_i
     data->userdata = userdata;
 
     org_freesmartphone_GSM_SIM_get_messagebook_info_async(simBus, sim_get_messagebook_info_callback, data);
+}
+
+typedef struct
+{
+    void (*callback)(GError*, GPtrArray* messages, gpointer);
+    gpointer userdata;
+} sim_retrieve_messagebook_data_t;
+
+void sim_retrieve_messagebook_callback(DBusGProxy* bus, GPtrArray* messages, GError *dbus_error, gpointer userdata) {
+    sim_retrieve_messagebook_data_t *data = userdata;
+    GError *error = NULL;
+
+    if(data->callback != NULL) {
+        if(dbus_error != NULL)
+            error = dbus_handle_errors(dbus_error);
+
+        data->callback (error, messages, data->userdata);
+        if(error != NULL) g_error_free(error);
+    } 
+
+    if(dbus_error != NULL) {
+        g_error_free(dbus_error);  
+    } else { 
+        g_ptr_array_free (messages, TRUE);
+    }        
+    
+    g_free(data);
+}
+
+void sim_retrieve_messagebook( const char* category, void (*callback)(GError*, GPtrArray* messages, gpointer), gpointer userdata) {
+    dbus_connect_to_gsm_sim();
+
+    sim_retrieve_messagebook_data_t *data = g_malloc (sizeof (sim_retrieve_messagebook_data_t));
+    data->callback = callback;
+    data->userdata = userdata;
+
+    org_freesmartphone_GSM_SIM_retrieve_messagebook_async(simBus, category, sim_retrieve_messagebook_callback, data);
 }
 
 typedef struct
