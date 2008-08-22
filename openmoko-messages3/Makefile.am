@@ -1,1 +1,1 @@
-SUBDIRS=libhito src data
+SUBDIRS=src data

@@ -26,7 +26,12 @@ PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI,
           [],
           [AC_MSG_FAILURE([libframeworkd-phonegui-gtk not found])]
          )
-         		
+PKG_CHECK_MODULES(HITO,
+          libhito,
+          [],
+          [AC_MSG_FAILURE([libhito not found])]
+         )
+                  		
 # CFLAGS and LIBS definitions for libhito
 CONTACTS_CFLAGS="$EBOOK_CFLAGS $GTK_CFLAGS"
 CONTACTS_LIBS="$EBOOK_LIBS $GTK_LIBS"
@@ -36,6 +41,8 @@ AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
 AC_SUBST(FRAMEWORKD_GLIB_LIBS)
 AC_SUBST(FRAMEWORKD_PHONEGUI_CFLAGS)
 AC_SUBST(FRAMEWORKD_PHONEGUI_LIBS)
+AC_SUBST(HITO_CFLAGS)
+AC_SUBST(HITO_LIBS)
 
 old_cflags=$CFLAGS
 CFLAGS=$EBOOK_CFLAGS
@@ -63,7 +70,6 @@ AC_SUBST(DBUS_GLIB_BIN)
 
 AC_OUTPUT([
 Makefile
-libhito/Makefile
 src/Makefile
 data/Makefile
 ])

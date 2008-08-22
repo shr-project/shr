@@ -6,6 +6,7 @@ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" $(GTK_CFLAGS) \
                 $(EBOOK_CFLAGS) \
                 $(FRAMEWORKD_GLIB_CFLAGS) \
                 $(FRAMEWORKD_PHONEGUI_CFLAGS) \
+                $(HITO_CFLAGS) \
                 -Wall
 
 AM_LDFLAGS = $(GTK_LIBS) \
@@ -14,6 +15,7 @@ AM_LDFLAGS = $(GTK_LIBS) \
              $(EBOOK_LIBS) \
              $(FRAMEWORKD_GLIB_LIBS) \
              $(FRAMEWORKD_PHONEGUI_LIBS) \
+             $(HITO_LIBS) \
              $(top_builddir)/libhito/libhito.a
 
 bin_PROGRAMS=openmoko-messages
