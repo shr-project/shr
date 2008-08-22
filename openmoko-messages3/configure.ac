@@ -5,11 +5,11 @@ AC_CONFIG_SRCDIR(src/sms-main.c)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
+AC_GNU_SOURCE
 AC_ISC_POSIX
 AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
-AC_GNU_SOURCE
 
 PKG_CHECK_MODULES(EBOOK, libebook-1.2)
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
@@ -21,10 +21,10 @@ PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
 		  [],
 		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
 		 )
-PKG_CHECK_MODULES(FRAMEWORKD_GLIB_PHONEGUI,
-          libframeworkd-glib-phonegui-gtk,
+PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI,
+          libframeworkd-phonegui-gtk,
           [],
-          [AC_MSG_FAILURE([libframeworkd-glib-phonegui-gtk not found])]
+          [AC_MSG_FAILURE([libframeworkd-phonegui-gtk not found])]
          )
          		
 # CFLAGS and LIBS definitions for libhito
@@ -34,8 +34,8 @@ AC_SUBST(CONTACTS_CFLAGS)
 AC_SUBST(CONTACTS_LIBS)
 AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
 AC_SUBST(FRAMEWORKD_GLIB_LIBS)
-AC_SUBST(FRAMEWORKD_GLIB_PHONEGUI_CFLAGS)
-AC_SUBST(FRAMEWORKD_GLIB_PHONEGUI_LIBS)
+AC_SUBST(FRAMEWORKD_PHONEGUI_CFLAGS)
+AC_SUBST(FRAMEWORKD_PHONEGUI_LIBS)
 
 old_cflags=$CFLAGS
 CFLAGS=$EBOOK_CFLAGS

@@ -23,7 +23,6 @@
 #include "moko-progressbar-window.h"
 
 static gboolean hidden = TRUE;
-static GtkTextBuffer *buffer;
 
 void compose_sim_send_stored_message_callback (GError *error, int transaction_index, gpointer userdata);
 void compose_sim_store_message_callback (GError *error, int i, gpointer userdata);
@@ -182,11 +181,10 @@ send_clicked_cb (GtkButton *button, SmsData *data)
 			buffer, &start, &end, FALSE);
 		
 		if (message && (message[0] != '\0')) {
-			gboolean sr = gtk_toggle_button_get_active (
-				GTK_TOGGLE_BUTTON (data->delivery_checkbox));
+			/* gboolean sr = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (data->delivery_checkbox)); */
 			g_debug ("Sending message '%s' to %s", message, number);
-			sim_store_message(number, message, 
-								compose_sim_store_message_callback, NULL);			
+			sim_store_message(number, message, compose_sim_store_message_callback, buffer);			
 			moko_progressbar_window();
 		} else {
 			/* TODO: Error dialog for empty message */
@@ -205,7 +203,7 @@ void compose_sim_store_message_callback (GError *error, int i, gpointer userdata
 {
 	if (error == NULL)
 	{
-		sim_send_stored_message(i, compose_sim_send_stored_message_callback, NULL);
+		sim_send_stored_message(i, compose_sim_send_stored_message_callback, userdata);
 	} else
 	{
 		g_debug("Error storing message on sim: %s", error->message);
@@ -214,7 +212,7 @@ void compose_sim_store_message_callback (GError *error, int i, gpointer userdata
 
 void compose_sim_send_stored_message_callback (GError *error, int transaction_index, gpointer userdata)
 {
-	gtk_text_buffer_set_text (buffer, "", -1);
+	gtk_text_buffer_set_text ((GtkTextBuffer*)userdata, "", -1);
 	moko_close_progressbar_window(error);
 }
 
