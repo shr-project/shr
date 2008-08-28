@@ -10,5 +10,7 @@ inherit shr pkgconfig autotools
 
 do_stage () {
         oe_libinstall -so libframeworkd-phonegui-gtk ${STAGING_LIBDIR}
+
+        autotools_stage_includes
 }
 

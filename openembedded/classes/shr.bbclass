@@ -9,7 +9,8 @@ SHR_MIRROR ?= "svn://daria.forty-two.fr/shr"
 LICENSE = "${@openmoko_two_get_license(d)}"
 SUBDIR = "${@openmoko_two_get_subdir(d)}"
 
-SRC_URI := "${SHR_MIRROR}/trunk/;module=${PN};rev=HEAD;proto=svn"
+#SRC_URI := "${SHR_MIRROR}/trunk/;module=${PN};rev=HEAD;proto=svn"
+SRC_URI := "file://${TOPDIR}/shr/${PN}"
 S = "${WORKDIR}/${PN}"
 
 FILES_${PN} += "${datadir}/icons"
