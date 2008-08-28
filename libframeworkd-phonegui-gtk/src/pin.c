@@ -22,7 +22,7 @@
 #include <frameworkd-glib/frameworkd-glib-sim.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include "pin.h"
-#include <frameworkd-glib/frameworkd-glib-phonegui.h>
+#include "frameworkd-phonegui.h"
 
 static gboolean is_sim_code_gui_active = FALSE;
 static int code_to_ask = 0;
