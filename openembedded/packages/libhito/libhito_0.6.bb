@@ -3,7 +3,7 @@ SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::dsunication"
 DEPENDS += " glib-2.0 gtk+ eds-dbus"
 # eds-dbus provides libebook
-PV = "0.6.0+svnr${SRCDATE}"
+PV = "0.6.0-shr"
 PR = "r1"
 PE = "1"
 
@@ -14,4 +14,3 @@ do_stage () {
 
 	autotools_stage_includes
 }
-

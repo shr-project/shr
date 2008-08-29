@@ -3,7 +3,7 @@ LICENSE = "GPL"
 SECTION = "openmoko/daemons"
 DEPENDS = "gtk+ pulseaudio apmd"
 RDEPENDS = "gpe-scap xrandr alsa-utils-amixer apm dbus"
-PV = "0.2.0-shr+svnr${SRCPV}"
+PV = "0.2.0-shr"
 PR = "r1"
 
 inherit shr gconf
