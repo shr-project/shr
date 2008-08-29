@@ -25,6 +25,10 @@
 #include "dialer-textview.h"
 #include "alsa-volume-control.h"
 #include "alsa-volume-scale.h"
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-bindings.h>
+#include <frameworkd-glib/frameworkd-glib-dbus.h>
+#include <frameworkd-glib/frameworkd-glib-call.h>
 
 #include "headset.h"
 
@@ -86,13 +90,29 @@ enum
   LAST_SIGNAL
 };
 
+static MokoTalking* mokoTalkingUI = NULL;
+
 void phonegui_display_call_UI(const int id_call, const int status, const char *number) { 
-    /* TODO */
-    return;
+	if (mokoTalkingUI != NULL) {
+		mokoTalkingUI = MOKO_TALKING (moko_talking_new());
+		MokoContactEntry *entry = moko_contacts_lookup(moko_contacts_get_default (), number);
+		
+		if (status == CALL_STATUS_INCOMING) {
+			moko_talking_incoming_call(mokoTalkingUI, number, entry);
+		} else if (status == CALL_STATUS_OUTGOING) {
+			moko_talking_outgoing_call(mokoTalkingUI, number, entry);
+		}
+	} else {
+		g_debug("phonegui_display_call_UI should be made async");
+	}
 }
 
 void phonegui_destroy_call_UI(const int id_call) { 
-    /* TODO */
+	if (mokoTalkingUI != NULL)
+	    moko_talking_hide_window (mokoTalkingUI);
+	else
+		g_debug("phonegui_destroy_call_UI should not be called when mokoTalkingUI==NULL");
+		
     return;
 }
 
