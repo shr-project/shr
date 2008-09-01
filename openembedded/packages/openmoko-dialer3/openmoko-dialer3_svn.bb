@@ -7,7 +7,3 @@ PR = "r8"
 PE = "1"
 
 inherit shr pkgconfig autotools
-
-do_stage () {
-        oe_libinstall -so libframeworkd-glib-phonegui-gtk ${STAGING_LIBDIR}
-}
