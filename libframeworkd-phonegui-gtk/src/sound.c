@@ -17,7 +17,7 @@
  *  Current Version: $Rev$ ($Date$) [$Author$]
  */
 
-#include "dialer.h"
+/*#include "dialer.h"*/
 
 #include <stdio.h>
 #include <stdlib.h>
