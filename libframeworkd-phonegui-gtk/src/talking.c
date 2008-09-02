@@ -93,7 +93,7 @@ enum
 static MokoTalking* mokoTalkingUI = NULL;
 
 void phonegui_display_call_UI(const int id_call, const int status, const char *number) { 
-	if (mokoTalkingUI != NULL) {
+	if (mokoTalkingUI == NULL) {
 		mokoTalkingUI = MOKO_TALKING (moko_talking_new());
 		MokoContactEntry *entry = moko_contacts_lookup(moko_contacts_get_default (), number);
 		
