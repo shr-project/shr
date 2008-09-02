@@ -131,25 +131,40 @@ static void print_property(gpointer key, gpointer value, gpointer user_data)
 	printf( "Call Property :: %s = %s\n", (char*) key, (char*) value );
 }
 
+static void set_number(gpointer key, gpointer value, gpointer user_data)
+{
+	if (strcmp((char*) key,"number") == 0)	//FIXME use strncmp
+		user_data = (char*) value;
+}
+
 void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) {
 	gchar *number = NULL;
 
+#ifdef DEBUG
+    g_debug("Call status changed new state: %d for call id: %d", status, id_call);
+#endif
+    if (properties) {
+        g_hash_table_foreach(properties, print_property, NULL);
+        g_hash_table_foreach(properties, set_number, number); 
+    } else {
+        g_debug("Properties is NULL");
+    }
+	
     switch(status) {
         case CALL_STATUS_INCOMING:
         case CALL_STATUS_OUTGOING:
+           phonegui_display_call_UI(id_call, status, number);
            break; 
+        case CALL_STATUS_RELEASED:
+        case CALL_STATUS_HELD:
+           phonegui_destroy_call_UI(id_call);
+           break;
+        case CALL_STATUS_ACTIVE:
+        	break;
+        default:
+        	g_debug("Unknown CallStatus");
+        	
     }
-
-	/* NOTE:
-	 *
-	 * This is just test code.
-	 */
-
-	if (properties)
-		g_hash_table_foreach(properties, print_property, NULL);
-
-	g_warning("Call status: %d", id_call);
-	phonegui_display_call_UI(id_call, status, number);
 }
 
 void ophonekitd_network_status_handler(GHashTable *status) {

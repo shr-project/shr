@@ -411,7 +411,7 @@ moko_alsa_volume_control_set_device_from_card_number (
 		moko_alsa_volume_control_set_device (control, device);
 		g_free (device);
 	} else
-		g_warning ("Unable to find card number %d", number);
+		g_debug ("Unable to find card number %d", number);
 }
 
 void
@@ -455,7 +455,7 @@ moko_alsa_volume_control_set_device_from_name (MokoAlsaVolumeControl *control,
 		}
 	}
 	
-	g_warning ("Card '%s' not found", name);
+	g_debug ("Card '%s' not found", name);
 }
 
 void

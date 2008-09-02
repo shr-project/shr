@@ -93,17 +93,32 @@ enum
 static MokoTalking* mokoTalkingUI = NULL;
 
 void phonegui_display_call_UI(const int id_call, const int status, const char *number) { 
+	MokoContactEntry *entry = NULL;
+	int show_gui = 0;
+	
 	if (mokoTalkingUI == NULL) {
 		mokoTalkingUI = MOKO_TALKING (moko_talking_new());
-		MokoContactEntry *entry = moko_contacts_lookup(moko_contacts_get_default (), number);
+		show_gui = 1;
+	} else {
+		if (GTK_WIDGET_VISIBLE(mokoTalkingUI->priv->window) == FALSE) {
+			show_gui = 1;			
+		} else {
+		/* TODO: Support simultaneous calls */
+		}
+	}
+	
+	if (show_gui == 1) {
+		if (number == NULL) {
+		    number = "Unknown number";
+		} else {
+			entry = moko_contacts_lookup(moko_contacts_get_default (), number);
+		}
 		
 		if (status == CALL_STATUS_INCOMING) {
 			moko_talking_incoming_call(mokoTalkingUI, number, entry);
 		} else if (status == CALL_STATUS_OUTGOING) {
 			moko_talking_outgoing_call(mokoTalkingUI, number, entry);
 		}
-	} else {
-		g_debug("phonegui_display_call_UI should be made async");
 	}
 }
 
