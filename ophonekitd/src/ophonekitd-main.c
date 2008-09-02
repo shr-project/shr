@@ -3,6 +3,7 @@
  *      Authors (alphabetical) :
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
+ *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -30,7 +31,7 @@
 #include <frameworkd-glib/frameworkd-glib-network.h>
 #include <frameworkd-glib/frameworkd-glib-device.h>
 #include "ophonekitd-main.h"
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <frameworkd-phonegui-gtk/frameworkd-phonegui.h>
 
 static gboolean connected_to_network = FALSE;
 static JanaStore* sms_store;
@@ -177,8 +178,7 @@ void ophonekitd_sim_incoming_message_handler(const int id) {
   sim_retrieve_messagebook("unread", ophonekitd_sim_retrieve_messagebook_callback, NULL);
 }
 
-static void add_meassage_to_pim(gpointer data, gpointer user_data) {
-
+void add_meassage_to_pim(gpointer data, gpointer user_data) {
   GValueArray* message = data; 
   const int index = g_value_get_int(g_value_array_get_nth(message, 0));
   const char* status = g_value_get_string(g_value_array_get_nth(message, 1));
@@ -186,9 +186,9 @@ static void add_meassage_to_pim(gpointer data, gpointer user_data) {
   const char* content = g_value_get_string(g_value_array_get_nth(message, 3));
   
   JanaNote *note = jana_ecal_note_new ();
-  #ifdef DEBUG
+#ifdef DEBUG
     g_debug ("Add message to pim: \ncontent: %s\nstatus: %s\n", content, status);
-  #endif
+#endif
 
   jana_note_set_author (note, number);
   jana_note_set_body (note, content);
@@ -199,20 +199,26 @@ static void add_meassage_to_pim(gpointer data, gpointer user_data) {
   /* Add SMS to store */
   jana_store_add_component (sms_store, JANA_COMPONENT (note));
 
+  /* TODO: Notify - debug code */
+  system("DISPLAY=\":0\" dbus-launch notify-send --expire-time=60000 \"New sms message\"");
+  
   sim_delete_message(index, ophonekitd_sim_delete_message_callback, NULL);
 }
 
 void ophonekitd_sim_delete_message_callback(GError* error, gpointer userdata) {
   if (error) {
-    g_debug("Error deleting message: %s", error->message);
+    g_warning("Error deleting message: %s", error->message);
+  } else {
+#ifdef DEBUG
+    g_debug ("No error deleting message");
+#endif
   }
 }
 
 void ophonekitd_sim_retrieve_messagebook_callback(GError* error, GPtrArray* messages, gpointer userdata) {
-   
-   if (!error) {
+   if (error != NULL) {
 #ifdef DEBUG   
-     g_debug("No error deleting message");
+     g_debug("Error retrieving messagebook: %s", error->message);
 #endif
    } else {
      g_ptr_array_foreach(messages, add_meassage_to_pim, NULL);
