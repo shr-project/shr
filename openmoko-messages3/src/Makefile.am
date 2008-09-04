@@ -15,8 +15,7 @@ AM_LDFLAGS = $(GTK_LIBS) \
              $(EBOOK_LIBS) \
              $(FRAMEWORKD_GLIB_LIBS) \
              $(FRAMEWORKD_PHONEGUI_LIBS) \
-             $(HITO_LIBS) \
-             $(top_builddir)/libhito/libhito.a
+             $(HITO_LIBS) 
 
 bin_PROGRAMS=openmoko-messages
 
