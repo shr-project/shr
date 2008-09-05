@@ -117,9 +117,10 @@ IMAGE_INSTALL = "\
 
 inherit image
 
-# perform some convenience tweaks to the rootfs
+# perform some FSO convenience tweaks to the rootfs
 fso_rootfs_postprocess() {
     curdir=$PWD
+    echo $curdir > ${IMAGE_ROOTFS}/topdir
     cd ${IMAGE_ROOTFS}
     # date/time
     date "+%m%d%H%M%Y" >./etc/timestamp
@@ -143,4 +144,16 @@ fso_rootfs_postprocess() {
     cd $curdir
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "fso_rootfs_postprocess"
+# perform some SHR convenience tweaks to the rootfs
+shr_rootfs_postprocess() {
+    dirs=`find ${FILESDIR} -type d -printf "%P\n" | grep -v "^.$" | grep -v ".svn"`
+    for dir in $dirs; do
+        mkdir -p ${IMAGE_ROOTFS}/$dir
+    done
+    files=`find ${FILESDIR} -type f -printf "%P\n" | grep -v ".svn"`
+    for file in $files; do
+        cp -f ${FILESDIR}/$file ${IMAGE_ROOTFS}/$file
+    done
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "fso_rootfs_postprocess; shr_rootfs_postprocess"
