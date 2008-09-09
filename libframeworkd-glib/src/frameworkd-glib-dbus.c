@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
- *              Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *
@@ -95,7 +95,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
     if (!bus)
         lose_gerror ("Couldn't connect to system bus", error);
 
-    dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_STRING_BOXED, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
+    dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__INT_STRING_BOXED, G_TYPE_NONE, G_TYPE_INT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
     dbus_g_object_register_marshaller (g_cclosure_user_marshal_VOID__UINT_BOOLEAN_STRING, G_TYPE_NONE, G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INVALID);
 
     if(fwHandler != NULL) {
@@ -114,7 +114,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
         }
         if(fwHandler->networkSignalStrength != NULL) {
             dbus_connect_to_gsm_network();
-            dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_INT , G_TYPE_INVALID);
+            dbus_g_proxy_add_signal (networkBus, "SignalStrength", G_TYPE_INT, G_TYPE_INVALID);
             dbus_g_proxy_connect_signal (networkBus, "SignalStrength", G_CALLBACK (network_signal_strength_handler),
                     fwHandler->networkSignalStrength, NULL);
 #ifdef DEBUG
@@ -141,7 +141,7 @@ void dbus_connect_to_bus(FrameworkdHandlers* fwHandler ) {
 		}
         if(fwHandler->callCallStatus != NULL) {
             dbus_connect_to_gsm_call();
-            dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_UINT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
+            dbus_g_proxy_add_signal (callBus, "CallStatus", G_TYPE_INT, G_TYPE_STRING, dbus_get_type_g_string_variant_hashtable(), G_TYPE_INVALID);
             dbus_g_proxy_connect_signal (callBus, "CallStatus", G_CALLBACK (call_status_handler),
                     fwHandler->callCallStatus, NULL);
 #ifdef DEBUG

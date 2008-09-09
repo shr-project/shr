@@ -101,12 +101,22 @@ static void call_initiate_callback(DBusGProxy* proxy, int id_call, GError *dbus_
     g_free (userdata);
 }
 
-void call_initiate(const char *number, const char* call_type, void (*callback)(GError *, int id_call, gpointer userdata), gpointer userdata) {
+void call_initiate(const char *number, CallTypes* call_type, void (*callback)(GError *, int id_call, gpointer userdata), gpointer userdata) {
     dbus_connect_to_gsm_call();
     call_initiate_data_t *data = g_malloc (sizeof (call_initiate_data_t));
     data->callback = callback;
     data->userdata = userdata;
-    org_freesmartphone_GSM_Call_initiate_async(callBus,number, call_type, call_initiate_callback, data);
+    switch ((int)call_type) {
+        case CALL_TYPE_VOICE:
+            org_freesmartphone_GSM_Call_initiate_async(callBus,number, DBUS_CALL_TYPE_VOICE, call_initiate_callback, data);
+            break;
+        case CALL_TYPE_DATA:
+            org_freesmartphone_GSM_Call_initiate_async(callBus,number, DBUS_CALL_TYPE_DATA, call_initiate_callback, data);
+            break;
+        default:
+            g_debug("Unkown call type\n");
+            exit(0);
+    }
 }
 
 static void call_release_callback(DBusGProxy* proxy, GError *dbus_error, gpointer userdata) {

@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
- *              Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *

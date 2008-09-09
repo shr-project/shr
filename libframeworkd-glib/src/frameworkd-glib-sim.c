@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2008 
  *	Authors (alphabetical) : 
- *		Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
+ *		Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
  *		Marc-Olivier Barre <marco@marcochapeau.org>
  *		Julien Cassignol <ainulindale@gmail.com>
  *
@@ -787,7 +787,7 @@ void sim_store_message_callback(DBusGProxy* bus, int index, GError *dbus_error, 
     g_free(data);
 }
 
-void sim_store_message(char * number, char* content, void (*callback)(GError*, int index, gpointer), gpointer userdata) {
+void sim_store_message(const char * number, const char* content, void (*callback)(GError*, int index, gpointer), gpointer userdata) {
     dbus_connect_to_gsm_sim();
 
     sim_store_message_data_t *data = g_malloc (sizeof (sim_store_message_data_t));

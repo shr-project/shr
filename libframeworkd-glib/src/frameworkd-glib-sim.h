@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
- *              Andreas Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *
@@ -97,7 +97,7 @@ void sim_set_service_center_number(char *number,  void (*callback)(GError*, gpoi
 
 void sim_delete_message(const int index, void (*callback)(GError*, gpointer), gpointer userdata);
 
-void sim_store_message(char *number, char* content, void (*callback)(GError*, int index, gpointer), gpointer userdata);
+void sim_store_message(const char *number,const char* content, void (*callback)(GError*, int index, gpointer), gpointer userdata);
 
 void sim_send_stored_message(const int index, void (*callback)(GError*, int transaction_index, gpointer), gpointer userdata);
 
