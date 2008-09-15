@@ -14,16 +14,26 @@ BASE_INSTALL = "\
   screen \
   fbset \
   fbset-modes \
-  libhito \
-  libframeworkd-glib \
-  libframeworkd-phonegui-gtk \
+"
+# Some machines don't set a *runtime* provider for X, so default to Xfbdev here
+# virtual/xserver won't work, since the kdrive recipes will build
+# multiple xserver packages
+XSERVER ?= "xserver-kdrive-fbdev"
+
+ILLUME_INSTALL = "\
+  e-wm \
+  illume \
+  illume-config-illume \
+  illume-dicts-english-us \
+  illume-keyboards-default \
+  illume-keyboards-numbers \
+  illume-keyboards-terminal \
+  illume-theme-freesmartphone \
 "
 
 # getting an X window system up
 X_INSTALL = "\
-  e-wm \
-  illume \
-  illume-theme-freesmartphone \
+  ${ILLUME_INSTALL} \
   ${XSERVER} \
   xserver-kdrive-common \
   xserver-nodm-init \
@@ -70,11 +80,13 @@ AUDIO_INSTALL = "\
 "
 
 GTK_INSTALL = "\
+  moko-gtk-engine \
+  hicolor-icon-theme \
+  openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
   openmoko-terminal2 \
   gpe-scap \
   tangogps-fso \
-  openmoko-dialer3 \
 "
 
 GAMES_INSTALL = "\
@@ -104,6 +116,15 @@ ZHONE_INSTALL = "\
   zhone \
 "
 
+# SHR
+SHR_INSTALL = "\
+  frameworkd \
+  libhito \
+  libframeworkd-glib \
+  libframeworkd-phonegui-gtk \
+  openmoko-dialer3 \
+"
+
 IMAGE_INSTALL = "\
   ${BASE_INSTALL} \
   ${X_INSTALL} \
@@ -112,7 +133,8 @@ IMAGE_INSTALL = "\
   ${AUDIO_INSTALL} \
   ${TOOLS_INSTALL} \
   ${PYTHON_INSTALL} \
-  ${ZHONE_INSTALL} \
+  ${SHR_INSTALL} \
+#  ${ZHONE_INSTALL} \
 "
 
 inherit image
@@ -120,7 +142,6 @@ inherit image
 # perform some FSO convenience tweaks to the rootfs
 fso_rootfs_postprocess() {
     curdir=$PWD
-    echo $curdir > ${IMAGE_ROOTFS}/topdir
     cd ${IMAGE_ROOTFS}
     # date/time
     date "+%m%d%H%M%Y" >./etc/timestamp
@@ -141,6 +162,8 @@ fso_rootfs_postprocess() {
     # minimal gtk theme foo
     mkdir -p ./etc/gtk-2.0/
     echo 'gtk-font-name = "Sans 5"' >> ./etc/gtk-2.0/gtkrc
+    # fix strange iconv/gconf bug
+    ln -s libc.so.6 ./lib/libc.so
     cd $curdir
 }
 
