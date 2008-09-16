@@ -30,6 +30,8 @@
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include <frameworkd-glib/frameworkd-glib-call.h>
 
+#include <libmokoui2/moko-stock.h>
+
 #include "headset.h"
 
 G_DEFINE_TYPE (MokoTalking, moko_talking, GTK_TYPE_WIDGET)
@@ -60,9 +62,9 @@ struct _MokoTalkingPrivate
   GtkWidget *person;
   GtkWidget *status;
   GtkWidget *volume;
-  
+
   GtkToolItem *speaker_toggle_btn;
-  
+
   GtkWidget *dtmf_display;
   GtkWidget *dtmf_pad;
 
@@ -72,9 +74,9 @@ struct _MokoTalkingPrivate
 
   GTimer *dtimer;
   guint timeout;
-  
+
   gint call_direction;
-  
+
   MokoAlsaVolumeControl *headphone;
 };
 
@@ -92,28 +94,28 @@ enum
 
 static MokoTalking* mokoTalkingUI = NULL;
 
-void phonegui_display_call_UI(const int id_call, const int status, const char *number) { 
+void phonegui_display_call_UI(const int id_call, const int status, const char *number) {
 	MokoContactEntry *entry = NULL;
 	int show_gui = 0;
-	
+
 	if (mokoTalkingUI == NULL) {
 		mokoTalkingUI = MOKO_TALKING (moko_talking_new());
 		show_gui = 1;
 	} else {
 		if (GTK_WIDGET_VISIBLE(mokoTalkingUI->priv->window) == FALSE) {
-			show_gui = 1;			
+			show_gui = 1;
 		} else {
 		/* TODO: Support simultaneous calls */
 		}
 	}
-	
+
 	if (show_gui == 1) {
 		if (number == NULL) {
 		    number = "Unknown number";
 		} else {
 			entry = moko_contacts_lookup(moko_contacts_get_default (), number);
 		}
-		
+
 		if (status == CALL_STATUS_INCOMING) {
 			moko_talking_incoming_call(mokoTalkingUI, number, entry);
 		} else if (status == CALL_STATUS_OUTGOING) {
@@ -122,25 +124,25 @@ void phonegui_display_call_UI(const int id_call, const int status, const char *n
 	}
 }
 
-void phonegui_destroy_call_UI(const int id_call) { 
+void phonegui_destroy_call_UI(const int id_call) {
 	if (mokoTalkingUI != NULL)
 	    moko_talking_hide_window (mokoTalkingUI);
 	else
 		g_debug("phonegui_destroy_call_UI should not be called when mokoTalkingUI==NULL");
-		
+
     return;
 }
 
 static guint talking_signals[LAST_SIGNAL] = {0, };
 
 void
-moko_talking_set_clip (MokoTalking      *talking, 
+moko_talking_set_clip (MokoTalking      *talking,
                        const gchar      *number,
                        MokoContactEntry *entry)
 {
   MokoTalkingPrivate *priv;
   gchar *markup;
-  
+
   g_return_if_fail (MOKO_IS_TALKING (talking));
   priv = talking->priv;
 
@@ -153,7 +155,7 @@ moko_talking_set_clip (MokoTalking      *talking,
     markup = g_strdup (number);
 
   gtk_label_set_markup (GTK_LABEL (priv->status), markup);
-  
+
   if (entry && GDK_IS_PIXBUF (entry->contact->photo))
     gtk_image_set_from_pixbuf (GTK_IMAGE (priv->person), entry->contact->photo);
   else
@@ -184,23 +186,23 @@ incoming_timeout (MokoTalking *talking)
   g_return_val_if_fail (MOKO_IS_TALKING (talking), FALSE);
   priv = talking->priv;
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon), 
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon),
                              priv->incoming[i]);
-  
+
   i++;
   if (i == 4)
     i = 0;
-  
+
   return TRUE;
 }
 
 void
-moko_talking_incoming_call (MokoTalking      *talking, 
+moko_talking_incoming_call (MokoTalking      *talking,
                             const gchar      *number,
                             MokoContactEntry *entry)
 {
   MokoTalkingPrivate *priv;
-  
+
   moko_talking_reset_ui (talking);
 
   g_return_if_fail (MOKO_IS_TALKING (talking));
@@ -212,7 +214,7 @@ moko_talking_incoming_call (MokoTalking      *talking,
   gtk_window_set_title (GTK_WINDOW (priv->window), "Incoming Call");
   gtk_label_set_text (GTK_LABEL (priv->title), "Incoming Call");
   gtk_label_set_text (GTK_LABEL (priv->duration), "");
-  gtk_image_set_from_file (GTK_IMAGE (priv->icon), 
+  gtk_image_set_from_file (GTK_IMAGE (priv->icon),
                            PKGDATADIR"/incoming_3.png");
 
   gtk_label_set_text (GTK_LABEL (priv->status), number);
@@ -220,7 +222,7 @@ moko_talking_incoming_call (MokoTalking      *talking,
                            PKGDATADIR"/unknown.png");
   if (priv->timeout)
     g_source_remove (priv->timeout);
-  priv->timeout = g_timeout_add (1000, 
+  priv->timeout = g_timeout_add (1000,
                                  (GSourceFunc)incoming_timeout,
                                  (gpointer)talking);
   priv->call_direction = CALL_DIRECTION_INCOMING;
@@ -237,18 +239,18 @@ outgoing_timeout (MokoTalking *talking)
   g_return_val_if_fail (MOKO_IS_TALKING (talking), FALSE);
   priv = talking->priv;
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon), 
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon),
                              priv->outgoing[i]);
-  
+
   i++;
   if (i == 4)
     i = 0;
-  
+
   return TRUE;
 }
 
 void
-moko_talking_outgoing_call (MokoTalking      *talking, 
+moko_talking_outgoing_call (MokoTalking      *talking,
                             const gchar      *number,
                             MokoContactEntry *entry)
 {
@@ -256,14 +258,14 @@ moko_talking_outgoing_call (MokoTalking      *talking,
   gchar *markup = NULL;
 
   moko_talking_reset_ui (talking);
-    
+
   g_return_if_fail (MOKO_IS_TALKING (talking));
   priv = talking->priv;
-  
+
   gtk_widget_hide (priv->incoming_bar);
   gtk_widget_show_all (priv->main_bar);
 
-  if ( HEADSET_STATUS_IN == moko_headset_status_get() ) 
+  if ( HEADSET_STATUS_IN == moko_headset_status_get() )
     moko_sound_profile_set(SOUND_PROFILE_GSM_HEADSET);
   else
     moko_sound_profile_set(SOUND_PROFILE_GSM_HANDSET);
@@ -278,7 +280,7 @@ moko_talking_outgoing_call (MokoTalking      *talking,
   gtk_label_set_text (GTK_LABEL (priv->duration), "");
 
   gtk_label_set_markup (GTK_LABEL (priv->status), markup);
-  
+
   if (entry && GDK_IS_PIXBUF (entry->contact->photo))
     gtk_image_set_from_pixbuf (GTK_IMAGE (priv->person), entry->contact->photo);
   else
@@ -286,13 +288,13 @@ moko_talking_outgoing_call (MokoTalking      *talking,
                              PKGDATADIR"/unknown.png");
   if (priv->timeout)
     g_source_remove (priv->timeout);
-  priv->timeout = g_timeout_add (1000, 
+  priv->timeout = g_timeout_add (1000,
                                  (GSourceFunc)outgoing_timeout,
                                  (gpointer)talking);
 
   g_free (markup);
   priv->call_direction = CALL_DIRECTION_OUTGOING;
-  
+
   gtk_window_present (GTK_WINDOW (priv->window));
   gtk_window_deiconify (GTK_WINDOW (priv->window));
 }
@@ -321,19 +323,19 @@ talking_timeout (MokoTalking *talking)
     gtk_label_set_markup (GTK_LABEL (priv->duration), markup);
   }
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon), 
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon),
                              priv->talking[i]);
-  
+
   i++;
   if (i == 5)
     i = 0;
-  
+
   g_free(markup);
   return TRUE;
 }
-  
+
 void
-moko_talking_accepted_call (MokoTalking      *talking, 
+moko_talking_accepted_call (MokoTalking      *talking,
                             const gchar      *number,
                             MokoContactEntry *entry)
 {
@@ -346,7 +348,7 @@ moko_talking_accepted_call (MokoTalking      *talking,
   gtk_widget_hide (priv->incoming_bar);
   gtk_widget_show_all (priv->main_bar);
 
-  if ( HEADSET_STATUS_IN == moko_headset_status_get() ) 
+  if ( HEADSET_STATUS_IN == moko_headset_status_get() )
     moko_sound_profile_set(SOUND_PROFILE_GSM_HEADSET);
   else
     moko_sound_profile_set(SOUND_PROFILE_GSM_HANDSET);
@@ -359,7 +361,7 @@ moko_talking_accepted_call (MokoTalking      *talking,
   gtk_window_set_title (GTK_WINDOW (priv->window), "Talking");
   gtk_label_set_text (GTK_LABEL (priv->title), "Talking");
   gtk_label_set_text (GTK_LABEL (priv->duration), "00:00:00");
-  gtk_image_set_from_file (GTK_IMAGE (priv->icon), 
+  gtk_image_set_from_file (GTK_IMAGE (priv->icon),
                            PKGDATADIR"/talking_3.png");
 
   /* start call duration timer */
@@ -372,7 +374,7 @@ moko_talking_accepted_call (MokoTalking      *talking,
    */
   if (priv->timeout)
     g_source_remove (priv->timeout);
-  priv->timeout = g_timeout_add (1000, 
+  priv->timeout = g_timeout_add (1000,
                                  (GSourceFunc)talking_timeout,
                                  (gpointer)talking);
 
@@ -387,9 +389,9 @@ moko_talking_hide_window (MokoTalking *talking)
   g_return_if_fail (MOKO_IS_TALKING (talking));
   priv = talking->priv;
 
-  if ( HEADSET_STATUS_IN == moko_headset_status_get() ) 
+  if ( HEADSET_STATUS_IN == moko_headset_status_get() )
     moko_sound_profile_set(SOUND_PROFILE_HEADSET);
-  else 
+  else
     moko_sound_profile_set(SOUND_PROFILE_STEREO_OUT);
 
   if (priv->dtimer)
@@ -444,11 +446,11 @@ on_cancel_clicked (GtkToolButton *button, MokoTalking *talking)
   if (priv->dtimer)
     g_timer_destroy(priv->dtimer);
   priv->dtimer = NULL;
-  
+
   if (priv->timeout)
     g_source_remove (priv->timeout);
 
-  if ( HEADSET_STATUS_IN == moko_headset_status_get() ) 
+  if ( HEADSET_STATUS_IN == moko_headset_status_get() )
     moko_sound_profile_set(SOUND_PROFILE_HEADSET);
   else
     moko_sound_profile_set(SOUND_PROFILE_STEREO_OUT);
@@ -486,7 +488,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
 
 
    talking_signals[ACCEPT_CALL] =
-    g_signal_new ("accept_call", 
+    g_signal_new ("accept_call",
                   G_TYPE_FROM_CLASS (obj_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (MokoTalkingClass,  accept_call),
@@ -495,7 +497,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
                   G_TYPE_NONE, 0);
 
    talking_signals[REJECT_CALL] =
-    g_signal_new ("reject_call", 
+    g_signal_new ("reject_call",
                   G_TYPE_FROM_CLASS (obj_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (MokoTalkingClass,  reject_call),
@@ -504,7 +506,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
                   G_TYPE_NONE, 0);
 
    talking_signals[CANCEL_CALL] =
-    g_signal_new ("cancel_call", 
+    g_signal_new ("cancel_call",
                   G_TYPE_FROM_CLASS (obj_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (MokoTalkingClass,  cancel_call),
@@ -512,7 +514,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
    talking_signals[SILENCE] =
-    g_signal_new ("silence", 
+    g_signal_new ("silence",
                   G_TYPE_FROM_CLASS (obj_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (MokoTalkingClass,  silence),
@@ -521,7 +523,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
                   G_TYPE_NONE, 0);
 
    talking_signals[SPEAKER_TOGGLE] =
-    g_signal_new ("speaker_toggle", 
+    g_signal_new ("speaker_toggle",
                   G_TYPE_FROM_CLASS (obj_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (MokoTalkingClass,  speaker_toggle),
@@ -530,7 +532,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
                   G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
    talking_signals[DTMF_KEY_PRESS] =
-    g_signal_new ("dtmf_key_press", 
+    g_signal_new ("dtmf_key_press",
                   G_TYPE_FROM_CLASS (obj_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (MokoTalkingClass,  dtmf_key_press),
@@ -538,7 +540,7 @@ moko_talking_class_init (MokoTalkingClass *klass)
                   g_cclosure_marshal_VOID__CHAR,
                   G_TYPE_NONE, 1, G_TYPE_CHAR);
 
-  g_type_class_add_private (obj_class, sizeof (MokoTalkingPrivate)); 
+  g_type_class_add_private (obj_class, sizeof (MokoTalkingPrivate));
 }
 
 static gboolean
@@ -550,7 +552,7 @@ window_delete_event_cb (GtkWidget *widget, GdkEvent  *event, MokoTalking *talkin
 	on_reject_clicked (NULL, talking);
   else
 	on_cancel_clicked (NULL, talking);
-  
+
   return TRUE;
 }
 
@@ -565,7 +567,7 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
   /* Create a string from the new digit */
   buf[0] = digit;
   buf[1] = '\0';
-  
+
   moko_dialer_textview_insert (MOKO_DIALER_TEXTVIEW (priv->dtmf_display), buf);
 
   g_signal_emit (G_OBJECT (talking), talking_signals[DTMF_KEY_PRESS],
@@ -597,48 +599,53 @@ moko_talking_init (MokoTalking *talking)
                             gtk_image_new_from_file (PKGDATADIR"/phone.png"));
   gtk_container_child_set (GTK_CONTAINER (notebook), main_vbox, "tab-expand",
                            TRUE, NULL);
-  
+
   priv->incoming_bar = toolbar = gtk_toolbar_new ();
   gtk_box_pack_start (GTK_BOX (main_vbox), toolbar, FALSE, FALSE, 0);
 
-  item = gtk_tool_button_new (gtk_image_new_from_file (PKGDATADIR"/moko-call-answer.png"), NULL);
+  image = gtk_image_new_from_icon_name (MOKO_STOCK_CALL_ANSWER, GTK_ICON_SIZE_BUTTON);
+  item = gtk_tool_button_new (image, "Answer");
   gtk_tool_item_set_expand (item, TRUE);
   g_signal_connect (item, "clicked", G_CALLBACK (on_answer_clicked), talking);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  item = gtk_tool_button_new (gtk_image_new_from_file (PKGDATADIR"/moko-call-ignore.png"), NULL);
+  image = gtk_image_new_from_icon_name (MOKO_STOCK_CALL_IGNORE, GTK_ICON_SIZE_BUTTON);
+  item = gtk_tool_button_new (image, "Ignore");
   gtk_tool_item_set_expand (item, TRUE);
   g_signal_connect (item, "clicked", G_CALLBACK (on_silence_clicked), talking);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  item = gtk_tool_button_new (gtk_image_new_from_file (PKGDATADIR"/moko-call-hangup.png"), NULL);
+  image = gtk_image_new_from_icon_name (MOKO_STOCK_CALL_REJECT, GTK_ICON_SIZE_BUTTON);
+  item = gtk_tool_button_new (image, "Reject");
   gtk_tool_item_set_expand (item, TRUE);
   g_signal_connect (item, "clicked", G_CALLBACK (on_reject_clicked), talking);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
-  
+
   /* Volume controls */
   priv->headphone = moko_alsa_volume_control_new ();
   moko_alsa_volume_control_set_device_from_name (priv->headphone, "neo1973");
   moko_alsa_volume_control_set_element_from_name (priv->headphone, "Headphone");
-  
+
   priv->volume = moko_alsa_volume_scale_new (GTK_ORIENTATION_HORIZONTAL);
   moko_alsa_volume_scale_set_control (MOKO_ALSA_VOLUME_SCALE (priv->volume),
                                       priv->headphone);
-  
+
   /* Outgoing call and talking share the same toolbar */
   priv->main_bar = toolbar = gtk_toolbar_new ();
   gtk_box_pack_start (GTK_BOX (main_vbox), toolbar, FALSE, FALSE, 0);
 
+  image = gtk_image_new_from_icon_name (MOKO_STOCK_SPEAKER,
+                                        GTK_ICON_SIZE_BUTTON);
   item = gtk_toggle_tool_button_new ();
-  gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (item),
-      gtk_image_new_from_file (PKGDATADIR"/speaker.png"));
+  gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (item), image);
 
   gtk_tool_item_set_expand (item, TRUE);
   g_signal_connect (item, "toggled", G_CALLBACK (on_speaker_toggled), talking);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
   priv->speaker_toggle_btn = item;
 
-  item = gtk_tool_button_new (gtk_image_new_from_file (PKGDATADIR"/moko-call-hangup.png"), NULL);
+  image = gtk_image_new_from_icon_name (MOKO_STOCK_CALL_HANGUP, GTK_ICON_SIZE_BUTTON);
+  item = gtk_tool_button_new (image, "Hangup");
   gtk_tool_item_set_expand (item, TRUE);
   g_signal_connect (item, "clicked", G_CALLBACK (on_cancel_clicked), talking);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
@@ -647,7 +654,7 @@ moko_talking_init (MokoTalking *talking)
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
   gtk_box_pack_start (GTK_BOX (main_vbox), vbox, FALSE, FALSE, 0);
-  
+
   priv->title = label = gtk_label_new ("Incoming Call");
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
@@ -678,7 +685,7 @@ moko_talking_init (MokoTalking *talking)
 
   priv->status = label = gtk_label_new ("");
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-  
+
   /* The volume control */
   gtk_box_pack_start (GTK_BOX (vbox), priv->volume, FALSE, TRUE, 12);
 
@@ -714,7 +721,7 @@ moko_talking_init (MokoTalking *talking)
       g_object_ref (priv->incoming[i]);
 
   }
-  
+
   /* dtmf page */
   GtkWidget *pad, *display;
   main_vbox = gtk_vbox_new (FALSE, 0);
@@ -722,11 +729,11 @@ moko_talking_init (MokoTalking *talking)
                             gtk_image_new_from_file (PKGDATADIR"/dtmf.png"));
   gtk_container_child_set (GTK_CONTAINER (notebook), main_vbox, "tab-expand",
                            TRUE, NULL);
-  
+
   display = moko_dialer_textview_new ();
   gtk_box_pack_start_defaults (GTK_BOX (main_vbox), display);
   priv->dtmf_display = display;
-  
+
   pad = moko_dialer_panel_new ();
   gtk_box_pack_start_defaults (GTK_BOX (main_vbox), pad);
   g_signal_connect (pad, "user_input", G_CALLBACK (on_pad_user_input), talking);
@@ -735,7 +742,7 @@ moko_talking_init (MokoTalking *talking)
   priv->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   g_signal_connect (priv->window, "delete-event", G_CALLBACK (window_delete_event_cb), talking);
   gtk_container_add (GTK_CONTAINER (priv->window), notebook);
-  
+
   gtk_widget_show_all (notebook);
 
 }
@@ -744,7 +751,7 @@ GtkWidget*
 moko_talking_new ()
 {
   MokoTalking *talking = NULL;
-    
+
   talking = g_object_new (MOKO_TYPE_TALKING, NULL);
 
   return GTK_WIDGET (talking);

@@ -29,13 +29,15 @@
 #include <frameworkd-phonegui-gtk/keypad.h>
 #include <frameworkd-phonegui-gtk/history.h>
 
+#include <libmokoui2/moko-stock.h>
+
 typedef struct
 {
   GtkWidget *notebook;
   GtkWidget *history;
-  
+
   GtkWidget *main_window;
-  
+
 //  DBusGProxy *dialer_proxy;
 } DialerData;
 
@@ -172,12 +174,13 @@ int main (int argc, char **argv)
   gtk_notebook_set_tab_pos (GTK_NOTEBOOK (data->notebook), GTK_POS_BOTTOM);
   gtk_container_add (GTK_CONTAINER (window), data->notebook);
 
-
   /* Keypad */
   keypad = moko_keypad_new ();
   g_signal_connect (keypad, "dial_number", G_CALLBACK (dial_clicked_cb), data);
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (data->notebook), keypad, gtk_image_new_from_file (PKGDATADIR"/dtmf.png"));
+  gtk_notebook_append_page (GTK_NOTEBOOK (data->notebook), keypad,
+                            gtk_image_new_from_icon_name (MOKO_STOCK_CALL_DIAL,
+                                                          GTK_ICON_SIZE_BUTTON));
   gtk_container_child_set (GTK_CONTAINER (data->notebook), keypad, "tab-expand", TRUE, NULL);
 
   /* History */
@@ -185,8 +188,8 @@ int main (int argc, char **argv)
   data->history = moko_history_new (journal);
   g_signal_connect (data->history, "dial_number", G_CALLBACK (dial_clicked_cb), data);
   gtk_notebook_append_page (GTK_NOTEBOOK (data->notebook), data->history,
-                            gtk_image_new_from_icon_name ("moko-call-history",
-                                                      GTK_ICON_SIZE_BUTTON));
+                            gtk_image_new_from_icon_name (MOKO_STOCK_CALL_HISTORY,
+                                                          GTK_ICON_SIZE_BUTTON));
   gtk_container_child_set (GTK_CONTAINER (data->notebook), data->history,
                            "tab-expand", TRUE,
                            NULL);

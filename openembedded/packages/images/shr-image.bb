@@ -54,7 +54,6 @@ X_INSTALL = "\
 TOOLS_INSTALL = "\
 #  bash \
   dosfstools \
-  htop \
   iptables \
   lsof \
   mickeydbus \
@@ -80,8 +79,8 @@ AUDIO_INSTALL = "\
 "
 
 GTK_INSTALL = "\
-  moko-gtk-engine \
   hicolor-icon-theme \
+  openmoko-theme-standard2 \
   openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
   openmoko-terminal2 \
@@ -177,6 +176,16 @@ shr_rootfs_postprocess() {
     for file in $files; do
         cp -f ${FILESDIR}/$file ${IMAGE_ROOTFS}/$file
     done
+
+    curdir=$PWD
+    cd ${IMAGE_ROOTFS}
+
+    # set openmoko theme
+    mkdir -p ./etc/gtk-2.0/
+    echo 'gtk-theme-name = "openmoko-standard-2"' >> ./etc/gtk-2.0/gtkrc
+    echo 'gtk-icon-theme-name = "openmoko-standard"' >> ./etc/gtk-2.0/gtkrc
+
+    cd $curdir
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "fso_rootfs_postprocess; shr_rootfs_postprocess"
