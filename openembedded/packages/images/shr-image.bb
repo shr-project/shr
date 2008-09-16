@@ -14,6 +14,7 @@ BASE_INSTALL = "\
   screen \
   fbset \
   fbset-modes \
+  gsm0710muxd \
 "
 # Some machines don't set a *runtime* provider for X, so default to Xfbdev here
 # virtual/xserver won't work, since the kdrive recipes will build
@@ -88,10 +89,6 @@ GTK_INSTALL = "\
   tangogps-fso \
 "
 
-GAMES_INSTALL = "\
-  numptyphysics \
-"
-
 # FIXME these should rather be part of alsa-state,
 # once Om stabilizes them...
 AUDIO_INSTALL_append_om-gta01 = "\
@@ -108,13 +105,6 @@ PYTHON_INSTALL = "\
   python-gst \
 "
 
-# zhone
-ZHONE_INSTALL = "\
-  gsm0710muxd \
-  frameworkd \
-  zhone \
-"
-
 # SHR
 SHR_INSTALL = "\
   frameworkd \
@@ -128,12 +118,10 @@ IMAGE_INSTALL = "\
   ${BASE_INSTALL} \
   ${X_INSTALL} \
   ${GTK_INSTALL} \
-  ${GAMES_INSTALL} \
   ${AUDIO_INSTALL} \
   ${TOOLS_INSTALL} \
   ${PYTHON_INSTALL} \
   ${SHR_INSTALL} \
-#  ${ZHONE_INSTALL} \
 "
 
 inherit image
