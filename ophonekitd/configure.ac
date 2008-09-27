@@ -9,27 +9,28 @@ AC_ISC_POSIX
 AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
+AC_LIBTOOL_DLOPEN
 
 # base deps TODO
-PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
+# PKG_CHECK_MODULES(JANA, libjana libjana-ecal libjana-gtk)
 PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
                   libframeworkd-glib,
 		  [],
 		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
 		 )
-PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI,
-                  libframeworkd-phonegui-gtk,
-                  [],
-                  [AC_MSG_FAILURE([libframeworkd-phonegui-gtk not found])]
-                 )
+# PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI,
+#                   libframeworkd-phonegui-gtk,
+#                   [],
+#                   [AC_MSG_FAILURE([libframeworkd-phonegui-gtk not found])]
+#                  )
 PKG_CHECK_MODULES(DBUS_GLIB,
                   dbus-glib-1,
                   [],
                   [AC_MSG_FAILURE([dbus-glib not found])]
                  )
 
-AC_SUBST(JANA_CFLAGS)
-AC_SUBST(JANA_LIBS)
+# AC_SUBST(JANA_CFLAGS)
+# AC_SUBST(JANA_LIBS)
 AC_SUBST(DBUS_GLIB_CFLAGS)
 AC_SUBST(DBUS_GLIB_LIBS)
 AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)

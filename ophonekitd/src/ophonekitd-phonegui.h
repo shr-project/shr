@@ -14,22 +14,21 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef _OPHONEKITD_MAIN_H
-#define _OPHONEKITD_MAIN_H
+#ifndef _OPHONEKITD_PHONEGUI_H
+#define _OPHONEKITD_PHONEGUI_H
 
-#include <dbus/dbus-glib.h>
+void *phonegui_load();
+void phonegui_connect(void *library);
+void *phonegui_get_function(void *library, char *name);
 
-#define CONFIG_FILE "/etc/ophonekitd/gui.conf"
-
-int main(int argc, char ** argv);
-
-void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties);
-void ophonekitd_sim_auth_status_handler(const int status);
-void ophonekitd_sim_incoming_message_handler(const int id);
-
-gboolean power_up_antenna();
-void power_up_antenna_callback(GError *error, gpointer userdata);
-void sim_auth_status_callback(GError *error, int status, gpointer userdata);
-void register_to_network_callback(GError *error, gpointer userdata);
+void (*phonegui_init)();
+void (*phonegui_sim_auth_ui_show)();
+void (*phonegui_sim_auth_ui_hide)();
+void (*phonegui_incoming_call_ui_show)();
+void (*phonegui_incoming_call_ui_hide)();
+void (*phonegui_outgoing_call_ui_show)();
+void (*phonegui_outgoing_call_ui_hide)();
+void (*phonegui_message_ui_show)();
+void (*phonegui_message_ui_hide)();
 
 #endif

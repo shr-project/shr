@@ -15,240 +15,163 @@
  *  GNU Lesser Public License for more details.
  */
 
-#include <stdio.h>
-#include <string.h>
+#include "ophonekitd-main.h"
 #include <stdlib.h>
-#include <unistd.h>
-
-#include <libjana/jana.h>
-#include <libjana/jana-store.h>
-#include <libjana-ecal/jana-ecal.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
-#include <frameworkd-glib/frameworkd-glib-dbus.h>
-#include <frameworkd-glib/frameworkd-glib-call.h>
-#include <frameworkd-glib/frameworkd-glib-sim.h>
-#include <frameworkd-glib/frameworkd-glib-network.h>
-#include <frameworkd-glib/frameworkd-glib-device.h>
-#include "ophonekitd-main.h"
-#include <frameworkd-phonegui-gtk/frameworkd-phonegui.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-network.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-device.h>
+#include "ophonekitd-phonegui.h"
 
-static gboolean connected_to_network = FALSE;
-static JanaStore* sms_store;
+gboolean sim_auth_ui_active = FALSE;
+gboolean incoming_call_ui_active = FALSE;
+gboolean outgoing_call_ui_active = FALSE;
 
-/*static MokoJournal *journal = NULL;
-static MokoContacts *contacts = NULL;
-
-typedef struct {
-    int id;
-    int status;
-    MokoJournalEntry *journal_entry;
-    MokoTime *time;
-    MokoContactsEntry *contacts_entry;
-} OphonekitdCallStatus;
-*/
-
-void ophonekitd_sim_retrieve_messagebook_callback(GError* error, GPtrArray* messages, gpointer userdata);
-void ophonekitd_sim_delete_message_callback(GError* error, gpointer userdata);
-void ophonekitd_sms_store_opened_cb (JanaStore *store);
 
 int main(int argc, char ** argv) {
-        GMainLoop *mainloop = NULL;
-        FrameworkdHandlers fwHandler;
+    GMainLoop *mainloop = NULL;
+    FrameworkdHandlers fwHandler;
+    void *library;
 
-        g_type_init();
+    /* Load phonegui library */
+    library = phonegui_load();
+    
+    /* Connect phonegui functions */
+    phonegui_connect(library);
 
-#ifdef DEBUG
-        printf("Starting...\n");
-#endif
-        mainloop = g_main_loop_new (NULL, FALSE);
+    /* Initiate glib main loop for dbus */
+    g_type_init();
+    mainloop = g_main_loop_new (NULL, FALSE);
 
-        fwHandler.networkStatus = ophonekitd_network_status_handler;
-        fwHandler.simAuthStatus = ophonekitd_sim_auth_status_handler;
-        fwHandler.simIncomingMessage = ophonekitd_sim_incoming_message_handler;
-        fwHandler.callCallStatus = ophonekitd_call_status_handler;
-        fwHandler.smsMessageSent = ophonekitd_sms_message_sent_handler;
-        fwHandler.smsIncomingMessage = ophonekitd_sms_incoming_message_handler;
-        fwHandler.networkSignalStrength = NULL;
+    /* Register dbus handlers */
+    fwHandler.networkStatus = NULL;
+    fwHandler.networkSignalStrength = NULL;
+    fwHandler.simAuthStatus = ophonekitd_sim_auth_status_handler;
+    fwHandler.simIncomingMessage = ophonekitd_sim_incoming_message_handler;
+    fwHandler.callCallStatus = ophonekitd_call_status_handler;
+    dbus_connect_to_bus(&fwHandler);
+    g_debug("Connected to the buses");
 
-        dbus_connect_to_bus(&fwHandler);
-        phonegui_init(argc, argv);
-#ifdef DEBUG
-        printf("Connected to the buses\n");
-#endif
-        g_timeout_add(5000, power_up_antenna, NULL);
-        sms_store = jana_ecal_store_new (JANA_COMPONENT_NOTE);
-        g_signal_connect (sms_store, "opened",
-                    G_CALLBACK (ophonekitd_sms_store_opened_cb), NULL);
-		jana_store_open (sms_store);
-		g_debug("Opening memoes/notes");
+    /* Initiate phonegui */
+    phonegui_init(argc, argv);
+    g_debug("phonegui initiated");
 
-#ifdef DEBUG
-        printf("Entering mainloop.\n");
-#endif
-        g_main_loop_run (mainloop);
+    /* It's asynchronous and will detach immediately: */
+    power_up_antenna();
 
-        exit(EXIT_SUCCESS);
+    /* Start glib main loop */
+    g_debug("Entering glib main loop");
+    g_main_loop_run (mainloop);
 
+    exit(EXIT_SUCCESS);
 }
 
-void ophonekitd_sms_store_opened_cb (JanaStore *store)
-{
-#ifdef DEBUG
-   printf("JanaStore is now opened\n");
-#endif
-}
+void ophonekitd_call_status_handler(const int call_id, const int status, GHashTable *properties) {
+    g_debug("call status handler called, id: %d, status: %d", call_id, status);
+	gchar *number = g_hash_table_lookup(properties, "peer");
 
-gboolean power_up_antenna() {
-        device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
-
-        return connected_to_network; // End timeout
-}
-
-void power_up_antenna_callback(GError *error, gpointer userdata) {
-        if(error != NULL) {
-            if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
-                ophonekitd_display_code_UI();
-            }
-                /* TODO */
-        }
-        else {
-                network_register(register_to_network_callback, NULL);
-        }
-}
-
-void register_to_network_callback(GError *error, gpointer userdata) {
-        if(error != NULL) {
-                /* TODO */
-        } else {
-                /* Antenna works, registered to network */
-                connected_to_network = TRUE;
-        }
-}
-
-static void print_property(gpointer key, gpointer value, gpointer user_data)
-{
-	printf( "Call Property :: %s = %s\n", (char*) key, (char*) value );
-}
-
-static void set_number(gpointer key, gpointer value, gpointer user_data)
-{
-	if (strcmp((char*) key,"number") == 0)	//FIXME use strncmp
-		user_data = (char*) value;
-}
-
-void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties) {
-	gchar *number = NULL;
-
-#ifdef DEBUG
-    g_debug("Call status changed new state: %d for call id: %d", status, id_call);
-#endif
-    if (properties) {
-        g_hash_table_foreach(properties, print_property, NULL);
-        g_hash_table_foreach(properties, set_number, number); 
-    } else {
-        g_debug("Properties is NULL");
-    }
-	
     switch(status) {
         case CALL_STATUS_INCOMING:
+            g_debug("incoming call");
+            phonegui_incoming_call_ui_show(call_id, status, number);
+            incoming_call_ui_active = TRUE;
+            break;
         case CALL_STATUS_OUTGOING:
-           phonegui_display_call_UI(id_call, status, number);
-           break; 
-        case CALL_STATUS_RELEASED:
+            g_debug("outgoing call");
+            phonegui_outgoing_call_ui_show(call_id, status, number);
+            outgoing_call_ui_active = TRUE;
+            break;
+        case CALL_STATUS_RELEASE:
+            g_debug("release call");
+
+            /* TODO: Add call id handling */
+
+            if(incoming_call_ui_active == TRUE)
+            {
+                phonegui_incoming_call_ui_hide(call_id);
+                incoming_call_ui_active = FALSE;
+            }
+
+            if(outgoing_call_ui_active == TRUE)
+            {
+                phonegui_outgoing_call_ui_hide(call_id);
+                outgoing_call_ui_active = FALSE;
+            }
+            break;
         case CALL_STATUS_HELD:
-           phonegui_destroy_call_UI(id_call);
-           break;
         case CALL_STATUS_ACTIVE:
         	break;
         default:
-        	g_debug("Unknown CallStatus");
-        	
+        	g_error("Unknown CallStatus");
     }
 }
 
-void ophonekitd_network_status_handler(GHashTable *status) {
-}
 
 void ophonekitd_sim_auth_status_handler(const int status) {
-        if(status == SIM_READY) {
-                phonegui_destroy_pin_UI();
-        }
-        else {
-                phonegui_display_pin_UI(status);
-        }
-#ifdef DEBUG
-        printf ("Auth status handler calling the UI on a %i signal", status);
-#endif
-
-}
-
-void ophonekitd_sms_message_sent_handler(const int id, gboolean success, const char* reason) {
-}
-
-void ophonekitd_sms_incoming_message_handler(const int id) {
-}
-
-void ophonekitd_sim_incoming_message_handler(const int id) {
-  sim_retrieve_messagebook("unread", ophonekitd_sim_retrieve_messagebook_callback, NULL);
-}
-
-void add_meassage_to_pim(gpointer data, gpointer user_data) {
-  GValueArray* message = data; 
-  const int index = g_value_get_int(g_value_array_get_nth(message, 0));
-  const char* status = g_value_get_string(g_value_array_get_nth(message, 1));
-  const char* number = g_value_get_string(g_value_array_get_nth(message, 2));
-  const char* content = g_value_get_string(g_value_array_get_nth(message, 3));
-  
-  JanaNote *note = jana_ecal_note_new ();
-#ifdef DEBUG
-    g_debug ("Add message to pim: \ncontent: %s\nstatus: %s\n", content, status);
-#endif
-
-  jana_note_set_author (note, number);
-  jana_note_set_body (note, content);
-    
-  /* TODO: Set timestamps */
-  jana_component_set_categories (JANA_COMPONENT (note), (const gchar *[]){ status, NULL});
-
-  /* Add SMS to store */
-  jana_store_add_component (sms_store, JANA_COMPONENT (note));
-
-  /* TODO: Notify - debug code */
-  system("DISPLAY=\":0\" dbus-launch notify-send --expire-time=60000 \"New sms message\"");
-  
-  sim_delete_message(index, ophonekitd_sim_delete_message_callback, NULL);
-}
-
-void ophonekitd_sim_delete_message_callback(GError* error, gpointer userdata) {
-  if (error) {
-    g_warning("Error deleting message: %s", error->message);
-  } else {
-#ifdef DEBUG
-    g_debug ("No error deleting message");
-#endif
-  }
-}
-
-void ophonekitd_sim_retrieve_messagebook_callback(GError* error, GPtrArray* messages, gpointer userdata) {
-   if (error != NULL) {
-#ifdef DEBUG   
-     g_debug("Error retrieving messagebook: %s", error->message);
-#endif
-   } else {
-     g_ptr_array_foreach(messages, add_meassage_to_pim, NULL);
-   }
-}
-
-void ophonekitd_display_code_UI_callback(GError* error, int status, gpointer userdata) {
-    if(error != NULL) {
-        /* TODO */
-    } else if (status != SIM_READY) {
-        phonegui_display_pin_UI(status);
+    g_debug("ophonekitd_sim_auth_status_handler()");
+    if(status == SIM_READY) {
+        g_debug("sim ready");
+        phonegui_sim_auth_ui_hide(status);
+        ogsmd_network_register(register_to_network_callback, NULL);
+    } else {
+        g_debug("sim not ready");
+        phonegui_sim_auth_ui_show(status);
     }
 }
 
-void ophonekitd_display_code_UI () {
-    sim_get_auth_status (ophonekitd_display_code_UI_callback, NULL);
+
+void ophonekitd_sim_incoming_message_handler(const int id) {
+    g_error("INCOMING MESSAGE!");
 }
 
+
+
+gboolean power_up_antenna() {
+    g_debug("power_up_antenna()");
+    ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
+    return FALSE;
+}
+
+void power_up_antenna_callback(GError *error, gpointer userdata) {
+    g_debug("power_up_antenna_callback()");
+    if(error == NULL)
+    {   
+        ogsmd_network_register(register_to_network_callback, NULL);
+    }
+    else if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED))
+    {
+        ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
+    }
+    else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY))
+    {
+        g_debug("dbus not available, try again in 5s");
+        g_timeout_add(5000, power_up_antenna, NULL);
+    }
+}
+
+void sim_auth_status_callback(GError *error, int status, gpointer userdata) {
+    g_debug("sim_auth_status_callback()");
+
+    if(sim_auth_ui_active == TRUE) {
+        phonegui_sim_auth_ui_hide(status);
+    }
+
+    if(status == SIM_READY) {
+        ogsmd_network_register(register_to_network_callback, NULL);
+    } else {
+        phonegui_sim_auth_ui_show(status);
+        sim_auth_ui_active = TRUE;
+    }
+}
+
+void register_to_network_callback(GError *error, gpointer userdata) {
+    g_debug("register_to_network_callback()");
+    if(error == NULL) {
+        /* Antenna works, registered to network */
+    } else {
+        /* TODO */
+    }
+}
