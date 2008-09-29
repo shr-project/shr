@@ -1,8 +1,9 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
- *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
+ *              Marc-Olivier Barre <marco@marcochapeau.org>
+ *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -16,6 +17,6 @@
 
 #ifndef _DIALER_MAIN_H
 #define _DIALER_MAIN_H
-#define DEBUG
+
 
 #endif

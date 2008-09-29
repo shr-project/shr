@@ -5,4 +5,4 @@ bin_PROGRAMS = openmoko-dialer
 
 openmoko_dialer_SOURCES = dialer-main.c dialer-main.h
 
-openmoko_dialer_LDADD = @DIALER_LIBS@
+openmoko_dialer_LDADD = @DIALER_LIBS@ -ldl

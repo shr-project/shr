@@ -2,8 +2,9 @@
  *  Copyright (C) 2007 Openmoko, Inc.
  *
  *  Authored by:
- *    OpenedHand Ltd <info@openedhand.com>
  *    Marc-Olivier Barre <marco@marcochapeau.org>
+ *    OpenedHand Ltd <info@openedhand.com>
+ *    quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -15,196 +16,82 @@
  *  GNU Lesser Public License for more details.
  */
 
-
+#include "dialer-main.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
-
-#include <gtk/gtk.h>
+#include <dlfcn.h>
+#include <signal.h>
 #include <dbus/dbus-glib.h>
-#include <frameworkd-glib/frameworkd-glib-dbus.h>
-#include <frameworkd-glib/frameworkd-glib-call.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 
-#include "dialer-main.h"
-#include <frameworkd-phonegui-gtk/keypad.h>
-#include <frameworkd-phonegui-gtk/history.h>
+#define CONFIG_FILE "/etc/ophonekitd/gui.conf"
 
-#include <libmokoui2/moko-stock.h>
+void (*func_phonegui_dialer_launch)();
 
-typedef struct
-{
-  GtkWidget *notebook;
-  GtkWidget *history;
-
-  GtkWidget *main_window;
-
-//  DBusGProxy *dialer_proxy;
-} DialerData;
-
-static gboolean show_missed;
-
-static GOptionEntry entries[] = {
-  {"show-missed", 'm', 0, G_OPTION_ARG_NONE, &show_missed,
-   "Show the history window filtered by the missed, none.", "N"},
-  {NULL}
-};
 
 void connect_to_frameworkd() {
-        FrameworkdHandlers fwHandler;
-        fwHandler.networkStatus = NULL;
-        fwHandler.simAuthStatus = NULL;
-        fwHandler.callCallStatus = NULL;
-        fwHandler.smsMessageSent = NULL;
-        fwHandler.smsIncomingMessage = NULL;
-        fwHandler.networkSignalStrength = NULL;
-        dbus_connect_to_bus(&fwHandler);
+    FrameworkdHandlers fwHandler;
+    fwHandler.networkStatus = NULL;
+    fwHandler.networkSignalStrength = NULL;
+    fwHandler.simAuthStatus = NULL;
+    fwHandler.simIncomingMessage = NULL;
+    fwHandler.callCallStatus = NULL;
+    dbus_connect_to_bus(&fwHandler);
 }
 
-/* Callbacks from widgets */
+void* load_gui_library() {
+    char name[32];
+    void *library;
 
-static void dial_clicked_call_initiated_done (GError *error, int call_id, gpointer userdata)
-{
-  DialerData *data = userdata;
-  if (error)
-  {
-    GtkWidget *dlg;
-    dlg = gtk_message_dialog_new (GTK_WINDOW (data->main_window), GTK_DIALOG_MODAL,
-                                  GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-                                  "Dialer Error:\n%s", error->message);
-    g_warning (error->message);
-    gtk_dialog_run (GTK_DIALOG (dlg));
-    gtk_widget_destroy (dlg);
-  }
-  else
-  {
-    g_debug ( "Call setup, call_id = %d\n", call_id);
-    /* the dbus object takes over now */
-    gtk_main_quit();
-  }
+    /* Reading gui configuraton file */
+    FILE *f;
+    f = fopen(CONFIG_FILE, "r");
+    if(f == NULL) {
+        g_error("Could not open %s", CONFIG_FILE);
+    }
+    char *r = fgets(name, 31, f);
+    if(r == NULL) {
+        g_error("Reading failed");
+    }
+    name[strlen(name) - 1] = '\0';
+    fclose(f);
+    
 
+    /* Load gui library */
+    library = dlopen(name, RTLD_LOCAL | RTLD_LAZY);
+    if(!library) {
+        g_error("Loading %s failed: %s", name, dlerror());
+    }
+
+    return library;
 }
 
-static void
-dial_clicked_cb (GtkWidget *widget, const gchar *number, DialerData *data)
-{
-  if (!number)
-  {
-    gtk_notebook_set_current_page (GTK_NOTEBOOK (data->notebook), 1);
-    moko_history_set_filter (MOKO_HISTORY (data->history), HISTORY_FILTER_DIALED);
-    return;
-  }
-
-  g_debug ("Dial %s", number);
-
-  call_initiate(number, CALL_TYPE_VOICE, dial_clicked_call_initiated_done, data);
+void connect_library_functions(void *library) {
+    char *error;
+    func_phonegui_dialer_launch = dlsym(library, "phonegui_dialer_launch");
+    if((error = dlerror()) != NULL)  {
+        g_error("Symbol not found: %s", error);
+    }
 }
 
-static void
-program_log (const char *format, ...)
-{
-  va_list args;
-  char *formatted, *str;
 
-  if (!getenv ("OM_PROFILING"))
-    return;
+int main (int argc, char **argv) {
+    void *library;
 
-  va_start (args, format);
-  formatted = g_strdup_vprintf (format, args);
-  va_end (args);
+    g_debug("Load gui library");
+    library = load_gui_library();
 
-  str = g_strdup_printf ("MARK: %s: %s", g_get_prgname(), formatted);
-  g_free (formatted);
+    g_debug("Connect library functions");
+    connect_library_functions(library);
 
-  access (str, F_OK);
-  g_free (str);
+    g_debug("Connect to frameworkd");
+    connect_to_frameworkd();
+
+    g_debug("Launch dialer");
+    func_phonegui_dialer_launch();
+
+    return EXIT_SUCCESS;
 }
 
-int main (int argc, char **argv)
-{
-  GtkWidget *window, *keypad;
-  MokoJournal *journal;
-  DialerData *data;
-
-  program_log ("start dialer");
-
-  data = g_new0 (DialerData, 1);
-
-  if (argc != 1)
-  {
-    /* Add init code. */
-    GError *error = NULL;
-    GOptionContext *context = g_option_context_new ("");
-
-    g_option_context_add_main_entries (context, entries, NULL);
-    g_option_context_add_group (context, gtk_get_option_group (TRUE));
-    g_option_context_parse (context, &argc, &argv, &error);
-
-    g_option_context_free (context);
-  }
-
-  /* Initialize Threading & GTK+ */
-  program_log ("gtk_init");
-  gtk_init (&argc, &argv);
-
-  /* application object */
-  g_set_application_name ("OpenMoko Dialer");
-
-
-  program_log ("open connection to frameworkd");
-  connect_to_frameworkd();
-
-  /* Set up the journal */
-  program_log ("load journal");
-  journal = moko_journal_open_default ();
-  if (!journal || !moko_journal_load_from_storage (journal))
-  {
-    g_warning ("Could not load journal");
-    journal = NULL;
-  }
-
-  program_log ("create main window");
-  data->main_window = window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name (window, "openmoko-dialer-window");
-  g_signal_connect (window, "delete-event", G_CALLBACK (gtk_main_quit), NULL);
-  gtk_window_set_title (GTK_WINDOW (window), "Dialer");
-
-  /* Notebook */
-  data->notebook = gtk_notebook_new ();
-  gtk_widget_set_name (data->notebook, "openmoko-dialer-notebook");
-  gtk_notebook_set_tab_pos (GTK_NOTEBOOK (data->notebook), GTK_POS_BOTTOM);
-  gtk_container_add (GTK_CONTAINER (window), data->notebook);
-
-  /* Keypad */
-  keypad = moko_keypad_new ();
-  g_signal_connect (keypad, "dial_number", G_CALLBACK (dial_clicked_cb), data);
-
-  gtk_notebook_append_page (GTK_NOTEBOOK (data->notebook), keypad,
-                            gtk_image_new_from_icon_name (MOKO_STOCK_CALL_DIAL,
-                                                          GTK_ICON_SIZE_BUTTON));
-  gtk_container_child_set (GTK_CONTAINER (data->notebook), keypad, "tab-expand", TRUE, NULL);
-
-  /* History */
-  program_log ("create history widget");
-  data->history = moko_history_new (journal);
-  g_signal_connect (data->history, "dial_number", G_CALLBACK (dial_clicked_cb), data);
-  gtk_notebook_append_page (GTK_NOTEBOOK (data->notebook), data->history,
-                            gtk_image_new_from_icon_name (MOKO_STOCK_CALL_HISTORY,
-                                                          GTK_ICON_SIZE_BUTTON));
-  gtk_container_child_set (GTK_CONTAINER (data->notebook), data->history,
-                           "tab-expand", TRUE,
-                           NULL);
-
-  program_log ("show window");
-  gtk_widget_show_all (window);
-
-  if (show_missed)
-    gtk_notebook_set_current_page (GTK_NOTEBOOK (data->notebook), 1);
-  else
-    gtk_notebook_set_current_page (GTK_NOTEBOOK (data->notebook), 0);
-
-  program_log ("enter main loop");
-  gtk_main ();
-
-  g_free (data);
-  return 0;
-}
