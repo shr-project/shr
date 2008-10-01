@@ -4,6 +4,7 @@
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -17,13 +18,16 @@
 
 #include "ophonekitd-main.h"
 #include <stdlib.h>
+#include <string.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
+#include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-network.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-device.h>
+#include <frameworkd-glib/ousaged/frameworkd-glib-ousaged.h>
 #include "ophonekitd-phonegui.h"
 
 gboolean sim_auth_ui_active = FALSE;
@@ -34,13 +38,11 @@ gboolean outgoing_call_ui_active = FALSE;
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
     FrameworkdHandlers fwHandler;
-    void *library;
 
-    /* Load phonegui library */
-    library = phonegui_load();
-    
-    /* Connect phonegui functions */
-    phonegui_connect(library);
+    /* Load, connect and initiate phonegui library */
+    phonegui_load(CONFIG_FILE);
+    phonegui_connect();
+    phonegui_init(argc, argv);
 
     /* Initiate glib main loop for dbus */
     g_type_init();
@@ -55,12 +57,13 @@ int main(int argc, char ** argv) {
     dbus_connect_to_bus(&fwHandler);
     g_debug("Connected to the buses");
 
-    /* Initiate phonegui */
-    phonegui_init(argc, argv);
-    g_debug("phonegui initiated");
-
-    /* It's asynchronous and will detach immediately: */
-    power_up_antenna();
+    /* It's asynchronous and will detach immediately.
+     * Every 5 seconds, we fetch the resource list in
+     * order to know wether GSM is available.
+     * This is needed for frameworkd startup. GSM is
+     * not available immediately!
+     */
+    list_resources();
 
     /* Start glib main loop */
     g_debug("Entering glib main loop");
@@ -87,7 +90,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
         case CALL_STATUS_RELEASE:
             g_debug("release call");
 
-            /* TODO: Add call id handling */
+            /* TODO: Add call_id handling */
 
             if(incoming_call_ui_active == TRUE)
             {
@@ -114,7 +117,11 @@ void ophonekitd_sim_auth_status_handler(const int status) {
     g_debug("ophonekitd_sim_auth_status_handler()");
     if(status == SIM_READY) {
         g_debug("sim ready");
-        phonegui_sim_auth_ui_hide(status);
+        
+        if(sim_auth_ui_active)
+        {
+            phonegui_sim_auth_ui_hide(status);
+        }
         ogsmd_network_register(register_to_network_callback, NULL);
     } else {
         g_debug("sim not ready");
@@ -124,31 +131,94 @@ void ophonekitd_sim_auth_status_handler(const int status) {
 
 
 void ophonekitd_sim_incoming_message_handler(const int id) {
-    g_error("INCOMING MESSAGE!");
+    g_error("ophonekitd_sim_incoming_message_handler()");
+    phonegui_message_ui_show(id);
 }
 
 
-
-gboolean power_up_antenna() {
-    g_debug("power_up_antenna()");
-    ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
+gboolean list_resources() {
+    g_debug("list_resources()");
+    ousaged_list_resources(list_resources_callback, NULL);
     return FALSE;
 }
 
-void power_up_antenna_callback(GError *error, gpointer userdata) {
-    g_debug("power_up_antenna_callback()");
+void list_resources_callback(GError *error, char** resources, gpointer userdata) {
+    g_debug("list_resources_callback()");
     if(error == NULL)
-    {   
-        ogsmd_network_register(register_to_network_callback, NULL);
-    }
-    else if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED))
     {
-        ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
+        gboolean available = FALSE;
+        int i = 0;
+        while(resources[i] != NULL)
+        {
+            g_debug("Resource %s available", resources[i]);
+            if(!strcmp(resources[i], "GSM"))
+            {
+                available = TRUE;
+                break;
+            }
+            i++;
+        }
+
+        if(available)
+        {
+            /* Sleep 10 seconds to avoid dbus error. It's a
+             * workaround for a frameworkd bug.
+             * FIXME
+             */
+            sleep(10);
+
+            g_debug("Request GSM resource");
+            ousaged_request_resource("GSM", request_resource_callback, NULL);
+        }
+        else
+        {
+            g_debug("gsm not available, try again in 5s");
+            g_timeout_add(5000, list_resources, NULL);
+        }
     }
     else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY))
     {
         g_debug("dbus not available, try again in 5s");
-        g_timeout_add(5000, power_up_antenna, NULL);
+        g_timeout_add(5000, list_resources, NULL);
+    }
+    else
+    {
+        g_error("Unknown error");
+    }
+}
+
+void request_resource_callback(GError *error, gpointer userdata) {
+    g_debug("request_resource_callback()");
+
+    if(error == NULL)
+    {
+        g_debug("ok");
+        ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
+    }
+    else
+    {   
+        /* FIXME: Remove this when frameworkd code is ready */
+        g_debug("request resource error, try again in 5s");
+        g_timeout_add(5000, list_resources, NULL);
+    }
+}
+
+
+void power_up_antenna_callback(GError *error, gpointer userdata) {
+    g_debug("power_up_antenna_callback()");
+    if(error != NULL)
+    {
+        if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED))
+        {
+            /* This auth status query is needed for startup when
+             * there's no auth status signal emitted
+             */
+            ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
+        }
+        else 
+        {
+            g_error("Unknown error");
+        }
     }
 }
 
@@ -159,11 +229,17 @@ void sim_auth_status_callback(GError *error, int status, gpointer userdata) {
         phonegui_sim_auth_ui_hide(status);
     }
 
-    if(status == SIM_READY) {
+    if(status == SIM_READY)
+    {
         ogsmd_network_register(register_to_network_callback, NULL);
-    } else {
-        phonegui_sim_auth_ui_show(status);
-        sim_auth_ui_active = TRUE;
+    }
+    else
+    {
+        if(sim_auth_ui_active == FALSE)
+        {
+            phonegui_sim_auth_ui_show(status);
+            sim_auth_ui_active = TRUE;
+        }
     }
 }
 

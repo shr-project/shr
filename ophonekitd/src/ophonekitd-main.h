@@ -3,6 +3,7 @@
  *      Authors (alphabetical) :
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
+ *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -27,7 +28,9 @@ void ophonekitd_call_status_handler(const int id_call, const int status, GHashTa
 void ophonekitd_sim_auth_status_handler(const int status);
 void ophonekitd_sim_incoming_message_handler(const int id);
 
-gboolean power_up_antenna();
+gboolean list_resources();
+void list_resources_callback(GError *error, char** resources, gpointer userdata);
+void request_resource_callback(GError *error, gpointer userdata);
 void power_up_antenna_callback(GError *error, gpointer userdata);
 void sim_auth_status_callback(GError *error, int status, gpointer userdata);
 void register_to_network_callback(GError *error, gpointer userdata);
