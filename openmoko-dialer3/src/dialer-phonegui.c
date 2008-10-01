@@ -1,8 +1,6 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
- *              Julien Cassignol <ainulindale@gmail.com>
- *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -15,12 +13,9 @@
  *  GNU Lesser Public License for more details.
  */
 
-#ifndef _DIALER_MAIN_H
-#define _DIALER_MAIN_H
+#include "dialer-phonegui.h"
 
-#define CONFIG_FILE "/etc/ophonekitd/gui.conf"
+void phonegui_connect() {
+    phonegui_dialer_launch = phonegui_get_function("phonegui_dialer_launch");
+}
 
-int main(int argc, char **argv);
-void connect_to_frameworkd();
-
-#endif

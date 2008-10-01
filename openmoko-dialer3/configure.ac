@@ -14,21 +14,15 @@ dnl glib-genmarshal
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 # base deps
-PKG_CHECK_MODULES(DIALER,
-                  libframeworkd-glib
-                  )
+PKG_CHECK_MODULES(DIALER, libframeworkd-glib)
+PKG_CHECK_MODULES(GLIB, glib-2.0)
                                    
-#old_cflags=$CFLAGS
-#CFLAGS=$DIALER_CFLAGS
-#AC_CHECK_TYPE(EContactPhotoType, [], [], [#include <libebook/e-book.h>])
-#CFLAGS=$old_cflags
-
-#if test $ac_cv_type_EContactPhotoType = yes; then
-#	AC_DEFINE(HAVE_ECONTACT_PHOTO_TYPE, 1, [Defined if EContactPhotoType exists])
-#fi
 
 AC_SUBST(DIALER_CFLAGS)
 AC_SUBST(DIALER_LIBS)
+AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
+AC_SUBST(FRAMEWORKD_GLIB_LIBS)
+
 
 # output stuff
 AC_CONFIG_FILES([
