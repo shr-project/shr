@@ -1,0 +1,162 @@
+/*
+images {
+         image,  "background.png" LOSSY 95;
+}
+*/
+collections {
+
+    group {
+        name, "outgoing_call";
+        parts {
+            part {
+            name,   "background";
+            type,   RECT;
+            mouse_events, 0;
+            description {
+                state, "default" 0.0;
+                rel1 {
+                    relative, 0.0 0.0;
+                    offset, 0 0;
+                }
+                rel2 {
+                    relative, 1.0 1.0;
+                    offset, 0 0;
+                }
+                color: 0 0 0 255;
+            }
+            }
+
+	        part {
+                name,   "text";
+                type,   TEXT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    rel1 {
+                           relative, 0.0 0.0;
+                           offset, 0 0;
+                    }
+                    rel2 {
+                           relative, 1.0 1.0;
+                           offset, 0 0;
+                    }
+                    text {
+                           text, "Outgoing call..";
+                           font, "redensek";
+                           size, 40;
+                           align, 0.5 0.25;
+                    }
+                }
+	        }
+
+	        part {
+                name,   "number";
+                type,   TEXT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    rel1 {
+                           relative, 0.0 0.0;
+                           offset, 0 0;
+                    }
+                    rel2 {
+                           relative, 1.0 1.0;
+                           offset, 0 0;
+                    }
+                    text {
+                           text, "";
+                           font, "redensek";
+                           size, 35;
+                           align, 0.5 0.4;
+                    }
+                }
+	        }
+
+
+	    part {
+	           name,   "button_release";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.25 0.5;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.75 0.7;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.25 0.5;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.75 0.7;
+		                       offset, 0 0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_release";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_release";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_release";
+	                     }
+	                     text {
+	                                 text, "Hang up";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
+    }
+
+
+ /* Close Parts */
+   programs {
+        program {
+                name, "button_release_click";
+                signal, "mouse,down,1";
+                source, "button_release";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_release";
+        }
+        program {
+                name, "button_release_unclick";
+                signal, "mouse,up,1";
+                source, "button_release";
+                action, STATE_SET "default" 0.0;
+                target, "button_release";
+        }
+        program {
+                name, "button_release_clicked";
+                signal, "mouse,down,1";
+                source, "button_release";
+                action, SIGNAL_EMIT "release" "input";
+        }
+    }
+
+} /* Close Coll */
+
+
