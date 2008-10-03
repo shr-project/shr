@@ -43,10 +43,7 @@ int main(int argc, char ** argv) {
     phonegui_load(CONFIG_FILE);
     phonegui_connect();
     phonegui_init(argc, argv);
-
-    /* Initiate glib main loop for dbus */
-    g_type_init();
-    mainloop = g_main_loop_new (NULL, FALSE);
+    g_debug("Phonegui initiated");
 
     /* Register dbus handlers */
     fwHandler.networkStatus = NULL;
@@ -65,7 +62,9 @@ int main(int argc, char ** argv) {
      */
     list_resources();
 
-    /* Start glib main loop */
+    /* Initiate and start glib main loop */
+    g_type_init();
+    mainloop = g_main_loop_new (NULL, FALSE);
     g_debug("Entering glib main loop");
     g_main_loop_run (mainloop);
 
@@ -131,7 +130,7 @@ void ophonekitd_sim_auth_status_handler(const int status) {
 
 
 void ophonekitd_sim_incoming_message_handler(const int id) {
-    g_error("ophonekitd_sim_incoming_message_handler()");
+    g_debug("ophonekitd_sim_incoming_message_handler()");
     phonegui_message_ui_show(id);
 }
 
@@ -172,7 +171,7 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
         }
         else
         {
-            g_debug("gsm not available, try again in 5s");
+            g_debug("GSM not available, try again in 5s");
             g_timeout_add(5000, list_resources, NULL);
         }
     }
@@ -193,6 +192,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
     if(error == NULL)
     {
         g_debug("ok");
+        g_debug("call ogsmd_device_set_antenna_power()");
         ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
     }
     else
