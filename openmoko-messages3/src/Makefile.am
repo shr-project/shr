@@ -1,51 +1,21 @@
 INCLUDES = -I$(top_srcdir)/libhito
 
-AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" $(GTK_CFLAGS) \
-                $(JANA_CFLAGS)  \
+AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" \
                 $(MOKOUI_CFLAGS) \
-                $(EBOOK_CFLAGS) \
                 $(FRAMEWORKD_GLIB_CFLAGS) \
-                $(FRAMEWORKD_PHONEGUI_CFLAGS) \
-                $(HITO_CFLAGS) \
                 -Wall
 
-AM_LDFLAGS = $(GTK_LIBS) \
-             $(JANA_LIBS) \
-             $(MOKOUI_LIBS) \
+AM_LDFLAGS = $(MOKOUI_LIBS) \
              $(EBOOK_LIBS) \
-             $(FRAMEWORKD_GLIB_LIBS) \
-             $(FRAMEWORKD_PHONEGUI_LIBS) \
-             $(HITO_LIBS) 
+             $(FRAMEWORKD_GLIB_LIBS)
 
 bin_PROGRAMS=openmoko-messages
 
-noinst_PROGRAMS=test-notes
-
-test_notes_SOURCES = \
-	test-notes.c
-
 openmoko_messages_SOURCES = \
-	sms.h \
-	sms-main.c \
-	sms-contacts.c \
-	sms-contacts.h \
-	sms-notes.c \
-	sms-notes.h \
-	sms-compose.c \
-	sms-compose.h \
-	sms-utils.c \
-	sms-utils.h \
-	sms-dbus.c \
-	sms-dbus.h \
-	moko-save-number.c \
-	moko-save-number.h \
-	moko-progressbar-window.c \
-	moko-progressbar-window.h
+	messages-main.c \
+	messages-main.h \ 
+	messages-phonegui.c \
+	messages-phonegui.h
 
-%-glue.h: %.xml
-	$(LIBTOOL) --mode=execute $(DBUS_GLIB_BIN)/dbus-binding-tool --prefix=$(subst -,_,$*) --mode=glib-server --output=$@ $<
         
-BUILT_SOURCES = sms-dbus-glue.h
-
-EXTRA_DIST = sms-dbus.xml
 
