@@ -1,5 +1,9 @@
+ * Sim Auth
+  * Vibration when wrong PIN or PUK was entered
  * Incoming Call
   * Display number
  * Dialer
+  * Make + work
   * USSD
  * Messages
+ * Contacts?

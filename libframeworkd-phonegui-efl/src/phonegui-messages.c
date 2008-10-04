@@ -6,66 +6,40 @@
 #include <Edje.h>
 /* #include <Etk.h> */
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
-#include "pipe.h"
+#include "phonegui-init.h"
 
 #define UI_FILE "/usr/share/libframeworkd-phonegui-efl/messages.edj"
 
-#define EVENT_MODE_MAIN "a"
-#define EVENT_MODE_INBOX "b"
-#define EVENT_MODE_OUTBOX "c"
+typedef enum {
+    MODE_MAIN,
+    MODE_INBOX,
+    MODE_OUTBOX
+} MessagesModes;
 
-static PipeHandler pipe_handler;
+typedef enum {
+    EVENT_SHOW,
+    EVENT_MODE_MAIN,
+    EVENT_MODE_INBOX,
+    EVENT_MODE_OUTBOX,
+    EVENT_HIDE
+} MessagesEvents;
 
-static Ecore_Evas   *ee;
-static Evas         *evas;
-static Evas_Object  *edje;
-static double       edje_w, edje_h;
 
+static MessagesModes messages_mode = MODE_MAIN;
 static char number[64];
 static int  number_length = 0;
 
-static MessagesMode messages_mode = MODE_MAIN;
 
-
-void phonegui_messages_launch(int argc, char** argv) {
-    g_debug("phonegui_messages_launch()");
-
-    /* Create pipe */
-    pipe_handler = pipe_create();
-    g_debug("pipe created");
-
-    ecore_init();
-    ecore_evas_init();
-    ee = ecore_evas_software_x11_new(NULL, 0, 0, 0, 0, 0);
-    ecore_evas_title_set(ee, "openmoko-messages3");
-    ecore_evas_borderless_set(ee, 0);
-    ecore_evas_shaped_set(ee, 0);
-
-    evas = ecore_evas_get(ee);
-    evas_font_path_append(evas, "/usr/local/share/edje/data/test/fonts/");
-
-    edje_init();
-    edje = edje_object_add(evas);
-    edje_object_file_set(edje, UI_FILE, "main");
-    evas_object_move(edje, 0, 0);
-    //edje_object_size_min_get(edje, &edje_w, &edje_h);
-    evas_object_resize(edje, 480, 600);
-    evas_object_show(edje);
-    ecore_evas_resize(ee, (int)edje_w, (int)edje_h);
-    ecore_evas_show(ee);
-
-    edje_object_signal_callback_add(edje, "*", "input", messages_ui_input, "data");
-
-    Ecore_Fd_Handler *handler = ecore_main_fd_handler_add(pipe_handler.input, ECORE_FD_READ, messages_ui_event, NULL, NULL, NULL);
-    ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);
-
+void phonegui_messages_show(int argc, char** argv) {
     /* etk_init(argc, argv); */
-
-    ecore_main_loop_begin();
+    pipe_write(pipe_handler, EVENT_SHOW);
 }
 
-void messages_ui_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
-    g_debug("messages_ui_input() input: %s", emission);
+void phonegui_messages_hide() {
+}
+
+void messages_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
+    g_debug("messages_input() input: %s", emission);
 
     if(!strcmp(emission, "inbox"))
     {
@@ -127,43 +101,32 @@ void retrieve_messagebook_callback(GError*error, GPtrArray*messages, gpointer us
 }
 
 
-void messages_ui_event(void *data, Ecore_Fd_Handler *fdh) {
-    g_debug("messages_ui_event()");
+void messages_event(int event) {
+    g_debug("messages_event()");
+    g_debug("Event: %d", event);
 
-    char* event = pipe_read(pipe_handler);
-    g_debug("event: %s", event);
-
-    if(!strcmp(event, EVENT_MODE_INBOX))
-    {
+    if(event == EVENT_SHOW) {
+        g_debug("show");
+        edje_object_file_set(edje, UI_FILE, "main");
+        ecore_evas_show(ee);
+    } else if(event == EVENT_MODE_INBOX) {
         g_debug("inbox");
         edje_object_file_set(edje, UI_FILE, "list");
         edje_object_part_text_set(edje, "title", "Inbox"); 
         ogsmd_sim_retrieve_messagebook("read", retrieve_messagebook_callback, NULL);
         messages_mode = MODE_INBOX;
-    }
-    else if(!strcmp(event, EVENT_MODE_OUTBOX))
-    {
+    } else if(event == EVENT_MODE_OUTBOX) {
         g_debug("outbox");
         edje_object_file_set(edje, UI_FILE, "list");
         edje_object_part_text_set(edje, "title", "Outbox"); 
         messages_mode = MODE_OUTBOX;
+    } else if(event == EVENT_HIDE) {
+        g_debug("hide");
+        ecore_evas_hide(ee);
+    } else {
+        g_error("Unknown event %d", event);
     }
-    else
-    {
-        g_error("Unknown event");
-    }
 }
 
-void messages_ui_update() {
-    g_debug("messages_ui_update()");
-    edje_object_part_text_set(edje, "number", number);
-}
-
-void messages_call_initiate_callback(GError *error, int call_id, gpointer userdata) {
-    g_debug("call_initiate_callback()");
-
-    /* Exit */
-    ecore_main_loop_quit();
-}
 
 

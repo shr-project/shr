@@ -10,7 +10,7 @@ typedef struct {
 
 
 PipeHandler pipe_create();
-char* pipe_read(PipeHandler h);
-void pipe_write(PipeHandler h, char* data);
+int pipe_read(PipeHandler h);
+void pipe_write(PipeHandler h, int data);
 
 #endif

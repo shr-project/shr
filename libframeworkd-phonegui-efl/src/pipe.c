@@ -6,16 +6,13 @@
 #include <glib-2.0/glib.h>
 #include <glib-2.0/glib-object.h>
 
-PipeHandler pipe_create()
-{
+PipeHandler pipe_create() {
     int r;
     int fds[2];
 
     r = pipe(fds);
-    if(r == -1)
-    {
-        g_debug("pipe() failed");
-        exit(-1);
+    if(r == -1) {
+        g_error("pipe() failed");
     }
     fcntl(fds[0], F_SETFL, fcntl(fds[0], F_GETFL) | O_NONBLOCK);
 
@@ -26,29 +23,14 @@ PipeHandler pipe_create()
     return h;
 }
 
-
-char* pipe_read(PipeHandler h)
-{
-    /*
-    int fd;
-    char event[2];
-    fd = ecore_main_fd_handler_fd_get(fdh);
-
-    // Reads all events and use only one
-    while(read (fd, event, sizeof(event) - 1) > 0);
-    event[sizeof(event) - 1] = '\0';
-    */
-
-    char* event = g_malloc(2);
-    while(read(h.input, event, 1) > 0);
-    event[1] = '\0';
-
+int pipe_read(PipeHandler h) {
+    int event;
+    while(read(h.input, &event, sizeof(event)) > 0);
     return event;
 }
 
-void pipe_write(PipeHandler h, char* data)
-{
-    write(h.output, data, strlen(data));
+void pipe_write(PipeHandler h, int event) {
+    write(h.output, &event, sizeof(event));
 }
 
 
