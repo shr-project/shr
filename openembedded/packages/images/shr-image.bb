@@ -14,6 +14,7 @@ BASE_INSTALL = "\
   screen \
   fbset \
   fbset-modes \
+  fso-gpsd \
   gsm0710muxd \
 "
 # Some machines don't set a *runtime* provider for X, so default to Xfbdev here
@@ -86,7 +87,7 @@ GTK_INSTALL = "\
   openmoko-calculator2 \
   openmoko-terminal2 \
   gpe-scap \
-  tangogps-fso \
+  tangogps \
 "
 
 # FIXME these should rather be part of alsa-state,
