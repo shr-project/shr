@@ -17,13 +17,13 @@
 
 void phonegui_connect() {
     phonegui_init = phonegui_get_function("phonegui_init");
-    phonegui_sim_auth_ui_show = phonegui_get_function("phonegui_sim_auth_ui_show");
-    phonegui_sim_auth_ui_hide = phonegui_get_function("phonegui_sim_auth_ui_hide");
-    phonegui_incoming_call_ui_show = phonegui_get_function("phonegui_incoming_call_ui_show");
-    phonegui_incoming_call_ui_hide = phonegui_get_function("phonegui_incoming_call_ui_hide");
-    phonegui_outgoing_call_ui_show = phonegui_get_function("phonegui_outgoing_call_ui_show");
-    phonegui_outgoing_call_ui_hide = phonegui_get_function("phonegui_outgoing_call_ui_hide");
-    phonegui_message_ui_show = phonegui_get_function("phonegui_message_ui_show");
-    phonegui_message_ui_hide = phonegui_get_function("phonegui_message_ui_hide");
+    phonegui_sim_auth_show = phonegui_get_function("phonegui_sim_auth_show");
+    phonegui_sim_auth_hide = phonegui_get_function("phonegui_sim_auth_hide");
+    phonegui_incoming_call_show = phonegui_get_function("phonegui_incoming_call_show");
+    phonegui_incoming_call_hide = phonegui_get_function("phonegui_incoming_call_hide");
+    phonegui_outgoing_call_show = phonegui_get_function("phonegui_outgoing_call_show");
+    phonegui_outgoing_call_hide = phonegui_get_function("phonegui_outgoing_call_hide");
+    phonegui_message_show = phonegui_get_function("phonegui_message_show");
+    phonegui_message_hide = phonegui_get_function("phonegui_message_hide");
 }
 

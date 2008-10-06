@@ -19,14 +19,14 @@
 #include <frameworkd-glib/frameworkd-glib-phonegui.h>
 
 void (*phonegui_init)();
-void (*phonegui_sim_auth_ui_show)();
-void (*phonegui_sim_auth_ui_hide)();
-void (*phonegui_incoming_call_ui_show)();
-void (*phonegui_incoming_call_ui_hide)();
-void (*phonegui_outgoing_call_ui_show)();
-void (*phonegui_outgoing_call_ui_hide)();
-void (*phonegui_message_ui_show)();
-void (*phonegui_message_ui_hide)();
+void (*phonegui_sim_auth_show)();
+void (*phonegui_sim_auth_hide)();
+void (*phonegui_incoming_call_show)();
+void (*phonegui_incoming_call_hide)();
+void (*phonegui_outgoing_call_show)();
+void (*phonegui_outgoing_call_hide)();
+void (*phonegui_message_show)();
+void (*phonegui_message_hide)();
 
 void phonegui_connect();
 
