@@ -111,9 +111,9 @@ SHR_INSTALL = "\
   frameworkd \
   libhito \
   libframeworkd-glib \
-#  libframeworkd-phonegui-gtk \
   openmoko-dialer3 \
 "
+# removed libframeworkd-phonegui-gtk from SHR_INSTALL
 
 IMAGE_INSTALL = "\
   ${BASE_INSTALL} \
