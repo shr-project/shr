@@ -2,8 +2,8 @@ DESCRIPTION = "Frameworkd / GLib bindings"
 SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS += " dbus-glib"
-PV = "0.0.1-shr+${PR}-gitr${SRCREV}"
-PR = "r15"
+PV = "0.0.1-shr+gitr${SRCREV}"
+PR = "r16"
 PE = "1"
 SRCREV=${AUTOREV}
 
