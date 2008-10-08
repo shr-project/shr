@@ -6,6 +6,9 @@ PV = "0.0.1-shr"
 PR = "r8"
 PE = "1"
 
+SRC_URI = "${FREESMARTPHONE_GIT}/libframeworkd-glib.git;protocol=git;branch=master"
+S = "${WORKDIR}/git"
+
 inherit shr autotools pkgconfig
 
 do_stage () {
