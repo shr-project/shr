@@ -22,12 +22,12 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
-#include <frameworkd-glib/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/frameworkd-glib-ogsmd-call.h>
-#include <frameworkd-glib/frameworkd-glib-ogsmd-sim.h>
-#include <frameworkd-glib/frameworkd-glib-ogsmd-network.h>
-#include <frameworkd-glib/frameworkd-glib-ogsmd-device.h>
-#include <frameworkd-glib/frameworkd-glib-ousaged.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-network.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-device.h>
+#include <frameworkd-glib/ousaged/frameworkd-glib-ousaged.h>
 #include "ophonekitd-phonegui.h"
 
 gboolean sim_auth_active = FALSE;
