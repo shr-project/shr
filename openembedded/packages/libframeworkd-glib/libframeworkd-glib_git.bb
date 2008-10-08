@@ -3,7 +3,7 @@ SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS += " dbus-glib"
 PV = "0.0.1-shr+${PR}-gitr${SRCREV}"
-PR = "r14"
+PR = "r15"
 PE = "1"
 SRCREV=${AUTOREV}
 
