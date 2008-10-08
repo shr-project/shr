@@ -26,7 +26,7 @@ int main(int argc, char ** argv);
 
 void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties);
 void ophonekitd_sim_auth_status_handler(const int status);
-void ophonekitd_sim_incoming_message_handler(const int id);
+void ophonekitd_sim_incoming_stored_message_handler(const int id);
 
 gboolean list_resources();
 void list_resources_callback(GError *error, char** resources, gpointer userdata);

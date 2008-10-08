@@ -49,7 +49,7 @@ int main(int argc, char ** argv) {
     fwHandler.networkStatus = NULL;
     fwHandler.networkSignalStrength = NULL;
     fwHandler.simAuthStatus = ophonekitd_sim_auth_status_handler;
-    fwHandler.simIncomingMessage = ophonekitd_sim_incoming_message_handler;
+    fwHandler.simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
     fwHandler.callCallStatus = ophonekitd_call_status_handler;
     dbus_connect_to_bus(&fwHandler);
     g_debug("Connected to the buses");
@@ -131,8 +131,8 @@ void ophonekitd_sim_auth_status_handler(const int status) {
 }
 
 
-void ophonekitd_sim_incoming_message_handler(const int id) {
-    g_debug("ophonekitd_sim_incoming_message_handler()");
+void ophonekitd_sim_incoming_stored_message_handler(const int id) {
+    g_debug("ophonekitd_sim_incoming_stored_message_handler()");
     phonegui_message_show(id);
 }
 
@@ -158,13 +158,6 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
         }
 
         if(available) {
-            /* 
-             * Sleep 10 seconds to avoid dbus timeout
-             * at system startup. This is fixed in recent
-             * open embedded dbus distributions.
-             */
-            sleep(10);
-
             g_debug("Request GSM resource");
             ousaged_request_resource("GSM", request_resource_callback, NULL);
         } else {
