@@ -41,7 +41,7 @@ void connect_to_frameworkd() {
     fwHandler.networkStatus = NULL;
     fwHandler.networkSignalStrength = NULL;
     fwHandler.simAuthStatus = NULL;
-    fwHandler.simIncomingMessage = NULL;
+    fwHandler.simIncomingStoredMessage = NULL;
     fwHandler.callCallStatus = NULL;
     dbus_connect_to_bus(&fwHandler);
 }
