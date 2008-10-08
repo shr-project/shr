@@ -112,6 +112,7 @@ SHR_INSTALL = "\
   libhito \
   libframeworkd-glib \
   openmoko-dialer3 \
+  ophonekitd \ 
 "
 # removed libframeworkd-phonegui-gtk from SHR_INSTALL
 
