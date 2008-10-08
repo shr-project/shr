@@ -21,8 +21,7 @@ libframeworkd_phonegui_gtk_la_SOURCES = \
                                      alsa-volume-scale.c \
                                      sound.c
 
-libframeworkd_phonegui_gtk_HEADERS = frameworkd-phonegui.h \
-                                     pin.h \
+libframeworkd_phonegui_gtk_HEADERS = pin.h \
                                      history.h \
                                      keypad.h \
                                      tips.h \
