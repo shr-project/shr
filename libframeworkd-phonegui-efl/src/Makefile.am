@@ -16,7 +16,7 @@ libframeworkd_phonegui_efl_HEADERS =
 
 libframeworkd_phonegui_efldir = $(includedir)/frameworkd-phonegui-efl
 
-# remove -version-info 0:0:0 because it generated an install error below
-libframeworkd_phonegui_efl_la_LDFLAGS = $(all_libraries) -lpthread @ECORE_LIBS@ @ECORE_EVAS_LIBS@ @EDJE_LIBS@ @EVAS_LIBS@ @ETK_LIBS@
+# removed $(all_libraries) and -version-info 0:0:0 because it generated an install error below
+libframeworkd_phonegui_efl_la_LDFLAGS = -lpthread @ECORE_LIBS@ @ECORE_EVAS_LIBS@ @EDJE_LIBS@ @EVAS_LIBS@ @ETK_LIBS@
 
 libframeworkd_phonegui_efl_la_LIBADD = @PHONEGUI_LIBS@ 
