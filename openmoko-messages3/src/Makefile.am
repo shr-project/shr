@@ -1,13 +1,12 @@
 INCLUDES = -I$(top_srcdir)/libhito
 
-AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" \
-                $(MOKOUI_CFLAGS) \
-                $(FRAMEWORKD_GLIB_CFLAGS) \
-                -Wall
+AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -Wall \
+	$(FRAMEWORKD_GLIB_CFLAGS) \
+	$(FRAMEWORKD_PHONEGUI_CFLAGS)
 
-AM_LDFLAGS = $(MOKOUI_LIBS) \
-             $(EBOOK_LIBS) \
-             $(FRAMEWORKD_GLIB_LIBS)
+AM_LDFLAGS = \
+	$(FRAMEWORKD_GLIB_LIBS) \
+	$(FRAMEWORKD_PHONEGUI_LIBS)
 
 bin_PROGRAMS=openmoko-messages
 
