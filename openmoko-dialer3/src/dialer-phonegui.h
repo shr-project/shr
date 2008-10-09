@@ -16,7 +16,7 @@
 #ifndef _DIALER_PHONEGUI_H
 #define _DIALER_PHONEGUI_H
 
-#include <frameworkd-glib/frameworkd-glib-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 void (*phonegui_dialer_launch)();
 

@@ -18,8 +18,6 @@
 #ifndef _DIALER_MAIN_H
 #define _DIALER_MAIN_H
 
-#define CONFIG_FILE "/etc/ophonekitd/gui.conf"
-
 int main(int argc, char **argv);
 void connect_to_frameworkd();
 

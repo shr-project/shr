@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     connect_to_frameworkd();
 
     /* Load, connect and initiate phonegui */
-    phonegui_load(CONFIG_FILE);
+    phonegui_load("openmoko-dialer3");
     phonegui_connect();
     phonegui_dialer_launch();
 
