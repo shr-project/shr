@@ -19,6 +19,6 @@
 #define FRAMEWORKD_PHONEGUI_CONFIG "/etc/frameworkd-phonegui.conf"
 
 void phonegui_load(const char *application_name);
-void *phonegui_get_function(const char *function_name);
+void* phonegui_get_function(const char *function_name);
 
 #endif
