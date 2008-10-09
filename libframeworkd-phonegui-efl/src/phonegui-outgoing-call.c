@@ -13,6 +13,7 @@ enum OutgoingCallEvents {
 };
 
 static int call_id;
+static char* call_number;
 
 
 void phonegui_outgoing_call_show(const int id, const int status, const char *number) {
@@ -20,6 +21,7 @@ void phonegui_outgoing_call_show(const int id, const int status, const char *num
     phonegui_input_callback = outgoing_call_input;
     phonegui_event_callback = outgoing_call_event;
     call_id = id;
+    call_number = number;
     pipe_write(pipe_handler, EVENT_SHOW);
 }
 
@@ -44,6 +46,7 @@ void outgoing_call_event(int event) {
 
     if(event == EVENT_SHOW) {
         edje_object_file_set(edje, UI_FILE, "outgoing_call");
+        edje_object_part_text_set(edje, "number", call_number);
         ecore_evas_show(ee);
     } else if(event == EVENT_HIDE) {
         ecore_evas_hide(ee);
