@@ -30,9 +30,8 @@ ILLUME_INSTALL = "\
   illume-keyboards-default \
   illume-keyboards-numbers \
   illume-keyboards-terminal \
-  illume-theme-illume \
+  illume-theme-asu \
 "
-# removed illume-theme-asu, because illume-theme-freesmartphone already included
 
 # getting an X window system up
 X_INSTALL = "\
