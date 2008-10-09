@@ -174,6 +174,13 @@ shr_rootfs_postprocess() {
     echo "Categories=Utility;" >> ./usr/share/applications/openmoko-calculator.desktop
     echo "Categories=Utility;" >> ./usr/share/applications/openmoko-terminal.desktop
 
+    # setup opkg config
+    rm ./etc/opkg/all-feed.conf
+    rm ./etc/opkg/armv4t-feed.conf
+    rm ./etc/opkg/fic-gta02-feed.conf
+    rm ./etc/opkg/neo1973-feed.conf
+    rm ./etc/opkg/om-gta02-feed.conf
+
     # set openmoko theme
     mkdir -p ./etc/gtk-2.0/
     echo 'gtk-theme-name = "openmoko-standard-2"' >> ./etc/gtk-2.0/gtkrc
