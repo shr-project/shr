@@ -7,11 +7,12 @@
 #include <glib-2.0/glib.h>
 #include <glib-2.0/glib-object.h>
 
-void phonegui_dialer_launch(int argc, char** argv);
+void phonegui_dialer_show();
+void phonegui_dialer_hide();
 
-void dialer_ui_input(void *data, Evas_Object *obj, const char *emission, const char *source);
-void dialer_ui_event(void *data, Ecore_Fd_Handler *fdh);
-void dialer_ui_update();
+void dialer_input(void *data, Evas_Object *obj, const char *emission, const char *source);
+void dialer_event(int event);
+void dialer_update();
 void dialer_call_initiate_callback(GError *error, int call_id, gpointer userdata);
 
 #endif

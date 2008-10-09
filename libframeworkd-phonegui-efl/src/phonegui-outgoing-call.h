@@ -7,6 +7,7 @@
 
 void phonegui_outgoing_call_show(const int id, const int status, const char *number);
 void phonegui_outgoing_call_hide(const int id);
+
 void outgoing_call_input(void *data, Evas_Object *o, const char *emission, const char *source);
 void outgoing_call_event(int event);
 

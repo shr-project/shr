@@ -5,7 +5,9 @@
 #                    incoming-call.edj \
 #                    outgoing-call.edj \
 #                    dialer.edj \
-#                    messages.edj
+#                    messages.edj \
+#                    contacts.edj \
+#                    incoming-message.edj
 
 install:
 	install -m 755 -d $(DESTDIR)/etc/ophonekitd/
@@ -18,3 +20,5 @@ install:
 	install -m 644 outgoing-call.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
 	install -m 644 dialer.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
 	install -m 644 messages.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
+	install -m 644 contacts.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
+	install -m 644 incoming-message.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 

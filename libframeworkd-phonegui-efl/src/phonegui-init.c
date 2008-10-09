@@ -9,15 +9,15 @@
 
 void phonegui_init(int argc, char **argv) {
     g_debug("phonegui_init()");
-
-    pthread_t thread;
-    int rc;
+    phonegui_argc = argc;
+    phonegui_argv = argv;
 
     // Create pipe
     pipe_handler = pipe_create();
 
     // Create thread
-    rc = pthread_create(&thread, NULL, (void*) ui_init, NULL);
+    pthread_t thread;
+    int rc = pthread_create(&thread, NULL, (void*) ui_init, NULL);
     if(rc) {
         g_error("Return code from pthread_create() is %d", rc);
     }

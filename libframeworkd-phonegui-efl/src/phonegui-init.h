@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include "pipe.h"
 
-void (*phonegui_input_callback)(void *data, Evas_Object *obj, const char *emission, const char *source);
-void (*phonegui_event_callback)(int event);
+int phonegui_argc;
+char **phonegui_argv;
 
 PipeHandler pipe_handler;
 
@@ -16,6 +16,9 @@ Ecore_Evas   *ee;
 Evas         *evas;
 Evas_Object  *edje;
 double       edje_w, edje_h;
+
+void (*phonegui_input_callback)(void *data, Evas_Object *obj, const char *emission, const char *source);
+void (*phonegui_event_callback)(int event);
 
 void phonegui_init(int argc, char **argv);
 void ui_init();
