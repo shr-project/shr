@@ -3,7 +3,7 @@ SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS += " dbus-glib libframeworkd-glib libframeworkd-phonegui"
 PV = "0.0.1-shr+svnr${SRCREV}"
-PR = "r16"
+PR = "r17"
 PE = "1"
 
 inherit shr
