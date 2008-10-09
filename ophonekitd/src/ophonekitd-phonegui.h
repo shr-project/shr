@@ -16,7 +16,7 @@
 #ifndef _OPHONEKITD_PHONEGUI_H
 #define _OPHONEKITD_PHONEGUI_H
 
-#include <frameworkd-glib/frameworkd-glib-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 void (*phonegui_init)();
 void (*phonegui_sim_auth_show)();

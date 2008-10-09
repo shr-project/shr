@@ -40,7 +40,7 @@ int main(int argc, char ** argv) {
     FrameworkdHandlers fwHandler;
 
     /* Load, connect and initiate phonegui library */
-    phonegui_load(CONFIG_FILE);
+    phonegui_load("ophonekitd");
     phonegui_connect();
     phonegui_init(argc, argv);
     g_debug("Phonegui initiated");

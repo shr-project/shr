@@ -20,8 +20,6 @@
 
 #include <dbus/dbus-glib.h>
 
-#define CONFIG_FILE "/etc/ophonekitd/gui.conf"
-
 int main(int argc, char ** argv);
 
 void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties);
