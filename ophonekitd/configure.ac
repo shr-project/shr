@@ -21,6 +21,7 @@ PKG_CHECK_MODULES(DBUS_GLIB,
                   [],
                   [AC_MSG_FAILURE([dbus-glib not found])]
                  )
+PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
 
 AC_SUBST(DBUS_GLIB_CFLAGS)
 AC_SUBST(DBUS_GLIB_LIBS)
