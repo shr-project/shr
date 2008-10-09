@@ -16,7 +16,7 @@
 #include "dialer-phonegui.h"
 
 void phonegui_connect() {
-    phonegui_init = phonegui_get_function("phonegui_dialer_init");
+    phonegui_init = phonegui_get_function("phonegui_init");
     phonegui_dialer_show = phonegui_get_function("phonegui_dialer_show");
 }
 
