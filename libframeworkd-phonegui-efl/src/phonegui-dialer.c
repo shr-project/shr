@@ -39,11 +39,11 @@ void dialer_input(void *data, Evas_Object *obj, const char *emission, const char
     } else if(!strcmp(emission, "delete") && number_length > 0) {
         number_length--;
         number[number_length] = '\0';
-        dialer_ui_update();
+        dialer_update();
     } else if(number_length < 64) {
         strncat(number, emission, 1);
         number_length++;
-        dialer_ui_update();
+        dialer_update();
     }
 }
 
