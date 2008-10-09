@@ -34,6 +34,13 @@ int main(int argc, char **argv) {
     phonegui_init(argc, argv);
     phonegui_dialer_show();
 
+    /* Initiate and start glib main loop */
+    GMainLoop *mainloop = NULL;
+    g_type_init();
+    mainloop = g_main_loop_new (NULL, FALSE);
+    g_debug("Entering glib main loop");
+    g_main_loop_run (mainloop);
+
     return EXIT_SUCCESS;
 }
 
