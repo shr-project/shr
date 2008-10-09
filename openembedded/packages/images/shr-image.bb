@@ -112,6 +112,7 @@ SHR_INSTALL = "\
   libhito \
   libframeworkd-glib \
   openmoko-dialer3 \
+  openmoko-messages3 \
   ophonekitd \ 
   libframeworkd-phonegui-efl \
 "
