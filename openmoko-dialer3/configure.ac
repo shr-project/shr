@@ -15,7 +15,7 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 # base deps
 PKG_CHECK_MODULES(DIALER, libframeworkd-glib)
-PKG_CHECK_MODULES(LIBFRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
+PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
 PKG_CHECK_MODULES(GLIB, glib-2.0)
                                    
 
