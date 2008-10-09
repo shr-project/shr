@@ -2,9 +2,8 @@ DESCRIPTION = "frameworkd EFL phonegui"
 SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS += " dbus-glib libframeworkd-glib"
-PV = "0.0.1-shr+svnr${SRCREV}"
-PR = "r2"
-PE = "1"
+PV = "0.0.1+${PR}-svnr${SRCREV}"
+PR = "r0"
 
 inherit shr pkgconfig autotools
 

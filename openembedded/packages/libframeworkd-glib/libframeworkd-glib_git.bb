@@ -2,9 +2,9 @@ DESCRIPTION = "Frameworkd / GLib bindings"
 SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS += " dbus-glib"
-PV = "0.0.1-shr+gitr${SRCREV}"
-PR = "r17"
-PE = "1"
+PV = "0.0.1+${PR}-gitr${SRCREV}"
+PR = "r0"
+
 SRCREV=${AUTOREV}
 
 SRC_URI = "${FREESMARTPHONE_GIT}/libframeworkd-glib.git;protocol=git;branch=master"
