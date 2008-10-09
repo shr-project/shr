@@ -31,7 +31,8 @@ int main(int argc, char **argv) {
     /* Load, connect and initiate phonegui */
     phonegui_load("openmoko-dialer3");
     phonegui_connect();
-    phonegui_dialer_launch();
+    phonegui_init(argc, argv);
+    phonegui_dialer_show();
 
     return EXIT_SUCCESS;
 }

@@ -18,7 +18,8 @@
 
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
 
-void (*phonegui_dialer_launch)();
+void (*phonegui_init)(int argc, char** argv);
+void (*phonegui_dialer_show)();
 
 void phonegui_connect();
 
