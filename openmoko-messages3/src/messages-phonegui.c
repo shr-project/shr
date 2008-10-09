@@ -16,6 +16,7 @@
 #include "messages-phonegui.h"
 
 void phonegui_connect() {
-    phonegui_messages_launch = phonegui_get_function("phonegui_messages_launch");
+    phonegui_init = phonegui_get_function("phonegui_init");
+    phonegui_messages_show = phonegui_get_function("phonegui_messages_show");
 }
 

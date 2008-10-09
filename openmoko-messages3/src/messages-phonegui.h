@@ -16,9 +16,10 @@
 #ifndef _MESSAGES_PHONEGUI_H
 #define _MESSAGES_PHONEGUI_H
 
-#include <frameworkd-glib/frameworkd-glib-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
-void (*phonegui_messages_launch)();
+void (*phonegui_init)();
+void (*phonegui_messages_show)();
 
 void phonegui_connect();
 
