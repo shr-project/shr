@@ -62,9 +62,6 @@ void dialer_update() {
 
 void dialer_call_initiate_callback(GError *error, int call_id, gpointer userdata) {
     g_debug("call_initiate_callback()");
-
-    /* Exit */
-    ecore_main_loop_quit();
 }
 
 

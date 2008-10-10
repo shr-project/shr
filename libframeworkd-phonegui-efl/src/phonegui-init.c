@@ -51,6 +51,8 @@ void ui_init() {
     g_debug("entering loop");
     ecore_main_loop_begin();
     g_debug("quit loop");
+
+    exit(0);
 }
 
 void ui_input(void *data, Evas_Object *obj, const char *emission, const char *source) {

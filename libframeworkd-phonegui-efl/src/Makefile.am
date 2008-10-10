@@ -1,9 +1,6 @@
-
-
 AM_CPPFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 AM_CFLAGS = -Wall @PHONEGUI_CFLAGS@
-
-AM_LDFLAGS = @PHONEGUI_LIBS@
+AM_LDFLAGS = $(all_libraries) -lpthread @PHONEGUI_LIBS@ @GLIB_LIBS@ @EVAS_LIBS@ @ECORE_EVAS_LIBS@ @EDJE_LIBS@ @ECORE_LIBS@ @ETK_LIBS@
 
 lib_LTLIBRARIES = libframeworkd-phonegui-efl.la
 

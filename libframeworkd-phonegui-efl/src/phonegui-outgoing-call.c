@@ -49,6 +49,7 @@ void outgoing_call_event(int event) {
         edje_object_part_text_set(edje, "number", call_number);
         ecore_evas_show(ee);
     } else if(event == EVENT_HIDE) {
+        g_debug("hide");
         ecore_evas_hide(ee);
     } else {
         g_error("Unknown event: %d", event);

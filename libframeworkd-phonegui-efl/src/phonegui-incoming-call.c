@@ -42,6 +42,7 @@ void incoming_call_input(void *data, Evas_Object *o, const char *emission, const
         g_debug("call accept");
         ogsmd_call_activate(call_id, NULL, NULL);
         edje_object_file_set(edje, UI_FILE, "incoming_call_accepted");
+        edje_object_part_text_set(edje, "number", call_number);
     } else if(!strcmp(emission, "release")) {
         g_debug("call release");
         ogsmd_call_release(call_id, NULL, NULL);
