@@ -83,7 +83,7 @@ void contacts_event(int event) {
     } else if(event == EVENT_MODE_LIST) {
 
         tree = etk_tree_new();
-        etk_tree_rows_height_set(ETK_TREE(tree), 180);
+        etk_tree_rows_height_set(ETK_TREE(tree), 80);
         etk_tree_mode_set(ETK_TREE(tree), ETK_TREE_MODE_LIST);
         etk_tree_headers_visible_set(ETK_TREE(tree), ETK_FALSE);
         etk_tree_multiple_select_set(ETK_TREE(tree), ETK_FALSE);
@@ -94,9 +94,9 @@ void contacts_event(int event) {
 
         Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree));
         etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
-        //etk_scrolled_view_drag_damping_set(ETK_SCROLLED_VIEW(scrolled_view), 500);
+        etk_scrolled_view_drag_damping_set(ETK_SCROLLED_VIEW(scrolled_view), 400);
         etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
-        etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_SHOW, ETK_POLICY_SHOW);
+        etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
 
 
         // Sort entries

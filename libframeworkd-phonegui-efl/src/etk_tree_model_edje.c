@@ -151,7 +151,7 @@ static void _edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Obj
 /* Edje: set_text_cb() */
 void _edje_set_text_cb(gpointer key, gpointer value, Evas_Object *cell_object) 
 {
-   g_debug("SET: %s", key);
+   //g_debug("SET: %s", key);
    edje_object_part_text_set(cell_object, key, value);
 }
 
@@ -159,7 +159,7 @@ void _edje_set_text_cb(gpointer key, gpointer value, Evas_Object *cell_object)
 /* Edje: render() */
 static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas)
 {
-   g_debug("render called");
+   //g_debug("render called");
 
    Etk_Tree_Model_Edje *edje_model;
    Etk_Tree_Model_Edje_Data *edje_data;

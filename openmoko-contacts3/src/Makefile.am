@@ -4,7 +4,7 @@ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" \
                 $(FRAMEWORKD_GLIB_CFLAGS) \
                 -Wall
 
-AM_LDFLAGS = $(FRAMEWORKD_GLIB_LIBS) -ldl
+AM_LDFLAGS = @FRAMEWORKD_GLIB_LIBS@ @FRAMEWORKD_PHONEGUI_LIBS@ -ldl
 
 bin_PROGRAMS=openmoko-contacts
 

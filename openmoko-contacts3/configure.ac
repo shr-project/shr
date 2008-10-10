@@ -17,14 +17,8 @@ PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
 		  [],
 		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
 		 )
+PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
                   		
-# CFLAGS and LIBS definitions for libhito
-AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
-AC_SUBST(FRAMEWORKD_GLIB_LIBS)
-
-old_cflags=$CFLAGS
-CFLAGS=$EBOOK_CFLAGS
-CFLAGS=$old_cflags
 
 
 dnl ==============================================

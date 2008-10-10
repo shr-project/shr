@@ -2,6 +2,7 @@
 #include <Ecore_Evas.h>
 #include <Ecore.h>
 #include <Edje.h>
+#include <etk/Etk.h>
 #include <pthread.h>
 #include <glib-2.0/glib.h>
 #include <glib-2.0/glib-object.h>
@@ -35,6 +36,10 @@ void ui_init() {
 
     evas = ecore_evas_get(ee);
 
+    // Init ETK
+    char **empty = NULL;
+    etk_init(0, empty);
+
     edje_init();
     edje = edje_object_add(evas);
     evas_object_move(edje, 0, 0);
@@ -64,10 +69,12 @@ void ui_input(void *data, Evas_Object *obj, const char *emission, const char *so
 
 int ui_event(void *data, Ecore_Fd_Handler *fdh) {
     g_debug("ui_event()");
-    int event = pipe_read(pipe_handler);
 
-    if(phonegui_event_callback != NULL) {
-        phonegui_event_callback(event); 
+    int event;
+    while((event = pipe_read(pipe_handler)) != -1) {
+        if(phonegui_event_callback != NULL) {
+            phonegui_event_callback(event); 
+        }
     }
 
     return 1;

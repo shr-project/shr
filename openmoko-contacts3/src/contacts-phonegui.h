@@ -16,9 +16,9 @@
 #ifndef _CONTACTS_PHONEGUI_H
 #define _CONTACTS_PHONEGUI_H
 
-#include <frameworkd-glib/frameworkd-glib-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
-void (*phonegui_init)();
+void (*phonegui_init)(int argc, char **argv);
 void (*phonegui_contacts_show)();
 
 void phonegui_connect();

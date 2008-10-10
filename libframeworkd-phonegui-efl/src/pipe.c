@@ -24,9 +24,12 @@ PipeHandler pipe_create() {
 }
 
 int pipe_read(PipeHandler h) {
-    int event;
-    while(read(h.input, &event, sizeof(event)) > 0);
-    return event;
+    int r, event;
+    r = read(h.input, &event, sizeof(event));
+    if(r == -1)
+        return -1;
+    else
+        return event;
 }
 
 void pipe_write(PipeHandler h, int event) {
