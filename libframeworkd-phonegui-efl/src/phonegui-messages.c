@@ -48,7 +48,6 @@ void phonegui_messages_show(int argc, char** argv) {
 
     messages_mode = MODE_FOLDERS;
     pipe_write(pipe_handler, EVENT_MODE_FOLDERS);
-    sleep(1); // TODO: Remove and see if it's working
     pipe_write(pipe_handler, EVENT_SHOW);
 }
 
@@ -67,6 +66,7 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
             messages_mode = MODE_LIST;
             Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
             if(row != NULL) {
+                edje_object_part_unswallow(edje, container);
                 etk_widget_hide_all(container);
                 edje_object_file_set(edje, UI_FILE, "loading");
 
@@ -77,6 +77,7 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
             messages_mode = MODE_MESSAGE;
             Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
             if(row != NULL) {
+                edje_object_part_unswallow(edje, container);
                 etk_widget_hide_all(container);
                 edje_object_file_set(edje, UI_FILE, "loading");
 
@@ -85,6 +86,9 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
             }
         }
     } else if(!strcmp(emission, "back")) {
+        edje_object_part_unswallow(edje, container);
+        etk_widget_hide_all(container);
+
         if(messages_mode == MODE_MESSAGE) {
             messages_mode = MODE_LIST;
             pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
@@ -94,6 +98,8 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
         }
     } else if(!strcmp(emission, "answer")) {
         // TODO
+    } else if(!strcmp(emission, "exit")) {
+        exit(0);
     } else {
         g_error("Unknown input");
     }
@@ -112,17 +118,11 @@ void process_message(GValueArray *message) {
 
     int *id = g_slice_alloc(sizeof(int));
     *id = g_value_get_int(g_value_array_get_nth(message, 0));
-g_debug("a");
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
-g_debug("b");
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
-g_debug("c");
     g_hash_table_insert(parameters, strdup("content"), strdup(g_value_get_string(g_value_array_get_nth(message, 3))));
-g_debug("d");
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree), NULL, col1, parameters, NULL);
-g_debug("e");
     etk_tree_row_data_set(row, id);
-g_debug("f");
 }
 
 
