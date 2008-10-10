@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Contacts
+Comment=View Contacts 
+Exec=openmoko-contacts
+Icon=openmoko-contacts
+Terminal=false
+Type=Application
+Categories=GTK;Office;PIM;
+SingleInstance=true
+StartupNotify=true

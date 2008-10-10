@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT(openmoko-messages, 0.0, http://www.openedhand.com/)
+AC_INIT(openmoko-contacts, 0.0, http://www.openedhand.com/)
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR(src/)
 AM_CONFIG_HEADER(config.h)
@@ -17,13 +17,10 @@ PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
 		  [],
 		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
 		 )
-PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
-
                   		
+# CFLAGS and LIBS definitions for libhito
 AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
 AC_SUBST(FRAMEWORKD_GLIB_LIBS)
-AC_SUBST(FRAMEWORKD_PHONEGUI_CFLAGS)
-AC_SUBST(FRAMEWORKD_PHONEGUI_LIBS)
 
 old_cflags=$CFLAGS
 CFLAGS=$EBOOK_CFLAGS
