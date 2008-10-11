@@ -10,8 +10,6 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
-
-
 # base deps
 PKG_CHECK_MODULES(PHONEGUI, libframeworkd-glib)
 PKG_CHECK_MODULES(GLIB, glib-2.0)
@@ -23,6 +21,17 @@ PKG_CHECK_MODULES(ETK, etk)
 
 AC_SUBST(PHONEGUI_CFLAGS)
 AC_SUBST(PHONEGUI_LIBS)
+
+AC_ARG_WITH(edje-cc,
+[  --with-edje-cc=PATH              specify a specific path to edje_cc],
+[
+  v=$withval;
+  edje_cc=$v
+  echo "  Enlightenment edje_cc explicitly set to "$edje_cc;
+],[
+  edje_cc=$(pkg-config --variable=prefix edje)/bin/edje_cc
+])
+AC_SUBST(edje_cc)
 
 
 # output stuff

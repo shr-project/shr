@@ -1,24 +1,31 @@
-# A shell check command that I find convenient:
-# ls -1 *.png | xargs --replace=pngimg sh -c '(grep -qw "pngimg" Makefile.am  || echo "Missing pngimg")'
+MAINTAINERCLEANFILES = Makefile.in
 
-#dist_pkgdata_DATA = sim-auth.edj \
-#                    incoming-call.edj \
-#                    outgoing-call.edj \
-#                    dialer.edj \
-#                    messages.edj \
-#                    contacts.edj \
-#                    incoming-message.edj
+filesdir = $(datadir)/libframeworkd-phonegui-efl/
+files_DATA = sim-auth.edj incoming-call.edj outgoing-call.edj dialer.edj messages.edj contacts.edj incoming-message.edj
 
-install:
-	install -m 755 -d $(DESTDIR)/etc/ophonekitd/
-	install -m 644 gui.conf $(DESTDIR)/etc/ophonekitd/gui.conf
+EXTRA_DIST = sim-auth.edc incoming-call.edc outgoing-call.edc dialer.edc messages.edc contacts.edc incoming-message.edc
 
-# Manual install instead of dist_pkgdata_DATA, because install: overwrites dist_pkgdata_DATA!
-	install -m 755 -d $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 sim-auth.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 incoming-call.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 outgoing-call.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 dialer.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 messages.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 contacts.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
-	install -m 644 incoming-message.edj $(DESTDIR)/usr/share/libframeworkd-phonegui-efl/ 
+clean-local:
+	rm -f *.edj
+
+sim-auth.edj:
+	@edje_cc@ sim-auth.edc
+
+incoming-call.edj:
+	@edje_cc@ incoming-call.edc
+
+outgoing-call.edj:
+	@edje_cc@ outgoing-call.edc
+
+dialer.edj:
+	@edje_cc@ dialer.edc
+
+messages.edj:
+	@edje_cc@ messages.edc
+
+contacts.edj:
+	@edje_cc@ contacts.edc
+
+incoming-message.edj:
+	@edje_cc@ incoming-message.edc
+
