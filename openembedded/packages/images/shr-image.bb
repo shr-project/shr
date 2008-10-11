@@ -25,12 +25,12 @@ XSERVER ?= "xserver-kdrive-fbdev"
 ILLUME_INSTALL = "\
   e-wm \
   illume \
-  illume-config-asu \
+  illume-config-illume \
   illume-dicts-english-us \
   illume-keyboards-default \
   illume-keyboards-numbers \
   illume-keyboards-terminal \
-  illume-theme-asu \
+  illume-theme-freesmartphone \
 "
 
 # getting an X window system up
@@ -56,6 +56,7 @@ X_INSTALL = "\
 TOOLS_INSTALL = "\
 #  bash \
   dosfstools \
+  htop \
   iptables \
   lsof \
   mickeydbus \
@@ -65,6 +66,7 @@ TOOLS_INSTALL = "\
   powertop \
   s3c24xx-gpio \
   sysstat \
+  tcpdump \
 "
 
 # audio
@@ -146,6 +148,11 @@ fso_rootfs_postprocess() {
     echo >>./etc/fstab
     echo "# NFS Host" >>./etc/fstab
     echo "192.168.0.200:/local/pkg /local/pkg nfs noauto,nolock,soft,rsize=32768,wsize=32768 0 0" >>./etc/fstab
+    # fix .desktop files for illume
+    desktop=`find ./usr/share/applications -name "*.desktop"`
+    for file in $desktop; do
+        echo "Categories=Office;" >>$file
+    done
     # minimal gtk theme foo
     mkdir -p ./etc/gtk-2.0/
     echo 'gtk-font-name = "Sans 5"' >> ./etc/gtk-2.0/gtkrc
@@ -168,12 +175,6 @@ shr_rootfs_postprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
 
-    # fix .desktop files for illume
-    echo "Categories=Network;" >> ./usr/share/applications/openmoko-dialer.desktop
-    echo "Categories=Network;" >> ./usr/share/applications/tangogps.desktop
-    echo "Categories=Utility;" >> ./usr/share/applications/gpe-scap.desktop
-    echo "Categories=Utility;" >> ./usr/share/applications/openmoko-calculator.desktop
-    echo "Categories=Utility;" >> ./usr/share/applications/openmoko-terminal.desktop
 
     # setup opkg config
     rm ./etc/opkg/all-feed.conf
