@@ -14,7 +14,8 @@
 typedef enum {
     MODE_FOLDERS,
     MODE_LIST,
-    MODE_MESSAGE
+    MODE_MESSAGE,
+    MODE_NEW
 } MessagesModes;
 
 typedef enum {
@@ -32,6 +33,13 @@ static MessagesModes messages_mode;
 static Etk_Widget *container = NULL;
 static Etk_Widget *tree;
 static Etk_Tree_Col *col1;
+
+static Etk_Text_View *content_text_view;
+static Etk_Entry *number_entry;
+
+static Etk_Widget *container_content;
+static Etk_Widget *container_number;
+
 
 static char *messages_category;
 
@@ -92,14 +100,32 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
         if(messages_mode == MODE_MESSAGE) {
             messages_mode = MODE_LIST;
             pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
-        } else if(messages_mode == MODE_LIST) {
+        } else if(messages_mode == MODE_LIST || messages_mode == MODE_NEW) {
             messages_mode = MODE_FOLDERS;
             pipe_write(pipe_handler, EVENT_MODE_FOLDERS);
         }
     } else if(!strcmp(emission, "answer")) {
         // TODO
-    } else if(!strcmp(emission, "exit")) {
-        exit(0);
+    } else if(!strcmp(emission, "new")) {
+        messages_mode = MODE_NEW;
+
+        edje_object_part_unswallow(edje, container);
+        etk_widget_hide_all(container);
+
+        edje_object_file_set(edje, UI_FILE, "edit");
+
+        content_text_view = etk_text_view_new();
+        container_content = etk_embed_new(evas);
+        etk_container_add(ETK_CONTAINER(container_content), content_text_view);
+        etk_widget_show_all(container_content);
+        edje_object_part_swallow(edje, "content", etk_embed_object_get(ETK_EMBED(container_content)));
+
+        number_entry = etk_entry_new();
+        container_number = etk_embed_new(evas);
+        etk_container_add(ETK_CONTAINER(container_number), number_entry);
+        etk_widget_show_all(container_number);
+        edje_object_part_swallow(edje, "number", etk_embed_object_get(ETK_EMBED(container_number)));
+    } else if(!strcmp(emission, "continue")) {
     } else {
         g_error("Unknown input");
     }
