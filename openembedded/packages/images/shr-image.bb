@@ -181,7 +181,8 @@ shr_rootfs_postprocess() {
     rm ./etc/opkg/armv4t-feed.conf
     rm ./etc/opkg/fic-gta02-feed.conf
     rm ./etc/opkg/neo1973-feed.conf
-    rm ./etc/opkg/om-gta02-feed.conf
+    if [ -a ./etc/opkg/om-gta01-feed.conf ]; then rm ./etc/opkg/om-gta02-feed.conf; fi
+    if [ -a ./etc/opkg/om-gta02-feed.conf ]; then rm ./etc/opkg/om-gta02-feed.conf; fi
 
     # set openmoko theme
     mkdir -p ./etc/gtk-2.0/
