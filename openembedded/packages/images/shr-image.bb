@@ -118,6 +118,7 @@ SHR_INSTALL = "\
   openmoko-contacts3 \
   ophonekitd \ 
   libframeworkd-phonegui-efl \
+  zhone \
 "
 # removed libframeworkd-phonegui-gtk from SHR_INSTALL
 
