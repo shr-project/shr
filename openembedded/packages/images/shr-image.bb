@@ -118,8 +118,8 @@ SHR_INSTALL = "\
   openmoko-contacts3 \
   ophonekitd \ 
   libframeworkd-phonegui-efl \
-  zhone \
 "
+# zhone should be added, but a custom package without the autostart script
 # removed libframeworkd-phonegui-gtk from SHR_INSTALL
 
 IMAGE_INSTALL = "\
