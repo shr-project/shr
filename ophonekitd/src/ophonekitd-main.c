@@ -28,6 +28,7 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-network.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-device.h>
 #include <frameworkd-glib/ousaged/frameworkd-glib-ousaged.h>
+#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-idlenotifier.h>
 #include "ophonekitd-phonegui.h"
 
 gboolean sim_auth_active = FALSE;
@@ -51,6 +52,7 @@ int main(int argc, char ** argv) {
     fwHandler.simAuthStatus = ophonekitd_sim_auth_status_handler;
     fwHandler.simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
     fwHandler.callCallStatus = ophonekitd_call_status_handler;
+    fwHandler.deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
     dbus_connect_to_bus(&fwHandler);
     g_debug("Connected to the buses");
 
@@ -70,6 +72,18 @@ int main(int argc, char ** argv) {
     g_main_loop_run (mainloop);
 
     exit(EXIT_SUCCESS);
+}
+
+void ophonekitd_device_idle_notifier_state_handler(const int state) {
+    g_debug("idle notifier state handler called, id %d", state);
+
+    if(state == DEVICE_IDLE_STATE_SUSPEND) {
+        /*ousaged_suspend(NULL, NULL);*/
+        g_debug("Suspend !");
+        /* Suspend is working on my kernel, but unfortunately resume isn't
+         * I'll suggest to check if SHR kernel image can resume before 
+         * commenting out this line ! */
+    }
 }
 
 void ophonekitd_call_status_handler(const int call_id, const int status, GHashTable *properties) {
