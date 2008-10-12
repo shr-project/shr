@@ -24,5 +24,6 @@ void phonegui_init(int argc, char **argv);
 void ui_init();
 void ui_input(void *data, Evas_Object *obj, const char *emission, const char *source);
 int ui_event(void *data, Ecore_Fd_Handler *fdh);
+static void ui_resize_callback(Evas *evas);
 
 #endif

@@ -72,6 +72,9 @@ void phonegui_sim_auth_hide(const int status) {
 }
 
 
+
+
+
 void sim_auth_event(int event) {
     g_debug("sim_auth_event()");
     g_debug("signal: %d", event);

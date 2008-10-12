@@ -32,13 +32,12 @@ void ui_init() {
     ee = ecore_evas_software_x11_new(NULL, 0, 0, 0, 0, 0);
     ecore_evas_title_set(ee, "phonegui");
     ecore_evas_borderless_set(ee, 0);
-    ecore_evas_shaped_set(ee, 0);
+    ecore_evas_shaped_set(ee, 1);
+    ecore_evas_callback_resize_set(ee, ui_resize_callback);
 
     evas = ecore_evas_get(ee);
 
-    // Init ETK
-    char **empty = NULL;
-    etk_init(0, empty);
+    etk_init(phonegui_argc, phonegui_argv);
 
     edje_init();
     edje = edje_object_add(evas);
@@ -46,7 +45,7 @@ void ui_init() {
     //edje_object_size_min_get(edje, &edje_w, &edje_h);
     evas_object_resize(edje, 480, 600);
     evas_object_show(edje);
-    ecore_evas_resize(ee, (int) edje_w, (int) edje_h);
+    // ecore_evas_resize(ee, (int) edje_w, (int) edje_h);
 
     edje_object_signal_callback_add(edje, "*", "input", ui_input, "data");
 
@@ -78,5 +77,15 @@ int ui_event(void *data, Ecore_Fd_Handler *fdh) {
     }
 
     return 1;
+}
+
+static void ui_resize_callback(Evas *ev) {
+    g_debug("RESIZE CALLBACK!");
+    int w, h;
+    evas_object_move(ee, 0, 0);
+    evas_output_size_get(ecore_evas_get(ev), &w, &h);
+    g_debug("w: %d, h: %d", w, h);
+    evas_object_resize(edje, w, h);
+    //ecore_evas_resize(ee, w, h);
 }
 

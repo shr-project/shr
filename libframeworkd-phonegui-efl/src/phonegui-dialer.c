@@ -5,6 +5,7 @@
 #include <glib-2.0/glib-object.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
 #include "phonegui-init.h"
+#include "kbd.h"
 
 #define UI_FILE "/usr/share/libframeworkd-phonegui-efl/dialer.edj"
 
