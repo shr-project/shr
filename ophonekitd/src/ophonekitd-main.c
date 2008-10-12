@@ -78,11 +78,14 @@ void ophonekitd_device_idle_notifier_state_handler(const int state) {
     g_debug("idle notifier state handler called, id %d", state);
 
     if(state == DEVICE_IDLE_STATE_SUSPEND) {
-        /*ousaged_suspend(NULL, NULL);*/
+        ousaged_suspend(NULL, NULL);
         g_debug("Suspend !");
         /* Suspend is working on my kernel, but unfortunately resume isn't
          * I'll suggest to check if SHR kernel image can resume before 
          * commenting out this line ! */
+        /* As of 10/13/2008 :
+         * Working linux-openmoko git revision :
+         * f5b973489beb1a1239dfad53e3ad6e36ff7ee958*/
     }
 }
 
