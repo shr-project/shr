@@ -73,18 +73,18 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
         // TODO
     } else if(!strcmp(emission, "show")) {
         if(messages_mode == MODE_FOLDERS) {
-            messages_mode = MODE_LIST;
             Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
             if(row != NULL) {
+                messages_mode = MODE_LIST;
                 frame_show(messages_loading_show, NULL);
 
                 messages_category = etk_tree_row_data_get(row);
                 pipe_write(pipe_handler, EVENT_MODE_LIST);
             }
         } else if(messages_mode == MODE_LIST) {
-            messages_mode = MODE_MESSAGE;
             Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
             if(row != NULL) {
+                messages_mode = MODE_MESSAGE;
                 frame_show(messages_loading_show, NULL);
 
                 int *id = etk_tree_row_data_get(row);
