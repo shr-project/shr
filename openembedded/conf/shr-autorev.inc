@@ -5,6 +5,3 @@ SRCREV_pn-openmoko-contacts3 = "${AUTOREV}"
 SRCREV_pn-openmoko-dialer3 = "${AUTOREV}"
 SRCREV_pn-libframeworkd-phonegui-efl = "${AUTOREV}"
 SRCREV_pn-libframeworkd-phonegui = "${AUTOREV}"
-
-
-
