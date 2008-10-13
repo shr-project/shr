@@ -29,6 +29,8 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-device.h>
 #include <frameworkd-glib/ousaged/frameworkd-glib-ousaged.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-idlenotifier.h>
+#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
+
 #include "ophonekitd-phonegui.h"
 
 gboolean sim_auth_active = FALSE;
@@ -74,18 +76,24 @@ int main(int argc, char ** argv) {
     exit(EXIT_SUCCESS);
 }
 
-void ophonekitd_device_idle_notifier_state_handler(const int state) {
-    g_debug("idle notifier state handler called, id %d", state);
-
-    if(state == DEVICE_IDLE_STATE_SUSPEND) {
+void ophonekitd_device_idle_notifier_suspend_handler(GError *error, const int status, gpointer userdata) {
+    if(error == NULL && status != DEVICE_POWER_STATE_CHARGING && status != DEVICE_POWER_STATE_FULL) {
         ousaged_suspend(NULL, NULL);
         g_debug("Suspend !");
         /* Suspend is working on my kernel, but unfortunately resume isn't
-         * I'll suggest to check if SHR kernel image can resume before 
+         * I'll suggest to check if SHR kernel image can resume before
          * commenting out this line ! */
         /* As of 10/13/2008 :
          * Working linux-openmoko git revision :
          * f5b973489beb1a1239dfad53e3ad6e36ff7ee958*/
+    }
+}
+
+void ophonekitd_device_idle_notifier_state_handler(const int state) {
+    g_debug("idle notifier state handler called, id %d", state);
+
+    if(state == DEVICE_IDLE_STATE_SUSPEND) {
+        odeviced_power_supply_get_power_status(ophonekitd_device_idle_notifier_suspend_handler, NULL);
     }
 }
 
