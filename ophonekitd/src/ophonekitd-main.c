@@ -77,6 +77,7 @@ int main(int argc, char ** argv) {
 }
 
 void ophonekitd_device_idle_notifier_suspend_handler(GError *error, const int status, gpointer userdata) {
+    g_debug("power status: %d", status);
     if(error == NULL && status != DEVICE_POWER_STATE_CHARGING && status != DEVICE_POWER_STATE_FULL) {
         ousaged_suspend(NULL, NULL);
         g_debug("Suspend !");
