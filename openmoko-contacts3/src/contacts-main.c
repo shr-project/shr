@@ -52,6 +52,7 @@ void connect_to_frameworkd() {
     fwHandler.simAuthStatus = NULL;
     fwHandler.simIncomingStoredMessage = NULL;
     fwHandler.callCallStatus = NULL;
+    fwHandler.deviceIdleNotifierState = NULL;
     dbus_connect_to_bus(&fwHandler);
 }
 
