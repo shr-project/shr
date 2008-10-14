@@ -36,7 +36,7 @@
 gboolean sim_auth_active = FALSE;
 gboolean incoming_call_active = FALSE;
 gboolean outgoing_call_active = FALSE;
-
+int active_calls = 0;
 
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
@@ -76,9 +76,9 @@ int main(int argc, char ** argv) {
     exit(EXIT_SUCCESS);
 }
 
-void ophonekitd_device_idle_notifier_suspend_handler(GError *error, const int status, gpointer userdata) {
+void ophonekitd_device_idle_notifier_power_state_handler(GError *error, const int status, gpointer userdata) {
     g_debug("power status: %d", status);
-    if(error == NULL && status != DEVICE_POWER_STATE_CHARGING && status != DEVICE_POWER_STATE_FULL) {
+    if(active_calls == 0 && error == NULL && status != DEVICE_POWER_STATE_CHARGING && status != DEVICE_POWER_STATE_FULL) {
         ousaged_suspend(NULL, NULL);
         g_debug("Suspend !");
         /* Suspend is working on my kernel, but unfortunately resume isn't
@@ -94,14 +94,14 @@ void ophonekitd_device_idle_notifier_state_handler(const int state) {
     g_debug("idle notifier state handler called, id %d", state);
 
     if(state == DEVICE_IDLE_STATE_SUSPEND) {
-        odeviced_power_supply_get_power_status(ophonekitd_device_idle_notifier_suspend_handler, NULL);
+        odeviced_power_supply_get_power_status(ophonekitd_device_idle_notifier_power_state_handler, NULL);
     }
 }
 
 void ophonekitd_call_status_handler(const int call_id, const int status, GHashTable *properties) {
     g_debug("call status handler called, id: %d, status: %d", call_id, status);
 
-	gchar *number = g_hash_table_lookup(properties, "peer");
+    gchar *number = g_hash_table_lookup(properties, "peer");
     if(number != NULL) {
         number = strdup(g_value_get_string(number));
     }
@@ -119,8 +119,9 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             break;
         case CALL_STATUS_RELEASE:
             g_debug("release call");
-
-            /* TODO: Add call_id handling */
+        
+            /* TODO: Add call_id handling for multiple calls*/
+            active_calls--;
 
             if(incoming_call_active == TRUE) {
                 phonegui_incoming_call_hide(call_id);
@@ -133,10 +134,12 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             }
             break;
         case CALL_STATUS_HELD:
+            break;
         case CALL_STATUS_ACTIVE:
-        	break;
+            active_calls++;
+            break;
         default:
-        	g_error("Unknown CallStatus");
+            g_error("Unknown CallStatus");
     }
 }
 
@@ -145,7 +148,7 @@ void ophonekitd_sim_auth_status_handler(const int status) {
     g_debug("ophonekitd_sim_auth_status_handler()");
     if(status == SIM_READY) {
         g_debug("sim ready");
-        
+
         if(sim_auth_active) {
             phonegui_sim_auth_hide(status);
         }
