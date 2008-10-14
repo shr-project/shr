@@ -286,9 +286,6 @@ void messages_new1_hide() {
 
 
 void messages_new2_show() {
-    edje_object_part_unswallow(edje, container);
-    etk_widget_hide_all(container);
-
     edje_object_file_set(edje, UI_FILE, "number_edit");
 
     number_entry = etk_entry_new();

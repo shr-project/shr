@@ -13,8 +13,18 @@ void contacts_input(void *data, Evas_Object *obj, const char *emission, const ch
 void contacts_event(int event);
 
 void retrieve_phonebook_callback(GError*error, GPtrArray*messages, gpointer userdata);
+void get_phonebook_info_callback(GError *error, GHashTable *phonebook_info, gpointer userdata);
 gint compare_entries(GValueArray **a, GValueArray **b);
 void process_entry(GValueArray *entry);
+
+void contacts_list_show();
+void contacts_list_hide();
+void contacts_options_show();
+void contacts_loading_show();
+void contacts_modify_show();
+void contacts_modify_hide();
+void contacts_new_show();
+void contacts_new_hide();
 
 #endif
 
