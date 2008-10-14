@@ -15,7 +15,7 @@ void contacts_event(int event);
 void retrieve_phonebook_callback(GError*error, GPtrArray*messages, gpointer userdata);
 void get_phonebook_info_callback(GError *error, GHashTable *phonebook_info, gpointer userdata);
 gint compare_entries(GValueArray **a, GValueArray **b);
-void process_entry(GValueArray *entry);
+void process_entry(GValueArray *entry, gpointer userdata);
 
 void contacts_list_show();
 void contacts_list_hide();

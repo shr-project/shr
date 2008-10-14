@@ -94,21 +94,22 @@ void contacts_input(void *data, Evas_Object *obj, const char *emission, const ch
         contacts_mode = MODE_MODIFY;
         frame_show(contacts_modify_show, contacts_modify_hide);
     } else if(!strcmp(emission, "save")) {
-        if(contacts_mode == MODE_NEW) {
-            tmp_name = etk_entry_text_get(entry_name);
-            tmp_number = etk_entry_text_get(entry_number);
-            ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
-        } else if(contacts_mode == MODE_MODIFY) {
-            ogsmd_sim_store_entry(
-                "contacts",
-                g_value_get_int(g_value_array_get_nth(tmp_entry, 0)),
-                etk_entry_text_get(entry_name),
-                etk_entry_text_get(entry_number),
-                NULL,
-                NULL
-            );
+        if(strcmp(etk_entry_text_get(entry_name), "") && strcmp(etk_entry_text_get(entry_number), "")) {
+            if(contacts_mode == MODE_NEW) {
+                ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
+            } else if(contacts_mode == MODE_MODIFY) {
+                ogsmd_sim_store_entry(
+                    "contacts",
+                    g_value_get_int(g_value_array_get_nth(tmp_entry, 0)),
+                    etk_entry_text_get(entry_name),
+                    etk_entry_text_get(entry_number),
+                    NULL,
+                    NULL
+                );
+            }
+            g_debug("SAVED");
+            pipe_write(pipe_handler, EVENT_MODE_LIST);
         }
-        frame_show(contacts_list_show, contacts_list_hide);
     } else if(!strcmp(emission, "back")) {
         contacts_mode = MODE_LIST;
         frame_show(contacts_list_show, contacts_list_hide);
@@ -138,6 +139,9 @@ void contacts_event(int event) {
             NULL
         );
         free_entry_index = -1;
+
+        frame_show(contacts_loading_show, NULL);
+        ogsmd_sim_retrieve_phonebook("contacts", retrieve_phonebook_callback, NULL);
     } else if(event == EVENT_HIDE) {
         ecore_evas_hide(ee);
     } else {
@@ -160,15 +164,19 @@ int get_phonebook_entry_id(GValueArray *entry) {
 
 
 void add_entry_index(GValueArray *entry, int* indizes) {
+    int i = 0;
+    while(indizes[i] != -1)
+        i++;
 
-    g_value_get_int(g_value_array_get_nth(entry, 0))
+    int id = g_value_get_int(g_value_array_get_nth(entry, 0));
+    indizes[i] = id;
 }
 
 
 int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
 
     int *indizes = g_slice_alloc(sizeof(int) * entries->len);
-    memset(indizes, 0, sizeof(int) * entries->len);
+    memset(indizes, -1, sizeof(int) * entries->len);
     g_ptr_array_foreach(entries, add_entry_index, indizes);
     
 
@@ -176,19 +184,13 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
     int i, j;
     g_debug("length: %d", tmp_entries->len);
 
-    // Run through all possible indices, eg. 1-150
-    for(i = *min ; i <= *max && free_entry_index == -1 ; i++) {
-        g_debug("First loop: %d", i);
-
-        // Run through the phonebook entries to see if an entry with that index exists
+    for(i = min ; i <= max && free_entry_index == -1 ; i++) {
         gboolean found = FALSE;
         for(j = 0 ; j < tmp_entries->len && found == FALSE ; j++) {
-            g_debug("Second loop: %d", j);
             if(i == indizes[j]) {
                 found = TRUE;
             }
         }
-
         if(found == FALSE) {
             free_entry_index = i;
             g_debug("Found free entry: %d", i);
@@ -208,7 +210,7 @@ void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userd
 
     free_entry_index = calculate_free_entry_index(1, 150, tmp_entries);
 
-    //pipe_write(pipe_handler, EVENT_NEW_SAVE);
+    pipe_write(pipe_handler, EVENT_NEW_SAVE);
 }
 
 gint compare_entries(GValueArray **a, GValueArray **b) {
