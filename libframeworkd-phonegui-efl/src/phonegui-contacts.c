@@ -110,6 +110,20 @@ void contacts_input(void *data, Evas_Object *obj, const char *emission, const ch
             g_debug("SAVED");
             pipe_write(pipe_handler, EVENT_MODE_LIST);
         }
+    } else if(!strcmp(emission, "delete")) {
+        frame_show(contacts_delete_show, NULL);
+    } else if(!strcmp(emission, "yes")) {
+        // delete = yes
+        ogsmd_sim_delete_entry(
+            "contacts",
+            g_value_get_int(g_value_array_get_nth(tmp_entry, 0)),
+            NULL,
+            NULL
+        );
+        pipe_write(pipe_handler, EVENT_MODE_LIST);
+    } else if(!strcmp(emission, "no")) {
+        // delete = no
+        pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
     } else if(!strcmp(emission, "back")) {
         contacts_mode = MODE_LIST;
         frame_show(contacts_list_show, contacts_list_hide);
@@ -206,7 +220,7 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
 void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
     int *min = g_hash_table_lookup(info, "min_index");
     int *max = g_hash_table_lookup(info, "max_index");
-    // FIXME: Min and main is always 24, but why? Override it!
+    // FIXME: Min and max is always 24, but why? Override it!
 
     free_entry_index = calculate_free_entry_index(1, 150, tmp_entries);
 
@@ -294,6 +308,8 @@ void contacts_modify_hide() {
 }
 
 void contacts_new_show() {
+    kbd_show(KEYBOARD_ALPHA);
+
     edje_object_file_set(edje, UI_FILE, "modify");
     edje_object_part_text_set(edje, "title", "New Contact");
 
@@ -308,8 +324,6 @@ void contacts_new_show() {
     etk_container_add(ETK_CONTAINER(container_name), entry_name);
     etk_widget_show_all(container_name);
     edje_object_part_swallow(edje, "name", etk_embed_object_get(ETK_EMBED(container_name)));
-
-    kbd_show(KEYBOARD_ALPHA);
 }
 
 void contacts_new_hide() {
@@ -320,5 +334,9 @@ void contacts_new_hide() {
     etk_widget_hide_all(container_name);
 
     kbd_hide();
+}
+
+void contacts_delete_show() {
+    edje_object_file_set(edje, UI_FILE, "delete");
 }
 

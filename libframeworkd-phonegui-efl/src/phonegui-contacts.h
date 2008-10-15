@@ -25,6 +25,7 @@ void contacts_modify_show();
 void contacts_modify_hide();
 void contacts_new_show();
 void contacts_new_hide();
+void contacts_delete_show();
 
 #endif
 

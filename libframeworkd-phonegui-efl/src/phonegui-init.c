@@ -30,6 +30,10 @@ void ui_init() {
     ecore_init();
     ecore_evas_init();
     ee = ecore_evas_software_x11_new(NULL, 0, 0, 0, 0, 0);
+    if(ee == NULL) {
+        g_error("Unable to get x11 convas. Try: export DISPLAY=:0.0");
+    }
+
     ecore_evas_title_set(ee, "phonegui");
     ecore_evas_borderless_set(ee, 0);
     ecore_evas_shaped_set(ee, 1);

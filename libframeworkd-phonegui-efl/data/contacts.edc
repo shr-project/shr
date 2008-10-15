@@ -224,7 +224,7 @@ collections {
 	                                 to, "button_options";
 	                     }
 	                     text {
-	                                 text, "Options";
+	                                 text, "More";
 	                                 font, "redensek";
 	                                 size, 25;
 	                                 align, 0.5 0.5;
@@ -486,59 +486,6 @@ collections {
 	    }
 
 
-	    part {
-	           name,   "button_back";
-	           type,   RECT;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           color, 69 69 69 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-		                       relative, 0.33 1.0;
-		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-		                       relative, 0.33 1.0;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_back";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_back";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_back";
-	                     }
-	                     text {
-	                                 text, "Back";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
 
 
 	    part {
@@ -549,11 +496,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.34 0.85;
+		                       relative, 0.0 0.40;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.66 1.0;
+		                       relative, 1.0 0.54;
 		                       offset, 0 0;
 		           }
 	           }
@@ -561,11 +508,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.34 0.85;
+		                       relative, 0.0 0.40;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.66 1.0;
+		                       relative, 1.0 0.54;
 		                       offset, 0 0;
 		           }
 	           }
@@ -599,6 +546,8 @@ collections {
 
 
 
+
+
 	    part {
 	           name,   "button_modify";
 	           type,   RECT;
@@ -607,20 +556,20 @@ collections {
 		           state, "default" 0.0;
 		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.67 0.85;
+		                       relative, 0.0 0.55;
     	           }
 		           rel2 {
-		                       relative, 1.0 1.0;
+		                       relative, 1.0 0.69;
 		           }
 	           }
 	           description {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.67 0.85;
+		                       relative, 0.0 0.55;
     	           }
 		           rel2 {
-		                       relative, 1.0 1.0;
+		                       relative, 1.0 0.69;
 		           }
 	           }
 
@@ -648,6 +597,121 @@ collections {
 	                     }
 	            }
 	    }
+
+
+
+
+
+
+	    part {
+	           name,   "button_delete";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.0 0.7;
+    	           }
+		           rel2 {
+		                       relative, 1.0 0.84;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.0 0.7;
+    	           }
+		           rel2 {
+		                       relative, 1.0 0.84;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_delete";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_delete";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_delete";
+	                     }
+	                     text {
+	                                 text, "Delete";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
+
+
+
+	    part {
+	           name,   "button_back";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.0 0.85;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.0 0.85;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_back";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_back";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_back";
+	                     }
+	                     text {
+	                                 text, "Back";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
 
 
         program {
@@ -714,6 +778,28 @@ collections {
                 source, "button_modify";
                 action, SIGNAL_EMIT "modify" "input";
         }
+
+        program {
+                name, "button_delete_click";
+                signal, "mouse,down,1";
+                source, "button_delete";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_delete";
+        }
+        program {
+                name, "button_delete_unclick";
+                signal, "mouse,up,1";
+                source, "button_delete";
+                action, STATE_SET "default" 0.0;
+                target, "button_delete";
+        }
+        program {
+                name, "button_delete_clicked";
+                signal, "mouse,down,1";
+                source, "button_delete";
+                action, SIGNAL_EMIT "delete" "input";
+        }
+
 
 
 	    }
@@ -1003,6 +1089,223 @@ collections {
 
 	    }
     }
+
+
+
+
+
+
+
+
+
+
+
+    group {
+        name, "delete";
+        parts {
+            part {
+                name,   "background";
+                type,   RECT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    rel1 {
+                        relative, 0.0 0.0;
+                    }
+                    rel2 {
+                        relative, 1.0 1.0;
+                    }
+                    color: 0 0 0 255;
+                }
+            }
+
+
+	    part {
+	           name,   "info";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		           }
+                   rel2 {
+                               relative, 1.0 0.85;
+                               offset, 0 0;
+                   }
+                   text {
+                               text, "Do you really want to delete it?";
+                               font, "redensek";
+                               size, 20;
+                               align, 0.5 0.5;
+                  }
+            }
+	    }
+
+
+	    part {
+	           name,   "button_no";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.0 0.85;
+    	           }
+		           rel2 {
+		                       relative, 0.5 1.0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.0 0.85;
+    	           }
+		           rel2 {
+		                       relative, 0.5 1.0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_no";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_no";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_no";
+	                     }
+	                     text {
+	                                 text, "No";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
+
+
+
+	    part {
+	           name,   "button_yes";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.51 0.85;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.51 0.85;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_yes";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_yes";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_yes";
+	                     }
+	                     text {
+	                                 text, "Yes";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
+
+
+
+
+        program {
+                name, "button_yes_click";
+                signal, "mouse,down,1";
+                source, "button_yes";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_yes";
+        }
+        program {
+                name, "button_yes_unclick";
+                signal, "mouse,up,1";
+                source, "button_yes";
+                action, STATE_SET "default" 0.0;
+                target, "button_yes";
+        }
+        program {
+                name, "button_yes_clicked";
+                signal, "mouse,down,1";
+                source, "button_yes";
+                action, SIGNAL_EMIT "yes" "input";
+        }
+
+
+        program {
+                name, "button_no_click";
+                signal, "mouse,down,1";
+                source, "button_no";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_no";
+        }
+        program {
+                name, "button_no_unclick";
+                signal, "mouse,up,1";
+                source, "button_no";
+                action, STATE_SET "default" 0.0;
+                target, "button_no";
+        }
+        program {
+                name, "button_no_clicked";
+                signal, "mouse,down,1";
+                source, "button_no";
+                action, SIGNAL_EMIT "no" "input";
+        }
+
+
+
+	    }
+    }
+
+
 
 
 
