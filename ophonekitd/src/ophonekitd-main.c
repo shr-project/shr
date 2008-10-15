@@ -30,6 +30,7 @@
 #include <frameworkd-glib/ousaged/frameworkd-glib-ousaged.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-idlenotifier.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
+#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 
 #include "ophonekitd-phonegui.h"
 
