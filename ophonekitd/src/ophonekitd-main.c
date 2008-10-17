@@ -110,11 +110,13 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
     switch(status) {
         case CALL_STATUS_INCOMING:
             g_debug("incoming call");
+            active_calls++;
             phonegui_incoming_call_show(call_id, status, number);
             incoming_call_active = TRUE;
             break;
         case CALL_STATUS_OUTGOING:
             g_debug("outgoing call");
+            active_calls++;
             phonegui_outgoing_call_show(call_id, status, number);
             outgoing_call_active = TRUE;
             break;
@@ -137,7 +139,6 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
         case CALL_STATUS_HELD:
             break;
         case CALL_STATUS_ACTIVE:
-            active_calls++;
             break;
         default:
             g_error("Unknown CallStatus");
