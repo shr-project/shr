@@ -11,4 +11,9 @@ void phonegui_incoming_call_hide(const int id_call);
 void incoming_call_event(int event);
 void incoming_call_input(void *data, Evas_Object *o, const char *emission, const char *source);
 
+void incoming_call_main_show();
+void incoming_call_accepted_show();
+void incoming_call_dtmf_show();
+void incoming_call_dtmf_hide();
+
 #endif

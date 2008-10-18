@@ -35,11 +35,10 @@ AC_SUBST(edje_cc)
 
 
 # output stuff
-AC_CONFIG_FILES([
+AC_OUTPUT([
 Makefile
 data/Makefile
 src/Makefile
 libframeworkd-phonegui-efl.pc
 ])
 
-AC_OUTPUT

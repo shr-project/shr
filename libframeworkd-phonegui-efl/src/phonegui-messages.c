@@ -50,6 +50,7 @@ static GPtrArray *tmp_messages;
 static char *tmp_number;
 static char *tmp_content;
 static char *tmp_status;
+static char *tmp_date;
 
 void phonegui_messages_show(int argc, char** argv) {
     g_debug("phonegui_messages_show()");
@@ -146,6 +147,10 @@ void retrieve_message_callback(GError *error, char *status, char *number, char *
     tmp_status = strdup(status);
     tmp_number = strdup(number);
     tmp_content = strdup(content);
+
+    // FIXME: Does not work
+    //tmp_date = strdup(g_hash_table_lookup(properties, "timestamp"));
+
     pipe_write(pipe_handler, EVENT_MODE_MESSAGE);
 }
 
@@ -255,6 +260,7 @@ void messages_message_show() {
     edje_object_part_text_set(edje, "message_show_status", tmp_status);
     edje_object_part_text_set(edje, "message_show_number", tmp_number);
     edje_object_part_text_set(edje, "message_show_content", tmp_content);
+    edje_object_part_text_set(edje, "message_show_date", tmp_date);
 }
 
 void messages_loading_show() {

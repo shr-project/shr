@@ -50,8 +50,7 @@ void ui_init() {
     evas_object_resize(edje, 480, 600);
     evas_object_show(edje);
     // ecore_evas_resize(ee, (int) edje_w, (int) edje_h);
-
-    edje_object_signal_callback_add(edje, "*", "input", ui_input, "data");
+    edje_object_signal_callback_add(edje, "*", "input", ui_input, NULL);
 
     Ecore_Fd_Handler *handler = ecore_main_fd_handler_add(pipe_handler.input, ECORE_FD_READ, ui_event, NULL, NULL, NULL);
     ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);

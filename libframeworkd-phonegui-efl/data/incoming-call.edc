@@ -247,24 +247,24 @@ collections {
 
 
     group {
-        name, "incoming_call_accepted";
+        name, "accepted";
         parts {
             part {
-            name,   "background";
-            type,   RECT;
-            mouse_events, 0;
-            description {
-                state, "default" 0.0;
-                rel1 {
-                    relative, 0.0 0.0;
-                    offset, 0 0;
+                name,   "background";
+                type,   RECT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    rel1 {
+                        relative, 0.0 0.0;
+                        offset, 0 0;
+                    }
+                    rel2 {
+                        relative, 1.0 1.0;
+                        offset, 0 0;
+                    }
+                    color: 0 0 0 255;
                 }
-                rel2 {
-                    relative, 1.0 1.0;
-                    offset, 0 0;
-                }
-                color: 0 0 0 255;
-            }
             }
 
 	        part {
@@ -322,24 +322,20 @@ collections {
 		           state, "default" 0.0;
 		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.25 0.5;
-		                       offset, 0 0;
+	                       relative, 0.0 0.85;
 		           }
 		           rel2 {
-		                       relative, 0.75 0.7;
-		                       offset, 0 0;
+	                       relative, 0.5 1.0;
 		           }
 	           }
 	           description {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.25 0.5;
-		                       offset, 0 0;
+	                       relative, 0.0 0.85;
 		           }
 		           rel2 {
-		                       relative, 0.75 0.7;
-		                       offset, 0 0;
+	                       relative, 0.5 1.0;
 		           }
 	           }
 
@@ -353,23 +349,72 @@ collections {
 		           state, "default" 0.0;
 		           rel1 {
 		                       relative, 0.0 0.0;
-		                       offset, 0 0;
 		                       to, "button_release";
 		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_release";
-	                     }
-	                     text {
-	                                 text, "Hang up";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
+                     rel2 {
+                             relative, 1.0 1.0;
+                             to, "button_release";
+                     }
+                     text {
+                             text, "Release";
+                             font, "redensek";
+                             size, 25;
+                             align, 0.5 0.5;
+                     }
 	            }
 	    }
 
+
+
+	    part {
+	           name,   "button_dtmf_show";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+	                       relative, 0.51 0.85;
+		           }
+		           rel2 {
+	                       relative, 1.0 1.0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+	                       relative, 0.51 0.85;
+		           }
+		           rel2 {
+	                       relative, 1.0 1.0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_dtmf_show";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       to, "button_dtmf_show";
+		           }
+                     rel2 {
+                             relative, 1.0 1.0;
+                             to, "button_dtmf_show";
+                     }
+                     text {
+                             text, "Show Pad";
+                             font, "redensek";
+                             size, 25;
+                             align, 0.5 0.5;
+                     }
+	            }
+	    }
 
     }
 
@@ -396,7 +441,258 @@ collections {
                 source, "button_release";
                 action, SIGNAL_EMIT "release" "input";
         }
+
+        program {
+                name, "button_dtmf_show_click";
+                signal, "mouse,down,1";
+                source, "button_dtmf_show";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_dtmf_show";
+        }
+        program {
+                name, "button_dtmf_show_unclick";
+                signal, "mouse,up,1";
+                source, "button_dtmf_show";
+                action, STATE_SET "default" 0.0;
+                target, "button_dtmf_show";
+        }
+        program {
+                name, "button_dtmf_show_clicked";
+                signal, "mouse,down,1";
+                source, "button_dtmf_show";
+                action, SIGNAL_EMIT "dtmf_show" "input";
+        }
     }
+    }
+
+
+
+
+
+
+
+
+    group {
+        name, "dtmf";
+        parts {
+
+            part {
+                name,   "background";
+                type,   RECT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    rel1 {
+                        relative, 0.0 0.0;
+                    }
+                    rel2 {
+                        relative, 1.0 1.0;
+                    }
+                   color: 0 0 0 255;
+                }
+            }
+
+	    part {
+	           name,   "title";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		           }
+                   rel2 {
+                               relative, 1.0 0.1;
+                   }
+                   text {
+                               text, "Active Call!";
+                               font, "redensek";
+                               size, 25;
+                               align, 0.5 0.5;
+                  }
+            }
+	    }
+
+
+	    part {
+	           name,   "swallow";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.15;
+		           }
+                   rel2 {
+                               relative, 1.0 0.84;
+                   }
+            }
+	    }
+
+
+
+
+	    part {
+	           name,   "button_dtmf_hide";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.0 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.49 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.0 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.49 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_dtmf_hide";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_dtmf_hide";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_dtmf_hide";
+	                     }
+	                     text {
+	                                 text, "Hide Pad";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
+
+
+	    part {
+	           name,   "button_release";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+		                       relative, 0.5 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.5 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_release";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_release";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_release";
+	                     }
+	                     text {
+	                                 text, "Release";
+	                                 font, "redensek";
+	                                 size, 25;
+	                                 align, 0.5 0.5;
+	                     }
+	            }
+	    }
+
+
+        program {
+                name, "button_release_click";
+                signal, "mouse,down,1";
+                source, "button_release";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_release";
+        }
+        program {
+                name, "button_release_unclick";
+                signal, "mouse,up,1";
+                source, "button_release";
+                action, STATE_SET "default" 0.0;
+                target, "button_release";
+        }
+        program {
+                name, "button_release_clicked";
+                signal, "mouse,down,1";
+                source, "button_release";
+                action, SIGNAL_EMIT "release" "input";
+        }
+
+        program {
+                name, "button_dtmf_hide_click";
+                signal, "mouse,down,1";
+                source, "button_dtmf_hide";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_dtmf_hide";
+        }
+        program {
+                name, "button_dtmf_hide_unclick";
+                signal, "mouse,up,1";
+                source, "button_dtmf_hide";
+                action, STATE_SET "default" 0.0;
+                target, "button_dtmf_hide";
+        }
+        program {
+                name, "button_dtmf_hide_clicked";
+                signal, "mouse,down,1";
+                source, "button_dtmf_hide";
+                action, SIGNAL_EMIT "dtmf_hide" "input";
+        }
+
+    }
+  }
+
 
 
 
