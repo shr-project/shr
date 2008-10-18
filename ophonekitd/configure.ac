@@ -10,17 +10,8 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
-# base deps TODO
-PKG_CHECK_MODULES(FRAMEWORKD_GLIB,
-                  libframeworkd-glib,
-		  [],
-		  [AC_MSG_FAILURE([libframeworkd-glib not found])]
-		 )
-PKG_CHECK_MODULES(DBUS_GLIB,
-                  dbus-glib-1,
-                  [],
-                  [AC_MSG_FAILURE([dbus-glib not found])]
-                 )
+PKG_CHECK_MODULES(FRAMEWORKD_GLIB, libframeworkd-glib)
+PKG_CHECK_MODULES(DBUS_GLIB, dbus-glib-1)
 PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
 
 AC_SUBST(DBUS_GLIB_CFLAGS)
@@ -30,8 +21,8 @@ AC_SUBST(FRAMEWORKD_GLIB_LIBS)
 AC_SUBST(FRAMEWORKD_PHONEGUI_CFLAGS)
 AC_SUBST(FRAMEWORKD_PHONEGUI_LIBS)
 
-# output stuff
 AC_OUTPUT([
 Makefile
 src/Makefile
 ])
+

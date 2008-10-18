@@ -1,3 +1,5 @@
+MAINTAINERCLEANFILES = Makefile.in
+
 AM_CPPFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 
 AM_CFLAGS = -Wall \
