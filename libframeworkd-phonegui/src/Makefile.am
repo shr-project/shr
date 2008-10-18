@@ -1,3 +1,5 @@
+MAINTAINERCLEANFILES = Makefile.in
+
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 AM_CFLAGS = -Wall @PHONEGUI_CFLAGS@
