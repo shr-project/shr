@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     /* Load, connect and initiate phonegui */
     phonegui_load(CONFIG_FILE);
     phonegui_connect();
-    phonegui_init(argc, argv);
+    phonegui_init(argc, argv, NULL);
     phonegui_contacts_show();
 
     /* Initiate and start glib main loop */

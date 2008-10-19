@@ -1,3 +1,5 @@
+MAINTAINERCLEANFILES = Makefile.in
+
 INCLUDES = -I$(top_srcdir)/libhito
 
 AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" \
