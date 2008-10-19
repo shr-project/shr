@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     /* Load, connect and initiate phonegui */
     phonegui_load("openmoko-dialer3");
     phonegui_connect();
-    phonegui_init(argc, argv);
+    phonegui_init(argc, argv, NULL);
     phonegui_dialer_show();
 
     /* Initiate and start glib main loop */
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
     g_type_init();
     mainloop = g_main_loop_new (NULL, FALSE);
     g_debug("Entering glib main loop");
-    g_main_loop_run (mainloop);
+    g_main_loop_run(mainloop);
 
     return EXIT_SUCCESS;
 }
@@ -54,4 +54,5 @@ void connect_to_frameworkd() {
     fwHandler.deviceIdleNotifierState = NULL;
     dbus_connect_to_bus(&fwHandler);
 }
+
 

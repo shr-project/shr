@@ -1,3 +1,6 @@
+MAINTAINERCLEANFILES = Makefile.in
+
+
 #
 # desktop integration: .desktop file
 #
