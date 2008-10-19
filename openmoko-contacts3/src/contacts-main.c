@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     /* Load, connect and initiate phonegui */
     phonegui_load(CONFIG_FILE);
     phonegui_connect();
-    phonegui_init(argc, argv, NULL);
+    phonegui_init(argc, argv, exit_callback);
     phonegui_contacts_show();
 
     /* Initiate and start glib main loop */
@@ -56,3 +56,6 @@ void connect_to_frameworkd() {
     dbus_connect_to_bus(&fwHandler);
 }
 
+void exit_callback() {
+    exit(EXIT_SUCCESS);
+}
