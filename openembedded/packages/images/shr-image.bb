@@ -22,7 +22,8 @@ BASE_INSTALL = "\
 # multiple xserver packages
 XSERVER ?= "xserver-kdrive-fbdev"
 
-ILLUME_INSTALL = "\
+# getting an X window system up
+X_INSTALL = "\
   e-wm \
   illume \
   illume-config-illume \
@@ -31,11 +32,6 @@ ILLUME_INSTALL = "\
   illume-keyboards-numbers \
   illume-keyboards-terminal \
   illume-theme-freesmartphone \
-"
-
-# getting an X window system up
-X_INSTALL = "\
-  ${ILLUME_INSTALL} \
   ${XSERVER} \
   xserver-kdrive-common \
   xserver-nodm-init \
@@ -49,6 +45,11 @@ X_INSTALL = "\
   ttf-dejavu-common \
   ttf-dejavu-sans \
   ttf-dejavu-serif \
+  \
+"
+
+X_INSTALL_append_om-gta02 = "\
+  ttf-arphic-uming \
   \
 "
 
