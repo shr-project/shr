@@ -18,7 +18,7 @@
 
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
 
-void (*phonegui_init)(int argc, char **argv);
+void (*phonegui_init)(int argc, char **argv, void (*exit_cb)());
 void (*phonegui_messages_show)();
 
 void phonegui_connect();

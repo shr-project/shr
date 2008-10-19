@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     /* Load, connect and initiate phonegui */
     phonegui_load("openmoko-messages3");
     phonegui_connect();
-    phonegui_init(argc, argv);
+    phonegui_init(argc, argv, NULL);
     phonegui_messages_show();
 
     /* Initiate and start glib main loop */
