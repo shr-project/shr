@@ -74,6 +74,11 @@ GType moko_talking_get_type (void) G_GNUC_CONST;
 
 GtkWidget* moko_talking_new ();
 
+void phonegui_incoming_call_show(const int id_call, const int status, const char *number);
+void phonegui_incoming_call_hide(const int id_call);
+void phonegui_outgoing_call_show(const int id, const int status, const char *number);
+void phonegui_outgoing_call_hide(const int id);
+
 void
 moko_talking_incoming_call (MokoTalking      *talking, 
                             const gchar      *number,

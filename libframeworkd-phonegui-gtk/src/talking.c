@@ -94,7 +94,11 @@ enum
 
 static MokoTalking* mokoTalkingUI = NULL;
 
-void phonegui_display_call_UI(const int id_call, const int status, const char *number) {
+void phonegui_outgoing_call_show(const int id, const int status, const char *number) {
+	phonegui_incoming_call_show(id, status, number);
+}
+
+void phonegui_incoming_call_show(const int id_call, const int status, const char *number) {
 	MokoContactEntry *entry = NULL;
 	int show_gui = 0;
 
@@ -124,11 +128,15 @@ void phonegui_display_call_UI(const int id_call, const int status, const char *n
 	}
 }
 
-void phonegui_destroy_call_UI(const int id_call) {
+void phonegui_outgoing_call_hide(const int id) {
+	phonegui_incoming_call_hide(id); 
+}
+
+void phonegui_incoming_call_hide(const int id_call) {
 	if (mokoTalkingUI != NULL)
 	    moko_talking_hide_window (mokoTalkingUI);
 	else
-		g_debug("phonegui_destroy_call_UI should not be called when mokoTalkingUI==NULL");
+		g_debug("phonegui_incoming/outgoing_call_hide should not be called when mokoTalkingUI==NULL");
 
     return;
 }

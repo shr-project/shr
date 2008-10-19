@@ -22,7 +22,6 @@
 #include <frameworkd-glib/frameworkd-glib-sim.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include "pin.h"
-#include <frameworkd-glib/frameworkd-glib-phonegui.h>
 
 static gboolean is_sim_code_gui_active = FALSE;
 static int code_to_ask = 0;
@@ -67,8 +66,9 @@ on_pad_user_input (MokoDialerPanel *panel, const gchar digit, MokoPinData *data)
         moko_dialer_textview_insert (MOKO_DIALER_TEXTVIEW (data->display), "*");
 }
 
-void phonegui_display_pin_UI (const int initial_status) {
-        code_to_ask = initial_status;
+
+void phonegui_sim_auth_show (const int status) {
+        code_to_ask = status;
 
         /* First, let's check if we have anything to do here */
         if (is_sim_code_gui_active)
@@ -181,8 +181,7 @@ sim_pin_puk_callback (GError *error, gpointer userdata)
         }
 }
 
-        void
-phonegui_destroy_pin_UI ()
+void phonegui_sim_auth_hide(const int status)
 {
         /* Now we can close the window */
         gtk_widget_destroy (staticData.dialog);

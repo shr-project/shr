@@ -23,6 +23,8 @@ typedef struct
         gchar *code;
 } MokoPinData;
 
+void phonegui_sim_auth_show(const int status);
+void phonegui_sim_auth_hide(const int status);
 
 static void
 on_pad_user_input (MokoDialerPanel *panel, const gchar digit,
