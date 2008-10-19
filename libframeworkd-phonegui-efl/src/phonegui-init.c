@@ -8,10 +8,11 @@
 #include <glib-2.0/glib-object.h>
 
 
-void phonegui_init(int argc, char **argv) {
+void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
     g_debug("phonegui_init()");
     phonegui_argc = argc;
     phonegui_argv = argv;
+    phonegui_exit_cb = exit_cb;
 
     // Create pipe
     pipe_handler = pipe_create();
@@ -29,9 +30,15 @@ void ui_init() {
 
     ecore_init();
     ecore_evas_init();
+
+    if(phonegui_exit_cb != NULL) {
+        g_debug("Added exit callback to ecore.");
+        ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, phonegui_exit_cb, NULL);
+    }
+
     ee = ecore_evas_software_x11_new(NULL, 0, 0, 0, 0, 0);
     if(ee == NULL) {
-        g_error("Unable to get x11 convas. Try: export DISPLAY=:0.0");
+        g_error("Unable to get x11 convas. Try:\n\nexport DISPLAY=:0.0");
     }
 
     ecore_evas_title_set(ee, "phonegui");
@@ -58,8 +65,6 @@ void ui_init() {
     g_debug("entering loop");
     ecore_main_loop_begin();
     g_debug("quit loop");
-
-    exit(0);
 }
 
 void ui_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
@@ -83,12 +88,9 @@ int ui_event(void *data, Ecore_Fd_Handler *fdh) {
 }
 
 static void ui_resize_callback(Evas *ev) {
-    g_debug("RESIZE CALLBACK!");
     int w, h;
     evas_object_move(ee, 0, 0);
     evas_output_size_get(ecore_evas_get(ev), &w, &h);
-    g_debug("w: %d, h: %d", w, h);
     evas_object_resize(edje, w, h);
-    //ecore_evas_resize(ee, w, h);
 }
 

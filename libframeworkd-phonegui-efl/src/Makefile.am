@@ -1,12 +1,13 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-AM_CPPFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
-AM_CFLAGS = -Wall @PHONEGUI_CFLAGS@
-AM_LDFLAGS = $(all_libraries) -lpthread @PHONEGUI_LIBS@ @GLIB_LIBS@ @EVAS_LIBS@ @ECORE_EVAS_LIBS@ @EDJE_LIBS@ @ECORE_LIBS@ @ETK_LIBS@
+AM_CPPFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @GLIB_CFLAGS@
+# AM_CFLAGS = -Wall @LIBFRAMEWORKD_GLIB_CFLAGS@ @E_CFLAGS@ -lpthread 
+# AM_LDFLAGS = $(all_libraries) @LIBFRAMEWORKD_GLIB_LIBS@ @GLIB_LIBS@ @E_LIBS@ -lpthread
 
 lib_LTLIBRARIES = libframeworkd-phonegui-efl.la
 
-libframeworkd_phonegui_efl_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
+libframeworkd_phonegui_efl_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @GLIB_LIBS@ @E_LIBS@ -lpthread
+libframeworkd_phonegui_efl_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 
 libframeworkd_phonegui_efl_la_SOURCES = \
 	phonegui-dialer.h phonegui-init.h phonegui-messages.c phonegui-outgoing-call.h \

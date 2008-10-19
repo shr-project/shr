@@ -17,16 +17,17 @@ typedef enum {
     MODE_LIST,
     MODE_MESSAGE,
     MODE_NEW1,
-    MODE_NEW2
+    MODE_NEW2,
+    MODE_DELETE
 } MessagesModes;
 
 typedef enum {
     EVENT_SHOW,
     EVENT_MODE_FOLDERS,
     EVENT_MODE_LIST,
-    EVENT_MODE_LIST_CACHED,
     EVENT_MODE_MESSAGE,
-    EVENT_HIDE
+    EVENT_HIDE,
+    EVENT_LIST_CACHED
 } MessagesEvents;
 
 
@@ -47,6 +48,7 @@ static char *messages_category;
 
 // TODO: Remove tmp variables
 static GPtrArray *tmp_messages;
+static int tmp_id;
 static char *tmp_number;
 static char *tmp_content;
 static char *tmp_status;
@@ -80,7 +82,7 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
                 frame_show(messages_loading_show, NULL);
 
                 messages_category = etk_tree_row_data_get(row);
-                pipe_write(pipe_handler, EVENT_MODE_LIST);
+                pipe_write(pipe_handler, EVENT_LIST_CACHED);
             }
         } else if(messages_mode == MODE_LIST) {
             Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
@@ -92,13 +94,28 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
                 ogsmd_sim_retrieve_message(*id, retrieve_message_callback, NULL);
             }
         }
+    } else if(!strcmp(emission, "delete")) {
+        Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
+        if(row != NULL) {
+            int *id = etk_tree_row_data_get(row);
+            tmp_id = *id;
+
+            messages_mode = MODE_DELETE;
+            frame_show(messages_delete_show, NULL);
+        }
+    } else if(!strcmp(emission, "yes")) {
+        frame_show(messages_loading_show, NULL);
+        ogsmd_sim_delete_message(tmp_id, delete_message_callback, NULL);
+    } else if(!strcmp(emission, "no")) {
+        messages_mode = MODE_LIST;
+        pipe_write(pipe_handler, EVENT_LIST_CACHED);
     } else if(!strcmp(emission, "back")) {
-        if(messages_mode == MODE_MESSAGE) {
+        if(messages_mode == MODE_MESSAGE || messages_mode == MODE_DELETE) {
             messages_mode = MODE_LIST;
-            pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
+            pipe_write(pipe_handler, EVENT_LIST_CACHED);
         } else if(messages_mode == MODE_LIST || messages_mode == MODE_NEW1) {
             messages_mode = MODE_FOLDERS;
-            pipe_write(pipe_handler, EVENT_MODE_FOLDERS);
+            pipe_write(pipe_handler, EVENT_LIST_CACHED);
         } else if(messages_mode == MODE_NEW2) {
             messages_mode = MODE_NEW1;
             frame_show(messages_new1_show, messages_new1_hide);
@@ -114,7 +131,16 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
             frame_show(messages_new2_show, messages_new2_hide);
         } else if(messages_mode == MODE_NEW2) {
             frame_show(messages_loading_show, NULL);
-            
+
+            char *number = etk_entry_text_get(number_entry);
+
+            Etk_Textblock *textblock = etk_text_view_textblock_get(content_text_view);
+            char *content = etk_string_get(etk_textblock_text_get(textblock, ETK_FALSE));
+
+            g_debug("Sending to %s:\n%s", number, content);
+
+            // TOD: Add setting to enable SMS reports
+            ogsmd_sms_send_message(strdup(number), strdup(content), ETK_FALSE, send_message_callback, NULL);
         }
     } else {
         g_error("Unknown input");
@@ -136,7 +162,7 @@ void process_message(GValueArray *message) {
 void retrieve_messagebook_callback(GError*error, GPtrArray*messages, gpointer userdata) {
     g_debug("retrieve messagebook callback");
     tmp_messages = messages;
-    pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
+    pipe_write(pipe_handler, EVENT_LIST_CACHED);
 }
 
 
@@ -154,6 +180,17 @@ void retrieve_message_callback(GError *error, char *status, char *number, char *
     pipe_write(pipe_handler, EVENT_MODE_MESSAGE);
 }
 
+void delete_message_callback(GError *error, gpointer userdata) {
+    messages_mode = MODE_LIST;
+    pipe_write(pipe_handler, EVENT_MODE_LIST);
+}
+
+void send_message_callback(GError *error, int transaction_index, gpointer userdata) {
+    messages_mode = MODE_LIST;
+    pipe_write(pipe_handler, EVENT_LIST_CACHED);
+}
+
+
 void messages_event(int event) {
     g_debug("messages_event()");
     g_debug("Event: %d", event);
@@ -161,48 +198,20 @@ void messages_event(int event) {
     if(event == EVENT_SHOW) {
         ecore_evas_show(ee);
     } else if(event == EVENT_MODE_FOLDERS) {
-        frame_show(messages_folders_show, messages_folders_hide);
+        edje_object_file_set(edje, UI_FILE, "loading");
+        ogsmd_sim_retrieve_messagebook("read", retrieve_messagebook_callback, NULL);
     } else if(event == EVENT_MODE_MESSAGE) {
         frame_show(messages_message_show, NULL);
     } else if(event == EVENT_MODE_LIST) {
-        g_debug("inbox");
         edje_object_file_set(edje, UI_FILE, "loading");
-
-        // this caches the list and emits EVENT_MODE_LIST_CACHED
         ogsmd_sim_retrieve_messagebook("read", retrieve_messagebook_callback, NULL);
-    } else if(event == EVENT_MODE_LIST_CACHED) {
-
-        edje_object_file_set(edje, UI_FILE, "list");
-        if(!strcmp(messages_category, "inbox")) {
-            edje_object_part_text_set(edje, "title", "Inbox"); 
+    } else if(event == EVENT_LIST_CACHED) {
+        if(messages_mode == MODE_FOLDERS) {
+            frame_show(messages_folders_show, messages_folders_hide);
         } else {
-            edje_object_part_text_set(edje, "title", "Outbox");     
+            frame_show(messages_list_show, messages_list_hide);
         }
-
-        tree = etk_tree_new();
-        etk_tree_rows_height_set(ETK_TREE(tree), 80);
-        etk_tree_mode_set(ETK_TREE(tree), ETK_TREE_MODE_LIST);
-        etk_tree_headers_visible_set(ETK_TREE(tree), ETK_FALSE);
-        etk_tree_multiple_select_set(ETK_TREE(tree), ETK_FALSE);
-
-        col1 = etk_tree_col_new(ETK_TREE(tree), "Title", 300, 0.0);
-        etk_tree_col_model_add(col1, etk_tree_model_edje_new(UI_FILE, "message_row"));
-        etk_tree_build(ETK_TREE(tree));
-
-        Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree));
-        etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
-        etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
-        etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
-
-        g_ptr_array_foreach(tmp_messages, process_message, NULL);
-
-        container = etk_embed_new(evas);
-        etk_container_add(ETK_CONTAINER(container), tree);
-        etk_widget_show_all(container);
-
-        edje_object_part_swallow(edje, "swallow", etk_embed_object_get(ETK_EMBED(container)));
     } else if(event == EVENT_HIDE) {
-        g_debug("hide");
         ecore_evas_hide(ee);
     } else {
         g_error("Unknown event %d", event);
@@ -230,18 +239,22 @@ void messages_folders_show() {
 
 
     // Example entry inbox
+    char label[32];
+    sprintf(label, "%d messages", tmp_messages->len);
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("name"), strdup("Inbox"));
-    g_hash_table_insert(parameters, strdup("info"), strdup("16 messages"));
+    g_hash_table_insert(parameters, strdup("info"), strdup(label));
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree), NULL, col1, parameters, NULL);
     etk_tree_row_data_set(row, strdup("Inbox"));
 
     // Example entry outbox
+    /*
     parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("name"), strdup("Outbox"));
     g_hash_table_insert(parameters, strdup("info"), strdup("0 messages"));
     row = etk_tree_row_append(ETK_TREE(tree), NULL, col1, parameters, NULL);
     etk_tree_row_data_set(row, strdup("Outbox"));
+    */
 
 
     container = etk_embed_new(evas);
@@ -251,6 +264,39 @@ void messages_folders_show() {
 }
 
 void messages_folders_hide() {
+    edje_object_part_unswallow(edje, container);
+    etk_widget_hide_all(container);
+}
+
+void messages_list_show() {
+    edje_object_file_set(edje, UI_FILE, "list");
+    edje_object_part_text_set(edje, "title", "Inbox"); 
+
+    tree = etk_tree_new();
+    etk_tree_rows_height_set(ETK_TREE(tree), 80);
+    etk_tree_mode_set(ETK_TREE(tree), ETK_TREE_MODE_LIST);
+    etk_tree_headers_visible_set(ETK_TREE(tree), ETK_FALSE);
+    etk_tree_multiple_select_set(ETK_TREE(tree), ETK_FALSE);
+
+    col1 = etk_tree_col_new(ETK_TREE(tree), "Title", 300, 0.0);
+    etk_tree_col_model_add(col1, etk_tree_model_edje_new(UI_FILE, "message_row"));
+    etk_tree_build(ETK_TREE(tree));
+
+    Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree));
+    etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
+    etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
+    etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
+
+    g_ptr_array_foreach(tmp_messages, process_message, NULL);
+
+    container = etk_embed_new(evas);
+    etk_container_add(ETK_CONTAINER(container), tree);
+    etk_widget_show_all(container);
+
+    edje_object_part_swallow(edje, "swallow", etk_embed_object_get(ETK_EMBED(container)));
+}
+
+void messages_list_hide() {
     edje_object_part_unswallow(edje, container);
     etk_widget_hide_all(container);
 }
@@ -308,5 +354,9 @@ void messages_new2_hide() {
     etk_widget_hide_all(container_number);
 
     kbd_hide();
+}
+
+void messages_delete_show() {
+    edje_object_file_set(edje, UI_FILE, "delete");
 }
 
