@@ -37,6 +37,7 @@
 gboolean sim_auth_active = FALSE;
 gboolean incoming_call_active = FALSE;
 gboolean outgoing_call_active = FALSE;
+gboolean incoming_message_active = FALSE;
 int active_calls = 0;
 int *incoming_calls= NULL;
 int incoming_calls_size = 0;
@@ -48,7 +49,7 @@ int main(int argc, char ** argv) {
     /* Load, connect and initiate phonegui library */
     phonegui_load("ophonekitd");
     phonegui_connect();
-    phonegui_init(argc, argv);
+    phonegui_init(argc, argv, exit_callback);
     g_debug("Phonegui initiated");
 
     /* Register dbus handlers */
@@ -201,13 +202,16 @@ void ophonekitd_sim_auth_status_handler(const int status) {
         ogsmd_network_register(register_to_network_callback, NULL);
     } else {
         g_debug("sim not ready");
-        phonegui_sim_auth_show(status);
+        if(!sim_auth_active) {
+            phonegui_sim_auth_show(status);
+        }
     }
 }
 
 
 void ophonekitd_sim_incoming_stored_message_handler(const int id) {
     g_debug("ophonekitd_sim_incoming_stored_message_handler()");
+    incoming_message_active = TRUE;
     phonegui_message_show(id);
 }
 
@@ -256,6 +260,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
     } else {   
         /* FIXME: Remove this when frameworkd code is ready */
         g_debug("request resource error, try again in 5s");
+        g_error("error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         g_timeout_add(5000, list_resources, NULL);
     }
 }
@@ -305,3 +310,14 @@ void register_to_network_callback(GError *error, gpointer userdata) {
         /* TODO */
     }
 }
+
+int exit_callback(void *data, int type, void *event) {
+    /* called on ctrl-c, kill $pid, SIGINT, SIGTERM and SIGQIT */
+    g_debug("exit_callback()");
+    if(incoming_message_active) {
+        g_debug("incoming_message_active = TRUE");
+        phonegui_message_hide();
+    }
+    return 0;
+}
+

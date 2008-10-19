@@ -18,7 +18,7 @@
 
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
 
-void (*phonegui_init)();
+void (*phonegui_init)(int argc, char **argv, void (*exit_cb)());
 void (*phonegui_sim_auth_show)();
 void (*phonegui_sim_auth_hide)();
 void (*phonegui_incoming_call_show)();
