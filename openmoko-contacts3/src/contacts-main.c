@@ -57,5 +57,6 @@ void connect_to_frameworkd() {
 }
 
 void exit_callback() {
+    g_debug("exit_callback()");
     exit(EXIT_SUCCESS);
 }

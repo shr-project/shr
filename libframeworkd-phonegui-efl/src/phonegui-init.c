@@ -41,7 +41,7 @@ void ui_init() {
         g_error("Unable to get x11 convas. Try:\n\nexport DISPLAY=:0.0");
     }
 
-    ecore_evas_title_set(ee, "phonegui");
+    ecore_evas_title_set(ee, phonegui_argv[0]);
     ecore_evas_borderless_set(ee, 0);
     ecore_evas_shaped_set(ee, 1);
     ecore_evas_callback_resize_set(ee, ui_resize_callback);
@@ -49,8 +49,10 @@ void ui_init() {
     evas = ecore_evas_get(ee);
 
     etk_init(phonegui_argc, phonegui_argv);
+    g_debug("Initiated etk");
 
     edje_init();
+    g_debug("Initiated edje");
     edje = edje_object_add(evas);
     evas_object_move(edje, 0, 0);
     //edje_object_size_min_get(edje, &edje_w, &edje_h);

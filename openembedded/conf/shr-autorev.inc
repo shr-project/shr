@@ -1,7 +1,0 @@
-SRCREV_pn-libframeworkd-glib = "${AUTOREV}"
-SRCREV_pn-ophonekitd = "${AUTOREV}"
-SRCREV_pn-openmoko-messages3 = "${AUTOREV}"
-SRCREV_pn-openmoko-contacts3 = "${AUTOREV}"
-SRCREV_pn-openmoko-dialer3 = "${AUTOREV}"
-SRCREV_pn-libframeworkd-phonegui-efl = "${AUTOREV}"
-SRCREV_pn-libframeworkd-phonegui = "${AUTOREV}"

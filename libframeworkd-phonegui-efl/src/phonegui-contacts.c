@@ -57,7 +57,9 @@ void phonegui_contacts_show() {
 
     contacts_mode = MODE_LIST;
     pipe_write(pipe_handler, EVENT_MODE_LIST);
+    g_debug("sent event mode list");
     pipe_write(pipe_handler, EVENT_SHOW);
+    g_debug("sent event show");
 }
 
 void phonegui_contacts_hide() {
