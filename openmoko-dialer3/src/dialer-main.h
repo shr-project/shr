@@ -1,8 +1,6 @@
 /*
  *  Copyright (C) 2008
  *      Authors (alphabetical) :
- *              Julien Cassignol <ainulindale@gmail.com>
- *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -18,8 +16,11 @@
 #ifndef _DIALER_MAIN_H
 #define _DIALER_MAIN_H
 
+#include <dbus/dbus-glib.h>
+
 int main(int argc, char **argv);
 void connect_to_frameworkd();
 void exit_callback();
+gboolean start();
 
 #endif
