@@ -77,12 +77,10 @@ int main(int argc, char ** argv) {
 
 
 void ophonekitd_call_add_incoming_call(int id) {
-    if(ophonekitd_call_check_incoming_call(id) == -1) {
-        incoming_calls_size++;
-        active_calls++;
-        incoming_calls = realloc(incoming_calls, sizeof(int)*incoming_calls_size);
-        incoming_calls[incoming_calls_size-1] = id;
-    }
+    incoming_calls_size++;
+    active_calls++;
+    incoming_calls = realloc(incoming_calls, sizeof(int)*incoming_calls_size);
+    incoming_calls[incoming_calls_size-1] = id;
 }
 
 int ophonekitd_call_check_incoming_call(int id) {
@@ -149,8 +147,10 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
     switch(status) {
         case CALL_STATUS_INCOMING:
             g_debug("incoming call");
-            ophonekitd_call_add_incoming_call(call_id);
-            phonegui_incoming_call_show(call_id, status, number);
+            if(ophonekitd_call_check_incoming_call(call_id) == -1) {
+                ophonekitd_call_add_incoming_call(call_id);
+                phonegui_incoming_call_show(call_id, status, number);
+            }
             incoming_call_active = TRUE;  
             break;
         case CALL_STATUS_OUTGOING:
