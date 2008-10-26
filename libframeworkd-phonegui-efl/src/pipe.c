@@ -23,17 +23,21 @@ PipeHandler pipe_create() {
     return h;
 }
 
-int pipe_read(PipeHandler h) {
-    int r, event;
-    r = read(h.input, &event, sizeof(event));
+PipeMessage* pipe_read(PipeHandler h) {
+    int r;
+    PipeMessage *m = malloc(sizeof(PipeMessage));
+    r = read(h.input, m, sizeof(PipeMessage));
     if(r == -1)
         return -1;
     else
-        return event;
+        return m;
 }
 
-void pipe_write(PipeHandler h, int event) {
-    write(h.output, &event, sizeof(event));
+void pipe_write(PipeHandler h, void (*callback)(int event), int event) {
+    PipeMessage m;
+    m.callback = callback;
+    m.event = event;
+    write(h.output, &m, sizeof(m));
 }
 
 

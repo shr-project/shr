@@ -18,5 +18,6 @@
 void phonegui_connect() {
     phonegui_init = phonegui_get_function("phonegui_init");
     phonegui_contacts_show = phonegui_get_function("phonegui_contacts_show");
+    phonegui_contacts_hide = phonegui_get_function("phonegui_contacts_hide");
 }
 

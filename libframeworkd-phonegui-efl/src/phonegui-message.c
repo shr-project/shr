@@ -21,15 +21,13 @@ enum MessageEvents {
 
 void phonegui_message_show(const int id) {
     g_debug("phonegui_message_show()");
-    phonegui_input_callback = message_input;
-    phonegui_event_callback = message_event;
     tmp_id = id;
-    pipe_write(pipe_handler, EVENT_SHOW);
+    pipe_write(pipe_handler, message_event, EVENT_SHOW);
 }
 
 void phonegui_message_hide() {
     g_debug("phonegui_message_hide()");
-    pipe_write(pipe_handler, EVENT_HIDE);
+    pipe_write(pipe_handler, message_event, EVENT_HIDE);
 }
 
 
@@ -60,6 +58,6 @@ void retrieve_callback(GError *error, char *status, char *number, char *content,
     tmp_number = strdup(number);
     tmp_content = strdup(content);
     tmp_properties = properties; // TODO: copy
-    pipe_write(pipe_handler, EVENT_MODE_MESSAGE);
+    pipe_write(pipe_handler, message_event, EVENT_MODE_MESSAGE);
 }
 

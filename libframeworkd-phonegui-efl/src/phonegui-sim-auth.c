@@ -18,6 +18,7 @@ enum SimAuthModes {
 };
 
 enum SimAuthEvents {
+    EVENT_CREATE,
     EVENT_MODE_PIN,
     EVENT_MODE_PUK,
     EVENT_PIN_CORRECT,
@@ -44,15 +45,14 @@ static int  pin_confirm_length = 0;
 
 void phonegui_sim_auth_show(const int status) {
     g_debug("phonegui_sim_auth_show()");
-    phonegui_input_callback = sim_auth_input;
-    phonegui_event_callback = sim_auth_event;
+    pipe_write(pipe_handler, sim_auth_event, EVENT_CREATE);
 
     if(status == SIM_PIN_REQUIRED) {
         mode = MODE_PIN;
-        pipe_write(pipe_handler, EVENT_MODE_PIN);
+        pipe_write(pipe_handler, sim_auth_event, EVENT_MODE_PIN);
     } else if(status == SIM_PUK_REQUIRED) {
         mode = MODE_PUK;
-        pipe_write(pipe_handler, EVENT_MODE_PUK);
+        pipe_write(pipe_handler, sim_auth_event, EVENT_MODE_PUK);
     } else {
         g_error("Unknown sim auth status: %d", status);
     }
@@ -62,24 +62,30 @@ void phonegui_sim_auth_hide(const int status) {
     g_debug("phonegui_sim_auth_hide");
 
     if(mode == MODE_PIN) {
-        pipe_write(pipe_handler, EVENT_PIN_CORRECT);
+        pipe_write(pipe_handler, sim_auth_event, EVENT_PIN_CORRECT);
     } else {
-        pipe_write(pipe_handler, EVENT_PUK_CORRECT);
+        pipe_write(pipe_handler, sim_auth_event, EVENT_PUK_CORRECT);
     }
 
     sleep(1);    
-    pipe_write(pipe_handler, EVENT_HIDE);
+    pipe_write(pipe_handler, sim_auth_event, EVENT_HIDE);
 }
 
 
-
+void sim_auth_delete(Ecore_Evas *ee) {
+    g_debug("sim_auth_delete");
+    pipe_write(pipe_handler, sim_auth_event, EVENT_HIDE);
+}
 
 
 void sim_auth_event(int event) {
     g_debug("sim_auth_event()");
     g_debug("signal: %d", event);
 
-    if(event == EVENT_MODE_PIN) {
+    if(event == EVENT_CREATE) {
+        g_debug("create");
+        window_create("SIM Authentication", sim_auth_input, sim_auth_event, sim_auth_delete);
+    } else if(event == EVENT_MODE_PIN) {
         g_debug("pin mode");
         edje_object_file_set(edje, UI_FILE, "sim_auth_input");
         edje_object_part_text_set(edje, "instruction", "Enter PIN:"); 
@@ -209,7 +215,7 @@ void pin_callback(GError* error, gpointer data) {
     if(error != NULL) {
         g_debug("error");
         if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
-            pipe_write(pipe_handler, EVENT_PIN_WRONG);
+            pipe_write(pipe_handler, sim_auth_event, EVENT_PIN_WRONG);
             vibrator_enable();
             sleep(2);
             vibrator_disable();
@@ -227,11 +233,11 @@ void puk_callback(GError* error, gpointer data) {
         g_debug("error code: %d %s %s", error->code, error->message, g_quark_to_string(error->domain));
         if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
             mode = MODE_PUK;
-            pipe_write(pipe_handler, EVENT_PUK_WRONG);
+            pipe_write(pipe_handler, sim_auth_event, EVENT_PUK_WRONG);
             vibrator_enable();
             sleep(2);
             vibrator_disable();
-            pipe_write(pipe_handler, EVENT_MODE_PUK);
+            pipe_write(pipe_handler, sim_auth_event, EVENT_MODE_PUK);
         }
     }
 }
@@ -252,10 +258,10 @@ void sim_auth_callback(GError *error, int status, gpointer userdata) {
     g_debug("sim_auth_callback()");
     if(status == SIM_PIN_REQUIRED) {
         mode = MODE_PIN;
-        pipe_write(pipe_handler, EVENT_MODE_PIN);
+        pipe_write(pipe_handler, sim_auth_event, EVENT_MODE_PIN);
     } else if(status == SIM_PUK_REQUIRED) {
         mode = MODE_PUK;
-        pipe_write(pipe_handler, EVENT_MODE_PUK);
+        pipe_write(pipe_handler, sim_auth_event, EVENT_MODE_PUK);
     } else {
         g_error("Unhandled sim auth status: %d", status);
     }

@@ -20,13 +20,12 @@ enum DialerEvents {
 
 void phonegui_dialer_show() {
     g_debug("phonegui_dialer_show()");
-    phonegui_input_callback = dialer_input;
-    phonegui_event_callback = dialer_event;
-    pipe_write(pipe_handler, EVENT_SHOW);
+    pipe_write(pipe_handler, dialer_event, EVENT_SHOW);
 }
 
 void phonegui_dialer_hide() {
     g_debug("phonegui_dialer_hide()");
+    pipe_write(pipe_handler, dialer_event, EVENT_HIDE);
 }
 
 
@@ -51,6 +50,7 @@ void dialer_input(void *data, Evas_Object *obj, const char *emission, const char
 void dialer_event(int event) {
     g_debug("dialer_event()");
     if(event == EVENT_SHOW) {
+        window_create("Dialer", dialer_input, dialer_event, NULL);
         edje_object_file_set(edje, UI_FILE, "main");
         ecore_evas_show(ee);
     }

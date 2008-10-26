@@ -18,8 +18,7 @@ BASE_INSTALL = "\
   gsm0710muxd \
 "
 # Some machines don't set a *runtime* provider for X, so default to Xfbdev here
-# virtual/xserver won't work, since the kdrive recipes will build
-# multiple xserver packages
+# virtual/xserver won't work, since the kdrive recipes will build multiple xserver packages
 XSERVER ?= "xserver-kdrive-fbdev"
 
 # getting an X window system up
@@ -84,13 +83,14 @@ AUDIO_INSTALL = "\
 "
 
 GTK_INSTALL = "\
-  hicolor-icon-theme \
-  openmoko-theme-standard2 \
-  openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
   openmoko-terminal2 \
   gpe-scap \
   tangogps \
+"
+
+GAMES_INSTALL = "\
+  numptyphysics \
 "
 
 # FIXME these should rather be part of alsa-state,
@@ -112,7 +112,6 @@ PYTHON_INSTALL = "\
 # SHR
 SHR_INSTALL = "\
   frameworkd \
-  libhito \
   libframeworkd-glib \
   openmoko-dialer3 \
   openmoko-messages3 \
@@ -127,6 +126,7 @@ IMAGE_INSTALL = "\
   ${BASE_INSTALL} \
   ${X_INSTALL} \
   ${GTK_INSTALL} \
+  ${GAMES_INSTALL} \
   ${AUDIO_INSTALL} \
   ${TOOLS_INSTALL} \
   ${PYTHON_INSTALL} \
@@ -135,7 +135,7 @@ IMAGE_INSTALL = "\
 
 inherit image
 
-# perform some FSO convenience tweaks to the rootfs
+# perform some convenience tweaks to the rootfs
 fso_rootfs_postprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}

@@ -33,16 +33,22 @@ int main(int argc, char **argv) {
     phonegui_load(CONFIG_FILE);
     phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
-    phonegui_contacts_show();
 
-    /* Initiate and start glib main loop */
+    /* Initialize glib main loop */
     GMainLoop *mainloop = NULL;
     g_type_init();
     mainloop = g_main_loop_new(NULL, FALSE);
-    g_debug("Entering glib main loop");
+
+    /* Enter glib main loop and start ui */
+    g_timeout_add(0, start, NULL);
     g_main_loop_run(mainloop);
 
     return EXIT_SUCCESS;
+}
+
+gboolean start() {
+    phonegui_contacts_show();
+    return FALSE;
 }
 
 void connect_to_frameworkd() {
@@ -58,5 +64,7 @@ void connect_to_frameworkd() {
 
 void exit_callback() {
     g_debug("exit_callback()");
+    phonegui_contacts_hide();
     exit(EXIT_SUCCESS);
 }
+

@@ -52,17 +52,14 @@ static int free_entry_index = -1;
 
 void phonegui_contacts_show() {
     g_debug("phonegui_contacts_show()");
-    phonegui_input_callback = contacts_input;
-    phonegui_event_callback = contacts_event;
 
     contacts_mode = MODE_LIST;
-    pipe_write(pipe_handler, EVENT_MODE_LIST);
-    g_debug("sent event mode list");
-    pipe_write(pipe_handler, EVENT_SHOW);
-    g_debug("sent event show");
+    pipe_write(pipe_handler, contacts_event, EVENT_SHOW);
+    pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST);
 }
 
 void phonegui_contacts_hide() {
+    pipe_write(pipe_handler, contacts_event, EVENT_HIDE);
 }
 
 
@@ -110,7 +107,7 @@ void contacts_input(void *data, Evas_Object *obj, const char *emission, const ch
                 );
             }
             g_debug("SAVED");
-            pipe_write(pipe_handler, EVENT_MODE_LIST);
+            pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST);
         }
     } else if(!strcmp(emission, "delete")) {
         frame_show(contacts_delete_show, NULL);
@@ -122,10 +119,10 @@ void contacts_input(void *data, Evas_Object *obj, const char *emission, const ch
             NULL,
             NULL
         );
-        pipe_write(pipe_handler, EVENT_MODE_LIST);
+        pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST);
     } else if(!strcmp(emission, "no")) {
         // delete = no
-        pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
+        pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED);
     } else if(!strcmp(emission, "back")) {
         contacts_mode = MODE_LIST;
         frame_show(contacts_list_show, contacts_list_hide);
@@ -135,13 +132,15 @@ void contacts_input(void *data, Evas_Object *obj, const char *emission, const ch
 }
 
 
+
 void contacts_event(int event) {
     g_debug("contacts_event(), event: %d", event);
 
     if(event == EVENT_SHOW) {
-        ecore_evas_show(ee);
+        window_create("Contacts", contacts_input, contacts_event, NULL);
     } else if(event == EVENT_MODE_LIST) {
         frame_show(contacts_loading_show, NULL);
+        ecore_evas_show(ee);
         ogsmd_sim_retrieve_phonebook("contacts", retrieve_phonebook_callback, NULL);
     } else if(event == EVENT_MODE_LIST_CACHED) {
         frame_show(contacts_list_show, contacts_list_hide);
@@ -169,7 +168,7 @@ void contacts_event(int event) {
 void retrieve_phonebook_callback(GError *error, GPtrArray *entries, gpointer userdata) {
     g_debug("retrieve phonebook callback");
     tmp_entries = entries;
-    pipe_write(pipe_handler, EVENT_MODE_LIST_CACHED);
+    pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED);
 }
 
 
@@ -222,11 +221,11 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
 void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
     int *min = g_hash_table_lookup(info, "min_index");
     int *max = g_hash_table_lookup(info, "max_index");
-    // FIXME: Min and max is always 24, but why? Override it!
+    // FIXME: Min and max is always 24, but why? Work around this bug!
 
     free_entry_index = calculate_free_entry_index(1, 150, tmp_entries);
 
-    pipe_write(pipe_handler, EVENT_NEW_SAVE);
+    pipe_write(pipe_handler, contacts_event, EVENT_NEW_SAVE);
 }
 
 gint compare_entries(GValueArray **a, GValueArray **b) {

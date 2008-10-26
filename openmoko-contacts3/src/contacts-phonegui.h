@@ -20,6 +20,7 @@
 
 void (*phonegui_init)(int argc, char **argv, void (*exit_cb)());
 void (*phonegui_contacts_show)();
+void (*phonegui_contacts_hide)();
 
 void phonegui_connect();
 

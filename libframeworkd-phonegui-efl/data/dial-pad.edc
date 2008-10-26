@@ -43,31 +43,6 @@ collections {
 
 
 
-	    part {
-	           name,   "number";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		           }
-	                     rel2 {
-	                                 relative, 1.0 0.2;
-	                                 offset, 0 0;
-	                     }
-	                     text {
-	                                 text, "";
-	                                 font, "redensek";
-	                                 size, 50;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
 
     /* first row */
 	    part {
@@ -78,11 +53,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0 0.21;
+		                       relative, 0 0.0;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 0.4;
+		                       relative, 0.32 0.245;
 		                       offset, 0 0;
 		           }
 	           }
@@ -90,11 +65,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0 0.21;
+		                       relative, 0 0.0;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 0.4;
+		                       relative, 0.32 0.245;
 		                       offset, 0 0;
 		           }
 	           }
@@ -107,11 +82,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.255 0.21;
+		                       relative, 0.33 0.0;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 0.4;
+		                       relative, 0.66 0.245;
 		                       offset, 0 0;
 		           }
 	           }
@@ -119,11 +94,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.255 0.21;
+		                       relative, 0.33 0.0;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 0.4;
+		                       relative, 0.66 0.245;
 		                       offset, 0 0;
 		           }
 	           }
@@ -137,11 +112,11 @@ collections {
 		           align, 1.0 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.505 0.21;
+		                       relative, 0.67 0.0;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 0.4;
+		                       relative, 1.0 0.245;
 		                       offset, 0 0;
 		           }
 	           }
@@ -150,11 +125,11 @@ collections {
 		           align, 0.5 0.5;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.505 0.21;
+		                       relative, 0.67 0.0;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 0.4;
+		                       relative, 1.0 0.245;
 		                       offset, 0 0;
 		           }
 	           }
@@ -245,11 +220,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0 0.41;
+		                       relative, 0 0.255;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 0.6;
+		                       relative, 0.32 0.495;
 		                       offset, 0 0;
 		           }
 	           }
@@ -257,11 +232,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0 0.41;
+		                       relative, 0 0.255;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 0.6;
+		                       relative, 0.32 0.495;
 		                       offset, 0 0;
 		           }
 	           }
@@ -274,11 +249,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.255 0.41;
+		                       relative, 0.33 0.255;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 0.6;
+		                       relative, 0.66 0.495;
 		                       offset, 0 0;
 		           }
 	           }
@@ -286,11 +261,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.255 0.41;
+		                       relative, 0.33 0.255;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 0.6;
+		                       relative, 0.66 0.495;
 		                       offset, 0 0;
 		           }
 	           }
@@ -303,11 +278,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.505 0.41;
+		                       relative, 0.67 0.255;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 0.6;
+		                       relative, 1.0 0.495;
 		                       offset, 0 0;
 		           }
 	           }
@@ -315,11 +290,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.505 0.41;
+		                       relative, 0.67 0.255;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 0.6;
+		                       relative, 1.0 0.495;
 		                       offset, 0 0;
 		           }
 	           }
@@ -410,11 +385,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0 0.61;
+		                       relative, 0 0.505;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 0.8;
+		                       relative, 0.32 0.745;
 		                       offset, 0 0;
 		           }
 	           }
@@ -422,11 +397,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0 0.61;
+		                       relative, 0 0.505;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 0.8;
+		                       relative, 0.32 0.745;
 		                       offset, 0 0;
 		           }
 	           }
@@ -439,11 +414,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.255 0.61;
+		                       relative, 0.33 0.505;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 0.8;
+		                       relative, 0.66 0.745;
 		                       offset, 0 0;
 		           }
 	           }
@@ -451,11 +426,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.255 0.61;
+		                       relative, 0.33 0.505;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 0.8;
+		                       relative, 0.66 0.745;
 		                       offset, 0 0;
 		           }
 	           }
@@ -468,11 +443,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.505 0.61;
+		                       relative, 0.67 0.505;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 0.8;
+		                       relative, 1.0 0.745;
 		                       offset, 0 0;
 		           }
 	           }
@@ -480,11 +455,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.505 0.61;
+		                       relative, 0.67 0.505;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 0.8;
+		                       relative, 1.0 0.745;
 		                       offset, 0 0;
 		           }
 	           }
@@ -572,11 +547,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0 0.81;
+		                       relative, 0.0 0.755;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 1.0;
+		                       relative, 0.32 1.0;
 		                       offset, 0 0;
 		           }
 	           }
@@ -584,11 +559,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0 0.81;
+		                       relative, 0.0 0.755;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.245 1.0;
+		                       relative, 0.32 1.0;
 		                       offset, 0 0;
 		           }
 	           }
@@ -601,11 +576,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.255 0.81;
+		                       relative, 0.33 0.755;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 1.0;
+		                       relative, 0.66 1.0;
 		                       offset, 0 0;
 		           }
 	           }
@@ -613,11 +588,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.255 0.81;
+		                       relative, 0.33 0.755;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.495 1.0;
+		                       relative, 0.66 1.0;
 		                       offset, 0 0;
 		           }
 	           }
@@ -630,11 +605,11 @@ collections {
 		           state, "default" 0.0;
 		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.505 0.81;
+		                       relative, 0.67 0.755;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 1.0;
+		                       relative, 1.0 1.0;
 		                       offset, 0 0;
 		           }
 	           }
@@ -642,11 +617,11 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-		                       relative, 0.505 0.81;
+		                       relative, 0.67 0.755;
 		                       offset, 0 0;
 		           }
 		           rel2 {
-		                       relative, 0.745 1.0;
+		                       relative, 1.0 1.0;
 		                       offset, 0 0;
 		           }
 	           }

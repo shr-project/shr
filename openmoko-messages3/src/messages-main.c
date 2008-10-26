@@ -31,16 +31,22 @@ int main(int argc, char **argv) {
     phonegui_load("openmoko-messages3");
     phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
-    phonegui_messages_show();
 
-    /* Initiate and start glib main loop */
+    /* Initiate glib main loop */
     GMainLoop *mainloop = NULL;
     g_type_init();
     mainloop = g_main_loop_new (NULL, FALSE);
-    g_debug("Entering glib main loop");
-    g_main_loop_run (mainloop);
+
+    /* Run glib main loop and start ui */
+    g_timeout_add(0, start, NULL);
+    g_main_loop_run(mainloop);
 
     return EXIT_SUCCESS;
+}
+
+gboolean start() {
+    phonegui_messages_show();
+    return FALSE;
 }
 
 void connect_to_frameworkd() {

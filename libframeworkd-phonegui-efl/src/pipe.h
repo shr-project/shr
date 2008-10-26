@@ -8,9 +8,14 @@ typedef struct {
     int output;
 } PipeHandler;
 
+typedef struct {
+    void (*callback)(int event);
+    int event;
+} PipeMessage;
+
 
 PipeHandler pipe_create();
-int pipe_read(PipeHandler h);
-void pipe_write(PipeHandler h, int data);
+PipeMessage* pipe_read(PipeHandler h);
+void pipe_write(PipeHandler h, void (*event_cb)(int event), int data);
 
 #endif

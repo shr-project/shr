@@ -68,6 +68,9 @@ int main(int argc, char ** argv) {
     g_debug("Entering glib main loop");
 
     /* Start glib main loop and run list_resources() */
+    if(argc > 1 && !strcmp(argv[1], "sms")) {
+        g_timeout_add(0, incs, NULL);
+    }
     g_timeout_add(0, list_resources, NULL);
     g_main_loop_run(mainloop);
 

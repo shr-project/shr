@@ -19,12 +19,9 @@ Evas_Object  *edje;
 double       edje_w, edje_h;
 
 void phonegui_init(int argc, char **argv, void (*exit_cb)());
-void ui_init();
-void ui_input(void *data, Evas_Object *obj, const char *emission, const char *source);
-int  ui_event(void *data, Ecore_Fd_Handler *fdh);
-static void ui_resize_callback(Evas *evas);
+int event_callback(void *data, Ecore_Fd_Handler *fdh);
 
-void (*phonegui_input_callback)(void *data, Evas_Object *obj, const char *emission, const char *source);
-void (*phonegui_event_callback)(int event);
+void window_create();
+void window_resize_callback(Evas *ev);
 
 #endif

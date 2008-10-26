@@ -56,12 +56,10 @@ static char *tmp_date;
 
 void phonegui_messages_show(int argc, char** argv) {
     g_debug("phonegui_messages_show()");
-    phonegui_input_callback = messages_input;
-    phonegui_event_callback = messages_event;
 
     messages_mode = MODE_FOLDERS;
-    pipe_write(pipe_handler, EVENT_MODE_FOLDERS);
-    pipe_write(pipe_handler, EVENT_SHOW);
+    pipe_write(pipe_handler, messages_event, EVENT_SHOW);
+    pipe_write(pipe_handler, messages_event, EVENT_MODE_FOLDERS);
 }
 
 void phonegui_messages_hide() {
@@ -82,7 +80,7 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
                 frame_show(messages_loading_show, NULL);
 
                 messages_category = etk_tree_row_data_get(row);
-                pipe_write(pipe_handler, EVENT_LIST_CACHED);
+                pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
             }
         } else if(messages_mode == MODE_LIST) {
             Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
@@ -108,14 +106,14 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
         ogsmd_sim_delete_message(tmp_id, delete_message_callback, NULL);
     } else if(!strcmp(emission, "no")) {
         messages_mode = MODE_LIST;
-        pipe_write(pipe_handler, EVENT_LIST_CACHED);
+        pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
     } else if(!strcmp(emission, "back")) {
         if(messages_mode == MODE_MESSAGE || messages_mode == MODE_DELETE) {
             messages_mode = MODE_LIST;
-            pipe_write(pipe_handler, EVENT_LIST_CACHED);
+            pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
         } else if(messages_mode == MODE_LIST || messages_mode == MODE_NEW1) {
             messages_mode = MODE_FOLDERS;
-            pipe_write(pipe_handler, EVENT_LIST_CACHED);
+            pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
         } else if(messages_mode == MODE_NEW2) {
             messages_mode = MODE_NEW1;
             frame_show(messages_new1_show, messages_new1_hide);
@@ -140,7 +138,9 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
             g_debug("Sending to %s:\n%s", number, content);
 
             // TOD: Add setting to enable SMS reports
-            ogsmd_sms_send_message(strdup(number), strdup(content), ETK_FALSE, send_message_callback, NULL);
+            GHashTable *properties;
+            properties = g_hash_table_new(NULL, NULL);
+            ogsmd_sms_send_message(strdup(number), strdup(content), properties, send_message_callback, NULL);
         }
     } else {
         g_error("Unknown input");
@@ -162,7 +162,7 @@ void process_message(GValueArray *message) {
 void retrieve_messagebook_callback(GError*error, GPtrArray*messages, gpointer userdata) {
     g_debug("retrieve messagebook callback");
     tmp_messages = messages;
-    pipe_write(pipe_handler, EVENT_LIST_CACHED);
+    pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
 }
 
 
@@ -177,17 +177,17 @@ void retrieve_message_callback(GError *error, char *status, char *number, char *
     // FIXME: Does not work
     //tmp_date = strdup(g_hash_table_lookup(properties, "timestamp"));
 
-    pipe_write(pipe_handler, EVENT_MODE_MESSAGE);
+    pipe_write(pipe_handler, messages_event, EVENT_MODE_MESSAGE);
 }
 
 void delete_message_callback(GError *error, gpointer userdata) {
     messages_mode = MODE_LIST;
-    pipe_write(pipe_handler, EVENT_MODE_LIST);
+    pipe_write(pipe_handler, messages_event, EVENT_MODE_LIST);
 }
 
 void send_message_callback(GError *error, int transaction_index, gpointer userdata) {
     messages_mode = MODE_LIST;
-    pipe_write(pipe_handler, EVENT_LIST_CACHED);
+    pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
 }
 
 
@@ -196,6 +196,7 @@ void messages_event(int event) {
     g_debug("Event: %d", event);
 
     if(event == EVENT_SHOW) {
+        window_create("Messages", messages_input, messages_event, NULL);
         ecore_evas_show(ee);
     } else if(event == EVENT_MODE_FOLDERS) {
         edje_object_file_set(edje, UI_FILE, "loading");

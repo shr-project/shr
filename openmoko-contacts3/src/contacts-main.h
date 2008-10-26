@@ -16,8 +16,11 @@
 #ifndef _MESSAGES_MAIN_H
 #define _MESSAGES_MAIN_H
 
+#include <dbus/dbus-glib.h>
+
 int main(int argc, char **argv);
 void connect_to_frameworkd();
 void exit_callback();
+gboolean start();
 
 #endif
