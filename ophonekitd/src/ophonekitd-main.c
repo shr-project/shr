@@ -62,24 +62,19 @@ int main(int argc, char ** argv) {
     dbus_connect_to_bus(&fwHandler);
     g_debug("Connected to the buses");
 
-    /*
-     * list_resources() is asynchronous and will detach immediately.
-     * Every 5 seconds, we fetch the resource list in
-     * order to know wether GSM is available.
-     * This is needed for frameworkd startup. GSM is
-     * not available immediately!
-     */
-    list_resources();
-
-    /* Initiate and start glib main loop */
+    /* Initiate glib main loop */
     g_type_init();
     mainloop = g_main_loop_new (NULL, FALSE);
     g_debug("Entering glib main loop");
-    g_main_loop_run (mainloop);
+
+    /* Start glib main loop and run list_resources() */
+    g_timeout_add(0, list_resources, NULL);
+    g_main_loop_run(mainloop);
 
     free(incoming_calls);
     exit(EXIT_SUCCESS);
 }
+
 
 void ophonekitd_call_add_incoming_call(int id) {
     if(ophonekitd_call_check_incoming_call(id) == -1) {
@@ -203,6 +198,7 @@ void ophonekitd_sim_auth_status_handler(const int status) {
     } else {
         g_debug("sim not ready");
         if(!sim_auth_active) {
+            sim_auth_active = TRUE;
             phonegui_sim_auth_show(status);
         }
     }
@@ -275,7 +271,10 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
              * This auth status query is needed for startup when
              * there's no auth status signal emitted
              */
-            ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
+            if(!sim_auth_active) {
+                sim_auth_active = TRUE;
+                ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
+            }
 
         } else if(IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
             g_error("SIM card not present.");
@@ -288,16 +287,17 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
 void sim_auth_status_callback(GError *error, int status, gpointer userdata) {
     g_debug("sim_auth_status_callback()");
 
-    if(sim_auth_active == TRUE) {
+    if(sim_auth_active) {
+        sim_auth_active = FALSE;
         phonegui_sim_auth_hide(status);
     }
 
     if(status == SIM_READY) {
         ogsmd_network_register(register_to_network_callback, NULL);
     } else {
-        if(sim_auth_active == FALSE) {
-            phonegui_sim_auth_show(status);
+        if(!sim_auth_active) {
             sim_auth_active = TRUE;
+            phonegui_sim_auth_show(status);
         }
     }
 }
