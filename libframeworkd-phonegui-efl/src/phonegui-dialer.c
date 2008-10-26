@@ -36,10 +36,12 @@ void dialer_input(void *data, Evas_Object *obj, const char *emission, const char
         g_debug("initiate call");
         ogsmd_call_initiate(number, "voice", dialer_call_initiate_callback, NULL);
     } else if(!strcmp(emission, "options")) {
-    } else if(!strcmp(emission, "delete") && number_length > 0) {
-        number_length--;
-        number[number_length] = '\0';
-        dialer_update();
+    } else if(!strcmp(emission, "delete")) {
+        if(number_length > 0) {
+            number_length--;
+            number[number_length] = '\0';
+            dialer_update();
+        }
     } else if(number_length < 64) {
         strncat(number, emission, 1);
         number_length++;
