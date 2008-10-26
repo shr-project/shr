@@ -3,7 +3,7 @@ SECTION = "openmoko/pim"
 PKG_TAGS_${PN} = "group::communication"
 DEPENDS += " dbus-glib libframeworkd-glib etk evas ecore edje edje-native"
 PV = "0.0.1+${PR}-svnr${SRCREV}"
-PR = "r18"
+PR = "r19"
 
 inherit shr pkgconfig autotools
 
