@@ -35,11 +35,16 @@ void message_input(void *data, Evas_Object *obj, const char *emission, const cha
     g_debug("message_input()");
 }
 
+void message_delete(Ecore_Evas *ee) {
+    g_debug("message_delete()");
+    pipe_write(pipe_handler, message_event, EVENT_HIDE);
+}
+
 void message_event(int event) {
     g_debug("message_event()");
 
     if(event == EVENT_SHOW) {
-        window_create("New SMS", message_input, message_event, NULL);
+        window_create("New SMS", message_input, message_event, message_delete);
         edje_object_file_set(edje, UI_FILE, "message");
         ecore_evas_show(ee);
         ogsmd_sim_retrieve_message(tmp_id, retrieve_callback, NULL);
@@ -52,7 +57,6 @@ void message_event(int event) {
         g_error("Unknown event");
     }
 }
-
 
 void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer userdata) {
     g_debug("retrieve_callback()");

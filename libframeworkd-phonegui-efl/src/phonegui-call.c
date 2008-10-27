@@ -84,7 +84,7 @@ void call_input(void *data, Evas_Object *o, const char *emission, const char *so
 }
 
 void call_delete(Ecore_Evas *ee) {
-    g_debug("incoming_call_delete");
+    g_debug("call_delete()");
     pipe_write(pipe_handler, call_event, EVENT_HIDE);
 }
 
@@ -121,6 +121,7 @@ void call_active_show() {
 }
 
 void call_dtmf_show() {
+    g_debug("call_dtmf_show()");
     edje_object_file_set(edje, CALL_UI_FILE, "dtmf"); // takes the wole screen and has a swallow part
 
     pad = edje_object_add(evas); // edje object that should be swallowed
@@ -130,7 +131,7 @@ void call_dtmf_show() {
 }
 
 void call_dtmf_hide() {
-    g_debug("CALLING DTMF HIDEE");
+    g_debug("call_dtmf_hide()");
     edje_object_part_unswallow(edje, pad);
     evas_object_hide(pad);
     edje_object_signal_callback_del(pad, "*", "input", call_input);
