@@ -62,7 +62,7 @@ collections {
                                  offset, 0 0;
                      }
                      text {
-                                 text, "SMS received";
+                                 text, "Receiving SMS";
                                  font, "redensek";
                                  size, 45;
                                  align, 0.5 0.5;
@@ -87,7 +87,7 @@ collections {
                                  offset, 0 0;
                      }
                      text {
-                                 text, "Outbox";
+                                 text, "";
                                  font, "redensek";
                                  size, 35;
                                  align, 0.5 0.5;

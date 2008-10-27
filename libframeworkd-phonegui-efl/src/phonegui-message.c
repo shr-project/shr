@@ -39,6 +39,7 @@ void message_event(int event) {
     g_debug("message_event()");
 
     if(event == EVENT_SHOW) {
+        window_create("New SMS", message_input, message_event, NULL);
         edje_object_file_set(edje, UI_FILE, "message");
         ecore_evas_show(ee);
         ogsmd_sim_retrieve_message(tmp_id, retrieve_callback, NULL);
