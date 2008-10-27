@@ -18,7 +18,11 @@ void call_event(int event);
 
 void call_incoming_show();
 void call_active_show();
-void call_dtmf_show();
-void call_dtmf_hide();
+void call_active_hide();
+
+void dtmf_enable();
+void dtmf_disable();
+void speaker_enable();
+void speaker_disable();
 
 #endif

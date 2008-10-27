@@ -275,14 +275,14 @@ collections {
                            offset, 0 0;
                     }
                     rel2 {
-                           relative, 1.0 0.85;
+                           relative, 1.0 0.1;
                            offset, 0 0;
                     }
                     text {
                            text, "Call is active";
                            font, "redensek";
                            size, 50;
-                           align, 0.5 0.4;
+                           align, 0.5 0.5;
                     }
                 }
 	        }
@@ -294,21 +294,40 @@ collections {
                 description {
                     state, "default" 0.0;
                     rel1 {
-                           relative, 0.0 0.0;
+                           relative, 0.0 0.1;
                            offset, 0 0;
                     }
                     rel2 {
-                           relative, 1.0 0.85;
+                           relative, 1.0 0.2;
                            offset, 0 0;
                     }
                     text {
                            text, "";
                            font, "redensek";
                            size, 35;
-                           align, 0.5 0.6;
+                           align, 0.5 0.5;
                     }
                 }
 	        }
+
+
+
+	    part {
+	           name,   "swallow";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.2;
+		           }
+                   rel2 {
+                               relative, 1.0 0.84;
+                   }
+            }
+	    }
+
+
 
 
 	    part {
@@ -322,7 +341,7 @@ collections {
 	                       relative, 0.0 0.85;
 		           }
 		           rel2 {
-	                       relative, 0.5 1.0;
+	                       relative, 0.32 1.0;
 		           }
 	           }
 	           description {
@@ -332,7 +351,7 @@ collections {
 	                       relative, 0.0 0.85;
 		           }
 		           rel2 {
-	                       relative, 0.5 1.0;
+	                       relative, 0.32 1.0;
 		           }
 	           }
 
@@ -363,15 +382,69 @@ collections {
 
 
 
+
 	    part {
-	           name,   "button_dtmf_show";
+	           name,   "button_speaker";
 	           type,   RECT;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           color, 69 69 69 255;
 		           rel1 {
-	                       relative, 0.51 0.85;
+	                       relative, 0.33 0.85;
+		           }
+		           rel2 {
+	                       relative, 0.66 1.0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+	                       relative, 0.33 0.85;
+		           }
+		           rel2 {
+	                       relative, 0.66 1.0;
+		           }
+	           }
+
+	    }
+
+	    part {
+	           name,   "text_speaker";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       to, "button_speaker";
+		           }
+                     rel2 {
+                             relative, 1.0 1.0;
+                             to, "button_speaker";
+                     }
+                     text {
+                             text, "Speaker";
+                             font, "redensek";
+                             size, 25;
+                             align, 0.5 0.5;
+                     }
+	            }
+	    }
+
+
+
+
+	    part {
+	           name,   "button_dtmf";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 69 69 69 255;
+		           rel1 {
+	                       relative, 0.67 0.85;
 		           }
 		           rel2 {
 	                       relative, 1.0 1.0;
@@ -381,7 +454,7 @@ collections {
 		           state, "clicked" 0.0;
 		           color, 255 255 255 255;
 		           rel1 {
-	                       relative, 0.51 0.85;
+	                       relative, 0.67 0.85;
 		           }
 		           rel2 {
 	                       relative, 1.0 1.0;
@@ -391,18 +464,18 @@ collections {
 	    }
 
 	    part {
-	           name,   "text_dtmf_show";
+	           name,   "text_dtmf";
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
 		                       relative, 0.0 0.0;
-		                       to, "button_dtmf_show";
+		                       to, "button_dtmf";
 		           }
                      rel2 {
                              relative, 1.0 1.0;
-                             to, "button_dtmf_show";
+                             to, "button_dtmf";
                      }
                      text {
                              text, "Show Pad";
@@ -439,253 +512,50 @@ collections {
                 action, SIGNAL_EMIT "release" "input";
         }
 
+
         program {
-                name, "button_dtmf_show_click";
+                name, "button_speaker_click";
                 signal, "mouse,down,1";
-                source, "button_dtmf_show";
+                source, "button_speaker";
                 action, STATE_SET "clicked" 0.0;
-                target, "button_dtmf_show";
+                target, "button_speaker";
         }
         program {
-                name, "button_dtmf_show_unclick";
+                name, "button_speaker_unclick";
                 signal, "mouse,up,1";
-                source, "button_dtmf_show";
+                source, "button_speaker";
                 action, STATE_SET "default" 0.0;
-                target, "button_dtmf_show";
+                target, "button_speaker";
         }
         program {
-                name, "button_dtmf_show_clicked";
+                name, "button_speaker_clicked";
                 signal, "mouse,down,1";
-                source, "button_dtmf_show";
-                action, SIGNAL_EMIT "dtmf_show" "input";
+                source, "button_speaker";
+                action, SIGNAL_EMIT "speaker" "input";
+        }
+
+        program {
+                name, "button_dtmf_click";
+                signal, "mouse,down,1";
+                source, "button_dtmf";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_dtmf";
+        }
+        program {
+                name, "button_dtmf_unclick";
+                signal, "mouse,up,1";
+                source, "button_dtmf";
+                action, STATE_SET "default" 0.0;
+                target, "button_dtmf";
+        }
+        program {
+                name, "button_dtmf_clicked";
+                signal, "mouse,down,1";
+                source, "button_dtmf";
+                action, SIGNAL_EMIT "dtmf" "input";
         }
     }
     }
-
-
-
-
-
-
-
-
-    group {
-        name, "dtmf";
-        parts {
-
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                    }
-                   color: 0 0 0 255;
-                }
-            }
-
-	        part {
-                name,   "text";
-                type,   TEXT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                           relative, 0.0 0.0;
-                           offset, 0 0;
-                    }
-                    rel2 {
-                           relative, 1.0 0.1;
-                           offset, 0 0;
-                    }
-                    text {
-                           text, "Call is active";
-                           font, "redensek";
-                           size, 40;
-                           align, 0.5 0.5;
-                    }
-                }
-	        }
-
-
-	    part {
-	           name,   "swallow";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.15;
-		           }
-                   rel2 {
-                               relative, 1.0 0.84;
-                   }
-            }
-	    }
-
-
-
-
-
-	    part {
-	           name,   "button_release";
-	           type,   RECT;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           color, 69 69 69 255;
-		           rel1 {
-	                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-	                       relative, 0.5 1.0;
-		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-	                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-	                       relative, 0.5 1.0;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_release";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_release";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_release";
-	                     }
-	                     text {
-	                                 text, "Release";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
-	    part {
-	           name,   "button_dtmf_hide";
-	           type,   RECT;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           color, 69 69 69 255;
-		           rel1 {
-	                       relative, 0.51 0.85;
-		           }
-		           rel2 {
-	                       relative, 1.0 1.0;
-		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-	                       relative, 0.51 0.85;
-		           }
-		           rel2 {
-	                       relative, 1.0 1.0;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_dtmf_hide";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_dtmf_hide";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_dtmf_hide";
-	                     }
-	                     text {
-	                                 text, "Hide Pad";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
-        program {
-                name, "button_release_click";
-                signal, "mouse,down,1";
-                source, "button_release";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_release";
-        }
-        program {
-                name, "button_release_unclick";
-                signal, "mouse,up,1";
-                source, "button_release";
-                action, STATE_SET "default" 0.0;
-                target, "button_release";
-        }
-        program {
-                name, "button_release_clicked";
-                signal, "mouse,down,1";
-                source, "button_release";
-                action, SIGNAL_EMIT "release" "input";
-        }
-
-        program {
-                name, "button_dtmf_hide_click";
-                signal, "mouse,down,1";
-                source, "button_dtmf_hide";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_dtmf_hide";
-        }
-        program {
-                name, "button_dtmf_hide_unclick";
-                signal, "mouse,up,1";
-                source, "button_dtmf_hide";
-                action, STATE_SET "default" 0.0;
-                target, "button_dtmf_hide";
-        }
-        program {
-                name, "button_dtmf_hide_clicked";
-                signal, "mouse,down,1";
-                source, "button_dtmf_hide";
-                action, SIGNAL_EMIT "dtmf_hide" "input";
-        }
-
-    }
-  }
-
-
 
 
 
