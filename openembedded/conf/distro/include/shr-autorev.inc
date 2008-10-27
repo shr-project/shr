@@ -1,4 +1,4 @@
-SRCREV_pn-frameworkd = "838377bdf37f333f9ed65402345444f4b16f8d9a"
+SRCREV_pn-frameworkd = "83328aadbb05c56c9e22035c79d16bbab20e6f3d"
 SRCREV_pn-fso-gpsd = "${AUTOREV}"
 SRCREV_pn-fso-sounds = "${AUTOREV}"
 SRCREV_pn-gsm0710muxd = "${AUTOREV}"
