@@ -148,12 +148,38 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
 }
 
 
+
+void add_integer_timestamp_to_message(GValueArray *message) {
+    GHashTable *details = g_value_get_pointer(g_value_array_get_nth(message, 4));
+    char *datestr = strdup(g_value_get_string(g_hash_table_lookup(details, "timestamp")));
+
+    // Parse date string, for example: Sun Sep 28 23:20:24 2008 +0200
+    struct tm date;
+    strptime(datestr, "%a %h %e %T %Y %z", &date); 
+
+
+// FIXME:
+FIXME
+Shouldn't it be inserted into a ghashtable????????????? fourth gvaluearray element..
+
+    // Insert integer timestamp into array
+    GValue value = { 0 };
+    GValue *timestamp = g_value_init(&value, G_TYPE_LONG);
+    g_value_set_long(timestamp, mktime(&date));
+    g_value_array_insert(message, message->n_values, timestamp);
+}
+
+
 void process_message(GValueArray *message) {
     int *id = g_slice_alloc(sizeof(int));
     *id = g_value_get_int(g_value_array_get_nth(message, 0));
+
+
+
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
     g_hash_table_insert(parameters, strdup("content"), strdup(g_value_get_string(g_value_array_get_nth(message, 3))));
+    g_hash_table_insert(parameters, strdup("date"), strdup("test"));
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree), NULL, col1, parameters, NULL);
     etk_tree_row_data_set(row, id);
 }
@@ -175,7 +201,8 @@ void retrieve_message_callback(GError *error, char *status, char *number, char *
     tmp_content = strdup(content);
 
     // FIXME: Does not work
-    //tmp_date = strdup(g_hash_table_lookup(properties, "timestamp"));
+    //tmp_date = g_hash_table_lookup(properties, "timestamp");
+    //g_debug("TIMESTAMP: %s", tmp_date);
 
     pipe_write(pipe_handler, messages_event, EVENT_MODE_MESSAGE);
 }
@@ -288,6 +315,7 @@ void messages_list_show() {
     etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
     etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
 
+    g_ptr_array_foreach(tmp_messages, add_integer_timestamp_to_message, NULL);
     g_ptr_array_foreach(tmp_messages, process_message, NULL);
 
     container = etk_embed_new(evas);
