@@ -16,40 +16,64 @@ BASE_INSTALL = "\
   fbset-modes \
   fso-gpsd \
   gsm0710muxd \
+  exquisite \
+  exquisite-themes \
+  exquisite-theme-illume \
 "
 # Some machines don't set a *runtime* provider for X, so default to Xfbdev here
 # virtual/xserver won't work, since the kdrive recipes will build multiple xserver packages
 XSERVER ?= "xserver-kdrive-fbdev"
 
-# getting an X window system up
+# getting an X window system
 X_INSTALL = "\
+  glibc-utils \
+  glibc-charmap-utf-8 \
+  glibc-binary-localedata-en-us \
+  glibc-binary-localedata-de-de \
+  glibc-binary-localedata-fr-fr \
+  glibc-binary-localedata-pt-br \
+  glibc-binary-localedata-ca-es \
+  glibc-binary-localedata-zh-cn \
+  glibc-binary-localedata-zh-tw \
+  glibc-binary-localedata-bg-bg \
+  glibc-binary-localedata-cs-cz \
+  glibc-binary-localedata-da-dk \
+  glibc-binary-localedata-nl-nl \
+  glibc-binary-localedata-fi-fi \
+  glibc-binary-localedata-hu-hu \
+  glibc-binary-localedata-it-it \
+  glibc-binary-localedata-ja-jp \
+  glibc-binary-localedata-ko-kr \
+  glibc-binary-localedata-nb-no \
+  glibc-binary-localedata-pl-pl \
+  glibc-binary-localedata-ru-ru \
+  glibc-binary-localedata-sk-sk \
+  glibc-binary-localedata-sl-si \
+  glibc-binary-localedata-es-ar \
+  glibc-binary-localedata-sv-se \
   e-wm \
-  illume \
-  illume-config-illume \
-  illume-dicts-english-us \
-  illume-keyboards-default \
-  illume-keyboards-numbers \
-  illume-keyboards-terminal \
-  illume-theme-freesmartphone \
+  e-wm-config-illume \
+  e-wm-config-standard \
+  e-wm-config-netbook \
+  e-wm-config-minimalist \
+  e-wm-config-scaleable \
   ${XSERVER} \
+  xserver-kdrive-splash-illume \
   xserver-kdrive-common \
   xserver-nodm-init \
   xauth \
   xhost \
   xset \
   xrandr \
-  \
   fontconfig-utils \
-  \
   ttf-dejavu-common \
   ttf-dejavu-sans \
-  ttf-dejavu-serif \
-  \
+  ttf-dejavu-sans-mono \
+  ttf-arphic-uming \
 "
 
 X_INSTALL_append_om-gta02 = "\
   ttf-arphic-uming \
-  \
 "
 
 # useful command line tools
