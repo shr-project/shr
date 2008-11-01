@@ -11,7 +11,7 @@ dist_desktop_DATA = openmoko-dialer.desktop
 # desktop integration: application icon
 #
 appicondir = $(datadir)/pixmaps
-dist_appicon_DATA = Dialer.png
+dist_appicon_DATA = shr-dialer.png
 
 #
 # gui configuration file
