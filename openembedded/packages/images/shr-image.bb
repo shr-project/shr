@@ -112,7 +112,6 @@ GTK_INSTALL = "\
   gpe-scap \
   tangogps \
   pidgin \
-  navit \
   vagalume \
   starling \
   gpe-filemanager \
