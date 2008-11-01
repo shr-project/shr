@@ -116,7 +116,7 @@ GTK_INSTALL = "\
   vagalume \
   starling \
   gpe-filemanager \
-  gpe-sketchbook 
+  gpe-sketchbook \ 
 "
 
 GAMES_INSTALL = "\
