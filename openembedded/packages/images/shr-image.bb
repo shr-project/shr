@@ -57,7 +57,7 @@ X_INSTALL = "\
   e-wm-config-minimalist \
   e-wm-config-scaleable \
   ${XSERVER} \
-  xserver-kdrive-splash-illume \
+#  xserver-kdrive-splash-illume \
   xserver-kdrive-common \
   xserver-nodm-init \
   xauth \
