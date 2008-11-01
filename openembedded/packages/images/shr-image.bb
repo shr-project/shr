@@ -110,6 +110,9 @@ GTK_INSTALL = "\
   openmoko-terminal2 \
   gpe-scap \
   tangogps \
+  pidgin \
+  navit \
+  vagalume \
 "
 
 GAMES_INSTALL = "\
