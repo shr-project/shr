@@ -68,7 +68,7 @@ X_INSTALL = "\
   ttf-dejavu-common \
   ttf-dejavu-sans \
   ttf-dejavu-sans-mono \
-  ttf-arphic-uming \
+  ttf-dejavu-serif \
 "
 
 X_INSTALL_append_om-gta02 = "\
@@ -106,6 +106,7 @@ AUDIO_INSTALL = "\
 "
 
 GTK_INSTALL = "\
+  openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
   openmoko-terminal2 \
   gpe-scap \
@@ -113,6 +114,9 @@ GTK_INSTALL = "\
   pidgin \
   navit \
   vagalume \
+  starling \
+  gpe-filemanager \
+  gpe-sketchbook 
 "
 
 GAMES_INSTALL = "\
