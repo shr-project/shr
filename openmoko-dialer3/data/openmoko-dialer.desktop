@@ -2,8 +2,8 @@
 Encoding=UTF-8
 Name=Dialer
 Comment=Telephone Calls
-Exec=/usr/share/pixmaps/shr-dialer.png
-Icon=Dialer
+Exec=openmoko-dialer -s
+Icon=/usr/share/pixmaps/shr-dialer.png
 Terminal=false
 Type=Application
 Categories=Application;PIM;Office;
