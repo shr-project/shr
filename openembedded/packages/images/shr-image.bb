@@ -187,6 +187,7 @@ fso_rootfs_postprocess() {
     # minimal gtk theme foo
     mkdir -p ./etc/gtk-2.0/
     echo 'gtk-font-name = "Sans 5"' >> ./etc/gtk-2.0/gtkrc
+    echo '' >> ./etc/ld.so.conf
     # fix strange iconv/gconf bug
     ln -s libc.so.6 ./lib/libc.so
     cd $curdir
