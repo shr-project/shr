@@ -7,8 +7,10 @@ IMAGE_LINGUAS = ""
 # getting the base system up
 BASE_INSTALL = "\
   ${MACHINE_TASK_PROVIDER} \
+  task-base \
   netbase \
   sysfsutils \
+  modutils-initscripts \
   module-init-tools-depmod \
   rsync \
   screen \
@@ -24,7 +26,7 @@ BASE_INSTALL = "\
 # virtual/xserver won't work, since the kdrive recipes will build multiple xserver packages
 XSERVER ?= "xserver-kdrive-fbdev"
 
-# getting an X window system
+# getting an X window system up
 X_INSTALL = "\
   glibc-utils \
   glibc-charmap-utf-8 \
@@ -54,10 +56,11 @@ X_INSTALL = "\
   e-wm \
   e-wm-config-illume \
   e-wm-config-standard \
+  e-wm-config-netbook \
   e-wm-config-minimalist \
   e-wm-config-scaleable \
   ${XSERVER} \
-#  xserver-kdrive-splash-illume \
+  xserver-kdrive-splash-illume \
   xserver-kdrive-common \
   xserver-nodm-init \
   xauth \
@@ -68,7 +71,7 @@ X_INSTALL = "\
   ttf-dejavu-common \
   ttf-dejavu-sans \
   ttf-dejavu-sans-mono \
-  ttf-dejavu-serif \
+#  ttf-dejavu-serif \
 "
 
 X_INSTALL_append_om-gta02 = "\
@@ -99,7 +102,7 @@ AUDIO_INSTALL = "\
   alsa-utils-aplay \
   alsa-utils-amixer \
   gst-meta-audio \
-#  gst-plugin-mad \
+  gst-plugin-mad \
   gst-plugin-modplug \
   gst-plugin-sid \
   fso-sounds \
@@ -174,6 +177,9 @@ fso_rootfs_postprocess() {
     echo "alias pico=nano" >>./etc/profile
     echo "alias fso='cd /local/pkg/fso'" >>./etc/profile
     echo "alias ipkg='opkg'" >>./etc/profile
+    # dns
+    echo "nameserver 208.67.222.222" >>./etc/resolv.conf
+    echo "nameserver 208.67.220.220" >>./etc/resolv.conf
     # nfs
     mkdir -p ./local/pkg
     echo >>./etc/fstab
@@ -184,6 +190,7 @@ fso_rootfs_postprocess() {
     for file in $desktop; do
         echo "Categories=Office;" >>$file
     done
+    echo "Exec=openmoko-terminal2 htop" >> ./usr/share/applications/htop.desktop
     # minimal gtk theme foo
     mkdir -p ./etc/gtk-2.0/
     echo 'gtk-font-name = "Sans 5"' >> ./etc/gtk-2.0/gtkrc
@@ -211,6 +218,7 @@ shr_rootfs_postprocess() {
     # setup opkg config
     if [ -a ./etc/opkg/all-feed.conf ]; then rm ./etc/opkg/all-feed.conf; fi
     if [ -a ./etc/opkg/armv4t-feed.conf ]; then rm ./etc/opkg/armv4t-feed.conf; fi
+    if [ -a ./etc/opkg/armv4-feed.conf ]; then rm ./etc/opkg/armv4-feed.conf; fi
     if [ -a ./etc/opkg/fic-gta02-feed.conf ]; then rm ./etc/opkg/fic-gta02-feed.conf; fi
     if [ -a ./etc/opkg/neo1973-feed.conf ]; then rm ./etc/opkg/neo1973-feed.conf; fi
     if [ -a ./etc/opkg/om-gta01-feed.conf ]; then rm ./etc/opkg/om-gta01-feed.conf; fi
