@@ -111,7 +111,7 @@ AUDIO_INSTALL = "\
 GTK_INSTALL = "\
   openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
-  openmoko-terminal2 \
+#  openmoko-terminal2 \ # could not compile it, gpe-terminal is included
   gpe-scap \
   tangogps \
   pidgin \
@@ -150,6 +150,10 @@ SHR_INSTALL = "\
   openmoko-contacts3 \
   ophonekitd \ 
   libframeworkd-phonegui-efl \
+  gpe-terminal \
+  rxvt-unicode \
+  elementary-alarm \
+  gpe-scap
 "
 # zhone should be added, but a custom package without the autostart script
 # removed libframeworkd-phonegui-gtk from SHR_INSTALL
