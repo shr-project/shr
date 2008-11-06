@@ -208,6 +208,10 @@ void ophonekitd_sim_auth_status_handler(const int status) {
 void ophonekitd_sim_incoming_stored_message_handler(const int id) {
     g_debug("ophonekitd_sim_incoming_stored_message_handler()");
     incoming_message_active = TRUE;
+
+    /* FIXME: Quick and dirty hack to avoid the GSM not enable error after suspend */
+    sleep(10);
+
     phonegui_message_show(id);
 }
 
