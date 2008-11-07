@@ -56,7 +56,6 @@ X_INSTALL = "\
   e-wm \
   e-wm-config-illume \
   e-wm-config-standard \
-  e-wm-config-netbook \
   e-wm-config-minimalist \
   e-wm-config-scaleable \
   ${XSERVER} \
