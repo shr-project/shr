@@ -1,29 +1,8 @@
 collections {
 
-
-
    group {
       name, "incoming_call";
-      min, 800 600;
-      max, 1024 768;
       parts {
-          part {
-                 name,   "background";
-                 type,   RECT;
-                 mouse_events, 0;
-                 description {
-                    state, "default" 0.0;
-                    rel1 {
-                          relative, 0.0 0.0;
-                          offset, 0 0;
-                    }
-                    rel2 {
-                           relative, 1.0 1.0;
-                           offset, 0 0;
-                    }
-                    color: 0 0 0 255;
-	            }
-	    }
 
 	    part {
 	           name,   "information";
@@ -31,6 +10,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -53,6 +33,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.2;
 		                       offset, 0 0;
@@ -71,171 +52,38 @@ collections {
 	    }
 
 
-
-
 	    part {
 	           name,   "button_accept";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 99 99 99 255;
 		           rel1 {
 		                       relative, 0.0 0.85;
-		                       offset, 0 0;
-		           }
+    	           }
 		           rel2 {
-		                       relative, 0.495 1.0;
-		                       offset, 0 0;
+		                       relative, 0.5 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-		                       offset, 0 0;
-		           }
-		           rel2 {
-		                       relative, 0.495 1.0;
-		                       offset, 0 0;
-		           }
-	           }
+            }
 	    }
 
 	    part {
 	           name,   "button_release";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 99 99 99 255;
 		           rel1 {
-		                       relative, 0.505 0.85;
-		                       offset, 0 0;
-		           }
+		                       relative, 0.5 0.85;
+    	           }
 		           rel2 {
 		                       relative, 1.0 1.0;
-		                       offset, 0 0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.505 0.85;
-		                       offset, 0 0;
-		           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		                       offset, 0 0;
-		           }
-	           }
-	    }
-
-
-	    part {
-	           name,   "text_accept";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                        offset, 0 0;
-                        to, "button_accept";
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                        offset, 0 0;
-                        to, "button_accept";
-                    }
-                    text {
-                        text, "Accept";
-                        font, "redensek";
-                        size, 30;
-                        align, 0.5 0.5;
-                    }
-	            }
-	    }
-
-
-	    part {
-	           name,   "text_release";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                        offset, 0 0;
-                        to, "button_release";
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                        offset, 0 0;
-                        to, "button_release";
-                    }
-                    text {
-                        text, "Release";
-                        font, "redensek";
-                        size, 30;
-                        align, 0.5 0.5;
-                    }
-	            }
+            }
 	    }
 
 
    } /* Close Parts */
-   programs {
-
-
-        program {
-                name, "button_accept_click";
-                signal, "mouse,down,1";
-                source, "button_accept";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_accept";
-        }
-        program {
-                name, "button_accept_unclick";
-                signal, "mouse,up,1";
-                source, "button_accept";
-                action, STATE_SET "default" 0.0;
-                target, "button_accept";
-        }
-
-        program {
-                name, "button_release_click";
-                signal, "mouse,down,1";
-                source, "button_release";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_release";
-        }
-        program {
-                name, "button_release_unclick";
-                signal, "mouse,up,1";
-                source, "button_release";
-                action, STATE_SET "default" 0.0;
-                target, "button_release";
-        }
-
-        program {
-                name, "button_accept_clicked";
-                signal, "mouse,down,1";
-                source, "button_accept";
-                action, SIGNAL_EMIT "accept" "input";
-        }
-
-        program {
-                name, "button_release_clicked";
-                signal, "mouse,down,1";
-                source, "button_release";
-                action, SIGNAL_EMIT "release" "input";
-        }
-
-
-   } /* Close Prog */
  } /* Close Group */
 
 
@@ -246,23 +94,7 @@ collections {
     group {
         name, "call";
         parts {
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                        offset, 0 0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                        offset, 0 0;
-                    }
-                    color: 0 0 0 255;
-                }
-            }
+
 
 	        part {
                 name,   "text";
@@ -270,6 +102,7 @@ collections {
                 mouse_events, 0;
                 description {
                     state, "default" 0.0;
+                    color, 0 0 0 255;
                     rel1 {
                            relative, 0.0 0.0;
                            offset, 0 0;
@@ -293,6 +126,7 @@ collections {
                 mouse_events, 0;
                 description {
                     state, "default" 0.0;
+                    color, 0 0 0 255;
                     rel1 {
                            relative, 0.0 0.1;
                            offset, 0 0;
@@ -313,7 +147,7 @@ collections {
 
 
 	    part {
-	           name,   "swallow";
+	           name,   "keypad";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
@@ -328,237 +162,56 @@ collections {
 	    }
 
 
-
-
 	    part {
 	           name,   "button_release";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-	                       relative, 0.0 0.85;
-		           }
+		                       relative, 0.0 0.85;
+    	           }
 		           rel2 {
-	                       relative, 0.32 1.0;
+		                       relative, 0.33 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-	                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-	                       relative, 0.32 1.0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_release";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       to, "button_release";
-		           }
-                     rel2 {
-                             relative, 1.0 1.0;
-                             to, "button_release";
-                     }
-                     text {
-                             text, "Release";
-                             font, "redensek";
-                             size, 25;
-                             align, 0.5 0.5;
-                     }
-	            }
-	    }
-
-
-
 
 	    part {
 	           name,   "button_speaker";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-	                       relative, 0.33 0.85;
-		           }
+		                       relative, 0.33 0.85;
+    	           }
 		           rel2 {
-	                       relative, 0.66 1.0;
+		                       relative, 0.66 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-	                       relative, 0.33 0.85;
-		           }
-		           rel2 {
-	                       relative, 0.66 1.0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_speaker";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       to, "button_speaker";
-		           }
-                     rel2 {
-                             relative, 1.0 1.0;
-                             to, "button_speaker";
-                     }
-                     text {
-                             text, "Speaker";
-                             font, "redensek";
-                             size, 25;
-                             align, 0.5 0.5;
-                     }
-	            }
-	    }
-
-
-
 
 	    part {
 	           name,   "button_dtmf";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-	                       relative, 0.67 0.85;
-		           }
+		                       relative, 0.66 0.85;
+    	           }
 		           rel2 {
-	                       relative, 1.0 1.0;
+		                       relative, 1.0 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-	                       relative, 0.67 0.85;
-		           }
-		           rel2 {
-	                       relative, 1.0 1.0;
-		           }
-	           }
-
+            }
 	    }
 
-	    part {
-	           name,   "text_dtmf";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       to, "button_dtmf";
-		           }
-                     rel2 {
-                             relative, 1.0 1.0;
-                             to, "button_dtmf";
-                     }
-                     text {
-                             text, "Show Pad";
-                             font, "redensek";
-                             size, 25;
-                             align, 0.5 0.5;
-                     }
-	            }
-	    }
+
 
     }
 
 
- /* Close Parts */
-   programs {
-        program {
-                name, "button_release_click";
-                signal, "mouse,down,1";
-                source, "button_release";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_release";
-        }
-        program {
-                name, "button_release_unclick";
-                signal, "mouse,up,1";
-                source, "button_release";
-                action, STATE_SET "default" 0.0;
-                target, "button_release";
-        }
-        program {
-                name, "button_release_clicked";
-                signal, "mouse,down,1";
-                source, "button_release";
-                action, SIGNAL_EMIT "release" "input";
-        }
-
-
-        program {
-                name, "button_speaker_click";
-                signal, "mouse,down,1";
-                source, "button_speaker";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_speaker";
-        }
-        program {
-                name, "button_speaker_unclick";
-                signal, "mouse,up,1";
-                source, "button_speaker";
-                action, STATE_SET "default" 0.0;
-                target, "button_speaker";
-        }
-        program {
-                name, "button_speaker_clicked";
-                signal, "mouse,down,1";
-                source, "button_speaker";
-                action, SIGNAL_EMIT "speaker" "input";
-        }
-
-        program {
-                name, "button_dtmf_click";
-                signal, "mouse,down,1";
-                source, "button_dtmf";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_dtmf";
-        }
-        program {
-                name, "button_dtmf_unclick";
-                signal, "mouse,up,1";
-                source, "button_dtmf";
-                action, STATE_SET "default" 0.0;
-                target, "button_dtmf";
-        }
-        program {
-                name, "button_dtmf_clicked";
-                signal, "mouse,down,1";
-                source, "button_dtmf";
-                action, SIGNAL_EMIT "dtmf" "input";
-        }
-    }
-    }
-
-
-
-
+  }
 } /* Close Coll */
 

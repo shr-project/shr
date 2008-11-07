@@ -25,4 +25,17 @@ void vibrator_write(char* str);
 void vibrator_enable();
 void vibrator_disable();
 
+void sim_auth_keypad_clicked(void *data, Evas_Object *obj, char input);
+void sim_auth_delete_clicked();
+void sim_auth_ok_clicked();
+
+void sim_auth_input_show();
+void sim_auth_input_hide();
+void sim_auth_checking_show();
+void sim_auth_pins_different_show();
+void sim_auth_pin_correct_show();
+void sim_auth_pin_wrong_show();
+void sim_auth_puk_correct_show();
+void sim_auth_puk_wrong_show();
+
 #endif

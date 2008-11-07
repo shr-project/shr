@@ -159,7 +159,7 @@ void _edje_set_text_cb(gpointer key, gpointer value, Evas_Object *cell_object)
 /* Edje: render() */
 static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas)
 {
-   //g_debug("render called");
+   g_debug("render called");
 
    Etk_Tree_Model_Edje *edje_model;
    Etk_Tree_Model_Edje_Data *edje_data;
@@ -174,20 +174,13 @@ static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geome
 
       cell_objects[0] = edje_object_add(evas);
       if (!cell_objects[0]) return ETK_FALSE;
-
-
-
-
-
-
-
    }
-      edje_object_file_set(cell_objects[0], edje_model->file, edje_model->part);
-   edje_extern_object_min_size_set(cell_objects[0], geometry.w, geometry.h);
-      g_hash_table_foreach(edje_data->parameters, _edje_set_text_cb, cell_objects[0]);
-   evas_object_move(cell_objects[0], geometry.x, geometry.y);
-   
-   evas_object_resize(cell_objects[0], geometry.w, geometry.h);
+    edje_object_file_set(cell_objects[0], edje_model->file, edje_model->part);
+    edje_extern_object_min_size_set(cell_objects[0], geometry.w, geometry.h);
+    g_hash_table_foreach(edje_data->parameters, _edje_set_text_cb, cell_objects[0]);
+    evas_object_move(cell_objects[0], geometry.x, geometry.y);
+
+    evas_object_resize(cell_objects[0], geometry.w, geometry.h);
     evas_object_show(cell_objects[0]);
 
    return ETK_TRUE;

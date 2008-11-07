@@ -3,6 +3,7 @@
 #include <Ecore.h>
 #include <Edje.h>
 #include <etk/Etk.h>
+#include <Elementary.h>
 #include <pthread.h>
 #include <glib-2.0/glib.h>
 #include <glib-2.0/glib-object.h>
@@ -29,11 +30,14 @@ void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
     ecore_evas_init();
     g_debug("Initiated ecore_evas");
 
-    etk_init(NULL, NULL); //etk_init(phonegui_argc, phonegui_argv);
-    g_debug("Initiated etk");
-
     edje_init();
     g_debug("Initiated edje");
+
+    etk_init(phonegui_argc, phonegui_argv);
+    g_debug("Initiated etk");
+
+    elm_init(phonegui_argc, phonegui_argv);
+    g_debug("Initiated elementary");
 
 
     // Add ecore exit callback
@@ -47,8 +51,9 @@ void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
     ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);
 
     // Create thread for ecore loop
+    g_debug("Entering ecore loop");
     pthread_t thread;
-    int rc = pthread_create(&thread, NULL, (void*) ecore_main_loop_begin, NULL);
+    int rc = pthread_create(&thread, NULL, (void*) elm_run, NULL);
     if(rc) {
         g_error("Return code from pthread_create() is %d", rc);
     }
@@ -63,35 +68,34 @@ void window_create(
 ) {
     g_debug("window_create()");
 
-    ee = ecore_evas_software_x11_new(NULL, 0, 0, 0, 0, 0);
-    if(ee == NULL) {
-        g_error("Unable to get x11 convas. Try:\n\nexport DISPLAY=:0.0");
-    }
-
-    ecore_evas_title_set(ee, strdup(title));
-    ecore_evas_borderless_set(ee, 0);
-    ecore_evas_shaped_set(ee, 1);
-    ecore_evas_callback_resize_set(ee, window_resize_callback);
+    // Window
+    win = elm_win_add(NULL, "main", ELM_WIN_BASIC);
+    elm_win_title_set(win, title);
+    elm_win_autodel_set(win, 1);
     if(delete_cb != NULL) {
-        ecore_evas_callback_delete_request_set(ee, delete_cb);
+        g_debug("Adding delete-request-callback");
+        evas_object_smart_callback_add(win, "delete-request", delete_cb, NULL);
     }
 
-    evas = ecore_evas_get(ee);
-    edje = edje_object_add(evas);
-    evas_object_move(edje, 0, 0);
-    //edje_object_size_min_get(edje, &edje_w, &edje_h);
-    evas_object_resize(edje, 480, 600);
-    evas_object_show(edje);
-    // ecore_evas_resize(ee, (int) edje_w, (int) edje_h);
-    edje_object_signal_callback_add(edje, "*", "input", input_cb, NULL);
+    // Background
+    bg = elm_bg_add(win);
+    evas_object_size_hint_weight_set(bg, 1.0, 1.0);
+    elm_win_resize_object_add(win, bg);
+    evas_object_show(bg);
+
+    // Layout
+    layout = elm_layout_add(win);
+    elm_win_resize_object_add(win, layout);
+    evas_object_show(layout);
+
+    evas_object_resize(win, 320, 520);
+    //evas_object_show(win);
 }
 
-void window_resize_callback(Evas *ev) {
-    g_debug("window_resize_callback()");
-    int w, h;
-    evas_object_move(ee, 0, 0);
-    evas_output_size_get(ecore_evas_get(ev), &w, &h);
-    evas_object_resize(edje, w, h);
+void window_destroy() {
+    evas_object_del(layout);
+    evas_object_del(bg);
+    evas_object_del(win);
 }
 
 int event_callback(void *data, Ecore_Fd_Handler *fdh) {

@@ -4,23 +4,7 @@ collections {
     group {
         name, "list";
         parts {
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                        offset, 0 0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                        offset, 0 0;
-                    }
-                    color: 0 0 0 255;
-                }
-            }
+
 
 
 	    part {
@@ -29,6 +13,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -66,241 +51,54 @@ collections {
 	    }
 
 
-
 	    part {
 	           name,   "button_new";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
 		                       relative, 0.0 0.85;
-		                       offset, 0 0;
-		           }
+    	           }
 		           rel2 {
 		                       relative, 0.33 1.0;
-		                       offset, 0 0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-		                       offset, 0 0;
-		           }
-		           rel2 {
-		                       relative, 0.33 1.0;
-		                       offset, 0 0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_new";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_new";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_new";
-	                     }
-	                     text {
-	                                 text, "New";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
 
 	    part {
 	           name,   "button_call";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.34 0.85;
-		                       offset, 0 0;
-		           }
+		                       relative, 0.33 0.85;
+    	           }
 		           rel2 {
 		                       relative, 0.66 1.0;
-		                       offset, 0 0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.34 0.85;
-		                       offset, 0 0;
-		           }
-		           rel2 {
-		                       relative, 0.66 1.0;
-		                       offset, 0 0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_call";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_call";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_call";
-	                     }
-	                     text {
-	                                 text, "Call";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
 
 	    part {
 	           name,   "button_options";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.67 0.85;
+		                       relative, 0.66 0.85;
     	           }
 		           rel2 {
 		                       relative, 1.0 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.67 0.85;
-    	           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_options";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-    		           rel1 {
-    		                       relative, 0.0 0.0;
-    		                       to, "button_options";
-    		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 to, "button_options";
-	                     }
-	                     text {
-	                                 text, "More";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
+            }
 	    }
 
 
-        program {
-                name, "button_new_click";
-                signal, "mouse,down,1";
-                source, "button_new";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_new";
-        }
-        program {
-                name, "button_new_unclick";
-                signal, "mouse,up,1";
-                source, "button_new";
-                action, STATE_SET "default" 0.0;
-                target, "button_new";
-        }
-        program {
-                name, "button_new_clicked";
-                signal, "mouse,down,1";
-                source, "button_new";
-                action, SIGNAL_EMIT "new" "input";
-        }
-
-
-        program {
-                name, "button_call_click";
-                signal, "mouse,down,1";
-                source, "button_call";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_call";
-        }
-        program {
-                name, "button_call_unclick";
-                signal, "mouse,up,1";
-                source, "button_call";
-                action, STATE_SET "default" 0.0;
-                target, "button_call";
-        }
-        program {
-                name, "button_call_clicked";
-                signal, "mouse,down,1";
-                source, "button_call";
-                action, SIGNAL_EMIT "call" "input";
-        }
-
-
-        program {
-                name, "button_options_click";
-                signal, "mouse,down,1";
-                source, "button_options";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_options";
-        }
-        program {
-                name, "button_options_unclick";
-                signal, "mouse,up,1";
-                source, "button_options";
-                action, STATE_SET "default" 0.0;
-                target, "button_options";
-        }
-        program {
-                name, "button_options_clicked";
-                signal, "mouse,down,1";
-                source, "button_options";
-                action, SIGNAL_EMIT "options" "input";
-        }
-
-
-	    }
     }
+  }
 
 
 
@@ -316,7 +114,7 @@ collections {
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
-                   color, 255 255 255 255;
+                   color, 0 0 0 255;
 		           state, "default" 0.0;
 		           rel1 {
 		                       relative, 0.0 0.0;
@@ -340,7 +138,7 @@ collections {
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
-                   color, 222 222 222 255;
+                   color, 33 33 33 255;
 		           state, "default" 0.0;
 		           rel1 {
 		                       relative, 0.0 0.3;
@@ -372,28 +170,12 @@ collections {
         parts {
 
 
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                    }
-                   color: 0 0 0 255;
-                }
-            }
-
 	    part {
 	           name,   "text";
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
-                   color, 255 255 255 255;
+                   color, 0 0 0 255;
 		           state, "default" 0.0;
 		           rel1 {
 		                       relative, 0.0 0.0;
@@ -424,21 +206,7 @@ collections {
     group {
         name, "options";
         parts {
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                    }
-                    color: 0 0 0 255;
-                }
-            }
+
 
 
 	    part {
@@ -447,6 +215,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.1;
 		                       offset, 0 0;
@@ -470,6 +239,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.2;
 		           }
@@ -487,326 +257,74 @@ collections {
 
 
 
+	    part {
+	           name,   "button_back";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.85;
+    	           }
+		           rel2 {
+		                       relative, 0.5 1.0;
+		           }
+            }
+	    }
+
+
 
 	    part {
 	           name,   "button_call";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.0 0.40;
-		                       offset, 0 0;
-		           }
+		                       relative, 0.5 0.85;
+    	           }
 		           rel2 {
-		                       relative, 1.0 0.54;
-		                       offset, 0 0;
+		                       relative, 1.0 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.40;
-		                       offset, 0 0;
-		           }
-		           rel2 {
-		                       relative, 1.0 0.54;
-		                       offset, 0 0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_call";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_call";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_call";
-	                     }
-	                     text {
-	                                 text, "Call";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
-
 
 	    part {
 	           name,   "button_modify";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.0 0.55;
+		                       relative, 0.0 0.7;
     	           }
 		           rel2 {
-		                       relative, 1.0 0.69;
+		                       relative, 0.5 0.85;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.55;
-    	           }
-		           rel2 {
-		                       relative, 1.0 0.69;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_modify";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-    		           rel1 {
-    		                       relative, 0.0 0.0;
-    		                       to, "button_modify";
-    		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 to, "button_modify";
-	                     }
-	                     text {
-	                                 text, "Modify";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
-
-
 
 	    part {
 	           name,   "button_delete";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.0 0.7;
+		                       relative, 0.5 0.7;
     	           }
 		           rel2 {
-		                       relative, 1.0 0.84;
+		                       relative, 1.0 0.85;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.7;
-    	           }
-		           rel2 {
-		                       relative, 1.0 0.84;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_delete";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_delete";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_delete";
-	                     }
-	                     text {
-	                                 text, "Delete";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
+            }
 	    }
 
 
 
 
 
-	    part {
-	           name,   "button_back";
-	           type,   RECT;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           color, 69 69 69 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-		           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_back";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_back";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_back";
-	                     }
-	                     text {
-	                                 text, "Back";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
-
-        program {
-                name, "button_back_click";
-                signal, "mouse,down,1";
-                source, "button_back";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_back";
-        }
-        program {
-                name, "button_back_unclick";
-                signal, "mouse,up,1";
-                source, "button_back";
-                action, STATE_SET "default" 0.0;
-                target, "button_back";
-        }
-        program {
-                name, "button_back_clicked";
-                signal, "mouse,down,1";
-                source, "button_back";
-                action, SIGNAL_EMIT "back" "input";
-        }
-
-
-        program {
-                name, "button_call_click";
-                signal, "mouse,down,1";
-                source, "button_call";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_call";
-        }
-        program {
-                name, "button_call_unclick";
-                signal, "mouse,up,1";
-                source, "button_call";
-                action, STATE_SET "default" 0.0;
-                target, "button_call";
-        }
-        program {
-                name, "button_call_clicked";
-                signal, "mouse,down,1";
-                source, "button_call";
-                action, SIGNAL_EMIT "call" "input";
-        }
-
-
-        program {
-                name, "button_modify_click";
-                signal, "mouse,down,1";
-                source, "button_modify";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_modify";
-        }
-        program {
-                name, "button_modify_unclick";
-                signal, "mouse,up,1";
-                source, "button_modify";
-                action, STATE_SET "default" 0.0;
-                target, "button_modify";
-        }
-        program {
-                name, "button_modify_clicked";
-                signal, "mouse,down,1";
-                source, "button_modify";
-                action, SIGNAL_EMIT "modify" "input";
-        }
-
-        program {
-                name, "button_delete_click";
-                signal, "mouse,down,1";
-                source, "button_delete";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_delete";
-        }
-        program {
-                name, "button_delete_unclick";
-                signal, "mouse,up,1";
-                source, "button_delete";
-                action, STATE_SET "default" 0.0;
-                target, "button_delete";
-        }
-        program {
-                name, "button_delete_clicked";
-                signal, "mouse,down,1";
-                source, "button_delete";
-                action, SIGNAL_EMIT "delete" "input";
-        }
-
-
-
-	    }
     }
-
-
-
+   }
 
 
 
@@ -816,21 +334,6 @@ collections {
     group {
         name, "modify";
         parts {
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                    }
-                    color: 0 0 0 255;
-                }
-            }
 
 
 	    part {
@@ -839,6 +342,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -862,6 +366,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.2;
 		           }
@@ -901,6 +406,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.5;
 		           }
@@ -937,163 +443,37 @@ collections {
 
 	    part {
 	           name,   "button_back";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
 		                       relative, 0.0 0.80;
-		           }
+    	           }
 		           rel2 {
-		                       relative, 0.49 1.0;
+		                       relative, 0.5 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.80;
-		           }
-		           rel2 {
-		                       relative, 0.49 1.0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_back";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_back";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_back";
-	                     }
-	                     text {
-	                                 text, "Back";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
 
 
 	    part {
 	           name,   "button_save";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
 		                       relative, 0.5 0.80;
     	           }
 		           rel2 {
 		                       relative, 1.0 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.5 0.80;
-    	           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-	           }
-
+            }
 	    }
 
-	    part {
-	           name,   "text_save";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-    		           rel1 {
-    		                       relative, 0.0 0.0;
-    		                       to, "button_save";
-    		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 to, "button_save";
-	                     }
-	                     text {
-	                                 text, "Save";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-        program {
-                name, "button_back_click";
-                signal, "mouse,down,1";
-                source, "button_back";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_back";
-        }
-        program {
-                name, "button_back_unclick";
-                signal, "mouse,up,1";
-                source, "button_back";
-                action, STATE_SET "default" 0.0;
-                target, "button_back";
-        }
-        program {
-                name, "button_back_clicked";
-                signal, "mouse,down,1";
-                source, "button_back";
-                action, SIGNAL_EMIT "back" "input";
-        }
-
-
-
-
-        program {
-                name, "button_save_click";
-                signal, "mouse,down,1";
-                source, "button_save";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_save";
-        }
-        program {
-                name, "button_save_unclick";
-                signal, "mouse,up,1";
-                source, "button_save";
-                action, STATE_SET "default" 0.0;
-                target, "button_save";
-        }
-        program {
-                name, "button_save_clicked";
-                signal, "mouse,down,1";
-                source, "button_save";
-                action, SIGNAL_EMIT "save" "input";
-        }
-
-
-	    }
     }
-
-
-
-
-
+  }
 
 
 
@@ -1103,21 +483,6 @@ collections {
     group {
         name, "delete";
         parts {
-            part {
-                name,   "background";
-                type,   RECT;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.0;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                    }
-                    color: 0 0 0 255;
-                }
-            }
 
 
 	    part {
@@ -1126,6 +491,7 @@ collections {
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
+                   color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -1143,175 +509,41 @@ collections {
             }
 	    }
 
-
 	    part {
 	           name,   "button_no";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
 		                       relative, 0.0 0.85;
     	           }
 		           rel2 {
 		                       relative, 0.5 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.0 0.85;
-    	           }
-		           rel2 {
-		                       relative, 0.5 1.0;
-		           }
-	           }
-
+            }
 	    }
-
-	    part {
-	           name,   "text_no";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_no";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_no";
-	                     }
-	                     text {
-	                                 text, "No";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
-	    }
-
-
-
 
 
 	    part {
 	           name,   "button_yes";
-	           type,   RECT;
+	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
-		           color, 69 69 69 255;
 		           rel1 {
-		                       relative, 0.51 0.85;
-		           }
+		                       relative, 0.5 0.85;
+    	           }
 		           rel2 {
 		                       relative, 1.0 1.0;
 		           }
-	           }
-	           description {
-		           state, "clicked" 0.0;
-		           color, 255 255 255 255;
-		           rel1 {
-		                       relative, 0.51 0.85;
-		           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-	           }
-
-	    }
-
-	    part {
-	           name,   "text_yes";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		                       to, "button_yes";
-		           }
-	                     rel2 {
-	                                 relative, 1.0 1.0;
-	                                 offset, 0 0;
-	                                 to, "button_yes";
-	                     }
-	                     text {
-	                                 text, "Yes";
-	                                 font, "redensek";
-	                                 size, 25;
-	                                 align, 0.5 0.5;
-	                     }
-	            }
+            }
 	    }
 
 
 
-
-
-
-        program {
-                name, "button_yes_click";
-                signal, "mouse,down,1";
-                source, "button_yes";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_yes";
-        }
-        program {
-                name, "button_yes_unclick";
-                signal, "mouse,up,1";
-                source, "button_yes";
-                action, STATE_SET "default" 0.0;
-                target, "button_yes";
-        }
-        program {
-                name, "button_yes_clicked";
-                signal, "mouse,down,1";
-                source, "button_yes";
-                action, SIGNAL_EMIT "yes" "input";
-        }
-
-
-        program {
-                name, "button_no_click";
-                signal, "mouse,down,1";
-                source, "button_no";
-                action, STATE_SET "clicked" 0.0;
-                target, "button_no";
-        }
-        program {
-                name, "button_no_unclick";
-                signal, "mouse,up,1";
-                source, "button_no";
-                action, STATE_SET "default" 0.0;
-                target, "button_no";
-        }
-        program {
-                name, "button_no_clicked";
-                signal, "mouse,down,1";
-                source, "button_no";
-                action, SIGNAL_EMIT "no" "input";
-        }
-
-
-
-	    }
+	  }
     }
-
-
-
-
-
-
-
-
 
 
 } /* Close Coll */

@@ -13,15 +13,12 @@ void (*phonegui_exit_cb)();
 
 PipeHandler pipe_handler;
 
-Ecore_Evas   *ee;
-Evas         *evas;
-Evas_Object  *edje;
-double       edje_w, edje_h;
+Evas_Object *win, *bg, *layout;
 
 void phonegui_init(int argc, char **argv, void (*exit_cb)());
 int event_callback(void *data, Ecore_Fd_Handler *fdh);
 
 void window_create();
-void window_resize_callback(Evas *ev);
+void window_destroy();
 
 #endif

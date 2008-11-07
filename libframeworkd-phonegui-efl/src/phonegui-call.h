@@ -16,13 +16,20 @@ void call_input(void *data, Evas_Object *o, const char *emission, const char *so
 void call_delete(Ecore_Evas *ee);
 void call_event(int event);
 
+void call_button_keypad_clicked(void *data, Evas_Object *obj, void *event_info);
+void call_button_accept_clicked();
+void call_button_release_clicked();
+void call_button_speaker_clicked();
+void call_button_dtmf_clicked();
+
 void call_incoming_show();
+void call_incoming_hide();
 void call_active_show();
 void call_active_hide();
 
-void dtmf_enable();
-void dtmf_disable();
-void speaker_enable();
-void speaker_disable();
+void call_dtmf_enable();
+void call_dtmf_disable();
+void call_speaker_enable();
+void call_speaker_disable();
 
 #endif

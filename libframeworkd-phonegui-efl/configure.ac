@@ -20,6 +20,7 @@ PKG_CHECK_MODULES(E, [
 	ecore-evas
 	edje
 	etk
+	elementary
 ])
 
 AC_SUBST(LIBFRAMEWORKD_GLIB_CFLAGS)

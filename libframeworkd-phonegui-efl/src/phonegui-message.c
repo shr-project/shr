@@ -6,7 +6,6 @@
 
 #define UI_FILE "/usr/share/libframeworkd-phonegui-efl/incoming-message.edj"
 
-// TODO: Remove tmp vars
 static int tmp_id;
 static char *tmp_number;
 static char *tmp_content;
@@ -37,7 +36,7 @@ void message_input(void *data, Evas_Object *obj, const char *emission, const cha
 
 void message_delete(Ecore_Evas *ee) {
     g_debug("message_delete()");
-    pipe_write(pipe_handler, message_event, EVENT_HIDE);
+    phonegui_message_hide();
 }
 
 void message_event(int event) {
@@ -45,14 +44,14 @@ void message_event(int event) {
 
     if(event == EVENT_SHOW) {
         window_create("New SMS", message_input, message_event, message_delete);
-        edje_object_file_set(edje, UI_FILE, "message");
-        ecore_evas_show(ee);
+        elm_layout_file_set(layout, UI_FILE, "message");
+        evas_object_show(win);
         ogsmd_sim_retrieve_message(tmp_id, retrieve_callback, NULL);
     } else if(event == EVENT_MODE_MESSAGE) {
-        edje_object_part_text_set(edje, "number", tmp_number);
-        edje_object_part_text_set(edje, "content", tmp_content);
+        edje_object_part_text_set(elm_layout_edje_get(layout), "number", tmp_number);
+        edje_object_part_text_set(elm_layout_edje_get(layout), "content", tmp_content);
     } else if(event == EVENT_HIDE) {
-        ecore_evas_hide(ee);
+        evas_object_hide(win);
     } else {
         g_error("Unknown event");
     }

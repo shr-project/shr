@@ -42,6 +42,8 @@ static int  puk_length = 0;
 static char pin_confirm[9];
 static int  pin_confirm_length = 0;
 
+static Evas_Object *bt1, *bt2, *keypad;
+
 
 void phonegui_sim_auth_show(const int status) {
     g_debug("phonegui_sim_auth_show()");
@@ -87,97 +89,38 @@ void sim_auth_event(int event) {
         window_create("SIM Authentication", sim_auth_input, sim_auth_event, sim_auth_delete);
     } else if(event == EVENT_MODE_PIN) {
         g_debug("pin mode");
-        edje_object_file_set(edje, UI_FILE, "sim_auth_input");
-        edje_object_part_text_set(edje, "instruction", "Enter PIN:"); 
-        ecore_evas_show(ee);
+        frame_show(sim_auth_input_show, sim_auth_input_hide);
+        edje_object_part_text_set(elm_layout_edje_get(layout), "instruction", "Enter PIN:"); 
+        evas_object_show(win);
     } else if(event == EVENT_MODE_PUK) {
         g_debug("puk mode");
-        edje_object_file_set(edje, UI_FILE, "sim_auth_input");
-        edje_object_part_text_set(edje, "instruction", "Enter PUK:"); 
-        ecore_evas_show(ee);
+        frame_show(sim_auth_input_show, sim_auth_input_hide);
+        edje_object_part_text_set(elm_layout_edje_get(layout), "instruction", "Enter PUK:"); 
+        evas_object_show(win);
     } else if(event == EVENT_PIN_CORRECT) {
-        edje_object_file_set(edje, UI_FILE, "sim_auth_pin_correct");        
+        frame_show(sim_auth_pin_correct_show, NULL);
     } else if(event == EVENT_PIN_WRONG) {
-        edje_object_file_set(edje, UI_FILE, "sim_auth_pin_wrong");
+        frame_show(sim_auth_pin_wrong_show, NULL);
         sim_auth_clear();
     } else if(event == EVENT_PUK_CORRECT) {
-        edje_object_file_set(edje, UI_FILE, "sim_auth_puk_correct");
+        frame_show(sim_auth_puk_correct_show, NULL);
     } else if(event == EVENT_PUK_WRONG) {
-        edje_object_file_set(edje, UI_FILE, "sim_auth_puk_wrong");
+        frame_show(sim_auth_puk_wrong_show, NULL);
         sim_auth_clear();
     } else if(event == EVENT_HIDE) {
         g_debug("hide it!");
         sim_auth_clear();
-        ecore_evas_hide(ee);
-        edje_object_file_set(edje, UI_FILE, "sim_auth_input");
+        frame_hide();
+        window_destroy();
     } else {
         g_error("Unknown event %d", event);
     }
 }
 
 
-void sim_auth_input(void *data, Evas_Object *o, const char *emission, const char *source)
-{
+void sim_auth_input(void *data, Evas_Object *o, const char *emission, const char *source) {
     g_debug("sim_auth_input()");
-
-    char* string;
-    int* length;
-    if(mode == MODE_PIN || mode == MODE_PUK_NEW_PIN) {
-        string = pin;
-        length = &pin_length;
-    } else if(mode == MODE_PUK) {
-        string = puk;
-        length = &puk_length;
-    } else {
-        string = pin_confirm;
-        length = &pin_confirm_length;
-    }
-    g_debug("String: %s", string);
-    g_debug("Length: %d", *length);
     g_debug("INPUT: %s", emission);
-
-	if(!strcmp(emission, "ok"))
-    {
-        if(mode == MODE_PIN && strcmp(pin, "") != 0) {
-            g_debug("Send pin");
-            edje_object_file_set(edje, UI_FILE, "sim_auth_checking");
-            ogsmd_sim_send_auth_code(pin, pin_callback, NULL);
-        } else if(mode == MODE_PUK && strcmp(puk, "") != 0) {
-            g_debug("Ask for a new PIN");
-            edje_object_part_text_set(edje, "instruction", "Enter new PIN:"); 
-            mode = MODE_PUK_NEW_PIN;
-            sim_auth_update();
-        } else if(mode == MODE_PUK_NEW_PIN && strcmp(pin, "") != 0) {
-            g_debug("Ask for new PIN confirmation");
-            edje_object_part_text_set(edje, "instruction", "Confirm new PIN:"); 
-            mode = MODE_PUK_NEW_PIN_CONFIRM;
-            sim_auth_update();
-        } else if(mode == MODE_PUK_NEW_PIN_CONFIRM) {
-            g_debug("See if PINs are identical");
-            if(!strcmp(pin, pin_confirm)) {
-                g_debug("PINs identical, send PUK and new PIN");
-                edje_object_file_set(edje, UI_FILE, "sim_auth_checking");
-                ogsmd_sim_unlock(puk, pin, puk_callback, NULL);
-            } else {
-                g_debug("PINs different");
-                edje_object_file_set(edje, UI_FILE, "sim_auth_pins_different");
-                vibrator_enable();
-                ecore_timer_add(2, pins_different_callback, NULL);
-            }
-        }
-    } else if(!strcmp(emission, "delete") && (*length) > 0) {
-        (*length)--;
-        string[*length] = 0;
-        sim_auth_update();
-    } else {
-        /* 1,2,3 etc. */
-        if(*length < 8)
-        {
-            strncat(string, emission, 1);
-            (*length)++;
-            sim_auth_update();
-        }
-    }
 }
 
 
@@ -196,7 +139,7 @@ void sim_auth_update() {
 	int i;
 	for(i = 0 ; i < length ; i++)
         strncat(stars, "*", 1);
-	edje_object_part_text_set(edje, "input_text", stars); 
+	edje_object_part_text_set(elm_layout_edje_get(layout), "input_text", stars); 
 }
 
 void sim_auth_clear() {
@@ -216,9 +159,9 @@ void pin_callback(GError* error, gpointer data) {
         g_debug("error");
         if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
             pipe_write(pipe_handler, sim_auth_event, EVENT_PIN_WRONG);
-            vibrator_enable();
+            //vibrator_enable();
             sleep(2);
-            vibrator_disable();
+            //vibrator_disable();
 
             ogsmd_sim_get_auth_status(sim_auth_callback, NULL);
         } else {
@@ -246,8 +189,8 @@ void puk_callback(GError* error, gpointer data) {
 int pins_different_callback(void *data) {
     vibrator_disable();
 
-    edje_object_file_set(edje, UI_FILE, "sim_auth_input");
-    edje_object_part_text_set(edje, "instruction", "Enter PUK:"); 
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_input");
+    edje_object_part_text_set(elm_layout_edje_get(layout), "instruction", "Enter PUK:"); 
     sim_auth_clear();
     mode = MODE_PUK;
 
@@ -296,5 +239,145 @@ void vibrator_enable() {
 void vibrator_disable() {
     g_debug("vibrator_disable()");
     //vibrator_write("0\n");
+}
+
+
+/*
+ * Button triggers
+ */
+
+void sim_auth_keypad_clicked(void *data, Evas_Object *obj, char input) {
+    char* string;
+    int* length;
+    if(mode == MODE_PIN || mode == MODE_PUK_NEW_PIN) {
+        string = pin;
+        length = &pin_length;
+    } else if(mode == MODE_PUK) {
+        string = puk;
+        length = &puk_length;
+    } else {
+        string = pin_confirm;
+        length = &pin_confirm_length;
+    }
+
+    if(*length < 8)
+    {
+        strncat(string, &input, 1);
+        (*length)++;
+        sim_auth_update();
+    }
+}
+
+void sim_auth_delete_clicked() {
+    char* string;
+    int* length;
+    if(mode == MODE_PIN || mode == MODE_PUK_NEW_PIN) {
+        string = pin;
+        length = &pin_length;
+    } else if(mode == MODE_PUK) {
+        string = puk;
+        length = &puk_length;
+    } else {
+        string = pin_confirm;
+        length = &pin_confirm_length;
+    }
+
+    if(*length > 0) {
+        (*length)--;
+        string[*length] = 0;
+        sim_auth_update();
+    }
+}
+
+void sim_auth_ok_clicked() {
+    if(mode == MODE_PIN && strcmp(pin, "") != 0) {
+        g_debug("Send pin: %s", pin);
+        frame_show(sim_auth_checking_show, NULL);
+        ogsmd_sim_send_auth_code(pin, pin_callback, NULL);
+    } else if(mode == MODE_PUK && strcmp(puk, "") != 0) {
+        g_debug("Ask for a new PIN");
+        edje_object_part_text_set(elm_layout_edje_get(layout), "instruction", "Enter new PIN:"); 
+        mode = MODE_PUK_NEW_PIN;
+        sim_auth_update();
+    } else if(mode == MODE_PUK_NEW_PIN && strcmp(pin, "") != 0) {
+        g_debug("Ask for new PIN confirmation");
+        edje_object_part_text_set(elm_layout_edje_get(layout), "instruction", "Confirm new PIN:"); 
+        mode = MODE_PUK_NEW_PIN_CONFIRM;
+        sim_auth_update();
+    } else if(mode == MODE_PUK_NEW_PIN_CONFIRM) {
+        g_debug("See if PINs are identical");
+        if(!strcmp(pin, pin_confirm)) {
+            g_debug("PINs identical, send PUK and new PIN: %s %s", pin, puk);
+            frame_show(sim_auth_checking_show, NULL);
+            ogsmd_sim_unlock(puk, pin, puk_callback, NULL);
+        } else {
+            g_debug("PINs different");
+            frame_show(sim_auth_pins_different_show, NULL);
+            vibrator_enable();
+            ecore_timer_add(2, pins_different_callback, NULL);
+        }
+    }
+}
+
+
+/*
+ * Views
+ */
+
+void sim_auth_input_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_input");
+
+    keypad = elm_keypad_add(win);
+    evas_object_smart_callback_add(keypad, "clicked", sim_auth_keypad_clicked, NULL);
+    edje_object_part_swallow(elm_layout_edje_get(layout), "keypad", keypad);
+    evas_object_show(keypad);
+
+    bt1 = elm_button_add(win);
+    elm_button_label_set(bt1, "Delete");
+    evas_object_smart_callback_add(bt1, "clicked", sim_auth_delete_clicked, NULL);
+    edje_object_part_swallow(elm_layout_edje_get(layout), "button_delete", bt1);
+    evas_object_show(bt1);
+
+    bt2 = elm_button_add(win);
+    elm_button_label_set(bt2, "OK");
+    evas_object_smart_callback_add(bt2, "clicked", sim_auth_ok_clicked, NULL);
+    edje_object_part_swallow(elm_layout_edje_get(layout), "button_ok", bt2);
+    evas_object_show(bt2);
+}
+
+void sim_auth_input_hide() {
+    edje_object_part_unswallow(elm_layout_edje_get(layout), keypad);
+    edje_object_signal_callback_del(keypad, "*", "input", sim_auth_keypad_clicked);
+    evas_object_del(keypad);
+
+    edje_object_part_unswallow(elm_layout_edje_get(layout), bt1);
+    evas_object_del(bt1);
+
+    edje_object_part_unswallow(elm_layout_edje_get(layout), bt2);
+    evas_object_del(bt2);
+}
+
+void sim_auth_checking_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_checking");
+}
+
+void sim_auth_pin_correct_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_pin_correct");
+}
+
+void sim_auth_pin_wrong_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_pin_wrong");
+}
+
+void sim_auth_pins_different_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_pins_different");
+}
+
+void sim_auth_puk_correct_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_puk_correct");
+}
+
+void sim_auth_puk_wrong_show() {
+    elm_layout_file_set(layout, UI_FILE, "sim_auth_puk_wrong");
 }
 
