@@ -245,11 +245,17 @@ shr_rootfs_postprocess() {
 }
 
 shr_rootfs_gta02_postprocess() {
+    curdir=$PWD
+    cd ${IMAGE_ROOTFS}
     cat ./etc/opkg/bearstech.conf | sed -e "s/^# \(.*om-gta02.*\)/\1/g" > ./etc/opkg/bearstech.conf
+    cd $curdir
 }
 
 shr_rootfs_gta01_postprocess() {
+    curdir=$PWD
+    cd ${IMAGE_ROOTFS}
     cat ./etc/opkg/bearstech.conf | sed -e "s/^# \(.*om-gta01.*\)/\1/g" > ./etc/opkg/bearstech.conf
+    cd $curdir
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "fso_rootfs_postprocess; shr_rootfs_postprocess"
