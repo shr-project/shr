@@ -121,7 +121,7 @@ GTK_INSTALL = "\
 "
 
 GAMES_INSTALL = "\
-#  numptyphysics \
+  numptyphysics \
 "
 
 # FIXME these should rather be part of alsa-state,
