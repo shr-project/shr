@@ -9,6 +9,32 @@
 #include <glib-2.0/glib-object.h>
 
 
+void ui_init() {
+
+
+    /*
+     * Initializations
+     */
+
+    elm_init(phonegui_argc, phonegui_argv);
+    g_debug("Initiated elementary");
+
+    etk_init(phonegui_argc, phonegui_argv);
+    g_debug("Initiated etk");
+
+    // Add ecore exit callback
+    if(phonegui_exit_cb != NULL) {
+        g_debug("Added exit callback to ecore.");
+        ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, phonegui_exit_cb, NULL);
+    }
+
+    // Add ecore pipe handler
+    Ecore_Fd_Handler *handler = ecore_main_fd_handler_add(pipe_handler.input, ECORE_FD_READ, event_callback, NULL, NULL, NULL);
+    ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);    
+
+    elm_run();
+}
+
 void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
     g_debug("phonegui_init()");
 
@@ -21,39 +47,11 @@ void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
     pipe_handler = pipe_create();
 
 
-    /*
-     * Initializations
-     */
-    ecore_init();
-    g_debug("Initiated ecore");
-
-    ecore_evas_init();
-    g_debug("Initiated ecore_evas");
-
-    edje_init();
-    g_debug("Initiated edje");
-
-    etk_init(phonegui_argc, phonegui_argv);
-    g_debug("Initiated etk");
-
-    elm_init(phonegui_argc, phonegui_argv);
-    g_debug("Initiated elementary");
-
-
-    // Add ecore exit callback
-    if(phonegui_exit_cb != NULL) {
-        g_debug("Added exit callback to ecore.");
-        ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, phonegui_exit_cb, NULL);
-    }
-
-    // Add ecore pipe handler
-    Ecore_Fd_Handler *handler = ecore_main_fd_handler_add(pipe_handler.input, ECORE_FD_READ, event_callback, NULL, NULL, NULL);
-    ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);
 
     // Create thread for ecore loop
     g_debug("Entering ecore loop");
     pthread_t thread;
-    int rc = pthread_create(&thread, NULL, (void*) elm_run, NULL);
+    int rc = pthread_create(&thread, NULL, (void*) ui_init, NULL);
     if(rc) {
         g_error("Return code from pthread_create() is %d", rc);
     }
@@ -62,7 +60,6 @@ void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
 
 void window_create(
     char *title,
-    void (*input_cb)(void *data, Evas_Object *obj, const char *emission, const char *source), 
     void (*event_cb)(int event),
     void (*delete_cb)(Ecore_Evas *ecore_evas)
 ) {
@@ -71,7 +68,7 @@ void window_create(
     // Window
     win = elm_win_add(NULL, "main", ELM_WIN_BASIC);
     elm_win_title_set(win, title);
-    elm_win_autodel_set(win, 1);
+    elm_win_autodel_set(win, 0); // Enable it?
     if(delete_cb != NULL) {
         g_debug("Adding delete-request-callback");
         evas_object_smart_callback_add(win, "delete-request", delete_cb, NULL);
@@ -89,7 +86,7 @@ void window_create(
     evas_object_show(layout);
 
     evas_object_resize(win, 320, 520);
-    //evas_object_show(win);
+    evas_object_show(win);
 }
 
 void window_destroy() {

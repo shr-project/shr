@@ -176,8 +176,10 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             }
             break;
         case CALL_STATUS_HELD:
+            g_debug("held call");
             break;
         case CALL_STATUS_ACTIVE:
+            g_debug("active call");
             ophonekitd_call_remove_incoming_call(call_id); 
             break;
         default:

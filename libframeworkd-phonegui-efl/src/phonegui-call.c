@@ -57,21 +57,17 @@ void call_show(const int id, const int status, const char *number, const char *t
 
 void call_hide(const int id) {
     g_debug("call_hide()");
-    free(call_number);
+    //free(call_number);
     pipe_write(pipe_handler, call_event, EVENT_HIDE);
 
     if(speaker_active) {
-        speaker_disable();
+        call_speaker_disable();
     }
 }
 
-
-void call_input(void *data, Evas_Object *o, const char *emission, const char *source) {
-    g_debug("call_input() %s", emission);
-}
-
 void call_delete(Ecore_Evas *ee) {
-    g_debug("call_delete()");
+    g_debug("call_delete(), release call!");
+    ogsmd_call_release(call_id, NULL, NULL);
     pipe_write(pipe_handler, call_event, EVENT_HIDE);
 }
 
@@ -80,7 +76,7 @@ void call_event(int event) {
 
     if(event == EVENT_SHOW) {
         g_debug("show");
-        window_create("Call", call_input, call_event, call_delete);
+        window_create("Call", call_event, call_delete);
     } else if(event == EVENT_MODE_INCOMING) {
         g_debug("mode incoming");
         frame_show(call_incoming_show, call_incoming_hide);

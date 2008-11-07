@@ -71,10 +71,6 @@ void messages_delete(void *data, Evas_Object *obj, void *event_info) {
 }
 
 
-void messages_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
-    g_debug("messages_input() input: %s", emission);
-}
-
 
 
 void add_integer_timestamp_to_message(GValueArray *message) {
@@ -171,7 +167,7 @@ void messages_event(int event) {
     g_debug("Event: %d", event);
 
     if(event == EVENT_SHOW) {
-        window_create("Messages", messages_input, messages_event, messages_delete);
+        window_create("Messages", messages_event, messages_delete);
     } else if(event == EVENT_MODE_FOLDERS) {
         elm_layout_file_set(layout, UI_FILE, "loading");
         evas_object_show(win);

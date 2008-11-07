@@ -10,7 +10,6 @@
 void phonegui_messages_show();
 void phonegui_messages_hide();
 
-void messages_input(void *data, Evas_Object *obj, const char *emission, const char *source);
 void messages_event(int event);
 
 void retrieve_messagebook_callback(GError*error, GPtrArray*messages, gpointer userdata);

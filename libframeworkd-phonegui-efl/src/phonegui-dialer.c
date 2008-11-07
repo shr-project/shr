@@ -34,14 +34,10 @@ void dialer_delete(void *data, Evas_Object *obj, void *event_info) {
     phonegui_dialer_hide();
 }
 
-void dialer_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
-    g_debug("dialer_input()");
-}
-
 void dialer_event(int event) {
     g_debug("dialer_event()");
     if(event == EVENT_SHOW) {
-        window_create("Dialer", dialer_input, dialer_event, dialer_delete);
+        window_create("Dialer", dialer_event, dialer_delete);
         g_debug("frame_show()");
         frame_show(dialer_main_show, dialer_main_hide);
         evas_object_show(win);

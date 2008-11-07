@@ -12,7 +12,6 @@ void phonegui_outgoing_call_hide(const int id);
 
 void call_show(const int id, const int status, const char *number, const char *type);
 void call_hide(const int id);
-void call_input(void *data, Evas_Object *o, const char *emission, const char *source);
 void call_delete(Ecore_Evas *ee);
 void call_event(int event);
 

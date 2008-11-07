@@ -10,7 +10,6 @@
 void phonegui_dialer_show();
 void phonegui_dialer_hide();
 
-void dialer_input(void *data, Evas_Object *obj, const char *emission, const char *source);
 void dialer_event(int event);
 void dialer_delete(void *data, Evas_Object *obj, void *event_info);
 void dialer_update();

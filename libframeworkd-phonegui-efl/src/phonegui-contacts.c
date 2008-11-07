@@ -70,17 +70,12 @@ void contacts_delete(void *data, Evas_Object *obj, void *event_info) {
 
 
 
-void contacts_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
-    g_debug("contacts_input() input: %s", emission);
-}
-
-
 
 void contacts_event(int event) {
     g_debug("contacts_event(), event: %d", event);
 
     if(event == EVENT_SHOW) {
-        window_create("Contacts", contacts_input, contacts_event, contacts_delete);
+        window_create("Contacts", contacts_event, contacts_delete);
     } else if(event == EVENT_MODE_LIST) {
         frame_show(contacts_loading_show, NULL);
         evas_object_show(win);

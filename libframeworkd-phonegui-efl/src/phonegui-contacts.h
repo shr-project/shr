@@ -9,7 +9,6 @@
 void phonegui_contacts_show();
 void phonegui_contacts_hide();
 
-void contacts_input(void *data, Evas_Object *obj, const char *emission, const char *source);
 void contacts_event(int event);
 void contacts_delete(void *data, Evas_Object *obj, void *event_info);
 

@@ -29,11 +29,6 @@ void phonegui_message_hide() {
     pipe_write(pipe_handler, message_event, EVENT_HIDE);
 }
 
-
-void message_input(void *data, Evas_Object *obj, const char *emission, const char *source) {
-    g_debug("message_input()");
-}
-
 void message_delete(Ecore_Evas *ee) {
     g_debug("message_delete()");
     phonegui_message_hide();
@@ -43,7 +38,7 @@ void message_event(int event) {
     g_debug("message_event()");
 
     if(event == EVENT_SHOW) {
-        window_create("New SMS", message_input, message_event, message_delete);
+        window_create("New SMS", message_event, message_delete);
         elm_layout_file_set(layout, UI_FILE, "message");
         evas_object_show(win);
         ogsmd_sim_retrieve_message(tmp_id, retrieve_callback, NULL);
@@ -51,7 +46,7 @@ void message_event(int event) {
         edje_object_part_text_set(elm_layout_edje_get(layout), "number", tmp_number);
         edje_object_part_text_set(elm_layout_edje_get(layout), "content", tmp_content);
     } else if(event == EVENT_HIDE) {
-        evas_object_hide(win);
+        window_destroy();
     } else {
         g_error("Unknown event");
     }

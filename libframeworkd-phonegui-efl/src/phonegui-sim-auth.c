@@ -86,7 +86,7 @@ void sim_auth_event(int event) {
 
     if(event == EVENT_CREATE) {
         g_debug("create");
-        window_create("SIM Authentication", sim_auth_input, sim_auth_event, sim_auth_delete);
+        window_create("SIM Authentication", sim_auth_event, sim_auth_delete);
     } else if(event == EVENT_MODE_PIN) {
         g_debug("pin mode");
         frame_show(sim_auth_input_show, sim_auth_input_hide);
@@ -115,12 +115,6 @@ void sim_auth_event(int event) {
     } else {
         g_error("Unknown event %d", event);
     }
-}
-
-
-void sim_auth_input(void *data, Evas_Object *o, const char *emission, const char *source) {
-    g_debug("sim_auth_input()");
-    g_debug("INPUT: %s", emission);
 }
 
 
@@ -329,11 +323,6 @@ void sim_auth_ok_clicked() {
 void sim_auth_input_show() {
     elm_layout_file_set(layout, UI_FILE, "sim_auth_input");
 
-    keypad = elm_keypad_add(win);
-    evas_object_smart_callback_add(keypad, "clicked", sim_auth_keypad_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "keypad", keypad);
-    evas_object_show(keypad);
-
     bt1 = elm_button_add(win);
     elm_button_label_set(bt1, "Delete");
     evas_object_smart_callback_add(bt1, "clicked", sim_auth_delete_clicked, NULL);
@@ -345,20 +334,25 @@ void sim_auth_input_show() {
     evas_object_smart_callback_add(bt2, "clicked", sim_auth_ok_clicked, NULL);
     edje_object_part_swallow(elm_layout_edje_get(layout), "button_ok", bt2);
     evas_object_show(bt2);
+
+    keypad = elm_keypad_add(win);
+    evas_object_smart_callback_add(keypad, "clicked", sim_auth_keypad_clicked, NULL);
+    edje_object_part_swallow(elm_layout_edje_get(layout), "keypad", keypad);
+    evas_object_show(keypad);
 }
 
 void sim_auth_input_hide() {
     g_debug("sim_auth_input_hide()");
-
-    edje_object_part_unswallow(elm_layout_edje_get(layout), keypad);
-    evas_object_smart_callback_del(keypad, "clicked", sim_auth_keypad_clicked);
-    evas_object_del(keypad);
 
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt1);
     evas_object_del(bt1);
 
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt2);
     evas_object_del(bt2);
+
+    edje_object_part_unswallow(elm_layout_edje_get(layout), keypad);
+    evas_object_smart_callback_del(keypad, "clicked", sim_auth_keypad_clicked);
+    evas_object_del(keypad);
 }
 
 void sim_auth_checking_show() {

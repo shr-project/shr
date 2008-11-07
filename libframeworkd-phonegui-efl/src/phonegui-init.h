@@ -18,7 +18,7 @@ Evas_Object *win, *bg, *layout;
 void phonegui_init(int argc, char **argv, void (*exit_cb)());
 int event_callback(void *data, Ecore_Fd_Handler *fdh);
 
-void window_create();
+void window_create(char *title, void (*event_cb)(int event), void (*delete_cb)(Ecore_Evas *ecore_evas));
 void window_destroy();
 
 #endif

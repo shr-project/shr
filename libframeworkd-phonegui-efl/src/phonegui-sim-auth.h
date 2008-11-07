@@ -11,7 +11,6 @@ void phonegui_sim_auth_show(const int status);
 void phonegui_sim_auth_hide(const int status);
 
 void sim_auth_event(int event);
-void sim_auth_input(void *data, Evas_Object *o, const char *emission, const char *source);
 void sim_auth_update();
 void sim_auth_clear();
 
