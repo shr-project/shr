@@ -239,7 +239,7 @@ shr_rootfs_postprocess() {
     cat ./etc/frameworkd.conf | sed -e "s/^\(modem.*=.*ti_calypso.*\)$/\1\nti_calypso_deep_sleep = never/g" > ./etc/frameworkd.conf
 
     #font cache optimization, persistent cache
-    cat /etc/fonts/fonts.conf | sed -e "s/<cachedir>.*\/var\/cache\/\(.*\)<\/cachedir>/<cachedir>\/var\/local\/\1<\/cachedir>/g" > /etc/fonts/fonts.conf
+    cat ./etc/fonts/fonts.conf | sed -e "s/<cachedir>.*\/var\/cache\/\(.*\)<\/cachedir>/<cachedir>\/var\/local\/\1<\/cachedir>/g" > ./etc/fonts/fonts.conf
 
     cd $curdir
 }
