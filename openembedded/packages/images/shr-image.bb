@@ -110,7 +110,7 @@ AUDIO_INSTALL = "\
 GTK_INSTALL = "\
   openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
-  openmoko-terminal2 \ # could not compile it, gpe-terminal is included
+  openmoko-terminal2 \
   gpe-scap \
   tangogps \
   pidgin \
@@ -121,7 +121,7 @@ GTK_INSTALL = "\
 "
 
 GAMES_INSTALL = "\
-  numptyphysics \
+#  numptyphysics \
 "
 
 # FIXME these should rather be part of alsa-state,
