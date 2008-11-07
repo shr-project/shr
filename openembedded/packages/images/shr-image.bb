@@ -101,7 +101,8 @@ AUDIO_INSTALL = "\
   alsa-utils-aplay \
   alsa-utils-amixer \
   gst-meta-audio \
-  gst-plugin-mad \
+#  gst-plugin-mad \
+  gst-plugin-ugly \
   gst-plugin-modplug \
   gst-plugin-sid \
   fso-sounds \

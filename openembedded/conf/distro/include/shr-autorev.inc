@@ -11,6 +11,7 @@ SRCREV_pn-zhone = "${AUTOREV}"
 SRCREV_pn-openmoko-terminal2 = "4604"
 SRCREV_pn-webkit-gtk = "${AUTOREV}"
 SRCREV_pn-navit = "${AUTOREV}"
+SRCREV_pn-shared-mime-info = "0.51"
  
 PREFERRED_VERSION_vala-native = "0.1.5"
 PREFERRED_VERSION_vala = "0.1.5"
