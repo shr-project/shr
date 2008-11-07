@@ -101,8 +101,7 @@ AUDIO_INSTALL = "\
   alsa-utils-aplay \
   alsa-utils-amixer \
   gst-meta-audio \
-#  gst-plugin-mad \
-  gst-plugin-ugly \
+  gst-plugin-mad \
   gst-plugin-modplug \
   gst-plugin-sid \
   fso-sounds \
@@ -111,7 +110,7 @@ AUDIO_INSTALL = "\
 GTK_INSTALL = "\
   openmoko-icon-theme-standard2 \
   openmoko-calculator2 \
-#  openmoko-terminal2 \ # could not compile it, gpe-terminal is included
+  openmoko-terminal2 \ # could not compile it, gpe-terminal is included
   gpe-scap \
   tangogps \
   pidgin \
@@ -150,7 +149,7 @@ SHR_INSTALL = "\
   openmoko-contacts3 \
   ophonekitd \ 
   libframeworkd-phonegui-efl \
-  gpe-terminal \
+#  gpe-terminal \
   rxvt-unicode \
   elementary-alarm \
   gpe-scap \
@@ -233,7 +232,27 @@ shr_rootfs_postprocess() {
     echo 'gtk-theme-name = "openmoko-standard-2"' >> ./etc/gtk-2.0/gtkrc
     echo 'gtk-icon-theme-name = "openmoko-standard"' >> ./etc/gtk-2.0/gtkrc
 
+    #frameworkd fixes
+    #log to /tmp
+    cat ./etc/frameworkd.conf |sed -e "s/^log_to.*/log_to = file\nlog_destination = \/tmp\/frameworkd.log/g" > ./etc/frameworkd.conf
+    #deep sleep for ti_calypso
+    cat ./etc/frameworkd.conf | sed -e "s/^\(modem.*=.*ti_calypso.*\)$/\1\nti_calypso_deep_sleep = never/g" > ./etc/frameworkd.conf
+
+    #font cache optimization, persistent cache
+    cat /etc/fonts/fonts.conf | sed -e "s/<cachedir>.*\/var\/cache\/\(.*\)<\/cachedir>/<cachedir>\/var\/local\/\1<\/cachedir>/g" > /etc/fonts/fonts.conf
+
     cd $curdir
 }
 
+shr_rootfs_gta02_postprocess() {
+    cat ./etc/opkg/bearstech.conf | sed -e "s/^# \(.*om-gta02.*\)/\1/g" > ./etc/opkg/bearstech.conf
+}
+
+shr_rootfs_gta01_postprocess() {
+    cat ./etc/opkg/bearstech.conf | sed -e "s/^# \(.*om-gta01.*\)/\1/g" > ./etc/opkg/bearstech.conf
+}
+
 ROOTFS_POSTPROCESS_COMMAND += "fso_rootfs_postprocess; shr_rootfs_postprocess"
+
+ROOTFS_POSTPROCESS_COMMAND_append_om-gta02 = "shr_rootfs_gta02_postprocess"
+ROOTFS_POSTPROCESS_COMMAND_append_om-gta01 = "shr_rootfs_gta01_postprocess"
