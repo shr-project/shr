@@ -234,12 +234,12 @@ shr_rootfs_postprocess() {
 
     #frameworkd fixes
     #log to /tmp
-    cat ./etc/frameworkd.conf |sed -e "s/^log_to.*/log_to = file\nlog_destination = \/tmp\/frameworkd.log/g" > ./etc/frameworkd.conf
+    sed -i "s/^log_to.*/log_to = file\nlog_destination = \/tmp\/frameworkd.log/g" ./etc/frameworkd.conf
     #deep sleep for ti_calypso
-    cat ./etc/frameworkd.conf | sed -e "s/^\(modem.*=.*ti_calypso.*\)$/\1\nti_calypso_deep_sleep = never/g" > ./etc/frameworkd.conf
+    sed -i "s/^\(modem.*=.*ti_calypso.*\)$/\1\nti_calypso_deep_sleep = never/g" ./etc/frameworkd.conf
 
     #font cache optimization, persistent cache
-    cat ./etc/fonts/fonts.conf | sed -e "s/<cachedir>.*\/var\/cache\/\(.*\)<\/cachedir>/<cachedir>\/var\/local\/\1<\/cachedir>/g" > ./etc/fonts/fonts.conf
+    sed -i "s/<cachedir>.*\/var\/cache\/\(.*\)<\/cachedir>/<cachedir>\/var\/local\/\1<\/cachedir>/g" ./etc/fonts/fonts.conf
 
     cd $curdir
 }
@@ -247,14 +247,14 @@ shr_rootfs_postprocess() {
 shr_rootfs_gta02_postprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
-    cat ./etc/opkg/bearstech.conf | sed -e "s/^# \(.*om-gta02.*\)/\1/g" > ./etc/opkg/bearstech.conf
+    sed -i "s/^# \(.*om-gta02.*\)/\1/g" ./etc/opkg/bearstech.conf
     cd $curdir
 }
 
 shr_rootfs_gta01_postprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
-    cat ./etc/opkg/bearstech.conf | sed -e "s/^# \(.*om-gta01.*\)/\1/g" > ./etc/opkg/bearstech.conf
+    sed -i "s/^# \(.*om-gta01.*\)/\1/g" ./etc/opkg/bearstech.conf
     cd $curdir
 }
 
