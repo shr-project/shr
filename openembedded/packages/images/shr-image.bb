@@ -254,5 +254,5 @@ shr_rootfs_gta01_postprocess() {
 
 ROOTFS_POSTPROCESS_COMMAND += "fso_rootfs_postprocess; shr_rootfs_postprocess"
 
-ROOTFS_POSTPROCESS_COMMAND_append_om-gta02 = "shr_rootfs_gta02_postprocess"
-ROOTFS_POSTPROCESS_COMMAND_append_om-gta01 = "shr_rootfs_gta01_postprocess"
+ROOTFS_POSTPROCESS_COMMAND_append_om-gta02 = ";shr_rootfs_gta02_postprocess"
+ROOTFS_POSTPROCESS_COMMAND_append_om-gta01 = ";shr_rootfs_gta01_postprocess"
