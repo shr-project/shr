@@ -12,9 +12,9 @@ SRCREV_pn-openmoko-terminal2 = "4604"
 SRCREV_pn-webkit-gtk = "${AUTOREV}"
 SRCREV_pn-navit = "${AUTOREV}"
  
-+PREFERRED_VERSION_vala-native = "0.1.5"
-+PREFERRED_VERSION_vala = "0.1.5"
-+PREFERRED_VERSION_midori = "0.1.0"
+PREFERRED_VERSION_vala-native = "0.1.5"
+PREFERRED_VERSION_vala = "0.1.5"
+PREFERRED_VERSION_midori = "0.1.0"
 
 
 # SRCREV_pn-libframeworkd-glib = "${AUTOREV}"
