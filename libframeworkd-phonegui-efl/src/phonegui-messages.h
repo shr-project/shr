@@ -1,7 +1,6 @@
 #ifndef _PHONEGUI_MESSAGES_H
 #define _PHONEGUI_MESSAGES_H
 
-#include <time.h>
 #include <Ecore_Evas.h>
 #include <Ecore.h>
 #include <glib-2.0/glib-object.h>
