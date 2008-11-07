@@ -34,28 +34,23 @@ typedef enum {
 
 static MessagesModes messages_mode;
 
-static Etk_Widget *container = NULL;
-static Etk_Widget *tree;
+static Etk_Range *scroll_range = NULL;
+static Etk_Widget *container, *tree_folders, *tree_messages;
+static Etk_Tree_Row *selected_row = NULL;
 static Etk_Tree_Col *col1;
 
 static Etk_Entry *number_entry;
-
 static Etk_Widget *container_number;
-
 
 static char *messages_category;
 
 static GPtrArray *tmp_messages;
-static int tmp_id;
-static char *tmp_number;
-static char *tmp_content;
-static char *tmp_status;
-static char *tmp_date;
+static GValueArray *tmp_message;
 
 static char *recipient_number = NULL;
 static char *new_message_content;
 
-static Evas_Object *content_entry, *bt1, *bt2, *bt3;
+static Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *hbt1, *hbt2, *hbt3;
 
 
 void phonegui_messages_show(int argc, char** argv) {
@@ -85,14 +80,12 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
 void add_integer_timestamp_to_message(GValueArray *message) {
     GHashTable *details = g_value_get_pointer(g_value_array_get_nth(message, 4));
     char *timestr = g_value_get_string(g_hash_table_lookup(details, "timestamp"));
-    //g_debug("datestr: %s", datestr);
     time_t timestamp = time_stringtotimestamp(timestr);
 
     // Insert integer timestamp into array
     GValue *value = g_slice_alloc0(sizeof(GValue));
     g_value_init(value, G_TYPE_LONG);
     g_value_set_long(value, timestamp);
-    //g_debug("%ld timestamp", g_value_get_long(timestamp));
     g_hash_table_insert(details, strdup("timestamp_int"), value);
 }
 
@@ -102,9 +95,6 @@ gint compare_messages(GValueArray **a, GValueArray **b) {
     
     long la = g_value_get_long(g_hash_table_lookup(h1, "timestamp_int"));
     long lb = g_value_get_long(g_hash_table_lookup(h2, "timestamp_int"));
-
-    //g_debug("## VALUES: %s, %s", g_value_get_string(g_hash_table_lookup(h1, "timestamp")), g_value_get_string(g_hash_table_lookup(h2, "timestamp")));
-    //g_debug("   VALUES: %ld, %ld", la, lb);    
 
     if(la > lb)
         return -1;
@@ -122,15 +112,16 @@ void process_message(GValueArray *message) {
     char datestr[32];
     strftime(datestr, 31, "%e.%m.%Y, %H:%M", gmtime(&timestamp));
 
-    int *id = g_slice_alloc(sizeof(int));
-    *id = g_value_get_int(g_value_array_get_nth(message, 0));
+    //int *id = g_slice_alloc(sizeof(int));
+    //*id = g_value_get_int(g_value_array_get_nth(message, 0));
 
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
     g_hash_table_insert(parameters, strdup("content"), strdup(g_value_get_string(g_value_array_get_nth(message, 3))));
     g_hash_table_insert(parameters, strdup("date"), strdup(datestr));
-    Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree), NULL, col1, parameters, NULL);
-    etk_tree_row_data_set(row, id);
+
+    Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree_messages), NULL, col1, parameters, NULL);
+    etk_tree_row_data_set(row, g_value_array_copy(message));
 }
 
 
@@ -139,27 +130,32 @@ void retrieve_messagebook_callback(GError*error, GPtrArray*messages, gpointer us
     tmp_messages = messages;
     g_ptr_array_foreach(tmp_messages, add_integer_timestamp_to_message, NULL);
     g_ptr_array_sort(tmp_messages, compare_messages);
+
+
+    // ADD ETK LIST HERE!
+    tree_messages = etk_tree_new();
+    etk_tree_rows_height_set(ETK_TREE(tree_messages), 80);
+    etk_tree_mode_set(ETK_TREE(tree_messages), ETK_TREE_MODE_LIST);
+    etk_tree_headers_visible_set(ETK_TREE(tree_messages), ETK_FALSE);
+    etk_tree_multiple_select_set(ETK_TREE(tree_messages), ETK_FALSE);
+
+    col1 = etk_tree_col_new(ETK_TREE(tree_messages), "Title", 300, 0.0);
+    etk_tree_col_model_add(col1, etk_tree_model_edje_new(UI_FILE, "message_row"));
+    etk_tree_build(ETK_TREE(tree_messages));
+
+    Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree_messages));
+    etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
+    etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
+    etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
+
+    g_ptr_array_foreach(tmp_messages, process_message, NULL);
+
+
     pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
 }
 
-
-void retrieve_message_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data) {
-    tmp_status = strdup(status);
-    tmp_number = strdup(number);
-    tmp_content = strdup(content);
-
-    GValue *value = g_hash_table_lookup(properties, "timestamp");
-    if(value != NULL) {
-        time_t timestamp = time_stringtotimestamp(g_value_get_string(value));
-        char timestr[32];
-        strftime(timestr, 31, "%a, %e.%m.%Y, %H:%M", gmtime(&timestamp));
-        tmp_date = strdup(timestr);
-    }
-
-    pipe_write(pipe_handler, messages_event, EVENT_MODE_MESSAGE);
-}
-
 void delete_message_callback(GError *error, gpointer userdata) {
+    selected_row = NULL;
     messages_mode = MODE_LIST;
     pipe_write(pipe_handler, messages_event, EVENT_MODE_LIST);
 }
@@ -212,9 +208,20 @@ void messages_button_options_clicked() {
 }
 
 void messages_button_answer_clicked() {
-    recipient_number = strdup(tmp_number);
-    messages_mode = MODE_NEW1;
-    frame_show(messages_new1_show, messages_new1_hide);
+    if(messages_mode == MODE_LIST) {
+        selected_row = etk_tree_selected_row_get(tree_messages);
+        if(selected_row != NULL) {
+            GValueArray *message = etk_tree_row_data_get(selected_row);
+
+            messages_mode = MODE_NEW1;
+            recipient_number = strdup(g_value_get_string(g_value_array_get_nth(message, 2)));
+            frame_show(messages_new1_show, messages_new1_hide);
+        }
+    } else if(messages_mode == MODE_MESSAGE) {
+        messages_mode = MODE_NEW1;
+        recipient_number = strdup(g_value_get_string(g_value_array_get_nth(tmp_message, 2)));
+        frame_show(messages_new1_show, messages_new1_hide);
+    }
 }
 
 void messages_button_new_clicked() {
@@ -227,7 +234,7 @@ void messages_button_show_clicked() {
 
     if(messages_mode == MODE_FOLDERS) {
         g_debug("MODE_FOLDERS");
-        Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
+        Etk_Tree_Row *row = etk_tree_selected_row_get(tree_folders);
         if(row != NULL) {
             messages_mode = MODE_LIST;
             g_debug("before loading");
@@ -241,13 +248,11 @@ void messages_button_show_clicked() {
         }
     } else if(messages_mode == MODE_LIST) {
         g_debug("MODE_LIST");
-        Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
-        if(row != NULL) {
+        selected_row = etk_tree_selected_row_get(tree_messages);
+        if(selected_row != NULL) {
             messages_mode = MODE_MESSAGE;
-            frame_show(messages_loading_show, NULL);
-
-            int *id = etk_tree_row_data_get(row);
-            ogsmd_sim_retrieve_message(*id, retrieve_message_callback, NULL);
+            tmp_message = etk_tree_row_data_get(selected_row);
+            pipe_write(pipe_handler, messages_event, EVENT_MODE_MESSAGE);
         }
     }
 }
@@ -283,24 +288,21 @@ void messages_button_continue_clicked() {
 }
 
 void messages_button_delete_clicked() {
-    Etk_Tree_Row *row = etk_tree_selected_row_get(tree);
-    if(row != NULL) {
-        int *id = etk_tree_row_data_get(row);
-        tmp_id = *id;
-
+    selected_row = etk_tree_selected_row_get(tree_messages);
+    if(selected_row != NULL) {
         messages_mode = MODE_DELETE;
+        tmp_message = etk_tree_row_data_get(selected_row);
         frame_show(messages_delete_show, messages_delete_hide);
     }
 }
 
 void messages_button_yes_clicked() {
     frame_show(messages_loading_show, NULL);
-    ogsmd_sim_delete_message(tmp_id, delete_message_callback, NULL);
+    ogsmd_sim_delete_message(g_value_get_int(g_value_array_get_nth(tmp_message, 0)), delete_message_callback, NULL);
 }
 
 void messages_button_no_clicked() {
-    messages_mode = MODE_LIST;
-    pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED);
+    pipe_write(pipe_handler, messages_event, EVENT_MODE_MESSAGE);
 }
 
 
@@ -324,17 +326,17 @@ void messages_folders_show() {
     edje_object_part_swallow(elm_layout_edje_get(layout), "button_show", bt2);
     evas_object_show(bt2);
 
-    tree = etk_tree_new();
-    etk_tree_rows_height_set(ETK_TREE(tree), 80);
-    etk_tree_mode_set(ETK_TREE(tree), ETK_TREE_MODE_LIST);
-    etk_tree_headers_visible_set(ETK_TREE(tree), ETK_FALSE);
-    etk_tree_multiple_select_set(ETK_TREE(tree), ETK_FALSE);
+    tree_folders = etk_tree_new();
+    etk_tree_rows_height_set(ETK_TREE(tree_folders), 80);
+    etk_tree_mode_set(ETK_TREE(tree_folders), ETK_TREE_MODE_LIST);
+    etk_tree_headers_visible_set(ETK_TREE(tree_folders), ETK_FALSE);
+    etk_tree_multiple_select_set(ETK_TREE(tree_folders), ETK_FALSE);
 
-    col1 = etk_tree_col_new(ETK_TREE(tree), "Title", 300, 0.0);
+    col1 = etk_tree_col_new(ETK_TREE(tree_folders), "Title", 300, 0.0);
     etk_tree_col_model_add(col1, etk_tree_model_edje_new(UI_FILE, "folder_row"));
-    etk_tree_build(ETK_TREE(tree));
+    etk_tree_build(ETK_TREE(tree_folders));
 
-    Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree));
+    Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree_folders));
     etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
     etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
     etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
@@ -346,11 +348,11 @@ void messages_folders_show() {
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("name"), strdup("Inbox"));
     g_hash_table_insert(parameters, strdup("info"), strdup(label));
-    Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree), NULL, col1, parameters, NULL);
+    Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(tree_folders), NULL, col1, parameters, NULL);
     etk_tree_row_data_set(row, strdup("Inbox"));
 
     container = etk_embed_new(evas_object_evas_get(win));
-    etk_container_add(ETK_CONTAINER(container), tree);
+    etk_container_add(ETK_CONTAINER(container), tree_folders);
     etk_widget_show_all(container);
     edje_object_part_swallow(elm_layout_edje_get(layout), "list_swallow", etk_embed_object_get(ETK_EMBED(container)));
 }
@@ -367,6 +369,14 @@ void messages_folders_hide() {
 }
 
 
+static void
+my_hover_bt_1(void *data, Evas_Object *obj, void *event_info)
+{
+   Evas_Object *hv = data;
+   
+   evas_object_show(hv);
+}
+
 void messages_list_show() {
     g_debug("messages_list_show()");
 
@@ -379,11 +389,47 @@ void messages_list_show() {
     edje_object_part_swallow(elm_layout_edje_get(layout), "button_back", bt1);
     evas_object_show(bt1);
 
+
+    // Options button with hover
+    hv = elm_hover_add(win);
+
     bt2 = elm_button_add(win);
-    elm_button_label_set(bt2, "Delete");
-    evas_object_smart_callback_add(bt2, "clicked", messages_button_delete_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "button_delete", bt2);
+    elm_button_label_set(bt2, "Options");
+    evas_object_smart_callback_add(bt2, "clicked", my_hover_bt_1, hv);
+    edje_object_part_swallow(elm_layout_edje_get(layout), "button_options", bt2);
     evas_object_show(bt2);
+
+    elm_hover_parent_set(hv, win);
+    elm_hover_target_set(hv, bt2);
+
+    bx = elm_box_add(win);
+    elm_box_horizontal_set(bx, 1);
+    elm_box_homogenous_set(bx, 1);
+    evas_object_show(bx);
+
+    hbt1 = elm_button_add(win);
+    elm_button_label_set(hbt1, "Show");
+    evas_object_size_hint_min_set(hbt1, 130, 80);
+    evas_object_smart_callback_add(hbt1, "clicked", messages_button_show_clicked, NULL);
+    evas_object_show(hbt1);
+    elm_box_pack_end(bx, hbt1);
+
+    hbt2 = elm_button_add(win);
+    elm_button_label_set(hbt2, "Answer");
+    evas_object_size_hint_min_set(hbt2, 130, 80);
+    evas_object_smart_callback_add(hbt2, "clicked", messages_button_answer_clicked, NULL);
+    evas_object_show(hbt2);
+    elm_box_pack_end(bx, hbt2);
+
+    hbt3 = elm_button_add(win);
+    elm_button_label_set(hbt3, "Delete");
+    evas_object_size_hint_min_set(hbt3, 130, 80);
+    evas_object_smart_callback_add(hbt3, "clicked", messages_button_delete_clicked, NULL);
+    evas_object_show(hbt3);
+    elm_box_pack_end(bx, hbt3);
+
+    elm_hover_content_set(hv, "top", bx);
+
 
     bt3 = elm_button_add(win);
     elm_button_label_set(bt3, "Show");
@@ -391,30 +437,20 @@ void messages_list_show() {
     edje_object_part_swallow(elm_layout_edje_get(layout), "button_show", bt3);
     evas_object_show(bt3);
 
-g_debug("tree init");
-    tree = etk_tree_new();
-    etk_tree_rows_height_set(ETK_TREE(tree), 80);
-    etk_tree_mode_set(ETK_TREE(tree), ETK_TREE_MODE_LIST);
-    etk_tree_headers_visible_set(ETK_TREE(tree), ETK_FALSE);
-    etk_tree_multiple_select_set(ETK_TREE(tree), ETK_FALSE);
 
-    col1 = etk_tree_col_new(ETK_TREE(tree), "Title", 300, 0.0);
-    etk_tree_col_model_add(col1, etk_tree_model_edje_new(UI_FILE, "message_row"));
-    etk_tree_build(ETK_TREE(tree));
+    g_debug("tree init");
 
-    Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(tree));
-    etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
-    etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
-    etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
+    if(selected_row != NULL) {
+        g_debug("Selecting row #####");
+        etk_tree_row_select(selected_row);
+    }
 
-g_debug("before foreach's");
-
-    g_ptr_array_foreach(tmp_messages, process_message, NULL);
-
-g_debug("after");
+    if(scroll_range != NULL) {
+        etk_range_value_set(etk_scrolled_view_vscrollbar_get(etk_tree_scrolled_view_get(ETK_TREE(tree_messages))), etk_range_value_get(scroll_range));
+    }
 
     container = etk_embed_new(evas_object_evas_get(win));
-    etk_container_add(ETK_CONTAINER(container), tree);
+    etk_container_add(ETK_CONTAINER(container), tree_messages);
     etk_widget_show_all(container);
 
     edje_object_part_swallow(elm_layout_edje_get(layout), "swallow", etk_embed_object_get(ETK_EMBED(container)));
@@ -430,22 +466,41 @@ void messages_list_hide() {
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt3);
     evas_object_del(bt3);
 
+    evas_object_del(hbt1);
+    evas_object_del(hbt2);
+    evas_object_del(hbt3);
+    evas_object_del(bx);
+    evas_object_del(hv);
+
+
+
+    scroll_range = etk_scrolled_view_vscrollbar_get(etk_tree_scrolled_view_get(ETK_TREE(tree_messages)));
     edje_object_part_unswallow(elm_layout_edje_get(layout), container);
     etk_widget_hide_all(container);
 
     // TODO: Free tree memory
     //etk_object_destroy(col1);
-    //etk_object_destroy(tree);
+    //etk_object_destroy(tree_messages);
     //etk_object_destroy(scrolled_view);
     //etk_object_destroy(container);
 }
 
+
+
 void messages_message_show() {
     elm_layout_file_set(layout, UI_FILE, "message_show");
-    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_status", tmp_status);
-    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_number", tmp_number);
-    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_content", tmp_content);
-    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_date", tmp_date);
+
+    g_debug("get timestamp");
+    GHashTable *details = g_value_get_pointer(g_value_array_get_nth(tmp_message, 4));
+    long timestamp = g_value_get_long(g_hash_table_lookup(details, "timestamp_int"));
+    char datestr[32];
+    strftime(datestr, 31, "%e.%m.%Y, %H:%M", gmtime(&timestamp));
+    g_debug("got timestamp");
+
+    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_status", g_value_get_string(g_value_array_get_nth(tmp_message, 1)));
+    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_number", g_value_get_string(g_value_array_get_nth(tmp_message, 2)));
+    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_content", g_value_get_string(g_value_array_get_nth(tmp_message, 3)));
+    edje_object_part_text_set(elm_layout_edje_get(layout), "message_show_date", datestr);
 
     bt1 = elm_button_add(win);
     elm_button_label_set(bt1, "Back");
@@ -453,11 +508,33 @@ void messages_message_show() {
     edje_object_part_swallow(elm_layout_edje_get(layout), "button_back", bt1);
     evas_object_show(bt1);
 
+
+    // Options button with hover
+    hv = elm_hover_add(win);
+
     bt2 = elm_button_add(win);
     elm_button_label_set(bt2, "Options");
-    evas_object_smart_callback_add(bt2, "clicked", messages_button_options_clicked, NULL);
+    evas_object_smart_callback_add(bt2, "clicked", my_hover_bt_1, hv);
     edje_object_part_swallow(elm_layout_edje_get(layout), "button_options", bt2);
     evas_object_show(bt2);
+
+    elm_hover_parent_set(hv, win);
+    elm_hover_target_set(hv, bt2);
+
+    bx = elm_box_add(win);
+    elm_box_horizontal_set(bx, 1);
+    elm_box_homogenous_set(bx, 1);
+    evas_object_show(bx);
+
+    hbt1 = elm_button_add(win);
+    elm_button_label_set(hbt1, "Delete");
+    evas_object_size_hint_min_set(hbt1, 130, 80);
+    evas_object_smart_callback_add(hbt1, "clicked", messages_button_delete_clicked, NULL);
+    evas_object_show(hbt1);
+    elm_box_pack_end(bx, hbt1);
+
+    elm_hover_content_set(hv, "top", bx);
+
 
     bt3 = elm_button_add(win);
     elm_button_label_set(bt3, "Answer");
@@ -475,6 +552,10 @@ void messages_message_hide() {
 
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt3);
     evas_object_del(bt3);
+
+    evas_object_del(hbt1);
+    evas_object_del(bx);
+    evas_object_del(hv);
 }
 
 

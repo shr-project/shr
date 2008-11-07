@@ -14,7 +14,6 @@ void messages_input(void *data, Evas_Object *obj, const char *emission, const ch
 void messages_event(int event);
 
 void retrieve_messagebook_callback(GError*error, GPtrArray*messages, gpointer userdata);
-void retrieve_message_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data);
 void process_message(GValueArray *message);
 void delete_message_callback(GError *error, gpointer userdata);
 void send_message_callback(GError *error, int transaction_index, gpointer userdata);

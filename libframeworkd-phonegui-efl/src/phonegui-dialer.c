@@ -125,7 +125,7 @@ void dialer_main_show() {
 
 void dialer_main_hide() {
     edje_object_part_unswallow(elm_layout_edje_get(layout), keypad);
-    edje_object_signal_callback_del(keypad, "*", "input", dialer_button_keypad_clicked);
+    evas_object_smart_callback_del(keypad, "clicked", dialer_button_keypad_clicked);
     evas_object_del(keypad);
 
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt_delete);

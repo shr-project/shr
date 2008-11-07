@@ -157,7 +157,7 @@ void pin_callback(GError* error, gpointer data) {
     g_debug("pin_callback()");
     if(error != NULL) {
         g_debug("error");
-        if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+        if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED) || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
             pipe_write(pipe_handler, sim_auth_event, EVENT_PIN_WRONG);
             //vibrator_enable();
             sleep(2);
@@ -174,7 +174,7 @@ void puk_callback(GError* error, gpointer data) {
     g_debug("puk_callback()");
     if(error != NULL) {
         g_debug("error code: %d %s %s", error->code, error->message, g_quark_to_string(error->domain));
-        if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+        if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED) || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
             mode = MODE_PUK;
             pipe_write(pipe_handler, sim_auth_event, EVENT_PUK_WRONG);
             vibrator_enable();
@@ -189,7 +189,7 @@ void puk_callback(GError* error, gpointer data) {
 int pins_different_callback(void *data) {
     vibrator_disable();
 
-    elm_layout_file_set(layout, UI_FILE, "sim_auth_input");
+    frame_show(sim_auth_input_show, sim_auth_input_hide);
     edje_object_part_text_set(elm_layout_edje_get(layout), "instruction", "Enter PUK:"); 
     sim_auth_clear();
     mode = MODE_PUK;
@@ -290,6 +290,8 @@ void sim_auth_delete_clicked() {
 }
 
 void sim_auth_ok_clicked() {
+    g_debug("OK clicked");
+
     if(mode == MODE_PIN && strcmp(pin, "") != 0) {
         g_debug("Send pin: %s", pin);
         frame_show(sim_auth_checking_show, NULL);
@@ -346,8 +348,10 @@ void sim_auth_input_show() {
 }
 
 void sim_auth_input_hide() {
+    g_debug("sim_auth_input_hide()");
+
     edje_object_part_unswallow(elm_layout_edje_get(layout), keypad);
-    edje_object_signal_callback_del(keypad, "*", "input", sim_auth_keypad_clicked);
+    evas_object_smart_callback_del(keypad, "clicked", sim_auth_keypad_clicked);
     evas_object_del(keypad);
 
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt1);

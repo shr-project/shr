@@ -345,7 +345,7 @@ collections {
 
 
 	    part {
-	           name,   "button_delete";
+	           name,   "button_options";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
