@@ -195,7 +195,15 @@ fso_rootfs_postprocess() {
     for file in $desktop; do
         echo "Categories=Office;" >>$file
     done
+
     echo "Exec=openmoko-terminal2 htop" >> ./usr/share/applications/htop.desktop
+    echo "Icon=pidgin.png" >> ./usr/share/applications/pidgin.desktop
+    echo "Icon=settings.png" >> ./usr/share/applications/exposure.desktop
+    sed -i "s/^X-Icon-path.*$//g" ./usr/share/applications/vagalume.desktop
+    echo "Icon=settings.png" >> ./usr/share/applications/exposure.desktop
+
+    
+
     # minimal gtk theme foo
     mkdir -p ./etc/gtk-2.0/
     echo 'gtk-font-name = "Sans 5"' >> ./etc/gtk-2.0/gtkrc
