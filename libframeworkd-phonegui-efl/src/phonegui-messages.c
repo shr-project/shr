@@ -303,6 +303,20 @@ void messages_button_no_clicked() {
 
 
 
+/*
+ * Signals
+ */
+void messages_new_content_changed() {
+    g_debug("content changed!");
+    char *content = elm_entry_entry_get(content_entry);
+    g_debug("content: %s", content);
+
+    char text[64];
+    sprintf(text, "%d characters left", 160 - (strlen(content) % 160));
+    edje_object_part_text_set(elm_layout_edje_get(layout), "characters_left", text); 
+}
+
+
 
 /*
  * Views
@@ -577,6 +591,7 @@ void messages_new1_show() {
     content_entry = elm_entry_add(win);
     elm_entry_entry_set(content_entry, "Enter your SMS here");
     edje_object_part_swallow(elm_layout_edje_get(layout), "content_entry", content_entry);
+    evas_object_smart_callback_add(content_entry, "changed", messages_new_content_changed, NULL);
     evas_object_show(content_entry);
     elm_widget_focus_set(content_entry, 1);
 
