@@ -1,0 +1,11 @@
+[Icon Theme]
+Name=SHR
+Comment=SHR Icon Theme
+
+Directories=48x48/apps
+
+[48x48/categories]
+Size=48
+Context=apps
+Type=Fixed
+

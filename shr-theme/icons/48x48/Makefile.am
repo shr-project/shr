@@ -1,0 +1,2 @@
+SUBDIRS=apps
+MAINTAINERCLEANFILES = Makefile.in
