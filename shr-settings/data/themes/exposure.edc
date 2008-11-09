@@ -1,0 +1,882 @@
+collections {
+
+#include "animation.edc"
+
+   group {
+      name: "exposure";
+      images {
+	 image: "back_arrow.png" COMP;
+	 image: "back_arrow_bg.png" COMP;
+	 image: "asterisk.png" COMP;
+	 image: "plus_button.png" COMP;
+	 image: "alert_ok.png" COMP;
+      }
+      parts {
+         part {
+            name: "base";
+            type: RECT;
+            description { state:   "default"  0.0;
+               color: 0 0 0 255;
+            }
+         }
+	 part { name: "settings-text";
+		 type: TEXT;
+		 mouse_events: 0;
+		 description { state: "default" 0.0;
+			 color: 255 255 255 255;
+			 text {
+				 align: 0.0 0.5;
+				 min: 1 1;
+				 size: 16;
+				 text: "Settings";
+				 font: "Sans";
+			 }
+			 rel1 {
+				 relative: 0.0 0.0;
+				 offset: 30 30;
+			 }
+			 rel2 {
+				 relative: 1.0 0.0;
+			 }
+		 }
+	 }
+         part {
+            name: "main-menu-clip";
+            type: RECT;
+            description { state:   "default"  0.0;
+               color: 255 255 255 255;
+            }
+            description { state:   "out"  0.0;
+               color: 255 255 255 0;
+            }
+         }
+         part {
+            name: "sysinfo-clip";
+            type: RECT;
+            description { state:   "default"  0.0;
+               color: 255 255 255 0;
+            }
+            description { state:   "out"  0.0;
+               color: 255 255 255 255;
+            }
+         }
+	 part {
+		name: "wifi-clip";
+		type: RECT;
+		description { state:   "default"  0.0;
+			color: 255 255 255 0;
+		}
+		description { state:   "out"  0.0;
+			color: 255 255 255 255;
+		}
+	 }
+	 part {
+		 name: "enter_pw-clip";
+		 type: RECT;
+		 description { state:   "default"  0.0;
+			 color: 255 255 255 0;
+		 }
+		 description { state:   "out"  0.0;
+			 color: 255 255 255 255;
+		 }
+	 }
+         part {
+            name: "main-menu";
+            type: SWALLOW;
+	    clip_to: "main-menu-clip";
+            description { state:   "default"  0.0;
+		    rel1 {  to: "settings-text";
+			    relative: 0.0 0.0;
+			    offset: 0 30;
+		    }
+		    rel2 {
+			    relative: 1.0 1.0;
+		    }
+            }
+            description { state:   "out"  0.0;
+               inherit: "default" 0.0;
+               rel1 {
+                  relative: -1.0 0.0;
+               }
+               rel2 {
+                  relative: 0.0 1.0;
+               }
+            }
+         }
+         part {
+            name: "sysinfo";
+            type: SWALLOW;
+	    clip_to: "sysinfo-clip";
+            description { state:   "default"  0.0;
+		  rel1 { to: "settings-text";
+                  relative: -1.0 0.0;
+		  offset: 0 30;
+               }
+               rel2 {
+                  relative: 0.0 1.0;
+               }
+            }
+            description { state:   "out"  0.0;
+	       inherit: "default" 0.0;
+               rel1 {
+                  relative: 0.0 0.0;
+               }
+               rel2 {
+                  relative: 1.0 1.0;
+               }
+            }
+         }
+	 part {
+		 name: "wifi";
+		 type: SWALLOW;
+		 clip_to: "wifi-clip";
+		 description { state:   "default"  0.0;
+			 rel1 { to: "settings-text";
+				 relative: -1.0 0.0;
+				 offset: 0 30;
+			 }
+			 rel2 {
+				 relative: 0.0 1.0;
+			 }
+		 }
+		 description { state:   "out"  0.0;
+			 inherit: "default" 0.0;
+			 rel1 {
+				 relative: 0.0 0.0;
+			 }
+			 rel2 {
+				 relative: 1.0 1.0;
+			 }
+		 }
+	 }
+	 part {
+		 name: "enter_pw";
+		 type: SWALLOW;
+		 clip_to: "enter_pw-clip";
+		 description { state:   "default"  0.0;
+			 rel1 { to: "settings-text";
+				 relative: -1.0 0.0;
+				 offset: 0 30;
+			 }
+			 rel2 {
+				 relative: 0.0 1.0;
+			 }
+		 }
+		 description { state:   "out"  0.0;
+			 inherit: "default" 0.0;
+			 rel1 {
+				 relative: 0.0 0.0;
+			 }
+			 rel2 {
+				 relative: 1.0 1.0;
+			 }
+		 }
+	 }
+	 part {
+		 name: "error_window";
+		 type: SWALLOW;
+		 description { state:   "default"  0.0;
+			 rel1 {
+				 relative: 0.0 -1.0;
+			 }
+			 rel2 {
+				 relative: 1.0 0.0;
+			 }
+		 }
+		 description { state:   "out"  0.0;
+			 inherit: "default" 0.0;
+			 rel1 {
+				 relative: 0.0 0.3;
+			 }
+			 rel2 {
+				 relative: 1.0 1.0;
+			 }
+		 }
+	 }
+         part { name: "arrow-event";
+	    type: RECT;
+            description { state:   "default"  0.0;
+	       visible: 0;
+	       color: 0 0 0 0;
+	       max: 68 64;
+	       rel1 { to: "asterisk-image";
+               }
+	       rel2 { to: "asterisk-image";
+               }
+            }
+            description { state:   "out"  0.0;
+	       inherit: "default" 0.0;
+	       visible: 1;
+            }
+         }
+         part { name: "asterisk-image";
+	    mouse_events: 0;
+            description { state:   "default"  0.0;
+	       color: 255 255 255 255;
+	       align: 0.0 1.0;
+	       rel1.offset: 2 0;
+	       rel2.offset: -1 -3;
+	       max: 68 64;
+	       image.normal: "asterisk.png";
+            }
+            description { state:   "out"  0.0;
+	       inherit: "default" 0.0;
+               color: 255 255 255 0;
+            }
+         }
+	 part { name: "back_arrow_bg-image";
+		 mouse_events: 0;
+		 description { state:   "default"  0.0;
+			 color: 255 255 255 0;
+			 align: 0.0 1.0;
+			 rel1.offset: 2 0;
+			 rel2.offset: -1 -3;
+			 max: 68 64;
+			 image.normal: "back_arrow_bg.png";
+		 }
+		 description { state:   "out"  0.0;
+			 inherit: "default" 0.0;
+			 color: 255 255 255 255;
+		 }
+	 }
+	 part { name: "arrow-image";
+		 mouse_events: 0;
+		 description { state:   "default"  0.0;
+			 color: 255 255 255 0;
+			 align: 0.0 1.0;
+			 max: 29 21;
+			 rel1.offset: 20 20;
+			 rel2.offset: -21 -21;
+			 image.normal: "back_arrow.png";
+		 }
+		 description { state:   "out"  0.0;
+			 inherit: "default" 0.0;
+			 color: 255 255 255 255;
+		 }
+		 description { state:   "highlighted"  0.0;
+			 inherit: "default" 0.0;
+			 color: 0 255 0 255;
+		 }
+	 }
+         part { name: "plus-button1-image";
+	    mouse_events: 0;
+            description { state:   "default"  0.0;
+	       color: 255 255 255 255;
+	       max: 136 63;
+	       align: 1.0 1.0;
+	       rel2.offset: -3 -4;
+	       image.normal: "plus_button.png";
+            }
+         }
+         part { name: "plus-button2-image";
+	    mouse_events: 0;
+            description { state:   "default"  0.0;
+	       color: 255 255 255 255;
+	       rel1 { to: "plus-button1-image";
+                  relative: -1.0 0.0;
+               }
+               rel2 { to: "plus-button1-image";
+                  relative: 0.0 1.0;
+                  offset: -2 -1;
+               }
+	       image.normal: "plus_button.png";
+            }
+         }
+         part { name: "plus-button3-image";
+	    mouse_events: 0;
+            description { state:   "default"  0.0;
+	       color: 255 255 255 255;
+	       rel1 { to: "plus-button2-image";
+                  relative: -1.0 0.0;
+               }
+               rel2 { to: "plus-button2-image";
+                  relative: 0.0 1.0;
+                  offset: -2 -1;
+               }
+	       image.normal: "plus_button.png";
+            }
+         }
+      }
+      programs {
+         program { name: "main-slide-in";
+		signal: "main-slide-in";
+		source: "exposure";
+		action: STATE_SET "default" 0.0;
+		target: "main-menu";
+		target: "sysinfo";
+		target: "wifi";
+		target: "main-menu-clip";
+		target: "sysinfo-clip";
+		target: "wifi-clip";
+		target: "arrow-event";
+		target: "arrow-image";
+		target: "back_arrow_bg-image";
+		target: "asterisk-image";
+		target: "error_window";
+		transition: DECELERATE 1.0;
+         }
+	 program { name: "sysinfo-slide-in";
+		signal: "sysinfo-slide-in";
+		source: "exposure";
+		action: STATE_SET "out" 0.0;
+		target: "main-menu";
+		target: "sysinfo";
+		target: "main-menu-clip";
+		target: "sysinfo-clip";
+		target: "arrow-event";
+		target: "arrow-image";
+		target: "back_arrow_bg-image";
+		target: "asterisk-image";
+		transition: DECELERATE 1.0;
+		after: "back_arrow_highlight";
+         }
+	 program { name: "wifi-slide-in";
+		 signal: "wifi-slide-in";
+		 source: "exposure";
+		 action: STATE_SET "out" 0.0;
+		 target: "main-menu";
+		 target: "wifi";
+		 target: "main-menu-clip";
+		 target: "wifi-clip";
+		 target: "arrow-event";
+		 target: "arrow-image";
+		 target: "back_arrow_bg-image";
+		 target: "asterisk-image";
+		 transition: DECELERATE 1.0;
+		 after: "back_arrow_highlight";
+	 }
+	 program { name: "error-window-out";
+		 signal: "error-window-out";
+		 source: "exposure";
+		 action: STATE_SET "out" 0.0;
+		 target: "error_window";
+		 transition: DECELERATE 1.0;
+	 }
+	 program { name: "error-window-default";
+		 signal: "error-window-default";
+		 source: "exposure";
+		 action: STATE_SET "default" 0.0;
+		 target: "error_window";
+		 transition: DECELERATE 1.0;
+	 }
+	 program { name: "back_arrow_highlight";
+		 action: STATE_SET "highlighted" 0.0;
+		 target: "arrow-image";
+		 transition: DECELERATE 1.0;
+		 after: "back_arrow_normal";
+	 }
+	 program { name: "back_arrow_normal";
+		 action: STATE_SET "out" 0.0;
+		 target: "arrow-image";
+	 }
+         program { name: "arrow-press";
+	    signal: "mouse,up,1";
+	    source: "arrow-event";
+	    action: SIGNAL_EMIT "main-slide-in" "exposure";
+         }
+	 program { name: "enter_pw-slide-in-wifi";
+		 signal: "enter_pw-slide-in";
+		 source: "exposure";
+		 action: STATE_SET "default" 0.0;
+		 target: "wifi";
+		 target: "wifi-clip";
+		 transition: DECELERATE 1.0;
+	 }
+	 program { name: "enter_pw-slide-in_pw";
+		 signal: "enter_pw-slide-in";
+		 source: "exposure";
+		 action: STATE_SET "out" 0.0;
+		 target: "enter_pw";
+		 target: "enter_pw-clip";
+		 transition: DECELERATE 1.0;
+		 after: "kbd_show_signal_prg";
+	 }
+	 program { name: "enter_pw-slide-out-wifi";
+		 signal: "enter_pw-slide-out";
+		 source: "exposure";
+		 action: STATE_SET "out" 0.0;
+		 target: "wifi";
+		 target: "wifi-clip";
+		 transition: DECELERATE 1.0;
+	 }
+	 program { name: "enter_pw-slide-out-pw";
+		 signal: "enter_pw-slide-out";
+		 source: "exposure";
+		 action: STATE_SET "default" 0.0;
+		 target: "enter_pw";
+		 target: "enter_pw-clip";
+		 transition: DECELERATE 1.0;
+		 after: "kbd_hide_signal_prg";
+	 }
+	 program {
+		 name: "kbd_show_signal_prg";
+		 action: SIGNAL_EMIT "kbd_show_signal" "kbd";
+	 }
+	 program {
+		 name: "kbd_hide_signal_prg";
+		 action: SIGNAL_EMIT "kbd_hide_signal" "kbd";
+	 }
+      }
+   }
+   group { name: "wifi_item";
+	min: 440 80;
+	max: 440 80;
+	images {
+		image: "wifi_bar.png" COMP;
+		image: "wifi_lock.png" COMP;
+	}
+	script {
+		public message(Msg_Type:type, id, ...) {
+			if (type == MSG_FLOAT) {
+
+				if (id == 1) {
+					new Float:val;
+					val = getfarg(2);
+
+					custom_state(PART:"snr-label", "default", 0.0);
+					set_state_val(PART:"snr-label", STATE_REL1, val, 0.0);
+					set_state_val(PART:"snr-label", STATE_REL2, val, 1.0);
+					set_state_val(PART:"snr-label", STATE_ALIGNMENT, val, val);
+					set_state(PART:"snr-label", "custom", 0.0);
+				}
+
+			} else if (type == MSG_INT) {
+
+				if (id == 1) {
+					new val;
+					val = getarg(2);
+
+					custom_state(PART:"sec-image", "default", 0.0);
+					set_state_val(PART:"sec-image", STATE_VISIBLE, val);
+					set_state(PART:"sec-image", "custom", 0.0);
+				} else if (id == 2) {
+					new val;
+					val = getarg(2);
+
+					custom_state(PART:"network-name", "default", 0.0);
+
+					// unselected
+					if (val == 0) {
+						set_state_val(PART:"network-name", STATE_COLOR, 255, 255, 255, 255);
+					// selected
+					} else {
+						set_state_val(PART:"network-name", STATE_COLOR, 0, 255, 0, 255);
+					}
+
+					set_state(PART:"network-name", "custom", 0.0);
+				}
+
+			}
+		}
+	}
+	parts {
+		part {
+			name: "base";
+			type: RECT;
+			ignore_flags: ON_HOLD;
+			description { state:   "default"  0.0;
+				color: 0 0 0 255;
+			}
+		}
+		ANIMATE_CLICK_BG();
+		part { name: "sec-image";
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				visible: 1;
+				image.normal: "wifi_lock.png";
+				min: 12 14;
+				max: 12 14;
+				align: 1.0 1.0;
+			}
+		}
+		part { name: "network-name";
+			type: TEXT;
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				color: 255 255 255 255;
+				text {
+					align: 0.0 0.5;
+					min: 0 1;
+					size: 48;
+					text: "<no essid>";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.0;
+					to_y: "sec-image";
+				}
+			}
+		}
+		part { name: "snr-range";
+			type: RECT;
+			mouse_events: 0;
+			description { state:   "default"  0.0;
+				visible: 0;
+				rel1 {
+					relative: 0.0 0.0;
+					to_y: "sec-image";
+				}
+				rel2 {
+					relative: 0.0 1.0;
+					to_x: "sec-image";
+				}
+			}
+		}
+		part { name: "snr-image";
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				image.normal: "wifi_bar.png";
+				rel1.to: "snr-range";
+				rel2 { to: "snr-label";
+					relative: 0.0 1.0;
+				}
+			}
+		}
+		part { name: "snr-label";
+			type: TEXT;
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				color: 255 255 255 255;
+				fixed: 1 1;
+				text {
+					min: 1 1;
+					size: 12;
+					text: "10%";
+					font: "Sans";
+				}
+				rel1 {  to: "snr-range";
+					relative: 0.5 0.0;
+				}
+				rel2 {  to: "snr-range";
+					relative: 0.5 1.0;
+				}
+				align: 		0.5 0.5;
+			}
+		}
+	}
+	programs {
+		ANIMATE_CLICK_PROG();
+	}
+   }
+   group { name: "list_item";
+	min: 440 80;
+	max: 440 80;
+	parts {
+		part {
+			name: "base";
+			type: RECT;
+			ignore_flags: ON_HOLD;
+			description { state:   "default"  0.0;
+				color: 0 0 0 255;
+			}
+		}
+		ANIMATE_CLICK_BG();
+		part { name: "item-label";
+			type: TEXT;
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 0.0 0.5;
+					min: 1 1;
+					size: 48;
+					text: "WiFi";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+		part { name: "item-status";
+			type: TEXT;
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 1.0 0.65;
+					min: 1 1;
+					size: 24;
+					text: "unknown";
+					font: "Sans";
+				}
+				align: 1.0 1.0;
+			}
+		}
+	}
+	programs {
+		ANIMATE_CLICK_PROG();
+	}
+   }
+   group { name: "list_item_unclickable";
+	   min: 440 80;
+	   max: 440 80;
+	   parts {
+		   part {
+			   name: "base";
+			   type: RECT;
+			   description { state:   "default"  0.0;
+				   color: 0 0 0 255;
+			   }
+		   }
+	   }
+   }
+   group { name: "sysinfo_item_big";
+	min: 440 45;
+	max: 440 45;
+	parts {
+		part {
+			name: "base";
+			type: RECT;
+			description { state:   "default"  0.0;
+				color: 0 0 0 255;
+			}
+		}
+		part { name: "item-label";
+			type: TEXT;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 0.0 0.5;
+					min: 1 1;
+					size: 28;
+					text: "sysinfo";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+   	}
+   }
+   group { name: "sysinfo_item_small";
+	min: 440 30;
+	max: 440 30;
+	parts {
+		part {
+			name: "base";
+			type: RECT;
+			description { state:   "default"  0.0;
+				color: 0 0 0 255;
+			}
+		}
+		part { name: "item-label";
+			type: TEXT;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 0.0 0.5;
+					min: 1 1;
+					size: 16;
+					text: "sysinfo";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+   }
+   group { name: "enter_pw-window";
+	   min: 440 600;
+	   max: 440 600;
+	   parts {
+		   part {
+			name: "base";
+			type: RECT;
+			description { state:   "default"  0.0;
+				color: 0 0 0 255;
+			}
+		   }
+		   part { name: "ok-button";
+			type: TEXT;
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 0.0 0.5;
+					min: 1 1;
+					size: 32;
+					text: "Ok";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 0.5 0.2;
+				}
+			}
+		   }
+		   part { name: "ok-button-mouse-catcher";
+			   type: RECT;
+			   description { state: "default" 0.0;
+				   color: 0 0 0 0;
+				   rel1 { to: "ok-button";
+				   }
+				   rel2 { to: "ok-button";
+				   }
+			   }
+		   }
+		   part { name: "cancel-button";
+			type: TEXT;
+			mouse_events: 0;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 0.8 0.5;
+					min: 1 1;
+					size: 32;
+					text: "Cancel";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.5 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.2;
+				}
+			}
+		   }
+		   part { name: "cancel-button-mouse-catcher";
+			   type: RECT;
+			   description { state: "default" 0.0;
+				   color: 0 0 0 0;
+				   rel1 { to: "cancel-button";
+				   }
+				   rel2 { to: "cancel-button";
+				   }
+			   }
+		   }
+		   part { name: "enter-label";
+			type: TEXT;
+			description { state: "default" 0.0;
+				fixed: 1 1;
+				text {
+					align: 0.0 0.5;
+					min: 1 1;
+					size: 48;
+					text: "Enter Password";
+					font: "Sans";
+				}
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.5;
+				}
+			}
+		   }
+		   part {
+			   name: "enter_pw_widget";
+			   type: SWALLOW;
+			   description { state:   "default"  0.0;
+				   color: 0 0 0 255;
+				   rel1 {
+					   relative: 0.0 0.2;
+				   }
+				   rel2 {
+					   relative: 1.0 0.6;
+				   }
+			   }
+		   }
+	   }
+	   programs{
+		program { name: "ok-press";
+			signal: "mouse,up,1";
+			source: "ok-button-mouse-catcher";
+			action: SIGNAL_EMIT "pw_win_ok" "exposure";
+		}
+		program { name: "cancel-press";
+			signal: "mouse,up,1";
+			source: "cancel-button-mouse-catcher";
+			action: SIGNAL_EMIT "pw_win_cancel" "exposure";
+		}
+	   }
+   }
+   group { name: "error_window";
+	   min: 480 185;
+	   max: 480 185;
+	   parts {
+		   part {
+			   name: "base";
+			   type: RECT;
+			   description { state:   "default"  0.0;
+				   color: 0 0 0 128;
+			   }
+		   }
+		   part { name: "error-label";
+			   type: TEXT;
+			   description { state: "default" 0.0;
+				   color: 255 0 0 255;
+				   fixed: 1 1;
+				   text {
+					   align: 0.0 0.5;
+					   min: 1 1;
+					   size: 16;
+					   text: "ERROR";
+					   font: "Sans";
+				   }
+				   rel1 {
+					   relative: 0.0 0.0;
+				   }
+				   rel2 {
+					   relative: 0.3 0.2;
+				   }
+			   }
+		   }
+		   part { name: "description-label";
+			   type: TEXT;
+			   description { state: "default" 0.0;
+				   fixed: 1 1;
+				   text {
+					   align: 0.0 0.5;
+					   min: 1 1;
+					   size: 16;
+					   text: "Unable to join network";
+					   font: "Sans";
+				   }
+				   rel1 {
+					   relative: 0.3 0.0;
+				   }
+				   rel2 {
+					   relative: 1.0 0.2;
+				   }
+			   }
+		   }
+		   part { name: "ok-image";
+			description { state:   "default"  0.0;
+				max: 442 60;
+				image.normal: "alert_ok.png";
+				rel1 {
+					relative: 0.0 0.2;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		   }
+	   }
+	   programs {
+		   program { name: "ok-error-press";
+			   signal: "mouse,down,1";
+			   source: "ok-image";
+			   action: SIGNAL_EMIT "error-window-default" "exposure";
+		   }
+	   }
+   }
+}

@@ -1,0 +1,33 @@
+Exposure - Setting or Preference on Neo1973
+===================================================
+
+*
+* Copyright (C) 2008 by OpenMoko, Inc.
+* Written by Willie Chen <willie_chen@openmoko.com>
+*            Marek Lindner <marek@openmoko.com>
+* All Rights Reserved
+*
+
+"exposure" gives settings/preferences for users. Currently,
+those items are as following.
+
+* GSM -> needs Qtopia dbus call (holger)
+* WiFi -> needs network manager (raster)
+* Bluetooth -> DONE
+* GPS -> DONE
+* Backlight -> DONE
+* Suspend -> needs python dbus module (julian)
+* Profile -> needs next working daily build (holger?)
+* Time -> DONE
+* System Info -> needs edj tweaking (raster)
+
+"exposure" is base on the 'Enlightment'[1] windows manager, and
+use python-etk[2], python-ecore, python-edje, ... to control
+devices and windows.
+
+[1] http://web.enlightenment.org/
+[2] http://staff.get-e.org/?p=users/cmarcelo/python-etk.git;a=summary
+
+Usage:
+
+#python main.py

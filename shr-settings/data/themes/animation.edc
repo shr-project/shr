@@ -1,0 +1,56 @@
+
+#define ANIMATE_CLICK_BG() \
+part { \
+	name: "clicked_animation"; \
+	type: RECT; \
+	mouse_events: 0; \
+	description { \
+		state: "default" 0.0; \
+		color: 0 255 0 255; \
+		visible: 0; \
+		rel1 { \
+			relative: 0.0 0.5; \
+			offset: 0 0; \
+		} \
+		rel2 { \
+			relative: 1.0 0.5; \
+			offset: -1 -1; \
+		} \
+	} \
+	description { \
+		state: "clicked" 0.0; \
+		inherit: "default" 0.0; \
+		visible: 1; \
+		rel1 { \
+			relative: 0.0 0.0; \
+			offset: 0 0; \
+		} \
+		rel2 { \
+			relative: 1.0 1.0; \
+			offset: -1 -1; \
+		} \
+	} \
+} \
+
+
+#define ANIMATE_CLICK_PROG() \
+program { \
+	name: "animate_click"; \
+	signal: "mouse,clicked,1"; \
+	source: "*"; \
+	action: STATE_SET "clicked" 0.0; \
+	transition: LINEAR 0.16667; \
+	target: "clicked_animation"; \
+	after: "unanimate_click"; \
+} \
+program { \
+	name: "unanimate_click"; \
+	action: STATE_SET "default" 0.0; \
+	target: "clicked_animation"; \
+	after: "after_animation_signal"; \
+} \
+program { \
+	name: "after_animation_signal"; \
+	action: SIGNAL_EMIT "after_animate_click" "list_item"; \
+} \
+
