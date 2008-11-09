@@ -154,6 +154,7 @@ SHR_INSTALL = "\
   elementary-alarm \
   gpe-scap \
   shr-settings \
+  shr-theme \
 "
 # zhone should be added, but a custom package without the autostart script
 # removed libframeworkd-phonegui-gtk from SHR_INSTALL
