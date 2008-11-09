@@ -1,4 +1,4 @@
-SRCREV_pn-frameworkd = "a8d607e8c2172dc3685dcb797bc384c2761414ed"
+SRCREV_pn-frameworkd = "${AUTOREV}"
 SRCREV_pn-fso-gpsd = "${AUTOREV}"
 SRCREV_pn-fso-sounds = "${AUTOREV}"
 SRCREV_pn-gsm0710muxd = "${AUTOREV}"
@@ -13,6 +13,7 @@ SRCREV_pn-webkit-gtk = "${AUTOREV}"
 SRCREV_pn-navit = "${AUTOREV}"
 #SRCREV_pn-shared-mime-info = "0.51"
 SRCREV_pn-shr-settings = "${AUTOREV}"
+SRCREV_pn-shr-theme = "${AUTOREV}"
  
 PREFERRED_VERSION_vala-native = "0.1.5"
 PREFERRED_VERSION_vala = "0.1.5"
