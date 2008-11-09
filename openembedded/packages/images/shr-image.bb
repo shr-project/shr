@@ -243,7 +243,7 @@ shr_rootfs_postprocess() {
     sed -i "s/<cachedir>.*\/var\/cache\/\(.*\)<\/cachedir>/<cachedir>\/var\/local\/\1<\/cachedir>/g" ./etc/fonts/fonts.conf
 
     #piss of debian users with a nice gentoo-like PS1
-    echo "export PS1=\"\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\]\"">> ./etc/profile
+    echo "export PS1=\"\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] \"">> ./etc/profile
 
     cd $curdir
 }
