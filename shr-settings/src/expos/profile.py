@@ -18,7 +18,7 @@ def debug(msg):
 	print msg
 
 class profile:
-	def __init__(self, dbus, session_bus, name="Profile"):
+	def __init__(self, dbus, system_bus, name="Profile"):
 		self.name = name
 		self.default_status = "unknown"
 		self.runnable = 0
@@ -26,19 +26,23 @@ class profile:
 		self.status = -1
 		self.status_str = self.default_status
 		self.dbus = dbus
-		self.session_bus = session_bus
-		self.dbus_name = "org.openmoko.qtopia.Phonestatus"
-		self.dbus_path = "/Profiles"
-		self.dbus_iface = "org.openmoko.qtopia.Profiles"
-		#debug("enter init device : " + self.name)
+		self.system_bus = system_bus
+		self.dbus_name = "org.freesmartphone.opreferencesd"
+		self.dbus_path = "/org/freesmartphone/Preferences"
+		self.dbus_iface = "org.freesmartphone.Preferences"
+		debug("enter init device : " + self.name)
+
+	def dbus_get_profiles(self, profiles):
+		self.profile_array = profiles
+		debug("PROFILES: %s" % profiles)
 
 	def dbus_get_value(self, value):
-		#debug("value: " + str(value))
-		self.status = value[1]
+		debug("value: " + str(value))
+		self.status = self.profile_array.index(value)
 		self.update_label()
 
-	def dbus_set_value(self, value):
-		#debug("dbus_set_value: " + str(value))
+	def dbus_set_value(self):
+		debug("dbus_set_value")
 		pass
 
 	def dbus_error_handler(self, error):
@@ -49,19 +53,19 @@ class profile:
 		self.update_label()
 
 	def dbus_owner_changed(self, owner):
-		#debug("dbus_owner_changed: " + str(owner))
+		debug("dbus_owner_changed: " + str(owner))
 
 		if not self.runnable and owner <> "":
-			self.connect_to_qtopia()
+			self.connect_to_frameworkd()
 
 			if self.runnable:
 				self.get_status()
 
 	def after_animate_click(self, edje_obj, emission, source):
-		#debug('onclick')
+		debug('onclick')
 		if (self.runnable):
-			if (self.status == len(self.profile_array)):
-				self.status = 1
+			if (self.status == len(self.profile_array) - 1):
+				self.status = 0
 			else:
 				self.status += 1
 			self.set_status()
@@ -69,43 +73,44 @@ class profile:
 
 	def init_status(self):
 		#debug('init_status')
-		self.connect_to_qtopia()
+		self.connect_to_frameworkd()
 
 		if self.runnable:
 			self.get_status()
 		else:
-			self.session_bus.watch_name_owner(self.dbus_name, self.dbus_owner_changed)
+			self.system_bus.watch_name_owner(self.dbus_name, self.dbus_owner_changed)
 			self.update_label()
 
-	def connect_to_qtopia(self):
+	def connect_to_frameworkd(self):
 		self.runnable = 1
 		try:
-			self.qtopia_obj = self.session_bus.get_object(self.dbus_name, self.dbus_path, introspect=False)
+			self.frameworkd_obj = self.system_bus.get_object(self.dbus_name, self.dbus_path, introspect=False)
 		except:
-			debug("Can't get Qtopia object:")
+			debug("Can't get frameworkd object:")
 			debug(sys.exc_info()[1])
 			self.runnable = 0
 		else:
 			try:
-				self.qtopia_iface = self.dbus.Interface(self.qtopia_obj, dbus_interface=self.dbus_iface)
+				self.frameworkd_iface = self.dbus.Interface(self.frameworkd_obj, dbus_interface=self.dbus_iface)
 			except:
-				debug("Can't get Qtopia interface:")
+				debug("Can't get frameworkd interface:")
 				debug(sys.exc_info()[1])
 				self.runnable = 0
 			else:
-				self.profile_array = self.qtopia_iface.profiles()
+				self.frameworkd_iface.GetProfiles(reply_handler=self.dbus_get_profiles, error_handler=self.dbus_error_handler)
 
 	def get_status(self):
-		#debug('get_status')
-		self.qtopia_iface.currentProfile(reply_handler=self.dbus_get_value, error_handler=self.dbus_error_handler)
+		debug('get_status')
+		self.frameworkd_iface.GetProfile(reply_handler=self.dbus_get_value, error_handler=self.dbus_error_handler)
 
 	def set_status(self):
-		#debug('set_status: ' + str(self.status))
-		self.qtopia_iface.setCurrentProfile(self.profile_array[self.status - 1], reply_handler=self.dbus_set_value, error_handler=self.dbus_error_handler)
+		debug('set_status: ' + str(self.status))
+		self.frameworkd_iface.SetProfile(self.profile_array[self.status], reply_handler=self.dbus_set_value, error_handler=self.dbus_error_handler)
 
 	def update_label(self):
-		#debug('update_label: ' + str(self.status))
+		debug('update_label: ' + str(self.status))
 		if self.runnable:
-			self.status_str = self.profile_array[self.status - 1][0]
-			#debug('update_label: ' + self.status_str)
+			self.status_str = self.profile_array[self.status]
+			debug('update_label: ' + self.status_str)
 		self.edje_obj.part_text_set("item-status", self.status_str)
+
