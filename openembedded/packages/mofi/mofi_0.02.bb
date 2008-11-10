@@ -18,6 +18,7 @@ do_configure_prepend() {
 
 do_install_append() {
 	install -d ${D}${sysconfdir}/mofi
+	install -d ${D}/${datadir}/applications
 	install -m 0644 ${S}/example.mofi.conf ${D}${sysconfdir}/mofi/
 	install -m 0755 ${S}/connect.sh ${D}${sysconfdir}/mofi/
         install -m 0644 ../mofi.desktop ${D}/${datadir}/applications
