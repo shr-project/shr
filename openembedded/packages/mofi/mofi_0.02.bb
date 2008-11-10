@@ -5,6 +5,7 @@ RDEPENDS = "python-core python-misc python-lang python-subprocess python-threadi
 PV = "0.02"
 PR = "r1"
 SRC_URI = "http://projects.openmoko.org/frs/download.php/271/mofi.${PV}.tar.gz"
+S = "${WORKDIR}/${PN}.${PV}"
 
 do_install() {
 	./install.sh
