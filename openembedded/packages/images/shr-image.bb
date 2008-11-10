@@ -156,6 +156,7 @@ SHR_INSTALL = "\
   shr-settings \
   shr-theme \
   midori \
+  mofi \
 "
 # zhone should be added, but a custom package without the autostart script
 # removed libframeworkd-phonegui-gtk from SHR_INSTALL
