@@ -27,6 +27,8 @@ void (*phonegui_outgoing_call_show)();
 void (*phonegui_outgoing_call_hide)();
 void (*phonegui_message_show)();
 void (*phonegui_message_hide)();
+void (*phonegui_dialog_show)(int type);
+void (*phonegui_dialog_hide)();
 
 void phonegui_connect();
 

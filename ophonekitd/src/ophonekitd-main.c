@@ -37,7 +37,6 @@
 gboolean sim_auth_active = FALSE;
 gboolean incoming_call_active = FALSE;
 gboolean outgoing_call_active = FALSE;
-gboolean incoming_message_active = FALSE;
 int active_calls = 0;
 int *incoming_calls= NULL;
 int incoming_calls_size = 0;
@@ -194,9 +193,11 @@ void ophonekitd_sim_auth_status_handler(const int status) {
         g_debug("sim ready");
 
         if(sim_auth_active) {
+            sim_auth_active = FALSE;
             phonegui_sim_auth_hide(status);
         }
         ogsmd_network_register(register_to_network_callback, NULL);
+        ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
     } else {
         g_debug("sim not ready");
         if(!sim_auth_active) {
@@ -209,12 +210,12 @@ void ophonekitd_sim_auth_status_handler(const int status) {
 
 void ophonekitd_sim_incoming_stored_message_handler(const int id) {
     g_debug("ophonekitd_sim_incoming_stored_message_handler()");
-    incoming_message_active = TRUE;
 
     /* FIXME: Quick and dirty hack to avoid the GSM not enable error after suspend */
     sleep(10);
 
     phonegui_message_show(id);
+    ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
 
 
@@ -278,7 +279,6 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
              * there's no auth status signal emitted
              */
             if(!sim_auth_active) {
-                sim_auth_active = TRUE;
                 ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
             }
 
@@ -293,6 +293,7 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
 void sim_auth_status_callback(GError *error, int status, gpointer userdata) {
     g_debug("sim_auth_status_callback()");
 
+    g_debug("sim_auth_active: %d", sim_auth_active);
     if(sim_auth_active) {
         sim_auth_active = FALSE;
         phonegui_sim_auth_hide(status);
@@ -317,13 +318,25 @@ void register_to_network_callback(GError *error, gpointer userdata) {
     }
 }
 
+void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
+    g_debug("get_messagebook_info_callback()");
+    if(error == NULL) {
+        int first = g_value_get_int(g_hash_table_lookup(info, "first"));
+        int last = g_value_get_int(g_hash_table_lookup(info, "last"));
+        int used = g_value_get_int(g_hash_table_lookup(info, "used"));
+        int total = last - first;
+        g_debug("messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
+        if(used == total) {
+            phonegui_dialog_show(PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL);
+        }
+    } else {
+        /* TODO */
+    }
+}
+
 int exit_callback(void *data, int type, void *event) {
     /* called on ctrl-c, kill $pid, SIGINT, SIGTERM and SIGQIT */
     g_debug("exit_callback()");
-    if(incoming_message_active) {
-        g_debug("incoming_message_active = TRUE");
-        phonegui_message_hide();
-    }
     return 0;
 }
 
