@@ -26,5 +26,5 @@ do_install_append() {
 FILES_${PN} += "\
   ${sysconfdir}/mofi/example.mofi.conf \
   ${sysconfdir}/mofi/connect.sh \
-"
+  ${datadir}/applications/mofi.desktop"
 
