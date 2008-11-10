@@ -11,11 +11,7 @@
 
 void ui_init() {
 
-
-    /*
-     * Initializations
-     */
-
+    // Initializations
     elm_init(phonegui_argc, phonegui_argv);
     g_debug("Initiated elementary");
 
@@ -45,8 +41,6 @@ void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
 
     // Create pipe
     pipe_handler = pipe_create();
-
-
 
     // Create thread for ecore loop
     g_debug("Entering ecore loop");

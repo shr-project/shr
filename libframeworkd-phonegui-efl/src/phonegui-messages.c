@@ -108,9 +108,6 @@ void process_message(GValueArray *message) {
     char datestr[32];
     strftime(datestr, 31, "%e.%m.%Y, %H:%M", gmtime(&timestamp));
 
-    //int *id = g_slice_alloc(sizeof(int));
-    //*id = g_value_get_int(g_value_array_get_nth(message, 0));
-
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
     g_hash_table_insert(parameters, strdup("content"), strdup(g_value_get_string(g_value_array_get_nth(message, 3))));
