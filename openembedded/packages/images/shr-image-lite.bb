@@ -198,11 +198,7 @@ fso_rootfs_postprocess() {
     done
 
     echo "Exec=openmoko-terminal2 htop" >> ./usr/share/applications/htop.desktop
-    echo "Icon=pidgin.png" >> ./usr/share/applications/pidgin.desktop
     echo "Icon=settings.png" >> ./usr/share/applications/exposure.desktop
-    sed -i "s/^X-Icon-path.*$//g" ./usr/share/applications/vagalume.desktop
-    echo "Icon=settings.png" >> ./usr/share/applications/exposure.desktop
-
     
 
     # minimal gtk theme foo
