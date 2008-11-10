@@ -9,8 +9,5 @@ setup(
     author_email = "NA",
     url = "http://projects.openmoko.org/projects/mofi/",
     packages = ["settingsgui"],
-    scripts = ['mofi_gui.py'],
-    data_files = [
-        ("../../home/root/", ["example.mofi.conf"] )
-    ]
+    scripts = ['mofi_gui.py', 'mofi.py'],
 )
