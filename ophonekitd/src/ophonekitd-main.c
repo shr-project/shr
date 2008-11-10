@@ -324,7 +324,7 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
         int first = g_value_get_int(g_hash_table_lookup(info, "first"));
         int last = g_value_get_int(g_hash_table_lookup(info, "last"));
         int used = g_value_get_int(g_hash_table_lookup(info, "used"));
-        int total = last - first;
+        int total = last - first + 1;
         g_debug("messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
         if(used == total) {
             phonegui_dialog_show(PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL);
