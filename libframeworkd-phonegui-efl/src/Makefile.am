@@ -10,11 +10,14 @@ libframeworkd_phonegui_efl_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @GLIB_LIBS@ @E_
 libframeworkd_phonegui_efl_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 
 libframeworkd_phonegui_efl_la_SOURCES = \
-	phonegui-dialer.h phonegui-init.h phonegui-messages.c \
-	phonegui-message.c phonegui-messages.h phonegui-sim-auth.c \
-	phonegui-dialer.c phonegui-init.c phonegui-message.h phonegui-sim-auth.h \
+	phonegui-init.h phonegui-init.c \
+	phonegui-dialer.h phonegui-dialer.c \
+	phonegui-messages.h phonegui-messages.c \
+	phonegui-message.h phonegui-message.c \
+	phonegui-sim-auth.h phonegui-sim-auth.c \
 	phonegui-contacts.h phonegui-contacts.c \
 	phonegui-call.h phonegui-call.c \
+	phonegui-dialog.h phonegui-dialog.c \
 	etk_tree_model_edje.h etk_tree_model_edje.c \
 	pipe.h pipe.c \
 	kbd.h kbd.c \
