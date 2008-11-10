@@ -21,3 +21,9 @@ do_install_append() {
 	install -m 0755 ${S}/connect.sh ${D}${sysconfdir}/mofi/
 
 }
+
+FILES_${PN} = "\
+  ${sysconfdir}/mofi/example.mofi.conf \
+  ${sysconfdir}/mofi/connect.sh \
+"
+
