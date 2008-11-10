@@ -4,8 +4,8 @@ SECTION = "devel/python"
 LICENSE = "GPLv2"
 SRCNAME = "python-wifi"
 
-SRC_URI = "http://pypi.python.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.linux-i686.tar.gz"
-S = "${WORKDIR}/${SRCNAME}"
+SRC_URI = "http://pypi.python.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.tar.gz"
+S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils
 
