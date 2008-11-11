@@ -141,7 +141,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
     GValue *peerNumber = g_hash_table_lookup(properties, "peer");
     gchar* number;
     if(peerNumber != NULL) {
-        number = g_strdup_value_contents (number);
+        number = g_strdup_value_contents (peerNumber);
     }
 
     switch(status) {
