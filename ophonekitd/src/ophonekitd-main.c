@@ -320,10 +320,22 @@ void register_to_network_callback(GError *error, gpointer userdata) {
 
 void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
     g_debug("get_messagebook_info_callback()");
-    if(error == NULL) {
-        int first = g_value_get_int(g_hash_table_lookup(info, "first"));
-        int last = g_value_get_int(g_hash_table_lookup(info, "last"));
-        int used = g_value_get_int(g_hash_table_lookup(info, "used"));
+    if(error == NULL && info != NULL) {
+        gpointer p = NULL;
+        int first = 0, last = 0, used = 0, total = 0;
+        if((p = g_hash_table_lookup(info, "first")) != NULL)
+                first = g_value_get_int(p);
+        else
+                g_debug("get_messagebok_info_callback(): No value for \"first\"");
+        if((p = g_hash_table_lookup(info, "last")) != NULL)
+                last = g_value_get_int(p);
+        else
+                g_debug("get_messagebok_info_callback(): No value for \"last\"");
+        if((p = g_hash_table_lookup(info, "used")) != NULL)
+                used = g_value_get_int(p);
+        else
+                g_debug("get_messagebok_info_callback(): No value for \"used\"");
+
         int total = last - first + 1;
         g_debug("messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
         if(used == total) {
