@@ -27,7 +27,7 @@ static gboolean speaker_active = FALSE;
 
 
 void phonegui_incoming_call_show(const int id, const int status, const char *number) {
-    call_show(id, status, number, "incoming");
+    call_show(id, status, number, EVENT_MODE_INCOMING);
 }
 
 void phonegui_incoming_call_hide(const int id) {
@@ -35,7 +35,7 @@ void phonegui_incoming_call_hide(const int id) {
 }
 
 void phonegui_outgoing_call_show(const int id, const int status, const char *number) {
-    call_show(id, status, number, "outgoing");
+    call_show(id, status, number, EVENT_MODE_ACTIVE);
 }
 
 void phonegui_outgoing_call_hide(const int id) {
@@ -43,16 +43,12 @@ void phonegui_outgoing_call_hide(const int id) {
 }
 
 
-void call_show(const int id, const int status, const char *number, const char *type) {
+void call_show(const int id, const int status, const char *number, int type) {
     g_debug("call_show()");
     call_id = id;
     call_number = number;
     pipe_write(pipe_handler, call_event, EVENT_SHOW);
-    if(!strcmp(type, "incoming")) {
-        pipe_write(pipe_handler, call_event, EVENT_MODE_INCOMING);
-    } else {
-        pipe_write(pipe_handler, call_event, EVENT_MODE_ACTIVE);
-    }
+    pipe_write(pipe_handler, call_event, type);
 }
 
 void call_hide(const int id) {

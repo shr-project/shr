@@ -54,7 +54,10 @@ static Evas_Object *bt1, *bt2, *bt3, *bt4;
 
 void phonegui_contacts_show() {
     g_debug("phonegui_contacts_show()");
-
+    if(pipe_handler == NULL) {
+        g_debug("pipe handler null");
+        return;
+    }
     contacts_mode = MODE_LIST;
     pipe_write(pipe_handler, contacts_event, EVENT_SHOW);
     pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST);
