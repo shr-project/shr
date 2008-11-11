@@ -85,7 +85,7 @@ void ophonekitd_call_add_incoming_call(int id) {
 int ophonekitd_call_check_incoming_call(int id) {
     int i = 0;
     for(i = 0; i < incoming_calls_size;i++) {
-        if(incoming_calls[i] != NULL && incoming_calls[i] == id)
+       if(incoming_calls != NULL && incoming_calls[i] == id)
             return i;
     }
     return -1;
@@ -138,9 +138,10 @@ void ophonekitd_device_idle_notifier_state_handler(const int state) {
 void ophonekitd_call_status_handler(const int call_id, const int status, GHashTable *properties) {
     g_debug("call status handler called, id: %d, status: %d", call_id, status);
 
-    gchar *number = g_hash_table_lookup(properties, "peer");
-    if(number != NULL) {
-        number = strdup(g_value_get_string(number));
+    GValue *peerNumber = g_hash_table_lookup(properties, "peer");
+    gchar* number;
+    if(peerNumber != NULL) {
+        number = g_strdup_value_contents (number);
     }
 
     switch(status) {
@@ -336,7 +337,7 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
         else
                 g_debug("get_messagebok_info_callback(): No value for \"used\"");
 
-        int total = last - first + 1;
+        total = last - first + 1;
         g_debug("messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
         if(used == total) {
             phonegui_dialog_show(PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL);
