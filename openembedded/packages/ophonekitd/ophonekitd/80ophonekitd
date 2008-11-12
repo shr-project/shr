@@ -1,5 +1,0 @@
-#!/bin/sh -e
-ophonekitd > /tmp/ophonekitd.log 2>&1 &
-renice -3 $!
-exit 0
-
