@@ -2,10 +2,10 @@
 Name=SHR
 Comment=SHR Icon Theme
 
-Directories=48x48/apps
+Directories=86x86/apps
 
-[48x48/categories]
-Size=48
+[86x86/categories]
+Size=86
 Context=apps
 Type=Fixed
 
