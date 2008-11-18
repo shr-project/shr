@@ -18,7 +18,7 @@ def debug(msg):
 	print msg
 
 class suspend:
-	def __init__(self, dbus, session_bus, name="Suspend"):
+	def __init__(self, dbus, system_bus, name="Suspend"):
 		self.name = name
 		self.default_status = "unknown"
 		self.runnable = 0
@@ -26,15 +26,15 @@ class suspend:
 		self.status = -1
 		self.status_str = self.default_status
 		self.dbus = dbus
-		self.session_bus = session_bus
-		self.dbus_name = "org.enlightenment.wm.service"
-		self.dbus_path = "/org/enlightenment/wm/RemoteObject"
-		self.dbus_iface = "org.enlightenment.wm.IllumeConfiguration"
+		self.system_bus = system_bus
+		self.dbus_name = "org.freesmartphone.odeviced"
+		self.dbus_path = "/org/freesmartphone/Device/IdleNotifier/0"
+		self.dbus_iface = "org.freesmartphone.Device.IdleNotifier"
 		#debug("enter init device : " + self.name)
 
-	def dbus_get_value(self, value):
-		#debug("dbus_get_value: " + str(value))
-		self.status = value
+	def dbus_get_value(self, states):
+		#debug("dbus_get_value: " + str(value)
+		self.status = states["suspend"]
 		self.update_label()
 
 	def dbus_set_value(self):
@@ -65,16 +65,16 @@ class suspend:
 		#debug('init_status')
 		self.runnable = 1
 		try:
-			self.e_obj = self.session_bus.get_object(self.dbus_name, self.dbus_path, introspect=False)
+			self.e_obj = self.system_bus.get_object(self.dbus_name, self.dbus_path, introspect=False)
 		except:
-			print "Can't get illume object:"
+			print "Can't get frameworkd object:"
 			print sys.exc_info()[1]
 			self.runnable = 0
 		else:
 			try:
-				self.illume_iface = self.dbus.Interface(self.e_obj, dbus_interface=self.dbus_iface)
+				self.frameworkd_iface = self.dbus.Interface(self.e_obj, dbus_interface=self.dbus_iface)
 			except:
-				print "Can't get illume interface:"
+				print "Can't get frameworkd interface:"
 				print sys.exc_info()[1]
 				self.runnable = 0
 		if self.runnable:
@@ -84,11 +84,11 @@ class suspend:
 
 	def get_status(self):
 		#debug('get_status')
-		self.illume_iface.ScreensaverTimeoutGet(reply_handler=self.dbus_get_value, error_handler=self.dbus_error_handler)
+		self.frameworkd_iface.GetTimeouts(reply_handler=self.dbus_get_value, error_handler=self.dbus_error_handler)
 
 	def set_status(self, value):
 		#debug('set_status: ' + str(value))
-		self.illume_iface.ScreensaverTimeoutSet(int(value), reply_handler=self.dbus_set_value, error_handler=self.dbus_error_handler)
+		self.frameworkd_iface.SetTimeout("suspend", int(value), reply_handler=self.dbus_set_value, error_handler=self.dbus_error_handler)
 		self.status = value
 
 	def update_label(self):
