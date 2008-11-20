@@ -25,6 +25,7 @@ typedef enum {
     EVENT_SHOW,
     EVENT_MODE_LIST,
     EVENT_MODE_LIST_CACHED,
+    EVENT_MODE_SIM_FULL,
     EVENT_HIDE
 } ContactsEvents;
 
@@ -80,6 +81,8 @@ void contacts_event(int event) {
         ogsmd_sim_retrieve_phonebook("contacts", retrieve_phonebook_callback, NULL);
     } else if(event == EVENT_MODE_LIST_CACHED) {
         frame_show(contacts_list_show, contacts_list_hide);
+    } else if(event == EVENT_MODE_SIM_FULL) {
+        frame_show(contacts_sim_full_show, contacts_sim_full_hide);
     } else if(event == EVENT_HIDE) {
         evas_object_hide(win);
     } else {
@@ -91,7 +94,6 @@ void contacts_event(int event) {
 void retrieve_phonebook_callback(GError *error, GPtrArray *entries, gpointer userdata) {
     g_debug("retrieve phonebook callback");
     tmp_entries = entries;
-    ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
     pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED);
 }
 
@@ -137,20 +139,24 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
         }
     }
 
-    if(ret == -1) {
-        g_error("No free entry index found. SIM probably full!");
-    }
 
     return ret;
 }
 
 
 void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
-    g_debug("LAST FREE INDEX: %d", free_entry_index);
     int min = g_value_get_int(g_hash_table_lookup(info, "min_index"));
     int max = g_value_get_int(g_hash_table_lookup(info, "max_index"));
     free_entry_index = calculate_free_entry_index(min, max, tmp_entries);
-    g_debug("NEW FREE INDEX: %d", free_entry_index);
+
+    if(free_entry_index == -1) {
+        pipe_write(pipe_handler, contacts_event, EVENT_MODE_SIM_FULL);
+    } else {
+        if(contacts_mode == MODE_NEW)
+            frame_show(contacts_new_show, contacts_new_hide);
+        else
+            frame_show(contacts_modify_show, contacts_modify_hide);
+    }
 }
 
 gint compare_entries(GValueArray **a, GValueArray **b) {
@@ -177,7 +183,12 @@ void process_entry(GValueArray *entry, gpointer userdata) {
 
 void contacts_button_new_clicked() {
     contacts_mode = MODE_NEW;
-    frame_show(contacts_new_show, contacts_new_hide);
+    ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
+}
+
+void contacts_button_modify_clicked() {
+    contacts_mode = MODE_MODIFY;
+    ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
 }
 
 void contacts_button_call_clicked() {
@@ -236,11 +247,6 @@ void contacts_button_back_clicked() {
     frame_show(contacts_list_show, contacts_list_hide);
 }
 
-void contacts_button_modify_clicked() {
-    contacts_mode = MODE_MODIFY;
-    frame_show(contacts_modify_show, contacts_modify_hide);
-}
-
 void contacts_button_delete_clicked() {
     frame_show(contacts_delete_show, contacts_delete_hide);
 }
@@ -256,6 +262,10 @@ void contacts_button_delete_yes_clicked() {
 }
 
 void contacts_button_delete_no_clicked() {
+    pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED);
+}
+
+void contacts_button_close_clicked() {
     pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED);
 }
 
@@ -381,7 +391,6 @@ void contacts_loading_show() {
 void contacts_modify_show() {
     contacts_new_show();
 
-    elm_layout_file_set(layout, UI_FILE, "modify");
     edje_object_part_text_set(elm_layout_edje_get(layout), "title", "Modify Contact");
 
     etk_entry_text_set(entry_number, g_value_get_string(g_value_array_get_nth(tmp_entry, 2)));
@@ -461,5 +470,21 @@ void contacts_delete_hide() {
 
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt2);
     evas_object_del(bt2);
+}
+
+void contacts_sim_full_show() {
+    elm_layout_file_set(layout, UI_FILE, "dialog");
+    edje_object_part_text_set(elm_layout_edje_get(layout), "content", "Your storage is full. Before adding new contacts, you have to delete some old ones.");
+
+    bt1 = elm_button_add(win);
+    elm_button_label_set(bt1, "Close");
+    evas_object_smart_callback_add(bt1, "clicked", contacts_button_close_clicked, NULL);
+    edje_object_part_swallow(elm_layout_edje_get(layout), "button_close", bt1);
+    evas_object_show(bt1);
+}
+
+void contacts_sim_full_hide() {
+    edje_object_part_unswallow(elm_layout_edje_get(layout), bt1);
+    evas_object_del(bt1);
 }
 

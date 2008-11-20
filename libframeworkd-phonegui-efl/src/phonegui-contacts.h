@@ -38,6 +38,8 @@ void contacts_new_show();
 void contacts_new_hide();
 void contacts_delete_show();
 void contacts_delete_hide();
+void contacts_sim_full_show();
+void contacts_sim_full_hide();
 
 #endif
 
