@@ -174,7 +174,7 @@ collections {
                 description {
                     state, "default" 0.0;
                     rel1 {
-                        relative, 0.33 0.755;
+                        relative, 0.33 0.75;
                     }
                     rel2 {
                         relative, 0.66 1.0;
