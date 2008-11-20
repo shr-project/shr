@@ -602,9 +602,20 @@ void messages_new1_hide() {
     edje_object_part_unswallow(elm_layout_edje_get(layout), bt2);
     evas_object_del(bt2);
 
+    /*
+     * Message content
+     */
     new_message_content = elm_entry_entry_get(content_entry);
     edje_object_part_unswallow(elm_layout_edje_get(layout), content_entry);
     evas_object_del(content_entry);
+
+    // Remove leading and trailing spaces
+    new_message_content = g_strstrip(new_message_content);
+
+    // Remove trailing "<br>"
+    if(strlen(new_message_content) >= 4 && !strncmp(new_message_content + (strlen(new_message_content)-4), "<br>", 4)) {
+        new_message_content[strlen(new_message_content) - 5] = '\0';
+    }
 
     kbd_hide();
 }
