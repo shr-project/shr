@@ -1,18 +1,5 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-AM_CPPFLAGS = -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -g3 -o0
-
-AM_CFLAGS = -Wall \
-	$(DBUS_GLIB_CFLAGS) \
-	$(FRAMEWORKD_GLIB_CFLAGS) \
-	$(FRAMEWORKD_PHONEGUI_CFLAGS)
-
-AM_LDFLAGS = -ldl \
-	$(DBUS_GLIB_LIBS) \
-	$(FRAMEWORKD_GLIB_LIBS) \
-	$(FRAMEWORKD_PHONEGUI_LIBS)
- 			 
-
 bin_PROGRAMS = ophonekitd
 
 ophonekitd_SOURCES = \
@@ -21,4 +8,15 @@ ophonekitd_SOURCES = \
 	ophonekitd-phonegui.c \
 	ophonekitd-phonegui.h
 
+ophonekitd_CFLAGS = \
+	-DDATADIR=\"$(datadir)\" \
+	-DPKGDATADIR=\"$(pkgdatadir)\" \
+	@DBUS_GLIB_CFLAGS@ \
+	@FRAMEWORKD_GLIB_CFLAGS@ \
+	@FRAMEWORKD_PHONEGUI_LIBS@
 
+ophonekitd_LDFLAGS = \
+	-ldl \
+	@DBUS_GLIB_LIBS@ \
+	@FRAMEWORKD_GLIB_LIBS@ \
+	@FRAMEWORKD_PHONEGUI_LIBS@

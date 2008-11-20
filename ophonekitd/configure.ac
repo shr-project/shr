@@ -1,14 +1,15 @@
-AC_PREREQ(2.53)
-AC_INIT(ophonekitd, 0.1, http://www.openmoko.org/)
-AM_INIT_AUTOMAKE()
-AM_CONFIG_HEADER(config.h)
-AM_MAINTAINER_MODE
+# get rid of that stupid cache mechanism
+rm -f config.cache
 
-AC_GNU_SOURCE
+AC_INIT(ophonekitd, 0.1, http://www.openmoko.org/)
+AC_PREREQ(2.52)
+AC_CONFIG_SRCDIR(configure.ac)
 AC_ISC_POSIX
+
+AM_INIT_AUTOMAKE(1.6 dist-bzip2)
+AM_CONFIG_HEADER(config.h)
 AC_PROG_CC
-AC_STDC_HEADERS
-AC_PROG_LIBTOOL
+AC_HEADER_STDC
 
 PKG_CHECK_MODULES(FRAMEWORKD_GLIB, libframeworkd-glib)
 PKG_CHECK_MODULES(DBUS_GLIB, dbus-glib-1)
