@@ -46,6 +46,7 @@ void message_event(int event) {
         edje_object_part_text_set(elm_layout_edje_get(layout), "number", tmp_number);
         edje_object_part_text_set(elm_layout_edje_get(layout), "content", tmp_content);
     } else if(event == EVENT_HIDE) {
+        frame_hide();
         window_destroy();
     } else {
         g_error("Unknown event");
