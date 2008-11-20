@@ -25,7 +25,6 @@ typedef enum {
     EVENT_SHOW,
     EVENT_MODE_LIST,
     EVENT_MODE_LIST_CACHED,
-    EVENT_NEW_SAVE,
     EVENT_HIDE
 } ContactsEvents;
 
@@ -81,19 +80,6 @@ void contacts_event(int event) {
         ogsmd_sim_retrieve_phonebook("contacts", retrieve_phonebook_callback, NULL);
     } else if(event == EVENT_MODE_LIST_CACHED) {
         frame_show(contacts_list_show, contacts_list_hide);
-    } else if(event == EVENT_NEW_SAVE) {
-        ogsmd_sim_store_entry(
-            "contacts",
-            free_entry_index,
-            etk_entry_text_get(entry_name),
-            etk_entry_text_get(entry_number),
-            NULL,
-            NULL
-        );
-        free_entry_index = -1;
-
-        frame_show(contacts_loading_show, NULL);
-        ogsmd_sim_retrieve_phonebook("contacts", retrieve_phonebook_callback, NULL);
     } else if(event == EVENT_HIDE) {
         evas_object_hide(win);
     } else {
@@ -105,6 +91,7 @@ void contacts_event(int event) {
 void retrieve_phonebook_callback(GError *error, GPtrArray *entries, gpointer userdata) {
     g_debug("retrieve phonebook callback");
     tmp_entries = entries;
+    ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
     pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED);
 }
 
@@ -133,10 +120,11 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
     
 
     // TODO: Optimize the loops
+    int ret = -1;
     int i, j;
     g_debug("length: %d", tmp_entries->len);
 
-    for(i = min ; i <= max && free_entry_index == -1 ; i++) {
+    for(i = min ; i <= max && ret == -1 ; i++) {
         gboolean found = FALSE;
         for(j = 0 ; j < tmp_entries->len && found == FALSE ; j++) {
             if(i == indizes[j]) {
@@ -144,25 +132,25 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries) {
             }
         }
         if(found == FALSE) {
-            free_entry_index = i;
+            ret = i;
             g_debug("Found free entry: %d", i);
         }
     }
 
-    if(free_entry_index == -1) {
+    if(ret == -1) {
         g_error("No free entry index found. SIM probably full!");
     }
+
+    return ret;
 }
 
 
 void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
-    int *min = g_hash_table_lookup(info, "min_index");
-    int *max = g_hash_table_lookup(info, "max_index");
-    // FIXME: Min and max is always 24, but why? Work around this bug!
-
-    free_entry_index = calculate_free_entry_index(1, 150, tmp_entries);
-
-    pipe_write(pipe_handler, contacts_event, EVENT_NEW_SAVE);
+    g_debug("LAST FREE INDEX: %d", free_entry_index);
+    int min = g_value_get_int(g_hash_table_lookup(info, "min_index"));
+    int max = g_value_get_int(g_hash_table_lookup(info, "max_index"));
+    free_entry_index = calculate_free_entry_index(min, max, tmp_entries);
+    g_debug("NEW FREE INDEX: %d", free_entry_index);
 }
 
 gint compare_entries(GValueArray **a, GValueArray **b) {
@@ -173,8 +161,6 @@ gint compare_entries(GValueArray **a, GValueArray **b) {
 }
 
 void process_entry(GValueArray *entry, gpointer userdata) {
-    g_debug("process_entry()");
-
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("name"), strdup(g_value_get_string(g_value_array_get_nth(entry, 1))));
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(entry, 2))));
@@ -220,8 +206,17 @@ void contacts_button_options_clicked() {
 void contacts_button_save_clicked() {
     if(strcmp(etk_entry_text_get(entry_name), "") && strcmp(etk_entry_text_get(entry_number), "")) {
         if(contacts_mode == MODE_NEW) {
-            ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, NULL);
+            g_debug("NEW");
+            ogsmd_sim_store_entry(
+                "contacts",
+                free_entry_index,
+                etk_entry_text_get(entry_name),
+                etk_entry_text_get(entry_number),
+                NULL,
+                NULL
+            );
         } else if(contacts_mode == MODE_MODIFY) {
+            g_debug("MODIFY");
             ogsmd_sim_store_entry(
                 "contacts",
                 g_value_get_int(g_value_array_get_nth(tmp_entry, 0)),
