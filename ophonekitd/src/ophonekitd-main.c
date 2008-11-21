@@ -255,12 +255,20 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
     }
 }
 
+gboolean power_up_antenna() {
+        g_debug("call ogsmd_device_set_antenna_power()");
+        ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
+	return FALSE;
+}
+
 void request_resource_callback(GError *error, gpointer userdata) {
     g_debug("request_resource_callback()");
 
     if(error == NULL) {
-        g_debug("call ogsmd_device_set_antenna_power()");
-        ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
+	power_up_antenna();
+    } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
+        g_debug("dbus not available, try again in 5s");
+        g_timeout_add(5000, list_resources, NULL);
     } else {   
         /* FIXME: Remove this when frameworkd code is ready */
         g_debug("request resource error, try again in 5s");
@@ -285,6 +293,10 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
 
         } else if(IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
             g_error("SIM card not present.");
+        } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) 
+{
+            g_debug("dbus not available, try again in 5s");
+            g_timeout_add(5000, power_up_antenna, NULL);        
         } else {
             g_error("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         }
