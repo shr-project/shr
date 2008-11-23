@@ -35,11 +35,10 @@
 #include "ophonekitd-phonegui.h"
 
 gboolean sim_auth_active = FALSE;
-gboolean incoming_call_active = FALSE;
-gboolean outgoing_call_active = FALSE;
-int active_calls = 0;
-int *incoming_calls= NULL;
+int *incoming_calls = NULL;
+int *outgoing_calls = NULL;
 int incoming_calls_size = 0;
+int outgoing_calls_size = 0;
 
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
@@ -75,38 +74,38 @@ int main(int argc, char ** argv) {
 }
 
 
-void ophonekitd_call_add_incoming_call(int id) {
-    incoming_calls_size++;
-    active_calls++;
-    incoming_calls = realloc(incoming_calls, sizeof(int)*incoming_calls_size);
-    incoming_calls[incoming_calls_size-1] = id;
+void ophonekitd_call_add(int **calls, int *size, int id) {
+    (*size)++;
+    if(*size == 1)
+        *calls = malloc(sizeof(int));
+    else
+        *calls = realloc(calls, sizeof(int)*(*size));
+    *calls[(*size)-1] = id;
 }
 
-int ophonekitd_call_check_incoming_call(int id) {
-    int i = 0;
-    for(i = 0; i < incoming_calls_size;i++) {
-       if(incoming_calls != NULL && incoming_calls[i] == id)
+int ophonekitd_call_check(int *calls, int *size, int id) {
+    int i;
+    for(i = 0; i < (*size) ; i++) {
+        if(calls[i] == id)
             return i;
     }
     return -1;
 }
 
-void ophonekitd_call_remove_incoming_call(int id) {
-    if(incoming_calls != NULL) {
-        if(incoming_calls_size == 1)  {
-            free(incoming_calls);
-            incoming_calls_size--;
-            incoming_calls = NULL;
-        } else {
-            int place = ophonekitd_call_check_incoming_call(id);
-            if(place >= 0) {
-                int i = place;
-                for(i = place; i + 1 < incoming_calls_size; i++) {
-                    incoming_calls[i] = incoming_calls[i+1];
-                }
-                incoming_calls_size--;                
-                incoming_calls = realloc(incoming_calls, sizeof(int)*incoming_calls_size);
+void ophonekitd_call_remove(int *calls, int *size, int id) {
+    if(*size == 1)  {
+        free(calls);
+        (*size)--;
+        calls = NULL;
+    } else {
+        int place = ophonekitd_call_check(calls, size, id);
+        if(place >= 0) {
+            int i = place;
+            for(i = place; i + 1 < (*size); i++) {
+                calls[i] = calls[i+1];
             }
+            (*size)--;                
+            calls = realloc(calls, sizeof(int)*(*size));
         }
     }
 }
@@ -115,7 +114,10 @@ void ophonekitd_call_remove_incoming_call(int id) {
 
 void ophonekitd_device_idle_notifier_power_state_handler(GError *error, const int status, gpointer userdata) {
     g_debug("power status: %d", status);
-    if(active_calls == 0 && error == NULL && status != DEVICE_POWER_STATE_CHARGING && status != DEVICE_POWER_STATE_FULL) {
+    if(
+        incoming_calls_size == 0 && outgoing_calls_size == 0 && error == NULL &&
+        status != DEVICE_POWER_STATE_CHARGING && status != DEVICE_POWER_STATE_FULL
+    ) {
         ousaged_suspend(NULL, NULL);
         g_debug("Suspend !");
         /* Suspend is working on my kernel, but unfortunately resume isn't
@@ -147,32 +149,27 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
     switch(status) {
         case CALL_STATUS_INCOMING:
             g_debug("incoming call");
-            if(ophonekitd_call_check_incoming_call(call_id) == -1) {
-                ophonekitd_call_add_incoming_call(call_id);
+            if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) == -1) {
+                ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id);
                 phonegui_incoming_call_show(call_id, status, number);
             }
-            incoming_call_active = TRUE;  
             break;
         case CALL_STATUS_OUTGOING:
             g_debug("outgoing call");
-            active_calls++;
-            phonegui_outgoing_call_show(call_id, status, number);
-            outgoing_call_active = TRUE;
+            if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) == -1) {
+                ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id);
+                phonegui_outgoing_call_show(call_id, status, number);
+            }
             break;
         case CALL_STATUS_RELEASE:
             g_debug("release call");
-
-            /* TODO: Add call_id handling for multiple calls*/
-            active_calls--;
-            ophonekitd_call_remove_incoming_call(call_id);
-            if(incoming_call_active == TRUE) {
+            if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) != -1) {
+                ophonekitd_call_remove(incoming_calls, &incoming_calls_size, call_id);
                 phonegui_incoming_call_hide(call_id);
-                incoming_call_active = FALSE;
             }
-
-            if(outgoing_call_active == TRUE) {
+            if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) != -1) {
+                ophonekitd_call_remove(outgoing_calls, &outgoing_calls_size, call_id);
                 phonegui_outgoing_call_hide(call_id);
-                outgoing_call_active = FALSE;
             }
             break;
         case CALL_STATUS_HELD:
@@ -180,7 +177,6 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             break;
         case CALL_STATUS_ACTIVE:
             g_debug("active call");
-            ophonekitd_call_remove_incoming_call(call_id); 
             break;
         default:
             g_error("Unknown CallStatus");
@@ -293,8 +289,7 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
 
         } else if(IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
             g_error("SIM card not present.");
-        } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) 
-{
+        } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
             g_debug("dbus not available, try again in 5s");
             g_timeout_add(5000, power_up_antenna, NULL);        
         } else {
