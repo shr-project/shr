@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<node name="/org/shr/ophonekitd/Usage">
+  <interface name="org.shr.ophonekitd.Usage">
+    <method name="RequestResource">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value="true"/>
+      <arg type="s" name="resource" direction="in" />
+    </method>
+    <method name="ReleaseResource">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value="true"/>
+      <arg type="s" name="resource" direction="in" />
+    </method>
+    <method name="GetResourceState">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value="true"/>
+      <arg type="s" name="resource" direction="in" />
+      <arg type="b" name="state" direction="out" />
+    </method>
+  </interface>
+</node>
