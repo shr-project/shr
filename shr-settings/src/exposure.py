@@ -91,7 +91,7 @@ class exposure():
 
 		### load and initialize modules ###
 
-		#self.mygsm = gsm()
+		self.mygsm = gsm(dbus, self.system_bus)
 		self.mybt = bt()
 		#self.mygps = gps() # COMMENTED OUT BY QUICKDEV
 		self.mywifi = wifi(self.etk, self.edj, self.edje.Edje, self.edje_file, self.window.evas, dbus, self.system_bus, self.ecore, self.window)
@@ -103,7 +103,7 @@ class exposure():
 		self.xdesktop = xdesktop(self)
 
 		# QUICKDEV: excluded mygps from loaded modules 
-		self.loaded_modules = [self.mybt, self.mybrightness, self.myprofile, self.mysuspend]
+		self.loaded_modules = [self.mygsm, self.mybt, self.mybrightness, self.myprofile, self.mysuspend]
 
 		### gui setup ###
 

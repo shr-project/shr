@@ -12,94 +12,98 @@
 # (at your option) any later version.
 #
 
-import os
+import os, dbus
 
 
 def debug(msg):
-	print msg
-
-### delayed init sequence for the gsm modem ###
-def _power_on_first(self):
-	os.system("echo 0 > " + self.pows)
-	self.timer_add(1, _power_on_sec, self)
-
-def _power_on_sec(self):
-	os.system("echo 1 > " + self.pows)
-	self.timer_add(1, _power_on_third, self)
-
-def _power_on_third(self):
-	os.system("echo 1 > " + self.res)
-	self.timer_add(1, _power_on_fourth, self)
-
-def _power_on_fourth(self):
-	os.system("echo 0 > " + self.res)
-	self.timer_add(2, _power_on_fifth, self)
-
-def _power_on_fifth(self):
-	self.timer_running = 0
-	if (self.timer_mode == 0):
-		self.power_off
+    print msg
 
 class gsm:
-	def __init__(self, name="GSM"):
-		self.name = name
-		self.default_status = "Qt Bug"
-		self.runnable = 0
+        def __init__(self, dbus, system_bus, name="GSM"):
+                self.name = name
+                self.default_status = "unknown"
+                self.runnable = 1
 
-		self.status = 0
-		self.status_str = self.default_status
-		self.timer_running = 0
-		self.timer_mode = 0
-		self.pows = "/sys/bus/platform/devices/neo1973-pm-gsm.0/power_on"
-		self.res = "/sys/bus/platform/devices/neo1973-pm-gsm.0/reset"
-		self.dl = "/sys/bus/platform/devices/neo1973-pm-gsm.0/download"
-		#debug("enter init device : " + self.name)
+                self.status = -1
+                self.status_str = self.default_status
+                self.dbus = dbus
+                self.system_bus = system_bus
+                self.dbus_name = "org.shr.ophonekitd.Usage"
+                self.dbus_path = "/org/shr/ophonekitd/Usage"
+                self.dbus_iface = "org.shr.ophonekitd.Usage"
+                debug("enter init device : " + self.name)
 
-	def power_on(self):
-		#debug('gsm on')
-		self.timer_mode = 1
-		if (self.timer_running == 0):
-			self.timer_running = 1
-			self.timer_add(0.1, _power_on_first, self)
+        def dbus_get_resource_state(self, state):
+                self.status = 1 if state else 0
+                self.update_label()
 
-	def power_off(self):
-		#debug('gsm off')
-		self.timer_mode = 0
-		if (self.timer_running == 0):
-			os.system("echo 0 > " + self.pows)
+        def dbus_set_state(self):
+                debug("state changed")
 
-	def after_animate_click(self, edje_obj, emission, source):
-		#debug('onclick')
-		if (self.status):
-			self.power_off()
-			self.status = 0
-			self.status_str = "off"
-		else:
-			self.power_on()
-			self.status = 1
-			self.status_str = "on"
-		self.update_label()
+        def dbus_error_handler(self, error):
+                print "error getting bus names - %s" % str(error)
+                self.status = -1
+                self.status_str = self.default_status
+                self.runnable = 0
+                self.update_label()
 
-	def init_status(self):
-		#debug('init_status')
-		if self.runnable:
-			self.get_status()
-		else:
-			self.status_str = self.default_status
-		self.update_label()
+        def dbus_owner_changed(self, owner):
+                debug("dbus_owner_changed: " + str(owner))
 
-	def get_status(self):
-		#debug('get_status')
-		file = open(self.pows)
-		status = file.readline()
-		if status.find('0') > -1:
-			self.status = 0
-			self.status_str = "off"
-		else:
-			self.status = 1
-			self.status_str = "on"
-		file.close()
+                if not self.runnable and owner <> "":
+                        self.connect_to_ophonekitd()
 
-	def update_label(self):
-		#debug('update_label')
-		self.edje_obj.part_text_set("item-status", self.status_str)
+                        if self.runnable:
+                                self.get_status()
+
+        def after_animate_click(self, edje_obj, emission, source):
+                debug('onclick')
+                if (self.runnable):
+                        self.status = 0 if self.status == 1 else 1
+                        self.set_state()
+                        self.update_label()
+
+        def init_status(self):
+                #debug('init_status')
+                self.connect_to_ophonekitd()
+
+                if self.runnable:
+                        self.get_state()
+                else:
+                        self.system_bus.watch_name_owner(self.dbus_name, self.dbus_owner_changed)
+                        self.update_label()
+
+        def connect_to_ophonekitd(self):
+                self.runnable = 1
+                try:
+                        self.ophonekitd_obj = self.system_bus.get_object(self.dbus_name, self.dbus_path, introspect=False)
+                except:
+                        debug("Can't get ophonekitd object:")
+                        debug(sys.exc_info()[1])
+                        self.runnable = 0
+                else:
+                        try:
+                                self.ophonekitd_iface = self.dbus.Interface(self.ophonekitd_obj, dbus_interface=self.dbus_iface)
+                        except:
+                                debug("Can't get ophonekitd interface:")
+                                debug(sys.exc_info()[1])
+                                self.runnable = 0
+                        else:
+                                self.ophonekitd_iface.GetResourceState("GSM", reply_handler=self.dbus_get_resource_state, error_handler=self.dbus_error_handler)
+        def get_state(self):
+                self.ophonekitd_iface.GetResourceState("GSM",reply_handler=self.dbus_get_resource_state, error_handler=self.dbus_error_handler)
+
+        def set_state(self):
+                debug('set_state: ' + str(self.status))
+                if self.status == 1:
+                        self.ophonekitd_iface.RequestResource("GSM",reply_handler=self.dbus_set_state, error_handler=self.dbus_error_handler)
+                else:
+                        self.ophonekitd_iface.ReleaseResource("GSM",reply_handler=self.dbus_set_state, error_handler=self.dbus_error_handler)
+
+        def update_label(self):
+                debug('update_label: ' + str(self.status))
+                if self.runnable:
+                        self.status_str = "on" if self.status == 1 else "off"
+                        debug('update_label: ' + self.status_str)
+                self.edje_obj.part_text_set("item-status", self.status_str)
+
