@@ -1,240 +1,88 @@
 #include "phonegui-call.h"
-#include <stdlib.h>
-#include <string.h>
-#include <glib-2.0/glib.h>
-#include <glib-2.0/glib-object.h>
-#include <dbus/dbus-glib.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
-#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
-#include "phonegui-init.h"
-#include "frame.h"
+#include <glib.h>
+#include <assert.h>
+#include "instance.h"
+#include "window.h"
+#include "async.h"
+#include "views.h"
 
-#define UI_FILE "/usr/share/libframeworkd-phonegui-efl/call.edj"
-
-enum CallEvents {
-    EVENT_SHOW,
-    EVENT_MODE_INCOMING,
-    EVENT_MODE_ACTIVE,
-    EVENT_HIDE
+enum CallTypes {
+    CALL_INCOMING,
+    CALL_ACTIVE
 };
 
-static Evas_Object *bt1, *bt2, *bt3, *keypad;
-static int call_id;
-static char* call_number;
-static gboolean dtmf_active = FALSE;
-static gboolean speaker_active = FALSE;
+struct Call {
+    int id;
+    struct Window *win;
+};
+
+
+static void _show(const int id, const int status, const char *number, int type);
+static void _show_async(GHashTable *options);
+static void _hide(const int id);
+static void _delete(void *data, Evas_Object *win, void *event_info);
 
 
 void phonegui_incoming_call_show(const int id, const int status, const char *number) {
-    call_show(id, status, number, EVENT_MODE_INCOMING);
+    _show(id, status, number, CALL_INCOMING);
 }
 
 void phonegui_incoming_call_hide(const int id) {
-    call_hide(id);
+    async_trigger(_hide, id);
 }
 
 void phonegui_outgoing_call_show(const int id, const int status, const char *number) {
-    call_show(id, status, number, EVENT_MODE_ACTIVE);
+    _show(id, status, number, CALL_ACTIVE);
 }
 
 void phonegui_outgoing_call_hide(const int id) {
-    call_hide(id);
+    async_trigger(_hide, id);
 }
 
 
-void call_show(const int id, const int status, const char *number, int type) {
-    g_debug("call_show()");
-    call_id = id;
-    call_number = number;
-    pipe_write(pipe_handler, call_event, EVENT_SHOW);
-    pipe_write(pipe_handler, call_event, type);
+static void _show(const int id, const int status, const char *number, int type) {
+    struct Window *win = window_new("Call");
+    window_delete_callback_set(win, _delete);
+    instance_manager_add(INSTANCE_CALL, id, win);
+
+    GHashTable *options = g_hash_table_new(NULL, g_str_equal);
+    g_hash_table_insert(options, "win", win);
+    g_hash_table_insert(options, "id", id);
+    g_hash_table_insert(options, "status", status);
+    g_hash_table_insert(options, "number", number);
+    g_hash_table_insert(options, "type", type);
+
+    async_trigger(_show_async, options);
 }
 
-void call_hide(const int id) {
-    g_debug("call_hide()");
-    //free(call_number);
-    pipe_write(pipe_handler, call_event, EVENT_HIDE);
+static void _show_async(GHashTable *options) {
+    struct Window *win = g_hash_table_lookup(options, "win");
+    assert(win != NULL);
+    window_init(win);
 
-    if(speaker_active) {
-        call_speaker_disable();
+    int type = g_hash_table_lookup(options, "type");
+    if(type == CALL_INCOMING) {
+        window_view_show(win, options, call_incoming_view_show, call_incoming_view_hide);
+    } else if (type == CALL_ACTIVE) {
+        window_view_show(win, options, call_active_view_show, call_active_view_hide);
+    } else {
+        g_error("Unknown call type: %d", type);
     }
+
+    window_show(win);
 }
 
-void call_delete(Ecore_Evas *ee) {
+static void _hide(const int id) {
+    g_debug("call_hide(id=%d)", id);
+
+    struct Window *win = instance_manager_remove(INSTANCE_CALL, id);
+    assert(win != NULL);
+    window_destroy(win, NULL);
+}
+
+static void _delete(void *data, Evas_Object *win, void *event_info) {
     g_debug("call_delete(), release call!");
-    ogsmd_call_release(call_id, NULL, NULL);
-    pipe_write(pipe_handler, call_event, EVENT_HIDE);
-}
-
-void call_event(int event) {
-    g_debug("call_event()");
-
-    if(event == EVENT_SHOW) {
-        g_debug("show");
-        window_create("Call", call_event, call_delete);
-    } else if(event == EVENT_MODE_INCOMING) {
-        g_debug("mode incoming");
-        frame_show(call_incoming_show, call_incoming_hide);
-        evas_object_show(win);
-    } else if(event == EVENT_MODE_ACTIVE) {
-        g_debug("mode active");
-        frame_show(call_active_show, call_active_hide);
-        g_debug("call_active_show_done!");
-        evas_object_show(win);
-        g_debug("show evas object done!");
-    } else if(event == EVENT_HIDE) {
-        g_debug("ecore_evas_hide!");
-        frame_hide();
-        evas_object_hide(win);
-        window_destroy();
-    } else {
-        g_error("Unknown event: %d", event);
-    }
-}
-
-
-/*
- * Button triggers
- */
-
-void call_button_keypad_clicked(void *data, Evas_Object *obj, void *event_info) {
-    char string[2];
-    string[0] = (char) event_info;
-    string[1] = '\0';
-    g_debug("call_button_keypad_clicked(): %s", string);
-    ogsmd_call_send_dtmf(strdup(string), NULL, NULL);
-}
-
-void call_button_accept_clicked() {
-    g_debug("accept_clicked()");
-    ogsmd_call_activate(call_id, NULL, NULL);
-    frame_show(call_active_show, call_active_hide);
-}
-
-void call_button_release_clicked() {
-    g_debug("release_clicked()");
-    ogsmd_call_release(call_id, NULL, NULL);
-}
-
-void call_button_speaker_clicked() {
-    g_debug("speaker_clicked()");
-    if(speaker_active) {
-        speaker_active = FALSE;
-        call_speaker_enable();
-        edje_object_part_text_set(elm_layout_edje_get(layout), "text_speaker", "Speaker");
-    } else {
-        speaker_active = TRUE;
-        call_speaker_disable();
-        edje_object_part_text_set(elm_layout_edje_get(layout), "text_speaker", "No Speaker");
-    }
-}
-
-void call_button_dtmf_clicked() {
-    g_debug("dtmf_clicked()");
-    if(dtmf_active) {
-        dtmf_active = FALSE;
-        call_dtmf_disable();
-        edje_object_part_text_set(elm_layout_edje_get(layout), "text_dtmf", "Show Keypad");
-    } else {
-        dtmf_active = TRUE;
-        call_dtmf_enable();
-        edje_object_part_text_set(elm_layout_edje_get(layout), "text_dtmf", "Hide Keypad");
-    }
-}
-
-
-/*
- * Views
- */
-void call_incoming_show() {
-    elm_layout_file_set(layout, UI_FILE, "incoming_call");
-    edje_object_part_text_set(elm_layout_edje_get(layout), "number", call_number);
-
-    bt1 = elm_button_add(win);
-    elm_button_label_set(bt1, "Accept");
-    evas_object_smart_callback_add(bt1, "clicked", call_button_accept_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "button_accept", bt1);
-    evas_object_show(bt1);
-
-    bt2 = elm_button_add(win);
-    elm_button_label_set(bt2, "Release");
-    evas_object_smart_callback_add(bt2, "clicked", call_button_release_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "button_release", bt2);
-    evas_object_show(bt2);
-}
-
-void call_incoming_hide() {
-    edje_object_part_unswallow(elm_layout_edje_get(layout), bt1);
-    evas_object_del(bt1);
-
-    edje_object_part_unswallow(elm_layout_edje_get(layout), bt2);
-    evas_object_del(bt2);
-}
-
-void call_active_show() {
-    elm_layout_file_set(layout, UI_FILE, "call");
-    edje_object_part_text_set(elm_layout_edje_get(layout), "number", call_number);
-
-    bt1 = elm_button_add(win);
-    elm_button_label_set(bt1, "Release");
-    evas_object_smart_callback_add(bt1, "clicked", call_button_release_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "button_release", bt1);
-    evas_object_show(bt1);
-
-    bt2 = elm_button_add(win);
-    elm_button_label_set(bt2, "Speaker");
-    evas_object_smart_callback_add(bt2, "clicked", call_button_speaker_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "button_speaker", bt2);
-    evas_object_show(bt2);
-
-    bt3 = elm_button_add(win);
-    elm_button_label_set(bt3, "Keypad");
-    evas_object_smart_callback_add(bt3, "clicked", call_button_dtmf_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "button_dtmf", bt3);
-    evas_object_show(bt3);
-}
-
-void call_active_hide() {
-    g_debug("call_active_hide()");
-    if(dtmf_active) {
-        call_dtmf_disable();
-    }
-
-    edje_object_part_unswallow(elm_layout_edje_get(layout), bt1);
-    evas_object_del(bt1);
-
-    edje_object_part_unswallow(elm_layout_edje_get(layout), bt2);
-    evas_object_del(bt2);
-
-    edje_object_part_unswallow(elm_layout_edje_get(layout), bt3);
-    evas_object_del(bt3);
-}
-
-
-
-void call_dtmf_enable() {
-    g_debug("call_dtmf_enable()");
-    keypad = elm_keypad_add(win);
-    evas_object_smart_callback_add(keypad, "clicked", call_button_keypad_clicked, NULL);
-    edje_object_part_swallow(elm_layout_edje_get(layout), "keypad", keypad);
-    evas_object_show(keypad);
-}
-
-void call_dtmf_disable() {
-    g_debug("call_dtmf_disable()");
-    edje_object_part_unswallow(elm_layout_edje_get(layout), keypad);
-    evas_object_smart_callback_del(keypad, "clicked", call_button_keypad_clicked);
-    evas_object_del(keypad);
-}
-
-void call_speaker_enable() {
-    g_debug("call_speaker_enable()");
-    odeviced_audio_pull_scenario(NULL, NULL);
-}
-
-void call_speaker_disable() {
-    g_debug("call_speaker_disable()");
-    odeviced_audio_push_scenario("gsmspeakerout", NULL, NULL);
+    //ogsmd_call_release(call_id, NULL, NULL);
+    //window_destroy(win, NULL);
 }
 

@@ -92,7 +92,7 @@ static void _edje_cell_data_free(Etk_Tree_Model *model, void *cell_data)
    if (!(edje_data = cell_data))
       return;
 
-   free(edje_data->parameters);
+   //free(edje_data->parameters);
 }
 
 /* Edje: cell_data_set() */
@@ -175,6 +175,9 @@ static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geome
       cell_objects[0] = edje_object_add(evas);
       if (!cell_objects[0]) return ETK_FALSE;
    }
+    if(!edje_file_group_exists(edje_model->file, edje_model->part)) {
+        g_error("%s does not exist in %s", edje_model->part, edje_model->file);
+    }
     edje_object_file_set(cell_objects[0], edje_model->file, edje_model->part);
     edje_extern_object_min_size_set(cell_objects[0], geometry.w, geometry.h);
     g_hash_table_foreach(edje_data->parameters, _edje_set_text_cb, cell_objects[0]);

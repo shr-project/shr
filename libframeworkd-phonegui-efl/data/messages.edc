@@ -27,7 +27,7 @@ collections {
                                relative, 1.0 0.1;
                    }
                    text {
-                               text, "New Message";
+                               text, "Compose SMS";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -35,37 +35,16 @@ collections {
             }
 	    }
 
-	    part {
-	           name,   "characters_left";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-                   color, 60 60 60 255;
-		           rel1 {
-		                       relative, 0.0 0.1;
-		           }
-                   rel2 {
-                               relative, 0.95 0.2;
-                   }
-                   text {
-                               text, "New Message";
-                               font, "redensek";
-                               size, 20;
-                               align, 1.0 0.5;
-                  }
-            }
-	    }
 
 
 	    part {
-	           name,   "content_entry";
+	           name,   "entry";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.05 0.2;
+		                       relative, 0.05 0.1;
 		           }
                    rel2 {
                                relative, 0.95 0.8;
@@ -75,7 +54,7 @@ collections {
 
 
 	    part {
-	           name,   "button_back";
+	           name,   "button_close";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
@@ -115,7 +94,7 @@ collections {
 
 
     group {
-        name, "number_edit";
+        name, "recipient_edit";
         parts {
 
 
@@ -133,7 +112,7 @@ collections {
                                relative, 1.0 0.1;
                    }
                    text {
-                               text, "Message Recipient";
+                               text, "SMS Recipients";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -143,20 +122,68 @@ collections {
 
 
 	    part {
-	           name,   "number";
+	           name,   "list";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.2 0.2;
+		                       relative, 0 0.15;
 		           }
                    rel2 {
-                               relative, 0.8 0.8;
+                               relative, 0.6 0.75;
                    }
             }
 	    }
 
+
+	    part {
+	           name,   "button_contact_add";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.6 0.15;
+		           }
+                   rel2 {
+                               relative, 1 0.35;
+                   }
+            }
+	    }
+
+
+
+	    part {
+	           name,   "button_number_add";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.6 0.35;
+		           }
+                   rel2 {
+                               relative, 1 0.55;
+                   }
+            }
+	    }
+
+
+	    part {
+	           name,   "button_delete";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.6 0.55;
+		           }
+                   rel2 {
+                               relative, 1 0.75;
+                   }
+            }
+	    }
 
 
 
@@ -190,6 +217,186 @@ collections {
 		           }
             }
 	    }
+
+    }
+  }
+
+
+
+
+
+
+
+    group {
+        name, "recipient_contact_add";
+        parts {
+
+
+	    part {
+	           name,   "title";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                  color, 0 0 0 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		           }
+                   rel2 {
+                               relative, 1.0 0.1;
+                   }
+                   text {
+                               text, "Add contact";
+                               font, "redensek";
+                               size, 25;
+                               align, 0.5 0.5;
+                  }
+            }
+	    }
+
+
+	    part {
+	           name,   "list";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.10;
+		                       offset, 0 0;
+		           }
+                   rel2 {
+                               relative, 1.0 0.85;
+                   }
+            }
+	    }
+
+	    part {
+	           name,   "button_back";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.5 1.0;
+		                       offset, 0 0;
+		           }
+            }
+	    }
+
+
+	    part {
+	           name,   "button_add";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.5 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		                       offset, 0 0;
+		           }
+            }
+	    }
+
+
+
+    }
+  }
+
+
+
+
+
+
+
+    group {
+        name, "recipient_number_add";
+        parts {
+
+
+	    part {
+	           name,   "title";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                  color, 0 0 0 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		           }
+                   rel2 {
+                               relative, 1.0 0.1;
+                   }
+                   text {
+                               text, "Add number";
+                               font, "redensek";
+                               size, 25;
+                               align, 0.5 0.5;
+                  }
+            }
+	    }
+
+
+	    part {
+	           name,   "entry";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.10;
+		                       offset, 0 0;
+		           }
+                   rel2 {
+                               relative, 1.0 0.3;
+                   }
+            }
+	    }
+
+	    part {
+	           name,   "button_back";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.5 1.0;
+		                       offset, 0 0;
+		           }
+            }
+	    }
+
+
+	    part {
+	           name,   "button_add";
+	           type,   SWALLOW;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.5 0.85;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		                       offset, 0 0;
+		           }
+            }
+	    }
+
+
 
     }
   }
@@ -902,6 +1109,49 @@ collections {
 
 	    }
     }
+
+
+
+
+
+
+
+
+
+    group {
+        name, "sending";
+        parts {
+
+
+	    part {
+	           name,   "text";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+                   color, 0 0 0 255;
+		           state, "default" 0.0;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		           }
+                   rel2 {
+                               relative, 1.0 1.0;
+                   }
+                   text {
+                               text, "Sending..";
+                               font, "redensek";
+                               size, 25;
+                               align, 0.5 0.5;
+                  }
+            }
+	    }
+
+      }
+    }
+
+
+
+
 
 
 

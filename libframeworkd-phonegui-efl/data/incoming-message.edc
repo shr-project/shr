@@ -44,7 +44,7 @@ collections {
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
-                    color: 90 90 255 255;
+                    color: 90 90 0 255;
 		           state, "default" 0.0;
 		           rel1 {
 		                       relative, 0.0 0.15;

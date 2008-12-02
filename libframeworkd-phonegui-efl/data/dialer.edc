@@ -3,27 +3,79 @@ collections {
         name, "main";
         parts {
 
+
+
             part {
-                name,   "number";
+                name,   "bg_number";
+                type,   RECT;
+                mouse_events, 1;
+                description {
+                    state, "default" 0.0;
+                    rel1 {
+                        relative, 0.05 0.0;
+                    }
+                    rel2 {
+                        relative, 0.8 0.2;
+                    }
+                   color: 0 0 0 0;
+                }
+            }
+
+
+
+
+
+            part {
+                name,   "text_number";
                 type,   TEXT;
                 mouse_events, 0;
                 description {
                     state, "default" 0.0;
                     color, 0 0 0 255;
                     rel1 {
-                        relative, 0.0 0.0;
+                        to, "bg_number";
                     }
                     rel2 {
-                        relative, 1.0 0.2;
+                        to, "bg_number";
                     }
                     text {
                         text, "";
                         font, "redensek";
                         size, 50;
-                        align, 0.5 0.5;
+                        align, 0.0 0.5;
                     }
                 }
             }
+
+
+            part {
+                name,   "text_number_info";
+                type,   TEXT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    color, 0 0 0 255;
+                    rel1 {
+                        to, "bg_number";
+                    }
+                    rel2 {
+                        to, "bg_number";
+                    }
+                    text {
+                        text, "Click to open contactlist";
+                        font, "redensek";
+                        size, 20;
+                        align, 0.0 0.5;
+                    }
+                }
+                description {
+                    state, "hidden" 0.0;
+                    color, 255 255 255 0;
+                }
+            }
+
+
+
 
             part {
                 name,   "keypad";
@@ -35,22 +87,22 @@ collections {
                         relative, 0 0.2;
                     }
                     rel2 {
-                        relative, 0.75 1.0;
+                        relative, 1 0.85;
                     }
                 }
             }
 
             part {
-                name,   "button_delete";
+                name,   "button_exit";
                 type,   SWALLOW;
                 mouse_events, 1;
                 description {
                     state, "default" 0.0;
                     rel1 {
-                        relative, 0.75 0.2;
+                        relative, 0.0 0.85;
                     }
                     rel2 {
-                        relative, 1 0.4;
+                        relative, 0.33 1;
                     }
                 }
             }
@@ -62,10 +114,10 @@ collections {
                 description {
                     state, "default" 0.0;
                     rel1 {
-                        relative, 0.75 0.4;
+                        relative, 0.33 0.85;
                     }
                     rel2 {
-                        relative, 1 0.7;
+                        relative, 0.66 1;
                     }
                 }
             }
@@ -77,7 +129,7 @@ collections {
                 description {
                     state, "default" 0.0;
                     rel1 {
-                        relative, 0.75 0.7;
+                        relative, 0.66 0.85;
                     }
                     rel2 {
                         relative, 1 1;
@@ -85,7 +137,146 @@ collections {
                 }
             }
 
+
+
+          part {
+                 name,   "button_delete";
+                 type,   RECT;
+                 mouse_events, 1;
+                 description {
+                    state, "default" 0.0;
+                    rel1 {
+                        relative, 0.8 0;
+                    }
+                    rel2 {
+                        relative, 1 0.2;
+                    }
+                   color: 0 0 0 0;
+	           }
+	       }
+
+
+            part {
+                name,   "text_delete";
+                type,   TEXT;
+                mouse_events, 0;
+                description {
+                    state, "default" 0.0;
+                    color, 0 0 0 0;
+                    rel1 {
+                        relative, 0 0;
+                        to, "button_delete";
+                    }
+                    rel2 {
+                        relative, 1 1;
+                        to, "button_delete";
+                    }
+                }
+                description {
+                    state, "visible" 0.0;
+                    color, 255 0 0 255;
+                    rel1 {
+                        relative, 0 0;
+                        to, "button_delete";
+                    }
+                    rel2 {
+                        relative, 1 1;
+                        to, "button_delete";
+                    }
+                    text {
+                        text, "DEL";
+                        font, "redensek:style=bold";
+                        size, 25;
+                        align, 0.5 0.5;
+                    }
+                }
+                description {
+                    state, "clicked" 0.0;
+                    color, 150 0 0 255;
+                    rel1 {
+                        relative, 0 0;
+                        to, "button_delete";
+                    }
+                    rel2 {
+                        relative, 1 1;
+                        to, "button_delete";
+                    }
+                    text {
+                        text, "DEL";
+                        font, "redensek:style=bold";
+                        size, 25;
+                        align, 0.5 0.5;
+                    }
+                }
+            }
+
+
+
+
         }
+        programs {
+
+            program {
+                name, "button_delete_click";
+                signal, "mouse,down,1";
+                source, "button_delete";
+                action, STATE_SET "clicked" 0.0;
+                target, "text_delete";
+            }
+
+            program {
+                name, "button_delete_unclick";
+                signal, "mouse,up,1";
+                source, "button_delete";
+                action, STATE_SET "visible" 0.0;
+                target, "text_delete";
+            }
+
+            program {
+                name, "button_delete_mouse_down";
+                signal, "mouse,down,1";
+                source, "button_delete";
+                action, SIGNAL_EMIT "mouse_down" "delete";
+            }
+
+            program {
+                name, "button_delete_mouse_up";
+                signal, "mouse,up,1";
+                source, "button_delete";
+                action, SIGNAL_EMIT "mouse_up" "delete";
+            }
+
+
+            program {
+                name, "bg_number_click";
+                signal, "mouse,up,1";
+                source, "bg_number";
+                action, SIGNAL_EMIT "click" "number";
+            }
+
+            program {
+                name: "number_available";
+                signal: "number_available";
+                source: "elm";
+                script {
+                    set_state(PART:"text_delete", "visible", 0.0);
+                    set_state(PART:"text_number_info", "hidden", 0.0);
+                }
+            }
+            program {
+                name: "number_empty";
+                signal: "number_empty";
+                source: "elm";
+                script {
+                    set_state(PART:"text_delete", "default", 0.0);
+                    set_state(PART:"text_number_info", "default", 0.0);
+                }
+            }
+        }
+
     }
+
+
+
 }
 

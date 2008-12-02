@@ -1,203 +1,1188 @@
 collections {
-    group {
-        name, "keypad";
-        parts {
 
-            /* first row */
 
-            part {
-                name,   "button1";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0 0.0;
-                    }
-                    rel2 {
-                        relative, 0.33 0.25;
-                    }
-                }
-            }
-
-            part {
-                name,   "button2";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.33 0.0;
-                    }
-                    rel2 {
-                        relative, 0.66 0.25;
-                    }
-                }
-            }
-
-            part {
-                name,   "button3";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.66 0.0;
-                    }
-                    rel2 {
-                        relative, 1.0 0.25;
-                    }
-                }
-            }
+   group {
+      name, "keypad";
+      parts {
 
 
 
-            /* second row */
-
-            part {
-                name,   "button4";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0 0.25;
-                    }
-                    rel2 {
-                        relative, 0.33 0.5;
-                    }
-                }
-            }
-
-            part {
-                name,   "button5";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.33 0.25;
-                    }
-                    rel2 {
-                        relative, 0.66 0.5;
-                    }
-                }
-            }
-
-            part {
-                name,   "button6";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.66 0.25;
-                    }
-                    rel2 {
-                        relative, 1.0 0.5;
-                    }
-                }
-            }
 
 
 
-            /* third row */
-
-            part {
-                name,   "button7";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0 0.5;
-                    }
-                    rel2 {
-                        relative, 0.33 0.75;
-                    }
-                }
-            }
-
-            part {
-                name,   "button8";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.33 0.5;
-                    }
-                    rel2 {
-                        relative, 0.66 0.75;
-                    }
-                }
-            }
-
-            part {
-                name,   "button9";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.66 0.5;
-                    }
-                    rel2 {
-                        relative, 1.0 0.75;
-                    }
-                }
-            }
+          part {
+                 name,   "border_top";
+                 type,   RECT;
+                 mouse_events, 0;
+                 description {
+                     state, "default" 0.0;
+                     rel1 {
+                              relative, 0 0;
+                     }
+		           rel2 {
+		                       relative, 1 0.01;
+		           }
+                   color: 100 100 100 255;
+	           }
+	    }
 
 
-            
-            /* fourth row */
 
-            part {
-                name,   "button_star";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.0 0.75;
-                    }
-                    rel2 {
-                        relative, 0.33 1.0;
-                    }
-                }
-            }
 
-            part {
-                name,   "button0";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.33 0.75;
-                    }
-                    rel2 {
-                        relative, 0.66 1.0;
-                    }
-                }
-            }
 
-            part {
-                name,   "button_rhomb";
-                type,   SWALLOW;
-                mouse_events, 1;
-                description {
-                    state, "default" 0.0;
-                    rel1 {
-                        relative, 0.66 0.75;
-                    }
-                    rel2 {
-                        relative, 1.0 1.0;
-                    }
-                }
-            }
+    /* first row */
+	    part {
+	           name,   "button1";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0 0.01;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 0.245;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0 0.01;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 0.245;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button2";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.33 0.01;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 0.245;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.33 0.01;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 0.245;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button3";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           align, 1.0 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.67 0.01;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 0.245;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           align, 0.5 0.5;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.67 0.01;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 0.245;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "text1";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       to, "button1";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 to, "button1";
+	                     }
+	                     text {
+	                                 text, "1";
+	                                 font, "redensek:style=bold:color=000";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text2";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button2";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button2";
+	                     }
+	                     text {
+	                                 text, "2";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text2_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button2";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button2";
+	                     }
+	                     text {
+	                                 text, "ABC";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text3";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button3";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button3";
+	                     }
+	                     text {
+	                                 text, "3";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
 
+	    part {
+	           name,   "text3_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button3";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button3";
+	                     }
+	                     text {
+	                                 text, "DEF";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+
+
+
+
+
+    /* second row */
+	    part {
+	           name,   "button4";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0 0.255;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 0.495;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0 0.255;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 0.495;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button5";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.33 0.255;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 0.495;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.33 0.255;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 0.495;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button6";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.67 0.255;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 0.495;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.67 0.255;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 0.495;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "text4";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button4";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button4";
+	                     }
+	                     text {
+	                                 text, "4";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+
+	    part {
+	           name,   "text4_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button4";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button4";
+	                     }
+	                     text {
+	                                 text, "GHI";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text5";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button5";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button5";
+	                     }
+	                     text {
+	                                 text, "5";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+
+	    part {
+	           name,   "text5_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button5";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button5";
+	                     }
+	                     text {
+	                                 text, "JKL";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text6";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button6";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button6";
+	                     }
+	                     text {
+	                                 text, "6";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text6_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button6";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button6";
+	                     }
+	                     text {
+	                                 text, "MNO";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+
+
+
+
+
+    /* third row */
+	    part {
+	           name,   "button7";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0 0.505;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 0.745;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0 0.505;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 0.745;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button8";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.33 0.505;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 0.745;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.33 0.505;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 0.745;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button9";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.67 0.505;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 0.745;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.67 0.505;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 0.745;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "text7";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button7";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button7";
+	                     }
+	                     text {
+	                                 text, "7";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text7_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button7";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button7";
+	                     }
+	                     text {
+	                                 text, "PQRS";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text8";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button8";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button8";
+	                     }
+	                     text {
+	                                 text, "8";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text8_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button8";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button8";
+	                     }
+	                     text {
+	                                 text, "TUV";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text9";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button9";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button9";
+	                     }
+	                     text {
+	                                 text, "9";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+
+	    part {
+	           name,   "text9_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button9";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button9";
+	                     }
+	                     text {
+	                                 text, "XYZ";
+	                                 font, "redensek";
+	                                 size, 20;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+
+
+    /* fourth row */
+	    part {
+	           name,   "button_star";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.0 0.755;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.0 0.755;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.32 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button0";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.33 0.755;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.33 0.755;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 0.66 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "button_rhomb";
+	           type,   RECT;
+	           mouse_events, 1;
+	           description {
+		           state, "default" 0.0;
+		           color, 255 255 255 255;
+		           rel1 {
+		                       relative, 0.67 0.755;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	           description {
+		           state, "clicked" 0.0;
+		           color, 200 200 200 255;
+		           rel1 {
+		                       relative, 0.67 0.755;
+		                       offset, 0 0;
+		           }
+		           rel2 {
+		                       relative, 1.0 1.0;
+		                       offset, 0 0;
+		           }
+	           }
+	    }
+	    part {
+	           name,   "text_star";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_star";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_star";
+	                     }
+	                     text {
+	                                 text, "*";
+	                                 font, "redensek:style=bold";
+	                                 size, 60;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text0";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button0";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button0";
+	                     }
+	                     text {
+	                                 text, "0";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+	    part {
+	           name,   "text0_desc";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 60 60 60 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button0";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button0";
+	                     }
+	                     text {
+	                                 text, "+";
+	                                 font, "redensek:style=bold";
+	                                 size, 25;
+	                                 align, 0.5 0.8;
+	                     }
+	            }
+	    }
+
+	    part {
+	           name,   "text_rhomb";
+	           type,   TEXT;
+	           mouse_events, 0;
+	           description {
+		           state, "default" 0.0;
+                   color, 1 1 1 255;
+		           rel1 {
+		                       relative, 0.0 0.0;
+		                       offset, 0 0;
+		                       to, "button_rhomb";
+		           }
+	                     rel2 {
+	                                 relative, 1.0 1.0;
+	                                 offset, 0 0;
+	                                 to, "button_rhomb";
+	                     }
+	                     text {
+	                                 text, "#";
+	                                 font, "redensek:style=bold";
+	                                 size, 40;
+	                                 align, 0.5 0.15;
+	                     }
+	            }
+	    }
+
+
+
+
+   } /* Close Parts */
+   programs {
+
+
+        program {
+                name, "button1_clicked";
+                signal, "mouse,up,1";
+                source, "button1";
+                action, SIGNAL_EMIT "1" "input";
         }
-    }
-}
+        program {
+                name, "button2_clicked";
+                signal, "mouse,up,1";
+                source, "button2";
+                action, SIGNAL_EMIT "2" "input";
+        }
+        program {
+                name, "button3_clicked";
+                signal, "mouse,up,1";
+                source, "button3";
+                action, SIGNAL_EMIT "3" "input";
+        }
+        program {
+                name, "button4_clicked";
+                signal, "mouse,up,1";
+                source, "button4";
+                action, SIGNAL_EMIT "4" "input";
+        }
+        program {
+                name, "button5_clicked";
+                signal, "mouse,up,1";
+                source, "button5";
+                action, SIGNAL_EMIT "5" "input";
+        }
+        program {
+                name, "button6_clicked";
+                signal, "mouse,up,1";
+                source, "button6";
+                action, SIGNAL_EMIT "6" "input";
+        }
+        program {
+                name, "button7_clicked";
+                signal, "mouse,up,1";
+                source, "button7";
+                action, SIGNAL_EMIT "7" "input";
+        }
+        program {
+                name, "button8_clicked";
+                signal, "mouse,up,1";
+                source, "button8";
+                action, SIGNAL_EMIT "8" "input";
+        }
+        program {
+                name, "button9_clicked";
+                signal, "mouse,up,1";
+                source, "button9";
+                action, SIGNAL_EMIT "9" "input";
+        }
+        program {
+                name, "button_star_clicked";
+                signal, "mouse,up,1";
+                source, "button_star";
+                action, SIGNAL_EMIT "*" "input";
+        }
+        program {
+                name, "button0_clicked";
+                signal, "mouse,up,1";
+                source, "button0";
+                action, SIGNAL_EMIT "0" "input";
+        }
+        program {
+                name, "button_rhomb_clicked";
+                signal, "mouse,up,1";
+                source, "button_rhomb";
+                action, SIGNAL_EMIT "#" "input";
+        }
+
+
+        program {
+                name, "button1_click";
+                signal, "mouse,down,1";
+                source, "button1";
+                action, STATE_SET "clicked" 0.0;
+                target, "button1";
+        }
+        program {
+                name, "button2_click";
+                signal, "mouse,down,1";
+                source, "button2";
+                action, STATE_SET "clicked" 0.0;
+                target, "button2";
+        }
+        program {
+                name, "button3_click";
+                signal, "mouse,down,1";
+                source, "button3";
+                action, STATE_SET "clicked" 0.0;
+                target, "button3";
+        }
+        program {
+                name, "button4_click";
+                signal, "mouse,down,1";
+                source, "button4";
+                action, STATE_SET "clicked" 0.0;
+                target, "button4";
+        }
+        program {
+                name, "button5_click";
+                signal, "mouse,down,1";
+                source, "button5";
+                action, STATE_SET "clicked" 0.0;
+                target, "button5";
+        }
+        program {
+                name, "button6_click";
+                signal, "mouse,down,1";
+                source, "button6";
+                action, STATE_SET "clicked" 0.0;
+                target, "button6";
+        }
+        program {
+                name, "button7_click";
+                signal, "mouse,down,1";
+                source, "button7";
+                action, STATE_SET "clicked" 0.0;
+                target, "button7";
+        }
+        program {
+                name, "button8_click";
+                signal, "mouse,down,1";
+                source, "button8";
+                action, STATE_SET "clicked" 0.0;
+                target, "button8";
+        }
+        program {
+                name, "button9_click";
+                signal, "mouse,down,1";
+                source, "button9";
+                action, STATE_SET "clicked" 0.0;
+                target, "button9";
+        }
+        program {
+                name, "button_star_click";
+                signal, "mouse,down,1";
+                source, "button_star";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_star";
+        }
+        program {
+                name, "button0_click";
+                signal, "mouse,down,1";
+                source, "button0";
+                action, STATE_SET "clicked" 0.0;
+                target, "button0";
+        }
+        program {
+                name, "button_rhomb_click";
+                signal, "mouse,down,1";
+                source, "button_rhomb";
+                action, STATE_SET "clicked" 0.0;
+                target, "button_rhomb";
+        }
+
+
+
+        program {
+                name, "button1_unclick";
+                signal, "mouse,up,1";
+                source, "button1";
+                action, STATE_SET "default" 0.0;
+                target, "button1";
+        }
+        program {
+                name, "button2_unclick";
+                signal, "mouse,up,1";
+                source, "button2";
+                action, STATE_SET "default" 0.0;
+                target, "button2";
+        }
+        program {
+                name, "button3_unclick";
+                signal, "mouse,up,1";
+                source, "button3";
+                action, STATE_SET "default" 0.0;
+                target, "button3";
+        }
+        program {
+                name, "button4_unclick";
+                signal, "mouse,up,1";
+                source, "button4";
+                action, STATE_SET "default" 0.0;
+                target, "button4";
+        }
+        program {
+                name, "button5_unclick";
+                signal, "mouse,up,1";
+                source, "button5";
+                action, STATE_SET "default" 0.0;
+                target, "button5";
+        }
+        program {
+                name, "button6_unclick";
+                signal, "mouse,up,1";
+                source, "button6";
+                action, STATE_SET "default" 0.0;
+                target, "button6";
+        }
+        program {
+                name, "button7_unclick";
+                signal, "mouse,up,1";
+                source, "button7";
+                action, STATE_SET "default" 0.0;
+                target, "button7";
+        }
+        program {
+                name, "button8_unclick";
+                signal, "mouse,up,1";
+                source, "button8";
+                action, STATE_SET "default" 0.0;
+                target, "button8";
+        }
+        program {
+                name, "button9_unclick";
+                signal, "mouse,up,1";
+                source, "button9";
+                action, STATE_SET "default" 0.0;
+                target, "button9";
+        }
+        program {
+                name, "button_star_unclick";
+                signal, "mouse,up,1";
+                source, "button_star";
+                action, STATE_SET "default" 0.0;
+                target, "button_star";
+        }
+        program {
+                name, "button0_unclick";
+                signal, "mouse,up,1";
+                source, "button0";
+                action, STATE_SET "default" 0.0;
+                target, "button0";
+        }
+        program {
+                name, "button_rhomb_unclick";
+                signal, "mouse,up,1";
+                source, "button_rhomb";
+                action, STATE_SET "default" 0.0;
+                target, "button_rhomb";
+        }
+
+
+   } /* Close Prog */
+ } /* Close Group */
+
+
+
+} /* Close Coll */
 

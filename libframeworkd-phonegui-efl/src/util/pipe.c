@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <glib-2.0/glib.h>
-#include <glib-2.0/glib-object.h>
 
 PipeHandler pipe_create() {
     int r;
@@ -33,10 +32,10 @@ PipeMessage* pipe_read(PipeHandler h) {
         return m;
 }
 
-void pipe_write(PipeHandler h, void (*callback)(int event), int event) {
+void pipe_write(PipeHandler h, void (*callback)(), void *userdata) {
     PipeMessage m;
     m.callback = callback;
-    m.event = event;
+    m.userdata = userdata;
     write(h.output, &m, sizeof(m));
 }
 

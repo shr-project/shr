@@ -1,6 +1,7 @@
 #ifndef _PIPE_H
 #define _PIPE_H
 
+#include <glib.h>
 #include <fcntl.h>
 
 typedef struct {
@@ -9,13 +10,13 @@ typedef struct {
 } PipeHandler;
 
 typedef struct {
-    void (*callback)(int event);
-    int event;
+    void (*callback)();
+    void *userdata;
 } PipeMessage;
 
 
 PipeHandler pipe_create();
 PipeMessage* pipe_read(PipeHandler h);
-void pipe_write(PipeHandler h, void (*event_cb)(int event), int data);
+void pipe_write(PipeHandler h, void (*callback)(), void *userdata);
 
 #endif
