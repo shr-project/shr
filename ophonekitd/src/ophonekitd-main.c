@@ -21,6 +21,8 @@
 #include <string.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
+#include <glib.h>
+#include <glib/gthread.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
@@ -31,8 +33,8 @@
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-idlenotifier.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
-
 #include "ophonekitd-phonegui.h"
+#include "ophonekitd-dbus.h"
 
 gboolean sim_auth_active = FALSE;
 int *incoming_calls = NULL;
@@ -43,6 +45,8 @@ int outgoing_calls_size = 0;
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
     FrameworkdHandlers fwHandler;
+    DBusGConnection *bus = NULL;
+    DBusGProxy *bus_proxy = NULL;
 
     /* Load, connect and initiate phonegui library */
     phonegui_load("ophonekitd");
@@ -57,14 +61,21 @@ int main(int argc, char ** argv) {
     fwHandler.simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
     fwHandler.callCallStatus = ophonekitd_call_status_handler;
     fwHandler.deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
-    dbus_connect_to_bus(&fwHandler);
-    g_debug("Connected to the buses");
 
-    /* Initiate glib main loop */
-    g_type_init();
+    if (!g_thread_supported ())
+        g_thread_init (NULL);
+
+    dbus_g_thread_init ();
+
+    
     mainloop = g_main_loop_new (NULL, FALSE);
     g_debug("Entering glib main loop");
-
+    
+    ophonekitd_dbus_start();
+    
+    dbus_connect_to_bus(&fwHandler);
+    g_debug("Connected to the buses");
+    
     /* Start glib main loop and run list_resources() */
     g_timeout_add(0, list_resources, NULL);
     g_main_loop_run(mainloop);
