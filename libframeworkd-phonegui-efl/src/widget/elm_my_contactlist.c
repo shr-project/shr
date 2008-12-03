@@ -18,12 +18,13 @@ struct _Widget_Data
    Etk_Widget *container, *tree;
    Etk_Tree_Col *col1;
    GPtrArray *messages;
+   Evas_Object **widget_pointer;
 };
 
 static void _del_hook(Evas_Object *obj);
 static void _sizing_eval(Evas_Object *obj);
 static void _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info);
-static void _sub_del(void *data, Evas_Object *obj, void *event_info);
+//static void _sub_del(void *data, Evas_Object *obj, void *event_info);
 static void _signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source);
 static void _retrieve_callback2(void *data);
 static void _process_entry(GValueArray *entry, void *data);
@@ -32,6 +33,7 @@ static void
 _del_hook(Evas_Object *obj)
 {
    Widget_Data *wd = elm_widget_data_get(obj);
+   *(wd->widget_pointer) = NULL;
    evas_object_del(wd->keypad);
    free(wd);
 }
@@ -58,10 +60,12 @@ _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info)
    //_sizing_eval(data);
 }
 
+
 /*
 static void
 _sub_del(void *data, Evas_Object *obj, void *event_info)
 {
+    g_debug("SUB DEL CALLED!");
    Widget_Data *wd = elm_widget_data_get(obj);
    Evas_Object *sub = event_info;
    if (sub == wd->icon)
@@ -72,9 +76,9 @@ _sub_del(void *data, Evas_Object *obj, void *event_info)
 	wd->icon = NULL;
 	_sizing_eval(obj);
      }
-   
 }
-*/
+*/ 
+
 
 static void
 _signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source)
@@ -109,18 +113,30 @@ _process_entry(GValueArray *entry, void *data) {
 
 static void
 _retrieve_callback(GError*error, GPtrArray*messages, void *data) {
-    Widget_Data *wd = elm_widget_data_get(data);
-    wd->messages = messages;
-    async_trigger(_retrieve_callback2, data);
+    Evas_Object **widget = (Evas_Object **) data;
+
+    if(*widget == NULL) {
+        free(widget);
+    } else {
+        Widget_Data *wd = elm_widget_data_get(*widget);
+        wd->messages = messages;
+        async_trigger(_retrieve_callback2, data);
+    }
 }
 
 static void
 _retrieve_callback2(void *data) {
-    Widget_Data *wd = elm_widget_data_get(data);
-    GPtrArray *messages = wd->messages;
+    Evas_Object **widget = (Evas_Object **) data;
 
-    g_ptr_array_sort(messages, _compare_entries);
-    g_ptr_array_foreach(messages, _process_entry, data);
+    if(*widget == NULL) {
+        free(widget);
+    } else {
+        Widget_Data *wd = elm_widget_data_get(*widget);
+        GPtrArray *messages = wd->messages;
+
+        g_ptr_array_sort(messages, _compare_entries);
+        g_ptr_array_foreach(messages, _process_entry, *widget);
+    }
 }
 
 
@@ -135,6 +151,9 @@ elm_my_contactlist_add(Evas_Object *parent)
    e = evas_object_evas_get(parent);
    wd->widget = elm_widget_add(e);
    elm_widget_data_set(wd->widget, wd);
+
+   wd->widget_pointer = malloc(sizeof(Evas_Object **));
+   *(wd->widget_pointer) = wd->widget;
    elm_widget_del_hook_set(wd->widget, _del_hook);
    
   /* wd->keypad = edje_object_add(e);
@@ -157,13 +176,14 @@ elm_my_contactlist_add(Evas_Object *parent)
     etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
     etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
     etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_SHOW);
+    etk_scrolled_view_drag_damping_set(ETK_SCROLLED_VIEW(scrolled_view), 800);
 
     wd->container = etk_embed_new(e);
     etk_container_add(ETK_CONTAINER(wd->container), wd->tree);
     etk_widget_show_all(wd->container);
     Evas_Object *object = etk_embed_object_get(ETK_EMBED(wd->container));
 
-    ogsmd_sim_retrieve_phonebook("contacts", _retrieve_callback, wd->widget);
+    ogsmd_sim_retrieve_phonebook("contacts", _retrieve_callback, wd->widget_pointer);
 
    elm_widget_resize_object_set(wd->widget, object);
    //evas_object_smart_callback_add(wd->widget, "sub-object-del", _sub_del, wd->widget);
@@ -182,5 +202,13 @@ elm_my_contactlist_selected_row_get(void *data)
         return parameters;
     }
     return NULL;
+}
+
+EAPI void
+elm_my_contactlist_refresh(void *data)
+{
+    Widget_Data *wd = elm_widget_data_get(data);
+    etk_tree_clear(wd->tree);
+    ogsmd_sim_retrieve_phonebook("contacts", _retrieve_callback, wd->widget_pointer);
 }
 

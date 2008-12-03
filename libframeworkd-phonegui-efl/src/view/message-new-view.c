@@ -19,6 +19,8 @@ struct MessageNewViewData {
     Evas_Object *list_recipients;
     Etk_Widget *container_recipients, *tree_recipients;
     Etk_Tree_Col *col1_recipients;
+
+    int messages_sent;
 };
 
 
@@ -65,6 +67,7 @@ struct MessageNewViewData *message_new_view_show(struct Window *win, GHashTable 
     data->mode = MODE_CONTENT;
     data->content = NULL;
     data->recipients = g_ptr_array_new();
+    data->messages_sent = 0;
 
     if(options != NULL) {
         char *recipient = g_hash_table_lookup(options, "recipient");
@@ -104,7 +107,7 @@ static void frame_content_show(struct MessageNewViewData *data) {
     window_layout_set(win, MESSAGE_FILE, "content_edit");
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Quit");
+    elm_button_label_set(data->bt1, "Close");
     evas_object_smart_callback_add(data->bt1, "clicked", frame_content_close_clicked, data);
     window_swallow(win, "button_close", data->bt1);
     evas_object_show(data->bt1);
@@ -302,9 +305,8 @@ static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Ev
 }
 
 static void frame_recipient_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) {
-    static int sent_counter = 0;
-    sent_counter++;
-    if(sent_counter == data->recipients->len) {
+    data->messages_sent++;
+    if(data->messages_sent == data->recipients->len) {
         window_destroy(data->win, NULL);
     }
 }

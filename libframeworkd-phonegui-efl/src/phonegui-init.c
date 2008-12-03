@@ -33,8 +33,6 @@ void ui_init() {
 }
 
 void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
-    g_debug("phonegui_init()");
-
     // Assign arguments
     phonegui_argc = argc;
     phonegui_argv = argv;

@@ -23,7 +23,8 @@ static void frame_dialer_delete_mouse_up(struct DialerViewData *data, Evas_Objec
 static void frame_dialer_number_clicked(struct DialerViewData *data, Evas_Object *o, const char *emission, const char *source);
 static void frame_dialer_number_clear(struct DialerViewData *data);
 static void frame_dialer_number_update(struct DialerViewData *data);
-static void frame_dialer_initiate_callback(GError *error, int call_id, struct DialerViewData *data);
+static void frame_dialer_initiate_callback(GError *error, int call_id, void *userdata);
+static void frame_dialer_initiate_callback2(struct DialerViewData *data);
 
 
 
@@ -228,9 +229,14 @@ static void frame_dialer_number_clear(struct DialerViewData *data) {
     }
 }
 
-static void frame_dialer_initiate_callback(GError *error, int call_id, struct DialerViewData *data) {
+static void frame_dialer_initiate_callback(GError *error, int call_id, void *userdata) {
+    async_trigger(frame_dialer_initiate_callback2, userdata);
+}
+
+static void frame_dialer_initiate_callback2(struct DialerViewData *data) {
     window_destroy(data->win, NULL);
 }
+
 
 
 

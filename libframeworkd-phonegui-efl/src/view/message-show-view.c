@@ -27,7 +27,7 @@ typedef enum {
 
 static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, struct MessageShowViewData *data);
 static void retrieve_callback2(struct MessageShowViewData *data);
-static void message_show_view_back_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
+static void message_show_view_close_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_answer_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info);
@@ -79,17 +79,7 @@ static void retrieve_callback(GError *error, char *status, char *number, char *c
 
 static void retrieve_callback2(struct MessageShowViewData *data) {
     struct Window *win = data->win;
-
     window_layout_set(win, MESSAGE_FILE, "message_show");
-
-
-    /*GHashTable *properties = g_value_get_pointer(g_value_array_get_nth(data->tmp_message, 4));
-    long timestamp = g_value_get_long(g_hash_table_lookup(properties, "timestamp_int"));
-    char *status = g_value_get_string(g_value_array_get_nth(data->tmp_message, 1));
-    char *number = g_value_get_string(g_value_array_get_nth(data->tmp_message, 2));
-    char *content = g_value_get_string(g_value_array_get_nth(data->tmp_message, 3));*/
-
-
 
     char *timestr = g_value_get_string(g_hash_table_lookup(data->tmp_properties, "timestamp"));
     time_t timestamp = time_stringtotimestamp(timestr);
@@ -97,8 +87,6 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     char *number = data->tmp_number;
     char *content = data->tmp_content;
     
-
-
     char datestr[32];
     strftime(datestr, 31, "%e.%m.%Y, %H:%M", gmtime(&timestamp));
 
@@ -108,9 +96,9 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     window_text_set(win, "message_show_date", datestr);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Back");
-    evas_object_smart_callback_add(data->bt1, "clicked", message_show_view_back_clicked, data);
-    window_swallow(win, "button_back", data->bt1);
+    elm_button_label_set(data->bt1, "Close");
+    evas_object_smart_callback_add(data->bt1, "clicked", message_show_view_close_clicked, data);
+    window_swallow(win, "button_close", data->bt1);
     evas_object_show(data->bt1);
 
 
@@ -157,27 +145,17 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
 
 
 
-static void message_show_view_back_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
-    g_debug("button_back()");
-    //data->messages_mode = MODE_LIST;
-    //pipe_write(pipe_handler, messages_event, EVENT_LIST_CACHED, win);
-}
-
-
-static void message_show_view_options_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
-    // TODO: Implement some functionality.
+static void message_show_view_close_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
+    window_destroy(data->win, NULL);
 }
 
 static void message_show_view_answer_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
-    g_debug("message_show_view_answer_clicked()");
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+    g_hash_table_insert(options, "recipient", data->tmp_number);
 
-    window_view_show(data->win, NULL, message_new_view_show, message_new_view_hide);
-
-    // TODO
-
-    /*data->messages_mode = MODE_NEW1;
-    data->recipient_number = strdup(g_value_get_string(g_value_array_get_nth(data->tmp_message, 2)));
-    window_frame_show(win, messages_new1_show, messages_new1_hide);*/
+    struct Window *win = window_new("Compose SMS");
+    window_init(win);
+    window_view_show(win, options, message_new_view_show, message_new_view_hide);
 }
 
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {

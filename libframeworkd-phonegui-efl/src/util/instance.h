@@ -5,7 +5,8 @@
 
 enum InstanceType {
     INSTANCE_INCOMING_MESSAGE,
-    INSTANCE_CALL
+    INSTANCE_CALL,
+    INSTANCE_DIALOG
 };
 
 void instance_manager_add(int type, void *id, struct Window *win);

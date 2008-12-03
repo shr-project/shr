@@ -7,6 +7,10 @@
 #include <assert.h>
 #include <glib.h>
 
+// TODO: Remove this:
+#include "phonegui-init.h"
+
+
 static int window_counter = 0;
 static void _window_delete_callback(void *data, Evas_Object *win, void *event_info);
 
@@ -28,7 +32,7 @@ void window_init(struct Window *win) {
     assert(win->win != NULL);
     elm_win_title_set(win->win, win->title);
     elm_win_autodel_set(win->win, 1); // Disable it?
-    evas_object_smart_callback_add(win->win, "delete-request", _window_delete_callback, NULL);
+    evas_object_smart_callback_add(win->win, "delete-request", _window_delete_callback, win);
 
     // Background
     win->bg = elm_bg_add(win->win);
@@ -94,13 +98,10 @@ void window_view_show(struct Window *win, void *options, void *(*show_cb)(struct
     window_view_hide(win, NULL);
 
     if(show_cb != NULL) {
-        g_debug("Showing view");
         win->view_data = show_cb(win, options);
-        g_debug("view_data = %d", win->view_data);
     }
 
     win->view_hide_cb = hide_cb;
-    g_debug("hide_cb = %d", hide_cb);
 }
 
 void window_view_hide(struct Window *win, void *options) {
@@ -110,10 +111,7 @@ void window_view_hide(struct Window *win, void *options) {
     // Hide last frame
     window_frame_hide(win, win->view_data); 
 
-    g_debug("hide_cb = %d", win->view_hide_cb);
     if(win->view_hide_cb != NULL) {
-        g_debug("Hiding view");
-        g_debug("view_data = %d", win->view_data);
         win->view_hide_cb(win->view_data, options);
         win->view_hide_cb = NULL;
     }
@@ -125,9 +123,9 @@ void window_view_hide(struct Window *win, void *options) {
 
 void window_frame_show(struct Window *win, void *data, void (*show_cb)(void *data), void (*hide_cb)(void *data)) {
     assert(show_cb != NULL);
+    g_debug("window_frame_show() hide_cb = %d", hide_cb);
 
     if(win->frame_hide_cb != NULL) {
-        g_debug("Hiding frame");
         win->frame_hide_cb(data);
     } else {
         g_debug("No frame to hide");
@@ -136,7 +134,6 @@ void window_frame_show(struct Window *win, void *data, void (*show_cb)(void *dat
     // hide_cb could be NULL!
     win->frame_hide_cb = hide_cb;
 
-    g_debug("Showing frame");
     show_cb(data);
 }
 
@@ -164,7 +161,6 @@ void window_kbd_hide(struct Window *win) {
 }
 
 void window_destroy(struct Window *win, void *options) {
-    g_debug("window_destroy(win=%d)", win);
     assert(win != NULL);
     window_view_hide(win, options);
 
@@ -176,17 +172,15 @@ void window_destroy(struct Window *win, void *options) {
 
     window_counter--;
     if(window_counter == 0) {
-        g_debug("DONE THINGS");
-        exit(0);
+        if(phonegui_exit_cb != NULL) {
+            g_debug("calling exit_cb()");
+            phonegui_exit_cb();
+        }
     }
 }
 
 
 static void _window_delete_callback(void *data, Evas_Object *win, void *event_info) {
-    window_counter--;
-    if(window_counter == 0) {
-        g_debug("DONE THINGS");
-        exit(0);
-    }
+    window_destroy(data, NULL);
 }
 

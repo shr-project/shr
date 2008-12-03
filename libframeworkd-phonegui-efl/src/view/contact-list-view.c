@@ -7,7 +7,7 @@ struct ContactListViewData {
     struct Window *win;
     Evas_Object *list;
     Evas_Object *bx, *hv;
-    Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit;
+    Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 };
 
 static void frame_list_show(struct ContactListViewData *data);
@@ -17,6 +17,8 @@ static void frame_list_call_clicked(struct ContactListViewData *data, Evas_Objec
 static void frame_list_options_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
 static void frame_list_message_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
 static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
+static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
+static void frame_list_contact_added(struct ContactListViewData *data);
 
 
 struct ContactListViewData *contact_list_view_show(struct Window *win, GHashTable *options) {
@@ -30,7 +32,8 @@ struct ContactListViewData *contact_list_view_show(struct Window *win, GHashTabl
 
 
 void contact_list_view_hide(struct ContactListViewData *data) {
-
+    g_slice_free(struct ContactListViewData, data);
+    data = NULL;
 }
 
 
@@ -77,13 +80,6 @@ static void frame_list_show(struct ContactListViewData *data) {
     elm_box_homogenous_set(data->bx, 1);
     evas_object_show(data->bx);
 
-    data->bt_edit = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_edit, "Edit");
-    evas_object_size_hint_min_set(data->bt_edit, 130, 80);
-    evas_object_smart_callback_add(data->bt_edit, "clicked", frame_list_edit_clicked, data);
-    evas_object_show(data->bt_edit);
-    elm_box_pack_end(data->bx, data->bt_edit);
-
     data->bt_message = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt_message, "SMS");
     evas_object_size_hint_min_set(data->bt_message, 130, 80);
@@ -91,11 +87,27 @@ static void frame_list_show(struct ContactListViewData *data) {
     evas_object_show(data->bt_message);
     elm_box_pack_end(data->bx, data->bt_message);
 
+    data->bt_edit = elm_button_add(window_evas_object_get(win));
+    elm_button_label_set(data->bt_edit, "Edit");
+    evas_object_size_hint_min_set(data->bt_edit, 130, 80);
+    evas_object_smart_callback_add(data->bt_edit, "clicked", frame_list_edit_clicked, data);
+    evas_object_show(data->bt_edit);
+    elm_box_pack_end(data->bx, data->bt_edit);
+
+    data->bt_delete = elm_button_add(window_evas_object_get(win));
+    elm_button_label_set(data->bt_delete, "Delete");
+    evas_object_size_hint_min_set(data->bt_delete, 130, 80);
+    evas_object_smart_callback_add(data->bt_delete, "clicked", frame_list_delete_clicked, data);
+    evas_object_show(data->bt_delete);
+    elm_box_pack_end(data->bx, data->bt_delete);
+
     elm_hover_content_set(data->hv, "top", data->bx);
 }
 
 
 static void frame_list_hide(struct ContactListViewData *data) {
+    g_debug("frame_list_hide() called");
+
     evas_object_del(data->bt1);
     evas_object_del(data->bt2);
     evas_object_del(data->bt_options);
@@ -105,9 +117,13 @@ static void frame_list_hide(struct ContactListViewData *data) {
 static void frame_list_new_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
     g_debug("new");
 
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+    g_hash_table_insert(options, "callback", frame_list_contact_added);
+    g_hash_table_insert(options, "callback_data", data);
+
     struct Window *win = window_new("New Contact");
     window_init(win);
-    window_view_show(win, NULL, contact_edit_view_show, contact_edit_view_hide);
+    window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
 }
 
 static void frame_list_call_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
@@ -143,11 +159,25 @@ static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Objec
 
     GHashTable *properties = elm_my_contactlist_selected_row_get(data->list);
     if(properties != NULL) {
-        // TODO: Copy properties
+        GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+        g_hash_table_insert(options, "id", g_hash_table_lookup(properties, "id"));
+        g_hash_table_insert(options, "name", g_hash_table_lookup(properties, "name"));
+        g_hash_table_insert(options, "number", g_hash_table_lookup(properties, "number"));
+        g_hash_table_insert(options, "callback", frame_list_contact_added);
+        g_hash_table_insert(options, "callback_data", data);
 
         struct Window *win = window_new("Edit Contact");
         window_init(win);
-        window_view_show(win, properties, contact_edit_view_show, contact_edit_view_hide);
+        window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
     }
+}
+
+static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
+    evas_object_show(data->hv);
+}
+
+
+static void frame_list_contact_added(struct ContactListViewData *data) {
+    elm_my_contactlist_refresh(data->list);
 }
 

@@ -502,39 +502,15 @@ collections {
         name, "list";
         parts {
 
-	    part {
-	           name,   "title";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-                  color, 0 0 0 255;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		           }
-                   rel2 {
-                               relative, 1.0 0.1;
-                   }
-                   text {
-                               text, "";
-                               font, "redensek";
-                               size, 25;
-                               align, 0.5 0.5;
-                  }
-            }
-	    }
-
-
 
 	    part {
-	           name,   "swallow";
+	           name,   "list";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.0 0.10;
+		                       relative, 0.0 0.0;
 		           }
                    rel2 {
                                relative, 1.0 0.85;
@@ -544,7 +520,7 @@ collections {
 
 
 	    part {
-	           name,   "button_back";
+	           name,   "button_new";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
@@ -796,7 +772,7 @@ collections {
 
 
 	    part {
-	           name,   "button_back";
+	           name,   "button_close";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {

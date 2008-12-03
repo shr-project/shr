@@ -26,6 +26,9 @@
 struct DialerViewData *dialer_view_show(struct Window *win, GHashTable *options);
 void dialer_view_hide(struct DialerViewData *data);
 
+struct DialogViewData *dialog_view_show(struct Window *win, GHashTable *options);
+void dialog_view_hide(struct DialogViewData *data);
+
 struct MessageNewViewData *message_new_view_show(struct Window *win, GHashTable *options);
 void message_new_view_hide(struct MessageNewViewData *data);
 
@@ -36,7 +39,7 @@ struct MessageShowViewData *message_show_view_show(struct Window *win, GHashTabl
 void message_show_view_hide(struct MessageShowViewData *data);
 
 struct MessageListViewData *message_list_view_show(struct Window *win, GHashTable *options);
-void messages_list_view_hide(struct MessageListViewData *data);
+void message_list_view_hide(struct MessageListViewData *data);
 
 struct SimAuthInputViewData *sim_auth_input_view_show(struct Window *win, GHashTable *options);
 void sim_auth_input_view_hide(struct SimAuthInputViewData *data);

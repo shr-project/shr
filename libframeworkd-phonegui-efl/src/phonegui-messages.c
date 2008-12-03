@@ -30,7 +30,7 @@ void phonegui_messages_hide() {
 static void _show(struct Window *win) {
     g_debug("_show()");
     window_init(win);
-    window_view_show(win, NULL, message_folder_view_show, message_folder_view_hide);
+    window_view_show(win, NULL, message_list_view_show, message_list_view_hide);
 }
 
 static void _hide(struct Window *win) {

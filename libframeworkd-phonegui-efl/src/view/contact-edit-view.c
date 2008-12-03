@@ -9,15 +9,20 @@ struct ContactEditViewData {
 
     int id;
     char *name, *number;
+    void (*callback)();
+    void *callback_data;
+    gboolean saved;
     
     GPtrArray *contacts;
     int free_entry_index;
+
+    struct ContactEditViewData **data_pointer;
 };
 
 
-static void get_phonebook_info_callback(GError *error, GHashTable *info, struct ContactEditViewData *data);
+static void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userdata);
 int calculate_free_entry_index(int min, int max, GPtrArray *entries, struct ContactEditViewData *data);
-static void retrieve_callback(GError*error, GPtrArray*messages, struct ContactEditViewData *data);
+static void retrieve_callback(GError*error, GPtrArray*messages, gpointer userdata);
 
 static void frame_edit_show(struct ContactEditViewData *data);
 static void frame_edit_hide(struct ContactEditViewData *data);
@@ -44,15 +49,30 @@ struct ContactEditViewData *contact_edit_view_show(struct Window *win, GHashTabl
     data->id = -1;
     data->name = strdup("");
     data->number = strdup("");
+    data->saved = FALSE;
+    data->callback = NULL;
+    data->callback_data = NULL;
+    data->data_pointer = malloc(sizeof(struct ContactEditViewData **));
+    *(data->data_pointer) = data; // used for async dbus calls
 
-    if(options != NULL && g_hash_table_lookup(options, "name")) {
-        // Edit
-        data->id = g_hash_table_lookup(options, "id");
-        data->name = g_hash_table_lookup(options, "name");
-        data->number = g_hash_table_lookup(options, "number");
-    } else {
-        // New
-        ogsmd_sim_retrieve_phonebook("contacts", retrieve_callback, data);
+    if(options != NULL) {
+        if(g_hash_table_lookup(options, "name")) {
+            data->name = strdup(g_hash_table_lookup(options, "name"));
+
+            // ID should only be set if name is specified
+            data->id = g_hash_table_lookup(options, "id");
+        }
+
+        if(g_hash_table_lookup(options, "number")) {
+            data->number = strdup(g_hash_table_lookup(options, "number"));
+        }
+
+        data->callback = g_hash_table_lookup(options, "callback"); 
+        data->callback_data = g_hash_table_lookup(options, "callback_data"); 
+    }
+
+    if(data->id == -1) {
+        ogsmd_sim_retrieve_phonebook("contacts", retrieve_callback, (void *) data->data_pointer);
     }
 
     window_frame_show(win, data, frame_edit_show, frame_edit_hide);
@@ -62,16 +82,26 @@ struct ContactEditViewData *contact_edit_view_show(struct Window *win, GHashTabl
 
 
 void contact_edit_view_hide(struct ContactEditViewData *data) {
+    if(data->saved && data->callback != NULL) {
+        data->callback(data->callback_data);
+    }
+
+    *(data->data_pointer) = NULL;
     g_slice_free(struct ContactEditViewData, data);
 }
 
 
 
-static void get_phonebook_info_callback(GError *error, GHashTable *info, struct ContactEditViewData *data) {
-    int min = g_value_get_int(g_hash_table_lookup(info, "min_index"));
-    int max = g_value_get_int(g_hash_table_lookup(info, "max_index"));
-    data->free_entry_index = calculate_free_entry_index(min, max, data->contacts, data);
-    g_debug("index: %d", data->free_entry_index);
+static void get_phonebook_info_callback(GError *error, GHashTable *info, gpointer userdata) {
+    struct ContactEditViewData **data = (struct ContactEditViewData **) userdata;
+    if(*data == NULL) {
+        free(data);
+    } else {
+        int min = g_value_get_int(g_hash_table_lookup(info, "min_index"));
+        int max = g_value_get_int(g_hash_table_lookup(info, "max_index"));
+        (*data)->free_entry_index = calculate_free_entry_index(min, max, (*data)->contacts, *data);
+        g_debug("index: %d", (*data)->free_entry_index);
+    }
 }
 
 
@@ -112,9 +142,14 @@ int calculate_free_entry_index(int min, int max, GPtrArray *entries, struct Cont
 }
 
 
-static void retrieve_callback(GError*error, GPtrArray*contacts, struct ContactEditViewData *data) {
-    data->contacts = contacts;
-    ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, data);
+static void retrieve_callback(GError*error, GPtrArray*contacts, gpointer userdata) {
+    struct ContactEditViewData **data = (struct ContactEditViewData **) userdata;
+    if(*data == NULL) {
+        free(data);
+    } else {
+        (*data)->contacts = contacts;
+        ogsmd_sim_get_phonebook_info("contacts", get_phonebook_info_callback, data);
+    }
 }
 
 
@@ -218,6 +253,8 @@ static void frame_edit_save_clicked(struct ContactEditViewData *data, Evas_Objec
         );
 
     }
+
+    data->saved = TRUE;
 
     // TODO: Free name and number
 }
