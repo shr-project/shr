@@ -33,10 +33,16 @@
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 
 #include "ophonekitd-phonegui.h"
+#include "ophonekitd-phonelog.h"
+
+typedef struct {
+	int id;
+	int unique_id;
+} call_t;
 
 gboolean sim_auth_active = FALSE;
-int *incoming_calls = NULL;
-int *outgoing_calls = NULL;
+call_t *incoming_calls = NULL;
+call_t *outgoing_calls = NULL;
 int incoming_calls_size = 0;
 int outgoing_calls_size = 0;
 
@@ -49,6 +55,10 @@ int main(int argc, char ** argv) {
     phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
     g_debug("Phonegui initiated");
+
+    /* Initiate phonelog database */
+    phonelog_init_database();
+    g_debug("Phonelog database initiated");
 
     /* Register dbus handlers */
     fwHandler.networkStatus = NULL;
@@ -74,25 +84,38 @@ int main(int argc, char ** argv) {
 }
 
 
-void ophonekitd_call_add(int **calls, int *size, int id) {
+void ophonekitd_call_add(call_t **calls, int *size, int id, int unique_id) {
+	g_debug("ophonekitd_call_add(%d, %u)", id, unique_id);
     (*size)++;
     if(*size == 1)
-        *calls = malloc(sizeof(int));
+        *calls = malloc(sizeof(call_t));
     else
-        *calls = realloc(calls, sizeof(int)*(*size));
-    *calls[(*size)-1] = id;
+        *calls = realloc(calls, sizeof(call_t)*(*size));
+    (*calls)[(*size)-1].id = id;
+    (*calls)[(*size)-1].unique_id = unique_id;
 }
 
-int ophonekitd_call_check(int *calls, int *size, int id) {
+int ophonekitd_call_check(call_t *calls, int *size, int id) {
     int i;
+	g_debug("ophonekitd_call_check(%d)", id);
     for(i = 0; i < (*size) ; i++) {
-        if(calls[i] == id)
+        if(calls[i].id == id)
             return i;
     }
     return -1;
 }
 
-void ophonekitd_call_remove(int *calls, int *size, int id) {
+int ophonekitd_call_get_unique_id(call_t *calls, int *size, int id) {
+	g_debug("ophonekitd_call_get_number(%d)", id);
+    int place = ophonekitd_call_check(calls, size, id);
+    if(place >= 0) {
+    	return calls[place].unique_id;
+    }
+    return -1;
+}
+
+void ophonekitd_call_remove(call_t *calls, int *size, int id) {
+	g_debug("ophonekitd_call_remove(%d)", id);
     if(*size == 1)  {
         free(calls);
         (*size)--;
@@ -102,10 +125,11 @@ void ophonekitd_call_remove(int *calls, int *size, int id) {
         if(place >= 0) {
             int i = place;
             for(i = place; i + 1 < (*size); i++) {
-                calls[i] = calls[i+1];
+                calls[i].id = calls[i+1].id;
+                calls[i].unique_id = calls[i+1].unique_id;
             }
-            (*size)--;                
-            calls = realloc(calls, sizeof(int)*(*size));
+            (*size)--;
+            calls = realloc(calls, sizeof(call_t)*(*size));
         }
     }
 }
@@ -150,24 +174,34 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
         case CALL_STATUS_INCOMING:
             g_debug("incoming call");
             if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) == -1) {
-                ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id);
+                int unique_id = phonelog_add_new_call(number);
+                ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id, unique_id);
+                phonelog_log_call_event(unique_id, status);
                 phonegui_incoming_call_show(call_id, status, number);
             }
             break;
         case CALL_STATUS_OUTGOING:
             g_debug("outgoing call");
             if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) == -1) {
-                ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id);
+                int unique_id = phonelog_add_new_call(number);
+                ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id, unique_id);
+                phonelog_log_call_event(unique_id, status);
                 phonegui_outgoing_call_show(call_id, status, number);
             }
             break;
         case CALL_STATUS_RELEASE:
             g_debug("release call");
             if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) != -1) {
+                int unique_id =
+                    ophonekitd_call_get_unique_id(incoming_calls, &incoming_calls_size, call_id);
+                phonelog_log_call_event(unique_id, status);
                 ophonekitd_call_remove(incoming_calls, &incoming_calls_size, call_id);
                 phonegui_incoming_call_hide(call_id);
             }
             if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) != -1) {
+                int unique_id =
+                    ophonekitd_call_get_unique_id(outgoing_calls, &outgoing_calls_size, call_id);
+                phonelog_log_call_event(unique_id, status);
                 ophonekitd_call_remove(outgoing_calls, &outgoing_calls_size, call_id);
                 phonegui_outgoing_call_hide(call_id);
             }
@@ -177,6 +211,16 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             break;
         case CALL_STATUS_ACTIVE:
             g_debug("active call");
+            if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) != -1) {
+                int unique_id =
+                    ophonekitd_call_get_unique_id(incoming_calls, &incoming_calls_size, call_id);
+                phonelog_log_call_event(unique_id, status);
+            }
+            if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) != -1) {
+                int unique_id =
+                    ophonekitd_call_get_unique_id(outgoing_calls, &outgoing_calls_size, call_id);
+                phonelog_log_call_event(unique_id, status);
+            }
             break;
         default:
             g_error("Unknown CallStatus");
@@ -265,7 +309,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
     } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
-    } else {   
+    } else {
         /* FIXME: Remove this when frameworkd code is ready */
         g_debug("request resource error, try again in 5s");
         g_error("error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
@@ -291,7 +335,7 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
             g_error("SIM card not present.");
         } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
             g_debug("dbus not available, try again in 5s");
-            g_timeout_add(5000, power_up_antenna, NULL);        
+            g_timeout_add(5000, power_up_antenna, NULL);
         } else {
             g_error("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         }
@@ -357,6 +401,11 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
 int exit_callback(void *data, int type, void *event) {
     /* called on ctrl-c, kill $pid, SIGINT, SIGTERM and SIGQIT */
     g_debug("exit_callback()");
+
+    /* Close phonelog database */
+    phonelog_close_database();
+    g_debug("Phonelog database closed");
+
     return 0;
 }
 

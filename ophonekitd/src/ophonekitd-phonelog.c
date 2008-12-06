@@ -21,11 +21,11 @@
 #include <sys/stat.h>
 #include <sqlite3.h>
 
-#define PHONELOG_DB_LOCATION "/var/log/phonelog.db"
+#define PHONELOG_DB_LOCATION "/var/db/phonelog.db"
 #define PHONELOG_CREATE_CALL_IDS_TABLE \
 	"CREATE TABLE call_ids (id INTEGER PRIMARY KEY, number TEXT)"
 #define PHONELOG_CREATE_CALL_EVENTS_TABLE \
-	"CREATE TABLE call_events (id INTEGER, status INT, eventTime DATE, FOREIGN KEY (id) REFERENCES call_ids(id))"
+	"CREATE TABLE call_events (id INTEGER, status INT, eventTime TIMESTAMP, FOREIGN KEY (id) REFERENCES call_ids(id))"
 #define PHONELOG_CREATE_CALL_EVENTS_TRIGGER \
 	"CREATE TRIGGER insert_call_events_eventTime AFTER  INSERT ON call_events\nBEGIN\nUPDATE call_events SET eventTime = DATETIME('NOW')  WHERE rowid = new.rowid;\nEND"
 
@@ -142,13 +142,3 @@ void phonelog_log_call_event(const int unique_id, const int status) {
 		}
 	}
 }
-
-/*static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
- NotUsed = 0;
- int i;
- for (i = 0; i < argc; i++) {
- printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
- }
- printf("\n");
- return 0;
- }*/
