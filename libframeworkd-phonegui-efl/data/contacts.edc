@@ -6,41 +6,14 @@ collections {
         parts {
 
 
-
 	    part {
-	           name,   "title";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-                   color, 0 0 0 255;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		           }
-                   rel2 {
-                               relative, 1.0 0.1;
-                               offset, 0 0;
-                   }
-                   text {
-                               text, "Contacts";
-                               font, "redensek";
-                               size, 25;
-                               align, 0.5 0.5;
-                  }
-            }
-	    }
-
-
-
-	    part {
-	           name,   "swallow";
+	           name,   "list";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.0 0.10;
+		                       relative, 0.0 0.0;
 		                       offset, 0 0;
 		           }
                    rel2 {
@@ -332,7 +305,7 @@ collections {
 
 
     group {
-        name, "modify";
+        name, "edit";
         parts {
 
 
@@ -359,9 +332,9 @@ collections {
                   }
             }
 	    }
-
+/*
 	    part {
-	           name,   "name_label";
+	           name,   "text_name";
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
@@ -381,27 +354,28 @@ collections {
                   }
             }
 	    }
-
+*/
 
 	    part {
-	           name,   "name";
+	           name,   "entry_name";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.3 0.2;
+		                       relative, 0.1 0.2;
 		                       offset, 0 0;
 		           }
                    rel2 {
-                               relative, 1.0 0.55;
+                               relative, 0.9 0.4;
                                offset, 0 0;
                    }
             }
 	    }
 
+/*
 	    part {
-	           name,   "number_label";
+	           name,   "text_number";
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
@@ -421,20 +395,20 @@ collections {
                   }
             }
 	    }
-
+*/
 
 	    part {
-	           name,   "number";
+	           name,   "entry_number";
 	           type,   SWALLOW;
 	           mouse_events, 1;
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.3 0.5;
+		                       relative, 0.1 0.5;
 		                       offset, 0 0;
 		           }
                    rel2 {
-                               relative, 1.0 0.75;
+                               relative, 0.9 0.7;
                                offset, 0 0;
                    }
             }
@@ -448,7 +422,7 @@ collections {
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.0 0.80;
+		                       relative, 0.0 0.85;
     	           }
 		           rel2 {
 		                       relative, 0.5 1.0;
@@ -464,7 +438,7 @@ collections {
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.5 0.80;
+		                       relative, 0.5 0.85;
     	           }
 		           rel2 {
 		                       relative, 1.0 1.0;

@@ -35,5 +35,5 @@ void sim_auth_status_callback(GError *error, int status, gpointer userdata);
 void register_to_network_callback(GError *error, gpointer userdata);
 void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer userdata);
 int exit_callback(void *data, int type, void *event);
-
+gboolean power_up_antenna();
 #endif
