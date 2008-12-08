@@ -49,6 +49,7 @@ void phonelog_init_database() {
 	if (rc) {
 		g_debug("phonelog - can't open database: %s\n", sqlite3_errmsg(db));
 		sqlite3_close(db);
+		db = 0;
 		return;
 	}
 
