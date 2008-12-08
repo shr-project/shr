@@ -14,6 +14,8 @@ ophonekitd_SOURCES = $(dbus_sources) \
 	ophonekitd-main.h \
 	ophonekitd-phonegui.c \
 	ophonekitd-phonegui.h \
+	ophonekitd-phonelog.c \
+	ophonekitd-phonelog.h \
 	ophonekitd-dbus-usage.c \
 	ophonekitd-dbus-usage.h \
 	ophonekitd-dbus.c \
@@ -25,11 +27,13 @@ ophonekitd_CFLAGS = \
 	@DBUS_GLIB_CFLAGS@ \
 	@DBUS_CFLAGS@ \
 	@FRAMEWORKD_GLIB_CFLAGS@ \
-	@FRAMEWORKD_PHONEGUI_LIBS@ -ggdb
+	@FRAMEWORKD_PHONEGUI_LIBS@  \
+	@SQLITE_LIBS@ -ggdb
 
 ophonekitd_LDFLAGS = \
 	-ldl \
 	@DBUS_GLIB_LIBS@ \
 	@DBUS_LIBS@ \
 	@FRAMEWORKD_GLIB_LIBS@ \
-	@FRAMEWORKD_PHONEGUI_LIBS@
+	@FRAMEWORKD_PHONEGUI_LIBS@ \
+	@SQLITE_LIBS@
