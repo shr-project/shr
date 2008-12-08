@@ -41,7 +41,7 @@ collections {
                     text {
                         text, "";
                         font, "redensek";
-                        size, 50;
+                        size, 45;
                         align, 0.0 0.5;
                     }
                 }

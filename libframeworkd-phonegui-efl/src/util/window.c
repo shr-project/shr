@@ -123,7 +123,6 @@ void window_view_hide(struct Window *win, void *options) {
 
 void window_frame_show(struct Window *win, void *data, void (*show_cb)(void *data), void (*hide_cb)(void *data)) {
     assert(show_cb != NULL);
-    g_debug("window_frame_show() hide_cb = %d", hide_cb);
 
     if(win->frame_hide_cb != NULL) {
         win->frame_hide_cb(data);
@@ -164,7 +163,7 @@ void window_destroy(struct Window *win, void *options) {
     assert(win != NULL);
     window_view_hide(win, options);
 
-    evas_object_hide(win);
+    evas_object_hide(win->win);
     evas_object_del(win->layout);
     evas_object_del(win->bg);
     evas_object_del(win->win);

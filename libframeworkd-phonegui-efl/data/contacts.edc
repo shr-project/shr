@@ -310,30 +310,6 @@ collections {
 
 
 	    part {
-	           name,   "title";
-	           type,   TEXT;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-                   color, 0 0 0 255;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		           }
-                   rel2 {
-                               relative, 1.0 0.1;
-                               offset, 0 0;
-                   }
-                   text {
-                               text, "SET BY APPLICATION!";
-                               font, "redensek";
-                               size, 30;
-                               align, 0.5 0.5;
-                  }
-            }
-	    }
-/*
-	    part {
 	           name,   "text_name";
 	           type,   TEXT;
 	           mouse_events, 0;
@@ -341,10 +317,10 @@ collections {
 		           state, "default" 0.0;
                    color, 0 0 0 255;
 		           rel1 {
-		                       relative, 0.0 0.2;
+		                       relative, 0.1 0.0;
 		           }
                    rel2 {
-                               relative, 1.0 0.55;
+                               relative, 1.0 0.1;
                    }
                    text {
                                text, "Name:";
@@ -354,7 +330,7 @@ collections {
                   }
             }
 	    }
-*/
+
 
 	    part {
 	           name,   "entry_name";
@@ -363,7 +339,7 @@ collections {
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.1 0.2;
+		                       relative, 0.1 0.1;
 		                       offset, 0 0;
 		           }
                    rel2 {
@@ -373,7 +349,7 @@ collections {
             }
 	    }
 
-/*
+
 	    part {
 	           name,   "text_number";
 	           type,   TEXT;
@@ -382,10 +358,10 @@ collections {
 		           state, "default" 0.0;
                    color, 0 0 0 255;
 		           rel1 {
-		                       relative, 0.0 0.5;
+		                       relative, 0.1 0.4;
 		           }
                    rel2 {
-                               relative, 1.0 0.75;
+                               relative, 1.0 0.5;
                    }
                    text {
                                text, "Number:";
@@ -395,7 +371,7 @@ collections {
                   }
             }
 	    }
-*/
+
 
 	    part {
 	           name,   "entry_number";
@@ -408,7 +384,7 @@ collections {
 		                       offset, 0 0;
 		           }
                    rel2 {
-                               relative, 0.9 0.7;
+                               relative, 0.9 0.8;
                                offset, 0 0;
                    }
             }

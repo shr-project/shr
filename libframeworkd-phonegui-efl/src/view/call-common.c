@@ -13,8 +13,11 @@ void call_button_keypad_clicked(struct CallViewData *data, Evas_Object *obj, voi
 void call_button_accept_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info) {
     g_debug("accept_clicked()");
     ogsmd_call_activate(data->id, NULL, NULL);
-    //window_frame_options_set(data->win, data->options);
-    window_frame_show(data->win, NULL, call_active_view_show, call_active_view_hide);
+
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+    g_hash_table_insert(options, "id", data->id);
+    g_hash_table_insert(options, "number", strdup(data->number));
+    window_view_show(data->win, options, call_active_view_show, call_active_view_hide);
 }
 
 void call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info) {

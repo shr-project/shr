@@ -5,7 +5,7 @@ struct ContactEditViewData {
     struct Window *win;
     Evas_Object *bt1, *bt2;
     Evas_Object *entry_name, *entry_number;
-    Evas_Object *bb_name, *bb_number;
+    Evas_Object *sc_name, *sc_number;
 
     int id;
     char *name, *number;
@@ -67,8 +67,8 @@ struct ContactEditViewData *contact_edit_view_show(struct Window *win, GHashTabl
             data->number = strdup(g_hash_table_lookup(options, "number"));
         }
 
-        data->callback = g_hash_table_lookup(options, "callback"); 
-        data->callback_data = g_hash_table_lookup(options, "callback_data"); 
+        data->callback = g_hash_table_lookup(options, "change_callback"); 
+        data->callback_data = g_hash_table_lookup(options, "change_callback_data"); 
     }
 
     if(data->id == -1) {
@@ -154,12 +154,6 @@ static void retrieve_callback(GError*error, GPtrArray*contacts, gpointer userdat
 
 
 
-
-
-
-
-
-
 /*
  * View "edit"
  */
@@ -193,20 +187,20 @@ static void frame_edit_show(struct ContactEditViewData *data) {
     evas_object_show(data->entry_name);
     elm_widget_focus_set(data->entry_name, 1);
 
-    data->bb_name = elm_bubble_add(window_evas_object_get(win));
-    elm_bubble_label_set(data->bb_name, "Name");
-    elm_bubble_content_set(data->bb_name, data->entry_name);
-    window_swallow(win, "entry_name", data->bb_name);
+    data->sc_name = elm_scroller_add(window_evas_object_get(win));
+    elm_scroller_content_set(data->sc_name, data->entry_name);
+    window_swallow(win, "entry_name", data->sc_name);
+    evas_object_show(data->sc_name);
 
 
     data->entry_number = elm_entry_add(window_evas_object_get(win));
     elm_entry_entry_set(data->entry_number, data->number);
     evas_object_show(data->entry_number);
 
-    data->bb_number = elm_bubble_add(window_evas_object_get(win));
-    elm_bubble_label_set(data->bb_number, "Number");
-    elm_bubble_content_set(data->bb_number, data->entry_number);
-    window_swallow(win, "entry_number", data->bb_number);
+    data->sc_number = elm_scroller_add(window_evas_object_get(win));
+    elm_scroller_content_set(data->sc_number, data->entry_number);
+    window_swallow(win, "entry_number", data->sc_number);
+    evas_object_show(data->sc_number);
 }
 
 static void frame_edit_hide(struct ContactEditViewData *data) {
@@ -221,14 +215,14 @@ static void frame_edit_hide(struct ContactEditViewData *data) {
     evas_object_del(data->bt2);
     evas_object_del(data->entry_name);
     evas_object_del(data->entry_number);
-    evas_object_del(data->bb_name);
-    evas_object_del(data->bb_number);
+    evas_object_del(data->sc_name);
+    evas_object_del(data->sc_number);
 
     window_kbd_hide(win);
 }
 
 static void frame_edit_save_clicked(struct ContactEditViewData *data, Evas_Object *obj, void *event_info) {
-    if(!strlen(frame_edit_name_get(data)) || !strlen(frame_edit_number_get(data)))
+    if(!strlen(frame_edit_name_get(data)) || !strlen(frame_edit_number_get(data)) || !string_is_number(frame_edit_number_get(data)))
         return;
 
     window_frame_show(data->win, data, frame_loading_show, frame_loading_hide);

@@ -12,11 +12,11 @@ struct MessageNewViewData {
     struct Window *win;
     int mode;
     char *content;
-    Evas_Object *bb, *entry, *bt1, *bt2, *bt3, *bt4, *bt5, *hv, *bx, *hbt1, *hbt2, *hbt3;
+    Evas_Object *bb, *entry, *bt1, *bt2, *bt3, *bt4, *bt5, *hv, *bx, *hbt1, *hbt2, *hbt3, *sc;
     Evas_Object *list_contacts;
 
     GPtrArray *recipients;
-    Evas_Object *list_recipients;
+    Evas_Object *list_recipients, *container_recipients_eo;
     Etk_Widget *container_recipients, *tree_recipients;
     Etk_Tree_Col *col1_recipients;
 
@@ -41,6 +41,7 @@ static void frame_recipient_delete_clicked(struct MessageNewViewData *data, Evas
 static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info);
 static void frame_recipient_process_recipient(GHashTable *properties, struct MessageNewViewData *data);
 static void frame_recipient_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data);
+static void frame_recipient_send_callback2(struct MessageNewViewData *data);
 
 static void frame_contact_add_show(struct MessageNewViewData *data);
 static void frame_contact_add_hide(struct MessageNewViewData *data);
@@ -87,7 +88,7 @@ struct MessageNewViewData *message_new_view_show(struct Window *win, GHashTable 
 }
 
 void message_new_view_hide(struct MessageNewViewData *data) {
-    g_slice_free(struct MessageNewViewData, data);
+    //g_slice_free(struct MessageNewViewData, data);
 }
 
 static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) {
@@ -126,11 +127,10 @@ static void frame_content_show(struct MessageNewViewData *data) {
         elm_entry_entry_set(data->entry, data->content);
     }
 
-    data->bb = elm_bubble_add(window_evas_object_get(win));
-    //elm_bubble_label_set(data->bb, "Enter the content");
-    elm_bubble_content_set(data->bb, data->entry);
-    window_swallow(win, "entry", data->bb);
-    evas_object_show(data->bb);
+    data->sc = elm_scroller_add(window_evas_object_get(win));
+    elm_scroller_content_set(data->sc, data->entry);
+    window_swallow(win, "entry", data->sc);
+    evas_object_show(data->sc);
 
     window_kbd_show(win, KEYBOARD_ALPHA);
 }
@@ -138,23 +138,15 @@ static void frame_content_show(struct MessageNewViewData *data) {
 static void frame_content_hide(struct MessageNewViewData *data) {
     struct Window *win = data->win;
 
-    window_unswallow(win, data->bt1);
-    evas_object_del(data->bt1);
-
-    window_unswallow(win, data->bt2);
-    evas_object_del(data->bt2);
-
-    /*
-     * Message content
-     */
+    // Save content
     data->content = strdup(g_strstrip(elm_entry_entry_get(data->entry)));
     string_strip_html(data->content);
-    window_unswallow(win, data->entry);
+
+    // Free objects
+    evas_object_del(data->bt1);
+    evas_object_del(data->bt2);
     evas_object_del(data->entry);
-
-
-    window_unswallow(win, data->bb);
-    evas_object_del(data->bb);
+    evas_object_del(data->sc);
 
     window_kbd_hide(win);
 }
@@ -180,8 +172,7 @@ static void frame_content_content_changed(struct MessageNewViewData *data, Evas_
 
     char text[64];
     sprintf(text, "%d characters left", 160 - (strlen(content) % 160));
-    elm_bubble_label_set(data->bb, text);
-    //elm_bubble_info_set(data->bb, text);
+    window_text_set(data->win, "characters_left", text);
     free(content);
 }
 
@@ -244,12 +235,16 @@ static void frame_recipient_show(struct MessageNewViewData *data) {
     data->container_recipients = etk_embed_new(evas_object_evas_get(window_evas_object_get(win)));
     etk_container_add(ETK_CONTAINER(data->container_recipients), data->tree_recipients);
     etk_widget_show_all(data->container_recipients);
-    window_swallow(win, "list", etk_embed_object_get(ETK_EMBED(data->container_recipients)));
+    data->container_recipients_eo = etk_embed_object_get(ETK_EMBED(data->container_recipients));
+
+    window_swallow(win, "list", data->container_recipients_eo);
 
     g_ptr_array_foreach(data->recipients, frame_recipient_process_recipient, data);
 }
 
 static void frame_recipient_hide(struct MessageNewViewData *data) {
+    g_debug("frame_recipient_hide()");
+
     struct Window *win = data->win;
 
     evas_object_del(data->bt1);
@@ -257,9 +252,7 @@ static void frame_recipient_hide(struct MessageNewViewData *data) {
     evas_object_del(data->bt3);
     evas_object_del(data->bt4);
     evas_object_del(data->bt5);
-
-    window_unswallow(win, etk_embed_object_get(ETK_EMBED(data->container_recipients)));
-    evas_object_del(etk_embed_object_get(ETK_EMBED(data->container_recipients)));
+    evas_object_del(data->container_recipients_eo);
 }
 
 static void frame_recipient_back_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
@@ -288,6 +281,8 @@ static void frame_recipient_delete_clicked(struct MessageNewViewData *data, Evas
 }
 
 static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
+    g_debug("frame_recipient_continue_clicked(win=%d)", data->win);
+
     if(data->recipients->len) {
         window_frame_show(data->win, data, frame_sending_show, frame_sending_hide);
 
@@ -300,6 +295,7 @@ static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Ev
             GHashTable *options = g_hash_table_new(NULL, NULL);
             // TODO: Remove strdup
             ogsmd_sms_send_message(strdup(number), strdup(data->content), options, frame_recipient_send_callback, data);
+            frame_recipient_send_callback(NULL, 1, data);
         }
     }
 }
@@ -307,8 +303,13 @@ static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Ev
 static void frame_recipient_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) {
     data->messages_sent++;
     if(data->messages_sent == data->recipients->len) {
-        window_destroy(data->win, NULL);
+        sleep(1);
+        async_trigger(frame_recipient_send_callback2, data);
     }
+}
+
+static void frame_recipient_send_callback2(struct MessageNewViewData *data) {
+    window_destroy(data->win, NULL);
 }
 
 static void frame_recipient_process_recipient(GHashTable *properties, struct MessageNewViewData *data) {
@@ -391,11 +392,10 @@ static void frame_number_add_show(struct MessageNewViewData *data) {
     evas_object_show(data->entry);
     elm_widget_focus_set(data->entry, 1);
 
-    data->bb = elm_bubble_add(window_evas_object_get(win));
-    elm_bubble_label_set(data->bb, "Enter the number");
-    elm_bubble_content_set(data->bb, data->entry);
-    window_swallow(win, "entry", data->bb);
-    evas_object_show(data->bb);
+    data->sc = elm_scroller_add(window_evas_object_get(win));
+    elm_scroller_content_set(data->sc, data->entry);
+    window_swallow(win, "entry", data->sc);
+    evas_object_show(data->sc);
 
     window_kbd_show(win, KEYBOARD_NUMERIC);
 }
@@ -403,7 +403,7 @@ static void frame_number_add_show(struct MessageNewViewData *data) {
 static void frame_number_add_hide(struct MessageNewViewData *data) {
     evas_object_del(data->bt1);
     evas_object_del(data->bt2);
-    evas_object_del(data->bb);
+    evas_object_del(data->sc);
     evas_object_del(data->entry);
 
     window_kbd_hide(data->win);
@@ -478,7 +478,7 @@ static void frame_sending_show(struct MessageNewViewData *data) {
     window_layout_set(data->win, MESSAGE_FILE, "sending");
 }
 
-static void frame_loading_hide(struct MessageNewViewData *data) {
+static void frame_sending_hide(struct MessageNewViewData *data) {
 
 }
 

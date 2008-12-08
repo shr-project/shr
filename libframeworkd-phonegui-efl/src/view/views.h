@@ -38,6 +38,9 @@ void message_folder_view_hide(struct MessageFolderViewData *data);
 struct MessageShowViewData *message_show_view_show(struct Window *win, GHashTable *options);
 void message_show_view_hide(struct MessageShowViewData *data);
 
+struct MessageDeleteViewData *message_delete_view_show(struct Window *win, GHashTable *options);
+void message_delete_view_hide(struct MessageDeleteViewData *data);
+
 struct MessageListViewData *message_list_view_show(struct Window *win, GHashTable *options);
 void message_list_view_hide(struct MessageListViewData *data);
 
@@ -55,6 +58,9 @@ void contact_list_view_hide(struct ContactListViewData *data);
 
 struct ContactEditViewData *contact_edit_view_show(struct Window *win, GHashTable *options);
 void contact_edit_view_hide(struct ContactEditViewData *data);
+
+struct ContactDeleteViewData *contact_delete_view_show(struct Window *win, GHashTable *options);
+void contact_delete_view_hide(struct ContactDeleteViewData *data);
 
 #endif
 

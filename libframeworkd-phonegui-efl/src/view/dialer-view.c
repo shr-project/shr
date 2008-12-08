@@ -41,7 +41,7 @@ struct DialerViewData *dialer_view_show(struct Window *win, GHashTable *options)
 }
 
 void dialer_view_hide(struct DialerViewData *data) {
-    g_debug("hide");
+    g_slice_free(struct DialerViewData, data);
 }
 
 
@@ -146,7 +146,14 @@ static void frame_dialer_exit_clicked(struct DialerViewData *data, Evas_Object *
 }
 
 static void frame_dialer_save_clicked(struct DialerViewData *data, Evas_Object *obj, void *event_info) {
-    g_debug("SAVE");
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+    g_hash_table_insert(options, "number", data->number);
+
+    struct Window *win = window_new("Add Contact");
+    window_init(win);
+    window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
+
+    window_destroy(data->win, NULL);
 }
 
 static void frame_dialer_call_clicked(struct DialerViewData *data, Evas_Object *obj, void *event_info) {
@@ -236,8 +243,4 @@ static void frame_dialer_initiate_callback(GError *error, int call_id, void *use
 static void frame_dialer_initiate_callback2(struct DialerViewData *data) {
     window_destroy(data->win, NULL);
 }
-
-
-
-
 

@@ -42,16 +42,41 @@ gboolean string_is_number(const char *string) {
         *p++;
 
     while(*p) {
-        if(
-            *p != '0' && *p != '1' && *p != '2' && *p != '3' &&
-            *p != '4' && *p != '5' && *p != '6' && *p != '7' &&
-            *p != '8' && *p != '9'
-        ) {
+        if(*p < '0' || *p > '9')
             return FALSE;
-        }
         *p++;
     }
 
     return TRUE;
 }
+
+gboolean string_is_pin(const char *string) {
+    if(strlen(string) != 4)
+        return FALSE;
+
+    char *p = string;
+    while(*p) {
+        if(*p < '0' || *p > '9')
+            return FALSE;
+        *p++;
+    }
+
+    return TRUE;
+}
+
+
+gboolean string_is_puk(const char *string) {
+    if(strlen(string) != 8)
+        return FALSE;
+
+    char *p = string;
+    while(*p) {
+        if(*p < '0' || *p > '9')
+            return FALSE;
+        *p++;
+    }
+
+    return TRUE;
+}
+
 

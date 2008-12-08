@@ -19,7 +19,10 @@ static void message_list_view_new_clicked(struct MessageListViewData *data, Evas
 static void message_list_view_show_clicked(struct MessageListViewData *data, Evas_Object *obj, void *event_info);
 static void message_list_view_delete_clicked(struct MessageListViewData *data, Evas_Object *obj, void *event_info);
 static void message_list_view_answer_clicked(struct MessageListViewData *data, Evas_Object *obj, void *event_info);
+static void message_list_view_message_deleted(struct MessageListViewData *data);
 static void retrieve_messagebook_callback(GError*error, GPtrArray*messages, struct MessageListViewData *data);
+static void retrieve_messagebook_callback2(struct MessageListViewData *data);
+
 
 
 struct MessageListViewData *message_list_view_show(struct Window *win, GHashTable *options) {
@@ -182,6 +185,11 @@ static void retrieve_messagebook_callback(GError*error, GPtrArray*messages, stru
     data->messages = messages;
     g_ptr_array_foreach(data->messages, add_integer_timestamp_to_message, NULL);
     g_ptr_array_sort(data->messages, compare_messages);
+
+    async_trigger(retrieve_messagebook_callback2, data);
+}
+
+static void retrieve_messagebook_callback2(struct MessageListViewData *data) {
     g_ptr_array_foreach(data->messages, process_message, data);
 }
 
@@ -223,6 +231,8 @@ static void message_list_view_show_clicked(struct MessageListViewData *data, Eva
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "id", g_value_get_int(g_value_array_get_nth(message, 0)));
+        g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
+        g_hash_table_insert(options, "delete_callback_data", data);
 
         struct Window *win = window_new("Show Message");
         window_init(win);
@@ -237,7 +247,16 @@ static void message_list_view_delete_clicked(struct MessageListViewData *data, E
 
     data->selected_row = etk_tree_selected_row_get(data->tree);
     if(data->selected_row != NULL) {
-        // TODO
+        GValueArray *message = etk_tree_row_data_get(data->selected_row);
+
+        GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+        g_hash_table_insert(options, "id", g_value_get_int(g_value_array_get_nth(message, 0)));
+        g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
+        g_hash_table_insert(options, "delete_callback_data", data);
+
+        struct Window *win = window_new("Delete Message");
+        window_init(win);
+        window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
     }
 }
 
@@ -245,5 +264,13 @@ static void message_list_view_delete_clicked(struct MessageListViewData *data, E
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info) {
    Evas_Object *hv = data;
    evas_object_show(hv);
+}
+
+static void message_list_view_message_deleted(struct MessageListViewData *data) {
+    // TODO: Reload list instead of deleting the selected message
+    data->selected_row = etk_tree_selected_row_get(data->tree);
+    if(data->selected_row != NULL) {
+        etk_tree_row_delete(data->selected_row);
+    }
 }
 

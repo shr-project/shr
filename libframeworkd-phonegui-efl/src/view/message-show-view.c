@@ -5,15 +5,15 @@
 
 struct MessageShowViewData {
     struct Window *win;
-    char *tmp_status;
-    char *tmp_number;
-    char *tmp_content;
-    GHashTable *tmp_properties;
-    GValueArray *tmp_message;
+    int id;
+    char *status, *number, *content;
+    GHashTable *properties;
+    GValueArray *message;
     Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *hbt1, *hbt2, *hbt3;
+
+    void (*callback)();
+    void *callback_data;
 };
-
-
 
 typedef enum {
     MODE_FOLDERS,
@@ -30,36 +30,37 @@ static void retrieve_callback2(struct MessageShowViewData *data);
 static void message_show_view_close_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_answer_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
+static void message_show_view_delete_callback(struct MessageShowViewData *data);
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info);
 
 
 
 struct MessageShowViewData *message_show_view_show(struct Window *win, GHashTable *options) {
+    assert(win != NULL);
+    assert(options != NULL);
+
     struct MessageShowViewData *data = g_slice_alloc0(sizeof(struct MessageShowViewData));
     data->win = win;
+    data->id = g_hash_table_lookup(options, "id");
 
-    ogsmd_sim_retrieve_message(g_hash_table_lookup(options, "id"), retrieve_callback, data);
+    if(options != NULL) {
+        data->callback = g_hash_table_lookup(options, "delete_callback"); 
+        data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
+    }
 
+    ogsmd_sim_retrieve_message(data->id, retrieve_callback, data);
     return data;
 }
 
 
 void message_show_view_hide(struct MessageShowViewData *data) {
     struct Window *win = data->win;
-
-    window_unswallow(win, data->bt1);
     evas_object_del(data->bt1);
-
-    window_unswallow(win, data->bt2);
     evas_object_del(data->bt2);
-
-    window_unswallow(win, data->bt3);
     evas_object_del(data->bt3);
-
     evas_object_del(data->hbt1);
     evas_object_del(data->bx);
     evas_object_del(data->hv);
-
     g_slice_free(struct MessageShowViewData, data);
 }
 
@@ -68,10 +69,10 @@ void message_show_view_hide(struct MessageShowViewData *data) {
 
 static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, struct MessageShowViewData *data) {
     g_debug("retrieve_callback()");
-    data->tmp_status = strdup(status);
-    data->tmp_number = strdup(number);
-    data->tmp_content = strdup(content);
-    data->tmp_properties = properties; // TODO: copy
+    data->status = strdup(status);
+    data->number = strdup(number);
+    data->content = strdup(content);
+    data->properties = properties; // TODO: copy
 
     async_trigger(retrieve_callback2, data);
 }
@@ -81,19 +82,19 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, MESSAGE_FILE, "message_show");
 
-    char *timestr = g_value_get_string(g_hash_table_lookup(data->tmp_properties, "timestamp"));
+    char *timestr = g_value_get_string(g_hash_table_lookup(data->properties, "timestamp"));
     time_t timestamp = time_stringtotimestamp(timestr);
-    char *status = data->tmp_status;
-    char *number = data->tmp_number;
-    char *content = data->tmp_content;
+    char *status = data->status;
+    char *number = data->number;
+    char *content = data->content;
     
     char datestr[32];
-    strftime(datestr, 31, "%e.%m.%Y, %H:%M", gmtime(&timestamp));
+    strftime(datestr, 31, "%d.%m.%Y, %H:%M", gmtime(&timestamp));
 
-    window_text_set(win, "message_show_status", status);
-    window_text_set(win, "message_show_number", number);
-    window_text_set(win, "message_show_content", content);
-    window_text_set(win, "message_show_date", datestr);
+    window_text_set(win, "text_status", status);
+    window_text_set(win, "text_number", number);
+    window_text_set(win, "text_content", content);
+    window_text_set(win, "text_date", datestr);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, "Close");
@@ -142,16 +143,13 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
 
 
 
-
-
-
 static void message_show_view_close_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
     window_destroy(data->win, NULL);
 }
 
 static void message_show_view_answer_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(options, "recipient", data->tmp_number);
+    g_hash_table_insert(options, "recipient", data->number);
 
     struct Window *win = window_new("Compose SMS");
     window_init(win);
@@ -159,16 +157,22 @@ static void message_show_view_answer_clicked(struct MessageShowViewData *data, E
 }
 
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
-    g_debug("message_show_view_delete_clicked()");
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+    g_hash_table_insert(options, "id", data->id);
+    g_hash_table_insert(options, "delete_callback", message_show_view_delete_callback);
+    g_hash_table_insert(options, "delete_callback_data", data);
 
-    // TODO
+    struct Window *win = window_new("Delete Message");
+    window_init(win);
+    window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
+}
 
-    /*win->selected_row = etk_tree_selected_row_get(win->tree_messages);
-    if(win->selected_row != NULL) {
-        win->messages_mode = MODE_DELETE;
-        win->tmp_message = etk_tree_row_data_get(win->selected_row);
-        window_frame_show(win, messages_delete_show, messages_delete_hide);
-    }*/
+static void message_show_view_delete_callback(struct MessageShowViewData *data) {
+    window_destroy(data->win, NULL);
+
+    if(data->callback != NULL) {
+        data->callback(data->callback_data);
+    }
 }
 
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info) {

@@ -18,7 +18,7 @@ static void frame_list_options_clicked(struct ContactListViewData *data, Evas_Ob
 static void frame_list_message_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
 static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
 static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
-static void frame_list_contact_added(struct ContactListViewData *data);
+static void frame_list_refresh(struct ContactListViewData *data);
 
 
 struct ContactListViewData *contact_list_view_show(struct Window *win, GHashTable *options) {
@@ -33,7 +33,6 @@ struct ContactListViewData *contact_list_view_show(struct Window *win, GHashTabl
 
 void contact_list_view_hide(struct ContactListViewData *data) {
     g_slice_free(struct ContactListViewData, data);
-    data = NULL;
 }
 
 
@@ -115,11 +114,9 @@ static void frame_list_hide(struct ContactListViewData *data) {
 }
 
 static void frame_list_new_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
-    g_debug("new");
-
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(options, "callback", frame_list_contact_added);
-    g_hash_table_insert(options, "callback_data", data);
+    g_hash_table_insert(options, "change_callback", frame_list_refresh);
+    g_hash_table_insert(options, "change_callback_data", data);
 
     struct Window *win = window_new("New Contact");
     window_init(win);
@@ -163,8 +160,8 @@ static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Objec
         g_hash_table_insert(options, "id", g_hash_table_lookup(properties, "id"));
         g_hash_table_insert(options, "name", g_hash_table_lookup(properties, "name"));
         g_hash_table_insert(options, "number", g_hash_table_lookup(properties, "number"));
-        g_hash_table_insert(options, "callback", frame_list_contact_added);
-        g_hash_table_insert(options, "callback_data", data);
+        g_hash_table_insert(options, "change_callback", frame_list_refresh);
+        g_hash_table_insert(options, "change_callback_data", data);
 
         struct Window *win = window_new("Edit Contact");
         window_init(win);
@@ -173,11 +170,23 @@ static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Objec
 }
 
 static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
-    evas_object_show(data->hv);
+    evas_object_hide(data->hv);
+
+    GHashTable *properties = elm_my_contactlist_selected_row_get(data->list);
+    if(properties != NULL) {
+        GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+        g_hash_table_insert(options, "id", g_hash_table_lookup(properties, "id"));
+        g_hash_table_insert(options, "delete_callback", frame_list_refresh);
+        g_hash_table_insert(options, "delete_callback_data", data);
+
+        struct Window *win = window_new("Delete Contact");
+        window_init(win);
+        window_view_show(win, options, contact_delete_view_show, contact_delete_view_hide);
+    }
 }
 
 
-static void frame_list_contact_added(struct ContactListViewData *data) {
+static void frame_list_refresh(struct ContactListViewData *data) {
     elm_my_contactlist_refresh(data->list);
 }
 

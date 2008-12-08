@@ -9,13 +9,13 @@ struct SimAuthInputViewData {
 
     int mode;
 
-    char stars[13];
-    char pin[9];
+    char stars[9];
+    char pin[5];
     int  pin_length;
 
-    char puk[13];
+    char puk[9];
     int  puk_length;
-    char pin_confirm[9];
+    char pin_confirm[5];
     int  pin_confirm_length;
 
     Evas_Object *bt1, *bt2, *keypad;
@@ -29,13 +29,11 @@ enum SimAuthModes {
 };
 
 
-
-void sim_auth_event(int event, struct SimAuthInputViewData *data);
-void sim_auth_delete(Ecore_Evas *ee);
 void sim_auth_update(struct SimAuthInputViewData *data);
 void sim_auth_clear(struct SimAuthInputViewData *data);
 
 void pin_callback(GError* error, struct SimAuthInputViewData *data);
+gboolean pin_wrong_callback(struct SimAuthInputViewData *data);
 void puk_callback(GError* error,struct SimAuthInputViewData *data);
 void puk_callback2(struct SimAuthInputViewData *data);
 int pins_different_callback(struct SimAuthInputViewData *data);
@@ -83,11 +81,8 @@ void sim_auth_input_view_hide(struct SimAuthInputViewData *data) {
     g_debug("sim_auth_input_view_hide()");
 
     if(data->mode == MODE_PIN) {
-        g_debug("correct is it");
-        g_debug("win: %d, data: %d", data->win, data);
         window_frame_show(data->win, data, frame_pin_correct_show, NULL);
     } else {
-        g_debug("wrong is it");
         window_frame_show(data->win, data, frame_puk_correct_show, NULL);
     }
 
@@ -102,6 +97,8 @@ void sim_auth_input_view_hide(struct SimAuthInputViewData *data) {
 
 void sim_auth_update(struct SimAuthInputViewData *data) {
     g_debug("sim_auth_update()");
+
+    g_debug("MODE: %d", data->mode);
 
     int length;
     if(data->mode == MODE_PUK)
@@ -137,13 +134,19 @@ void pin_callback(GError* error, struct SimAuthInputViewData *data) {
         g_debug("error");
         if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED) || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
             async_trigger(frame_pin_wrong_show, data);
-            sleep(2);
-            ogsmd_sim_get_auth_status(sim_auth_callback, data);
+            ecore_timer_add(2, pin_wrong_callback, data);
         } else {
             g_error("Unknown error");
         }
     }
 }
+
+
+gboolean pin_wrong_callback(struct SimAuthInputViewData *data) {
+    ogsmd_sim_get_auth_status(sim_auth_callback, data);
+    return FALSE;
+}
+
 
 void puk_callback(GError* error, struct SimAuthInputViewData *data) {
     g_debug("puk_callback()");
@@ -187,41 +190,55 @@ void sim_auth_callback(GError *error, int status, struct SimAuthInputViewData *d
 void sim_auth_ok_clicked(struct SimAuthInputViewData *data, Evas_Object *obj, void *event_info) {
     g_debug("sim_auth_ok_clicked(win=%d)", data->win);
 
-    if(data->mode == MODE_PIN && strcmp(data->pin, "") != 0) {
-        g_debug("Send pin: %s", data->pin);
-        window_frame_show(data->win, data, frame_checking_show, NULL);
-        ogsmd_sim_send_auth_code(data->pin, pin_callback, data);
-    } else if(data->mode == MODE_PUK && strcmp(data->puk, "") != 0) {
+    if(data->mode == MODE_PIN && strcmp(data->pin, "")) {
+        if(string_is_pin(data->pin)) {
+            // PIN length is correct, try it
+            window_frame_show(data->win, data, frame_checking_show, NULL);
+            ogsmd_sim_send_auth_code(data->pin, pin_callback, data);
+        } else {
+            // PIN length is wrong, thus PIN is wrong
+            window_frame_show(data->win, data, frame_pin_wrong_show, NULL);
+            ecore_timer_add(2, pin_wrong_callback, data);
+        }
+    } else if(data->mode == MODE_PUK && strcmp(data->puk, "")) {
         g_debug("Ask for a new PIN");
         window_text_set(data->win, "instruction", "Enter a NEW PIN"); 
         data->mode = MODE_PUK_NEW_PIN;
+        g_debug("MODE: %d", data->mode);
         sim_auth_update(data);
-    } else if(data->mode == MODE_PUK_NEW_PIN && strcmp(data->pin, "") != 0) {
+    } else if(data->mode == MODE_PUK_NEW_PIN && strcmp(data->pin, "")) {
         g_debug("Ask for new PIN confirmation");
         window_text_set(data->win, "instruction", "Confirm your NEW PIN"); 
         data->mode = MODE_PUK_NEW_PIN_CONFIRM;
         sim_auth_update(data);
     } else if(data->mode == MODE_PUK_NEW_PIN_CONFIRM) {
-        g_debug("See if PINs are identical");
-        if(strlen(data->pin) != 4) {
-            g_debug("PIN must be 4 chars long");
+        g_debug("See if NEW PINs are identical");
+        if(!string_is_pin(data->pin)) {
+            g_debug("NEW PIN must be 4 chars long and consist of digits");
             data->mode = MODE_PUK;
             window_frame_show(data->win, data, frame_pin_invalid_length_show, NULL);
             ecore_timer_add(2, reset_callback, data);     
-        } else if(!strcmp(data->pin, data->pin_confirm)) {
-            g_debug("PINs identical, send PUK and new PIN: %s %s", data->pin, data->puk);
-            window_frame_show(data->win, data, frame_checking_show, NULL);
-            ogsmd_sim_unlock(data->puk, data->pin, puk_callback, data);
-        } else {
-            g_debug("PINs different");
+        } else if(strcmp(data->pin, data->pin_confirm)) {
+            g_debug("NEW PINs different");
             data->mode = MODE_PUK;
             window_frame_show(data->win, data, frame_pins_different_show, NULL);
             ecore_timer_add(2, reset_callback, data);
+        } else if(!string_is_puk(data->puk)) {
+            g_debug("PUK is invalid");
+            data->mode = MODE_PUK;
+            window_frame_show(data->win, data, frame_puk_wrong_show, NULL);
+            ecore_timer_add(2, reset_callback, data);
+        } else {
+            g_debug("NEW PINs identical, send PUK and NEW PIN");
+            window_frame_show(data->win, data, frame_checking_show, NULL);
+            ogsmd_sim_unlock(data->puk, data->pin, puk_callback, data);
         }
     }
 }
 
 void sim_auth_keypad_clicked(struct SimAuthInputViewData *data, Evas_Object *obj, char input) {
+    g_debug("MODE: %d", data->mode);
+
     char* string;
     int* length;
     if(data->mode == MODE_PIN || data->mode == MODE_PUK_NEW_PIN) {
@@ -235,8 +252,12 @@ void sim_auth_keypad_clicked(struct SimAuthInputViewData *data, Evas_Object *obj
         length = &(data->pin_confirm_length);
     }
 
-    if(*length < 8)
-    {
+    if(
+        (data->mode == MODE_PIN && *length < 4) ||
+        (data->mode == MODE_PUK_NEW_PIN && *length < 4) ||
+        (data->mode == MODE_PUK_NEW_PIN_CONFIRM && *length < 4) ||
+        (data->mode == MODE_PUK && *length < 8)
+    ) {
         strncat(string, &input, 1);
         (*length)++;
         sim_auth_update(data);
