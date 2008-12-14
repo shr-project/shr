@@ -51,7 +51,7 @@ gboolean string_is_number(const char *string) {
 }
 
 gboolean string_is_pin(const char *string) {
-    if(strlen(string) != 4)
+    if(strlen(string) < 4 || strlen(string) > 8)
         return FALSE;
 
     char *p = string;

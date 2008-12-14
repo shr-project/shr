@@ -10,12 +10,12 @@ struct SimAuthInputViewData {
     int mode;
 
     char stars[9];
-    char pin[5];
+    char pin[9];
     int  pin_length;
 
     char puk[9];
     int  puk_length;
-    char pin_confirm[5];
+    char pin_confirm[9];
     int  pin_confirm_length;
 
     Evas_Object *bt1, *bt2, *keypad;
@@ -214,7 +214,7 @@ void sim_auth_ok_clicked(struct SimAuthInputViewData *data, Evas_Object *obj, vo
     } else if(data->mode == MODE_PUK_NEW_PIN_CONFIRM) {
         g_debug("See if NEW PINs are identical");
         if(!string_is_pin(data->pin)) {
-            g_debug("NEW PIN must be 4 chars long and consist of digits");
+            g_debug("NEW PIN must be 4-8 chars long and consist of digits");
             data->mode = MODE_PUK;
             window_frame_show(data->win, data, frame_pin_invalid_length_show, NULL);
             ecore_timer_add(2, reset_callback, data);     
@@ -252,12 +252,7 @@ void sim_auth_keypad_clicked(struct SimAuthInputViewData *data, Evas_Object *obj
         length = &(data->pin_confirm_length);
     }
 
-    if(
-        (data->mode == MODE_PIN && *length < 4) ||
-        (data->mode == MODE_PUK_NEW_PIN && *length < 4) ||
-        (data->mode == MODE_PUK_NEW_PIN_CONFIRM && *length < 4) ||
-        (data->mode == MODE_PUK && *length < 8)
-    ) {
+    if(*length < 8) {
         strncat(string, &input, 1);
         (*length)++;
         sim_auth_update(data);

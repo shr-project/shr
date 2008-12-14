@@ -197,7 +197,7 @@ collections {
                            offset, 0 0;
                     }
                     text {
-                           text, "PIN must be 4 chars long";
+                           text, "PIN must be 4-8 chars long";
                            font, "redensek";
                            size, 25;
                            align, 0.5 0.5;
