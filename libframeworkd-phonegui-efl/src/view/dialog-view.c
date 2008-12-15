@@ -15,11 +15,15 @@ struct DialogViewData *dialog_view_show(struct Window *win, GHashTable *options)
     window_layout_set(win, DIALOG_FILE, "dialog");
     window_text_set(win, "content", "Your storage is full. Please delete some messages or you are not going to receive messages anymore!");
 
-    data->bt_close = elm_button_add(win);
+    data->bt_close = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt_close, "Close");
-    evas_object_smart_callback_add(data->bt_close, "clicked", dialog_view_close_clicked, win);
+    evas_object_smart_callback_add(data->bt_close, "clicked", dialog_view_close_clicked, data);
     window_swallow(win, "button_close", data->bt_close);
     evas_object_show(data->bt_close);
+
+
+    window_show(win);
+    return data;
 }
 
 void dialog_view_hide(struct DialogViewData *data) {
