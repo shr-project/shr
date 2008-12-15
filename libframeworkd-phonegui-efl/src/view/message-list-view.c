@@ -172,7 +172,9 @@ static void process_message(GValueArray *message, struct MessageListViewData *da
 
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
-    g_hash_table_insert(parameters, strdup("content"), strdup(g_value_get_string(g_value_array_get_nth(message, 3))));
+    char *content = strdup(g_value_get_string(g_value_array_get_nth(message, 3)));
+    string_replace_newline(content);
+    g_hash_table_insert(parameters, strdup("content"), content);
     g_hash_table_insert(parameters, strdup("date"), strdup(datestr));
 
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(data->tree), NULL, data->col1, parameters, NULL);
