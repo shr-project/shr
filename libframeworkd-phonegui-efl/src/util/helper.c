@@ -11,7 +11,7 @@ time_t time_stringtotimestamp(const char *str) {
     struct tm date;
     if(strptime(str, "%a %h %e %T %Y %z", &date) == NULL) {
         return NULL;
-    } 
+    }
 
     // Generate long from struct tm
     time_t ts = mktime(&date);
@@ -27,6 +27,23 @@ void string_strip_html(char *string) {
             while (*in_p && *in_p++ != '>');
         else
           *out_p++ = *in_p++;
+    }
+    *out_p = '\0';
+}
+
+
+void string_replace_newline(char *string) {
+    char *in_p = string, *out_p = string;
+    for (; *in_p; in_p++, out_p++) {
+        switch (*in_p) {
+            case '\n':
+            case '\t':
+                *out_p = ' ';
+                break;
+            default:
+                *out_p = *in_p;
+                break;
+        }
     }
     *out_p = '\0';
 }
