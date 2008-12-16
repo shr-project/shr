@@ -90,7 +90,12 @@ int main(int argc, char ** argv) {
     g_timeout_add(0, list_resources, NULL);
     g_main_loop_run(mainloop);
 
+    /* Close phonelog database */
+    phonelog_close_database();
+    g_debug("Phonelog database closed");
+
     free(incoming_calls);
+    free(outgoing_calls);
     exit(EXIT_SUCCESS);
 }
 
@@ -117,7 +122,7 @@ int ophonekitd_call_check(call_t *calls, int *size, int id) {
 }
 
 int ophonekitd_call_get_unique_id(call_t *calls, int *size, int id) {
-	g_debug("ophonekitd_call_get_number(%d)", id);
+	g_debug("ophonekitd_call_get_unique_id(%d)", id);
     int place = ophonekitd_call_check(calls, size, id);
     if(place >= 0) {
     	return calls[place].unique_id;
@@ -412,10 +417,6 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
 int exit_callback(void *data, int type, void *event) {
     /* called on ctrl-c, kill $pid, SIGINT, SIGTERM and SIGQIT */
     g_debug("exit_callback()");
-
-    /* Close phonelog database */
-    phonelog_close_database();
-    g_debug("Phonelog database closed");
 
     return 0;
 }
