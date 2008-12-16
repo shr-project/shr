@@ -49,6 +49,54 @@ void string_replace_newline(char *string) {
 }
 
 
+
+char *string_replace_with_tags(char *string)
+{
+    int newlen = 0;
+    char *in_p = string, *out_p;
+
+    /* scan the string to see how much longer we have to get */
+    while (*in_p) {
+        switch (*in_p++) {
+            case '\n':    newlen += 3; break;
+            case '\t':    newlen += 4; break;
+        }
+    }
+
+    if (!newlen)
+       return (string);
+
+    newlen += strlen(string);
+    char *newstring = malloc(newlen+1);
+    in_p = string;
+    out_p = newstring;
+    while (*in_p) {
+        switch (*in_p) {
+            case '\n':
+                *out_p++ = '<';
+                *out_p++ = 'b';
+                *out_p++ = 'r';
+                *out_p++ = '>';
+                break;
+            case '\t':
+                *out_p++ = '<';
+                *out_p++ = 't';
+                *out_p++ = 'a';
+                *out_p++ = 'b';
+                *out_p++ = '>';
+                break;
+            default:
+                *out_p++ = *in_p;
+                break;
+        }
+        in_p++;
+    }
+    *out_p = '\0';
+
+    return (newstring);
+}
+
+
 gboolean string_is_number(const char *string) {
     if(!strlen(string)) {
         return FALSE;
