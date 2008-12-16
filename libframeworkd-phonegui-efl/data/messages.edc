@@ -2,6 +2,7 @@ styles {
   style {
     name: "content_style";
     base: "font=Edje-Vera font_size=20 align=left valign=bottom color=#000 wrap=word";
+    tag: "br"         "+ \n";
   }
 }
 

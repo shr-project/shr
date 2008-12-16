@@ -86,8 +86,8 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     time_t timestamp = time_stringtotimestamp(timestr);
     char *status = data->status;
     char *number = data->number;
-    char *content = data->content;
-    
+    char *content = string_replace_with_tags(data->content);
+
     char datestr[32];
     strftime(datestr, 31, "%d.%m.%Y, %H:%M", gmtime(&timestamp));
 
