@@ -19,6 +19,7 @@ static void frame_list_message_clicked(struct ContactListViewData *data, Evas_Ob
 static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
 static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info);
 static void frame_list_refresh(struct ContactListViewData *data);
+static void frame_list_refresh_callback(struct ContactListViewData *data);
 
 
 struct ContactListViewData *contact_list_view_show(struct Window *win, GHashTable *options) {
@@ -137,7 +138,6 @@ static void frame_list_options_clicked(struct ContactListViewData *data, Evas_Ob
 static void frame_list_message_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
     evas_object_hide(data->hv);
 
-    g_debug("mssage");
     GHashTable *properties = elm_my_contactlist_selected_row_get(data->list);
     if(properties != NULL) {
         assert(g_hash_table_lookup(properties, "number") != NULL);
@@ -187,6 +187,10 @@ static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Obj
 
 
 static void frame_list_refresh(struct ContactListViewData *data) {
+    async_trigger(frame_list_refresh_callback, data);
+}
+
+static void frame_list_refresh_callback(struct ContactListViewData *data) {
     elm_my_contactlist_refresh(data->list);
 }
 

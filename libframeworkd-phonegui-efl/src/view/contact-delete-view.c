@@ -16,8 +16,8 @@ void contact_delete_no_clicked(void *userdata, Evas_Object *obj, void *event_inf
 static void delete_callback(GError *error, gpointer userdata);
 static void delete_callback2(struct ContactDeleteViewData *data);
 
-static void frame_delete_show(struct ContactDeleteViewData *data);
-static void frame_delete_hide(struct ContactDeleteViewData *data);
+static void frame_delete_show(void *);
+static void frame_delete_hide(void *);
 static void frame_delete_no_clicked(void *userdata, Evas_Object *obj, void *event_info);
 static void frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *event_info);
 
@@ -31,16 +31,13 @@ struct ContactDeleteViewData *contact_delete_view_show(struct Window *win, GHash
     if(options == NULL) {
         g_error("At least option[id] must be set.");
     } else {
-        data->id = g_hash_table_lookup(options, "id");
+        data->id = (int) g_hash_table_lookup(options, "id");
         data->callback = g_hash_table_lookup(options, "delete_callback"); 
         data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
-
-        g_debug("Delete view with contact id = %d", data->id);
     }
 
     window_frame_show(win, data, frame_delete_show, frame_delete_hide);
     window_show(win);
-    
     return data;
 }
 
@@ -67,7 +64,8 @@ static void delete_callback2(struct ContactDeleteViewData *data) {
  * Frame "delete"
  */
 
-static void frame_delete_show(struct ContactDeleteViewData *data) {
+static void frame_delete_show(void *userdata) {
+    struct ContactDeleteViewData *data = (struct ContactDeleteViewData *) userdata;
     struct Window *win = data->win;
     window_layout_set(win, CONTACTS_FILE, "delete");
 
@@ -84,7 +82,8 @@ static void frame_delete_show(struct ContactDeleteViewData *data) {
     evas_object_show(data->bt_no);
 }
 
-static void frame_delete_hide(struct ContactDeleteViewData *data) {
+static void frame_delete_hide(void *userdata) {
+    struct ContactDeleteViewData *data = (struct ContactDeleteViewData *) userdata;
     evas_object_del(data->bt_yes);
     evas_object_del(data->bt_no);
 }

@@ -47,7 +47,7 @@ void call_incoming_view_hide(struct CallIncomingViewData *data) {
     evas_object_del(data->bt2);
 
     if(data->parent.dtmf_active) {
-        call_dtmf_disable(&(data->parent));
+        call_dtmf_disable(data);
     }
 
     if(speaker_active) {

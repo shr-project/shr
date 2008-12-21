@@ -31,6 +31,7 @@ static void message_show_view_close_clicked(struct MessageShowViewData *data, Ev
 static void message_show_view_answer_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_delete_callback(struct MessageShowViewData *data);
+static void message_show_view_delete_callback_callback(struct MessageShowViewData *data);
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info);
 
 
@@ -168,11 +169,15 @@ static void message_show_view_delete_clicked(struct MessageShowViewData *data, E
 }
 
 static void message_show_view_delete_callback(struct MessageShowViewData *data) {
+    async_trigger(message_show_view_delete_callback_callback, data);
+}
+
+static void message_show_view_delete_callback_callback(struct MessageShowViewData *data) {
     window_destroy(data->win, NULL);
 
     if(data->callback != NULL) {
         data->callback(data->callback_data);
-    }
+    }    
 }
 
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info) {

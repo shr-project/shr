@@ -20,6 +20,7 @@ static void message_list_view_show_clicked(struct MessageListViewData *data, Eva
 static void message_list_view_delete_clicked(struct MessageListViewData *data, Evas_Object *obj, void *event_info);
 static void message_list_view_answer_clicked(struct MessageListViewData *data, Evas_Object *obj, void *event_info);
 static void message_list_view_message_deleted(struct MessageListViewData *data);
+static void message_list_view_message_deleted_callback(struct MessageListViewData *data);
 static void retrieve_messagebook_callback(GError*error, GPtrArray*messages, struct MessageListViewData *data);
 static void retrieve_messagebook_callback2(struct MessageListViewData *data);
 
@@ -27,10 +28,8 @@ static void retrieve_messagebook_callback2(struct MessageListViewData *data);
 
 struct MessageListViewData *message_list_view_show(struct Window *win, GHashTable *options) {
     g_debug("message_list_view_show()");
-
     struct MessageListViewData *data = g_slice_alloc0(sizeof(struct MessageListViewData));
     data->win = win;
-
 
     window_layout_set(win, MESSAGE_FILE, "list");
     window_text_set(win, "title", "Inbox"); 
@@ -269,6 +268,10 @@ static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info) {
 }
 
 static void message_list_view_message_deleted(struct MessageListViewData *data) {
+    async_trigger(message_list_view_message_deleted_callback, data);
+}
+
+static void message_list_view_message_deleted_callback(struct MessageListViewData *data) {
     // TODO: Reload list instead of deleting the selected message
     data->selected_row = etk_tree_selected_row_get(data->tree);
     if(data->selected_row != NULL) {
