@@ -47,6 +47,7 @@ call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
 int incoming_calls_size = 0;
 int outgoing_calls_size = 0;
+GHashTable *contact_cache = NULL;
 
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
@@ -96,6 +97,8 @@ int main(int argc, char ** argv) {
 
     free(incoming_calls);
     free(outgoing_calls);
+    g_hash_table_destroy(contact_cache);
+
     exit(EXIT_SUCCESS);
 }
 
@@ -193,7 +196,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
                 int unique_id = phonelog_add_new_call(number);
                 ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id, unique_id);
                 phonelog_log_call_event(unique_id, status);
-                phonegui_incoming_call_show(call_id, status, number);
+                phonegui_incoming_call_show(call_id, status, cache_phonebook_lookup(number));
             }
             break;
         case CALL_STATUS_OUTGOING:
@@ -202,7 +205,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
                 int unique_id = phonelog_add_new_call(number);
                 ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id, unique_id);
                 phonelog_log_call_event(unique_id, status);
-                phonegui_outgoing_call_show(call_id, status, number);
+                phonegui_outgoing_call_show(call_id, status, cache_phonebook_lookup(number));
             }
             break;
         case CALL_STATUS_RELEASE:
@@ -255,6 +258,7 @@ void ophonekitd_sim_auth_status_handler(const int status) {
         }
         ogsmd_network_register(register_to_network_callback, NULL);
         ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
+        ogsmd_sim_retrieve_phonebook("contacts", cache_phonebook_callback, NULL);
     } else {
         g_debug("sim not ready");
         if(!sim_auth_active) {
@@ -413,6 +417,50 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
         /* TODO */
     }
 }
+
+
+void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata) {
+    g_debug("creating contact_cache");
+    contact_cache = g_hash_table_new(g_str_hash, g_str_equal);
+    if (!contact_cache) {
+        g_error("could not allocate contact cache");
+        return;
+    }
+    g_ptr_array_foreach(contacts, cache_phonebook_entry, NULL);
+}
+
+
+void cache_phonebook_entry(GValueArray *entry, void *data) {
+    char *number = strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
+    char *name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
+    g_hash_table_insert(contact_cache, number, name);
+}
+
+
+char *cache_phonebook_lookup(char *number) {
+    if (!number || !*number)
+        return ("unknown");
+    if (*number == '"') {
+        number++;
+        char *s = number;
+        while (*s) {
+            if (*s == '"') {
+                *s = '\0';
+                break;
+            }
+            s++;
+        }
+    }
+
+    char *name = g_hash_table_lookup(contact_cache, number);
+    g_debug("looking for '%s' in contacts_cache", number);
+    if (name)
+        g_debug("found name '%s'", name);
+    if (name && *name)
+        return (name);
+    return (number);
+}
+
 
 int exit_callback(void *data, int type, void *event) {
     /* called on ctrl-c, kill $pid, SIGINT, SIGTERM and SIGQIT */
