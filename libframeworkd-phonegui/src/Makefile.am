@@ -2,7 +2,7 @@ MAINTAINERCLEANFILES = Makefile.in
 
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
-AM_CFLAGS = -Wall @PHONEGUI_CFLAGS@
+AM_CFLAGS = -Wall @GLIB_CFLAGS@
 
 lib_LTLIBRARIES = libframeworkd-phonegui.la
 
@@ -14,4 +14,4 @@ libframeworkd_phoneguidir = $(includedir)/frameworkd-phonegui
 
 libframeworkd_phonegui_la_LDFLAGS = $(all_libraries) -ldl
 
-libframeworkd_phonegui_la_LIBADD = @PHONEGUI_LIBS@ 
+libframeworkd_phonegui_la_LIBADD = @GLIB_LIBS@ 
