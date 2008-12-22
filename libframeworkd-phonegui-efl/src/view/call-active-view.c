@@ -45,7 +45,6 @@ void call_active_view_hide(struct CallActiveViewData *data) {
     g_debug("call_active_hide()");
 
     struct Window *win = data->parent.win;
-    g_debug("win: %d", win);
 
     if(data->parent.dtmf_active) {
         call_dtmf_disable(&(data->parent));
@@ -64,6 +63,4 @@ void call_active_view_hide(struct CallActiveViewData *data) {
     window_unswallow(win, data->bt3);
     evas_object_del(data->bt3);
 }
-
-
 

@@ -100,7 +100,7 @@ static void get_phonebook_info_callback(GError *error, GHashTable *info, gpointe
         int min = g_value_get_int(g_hash_table_lookup(info, "min_index"));
         int max = g_value_get_int(g_hash_table_lookup(info, "max_index"));
         (*data)->free_entry_index = calculate_free_entry_index(min, max, (*data)->contacts, *data);
-        g_debug("index: %d", (*data)->free_entry_index);
+        g_debug("free index: %d", (*data)->free_entry_index);
     }
 }
 

@@ -281,8 +281,6 @@ static void frame_recipient_delete_clicked(struct MessageNewViewData *data, Evas
 }
 
 static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
-    g_debug("frame_recipient_continue_clicked(win=%d)", data->win);
-
     if(data->recipients->len) {
         window_frame_show(data->win, data, frame_sending_show, frame_sending_hide);
 
@@ -325,7 +323,6 @@ static void frame_recipient_process_recipient(GHashTable *properties, struct Mes
 
 static void frame_contact_add_show(struct MessageNewViewData *data) {
     struct Window *win = data->win;
-
     window_layout_set(win, MESSAGE_FILE, "recipient_contact_add");
 
     data->bt1 = elm_button_add(window_evas_object_get(win));

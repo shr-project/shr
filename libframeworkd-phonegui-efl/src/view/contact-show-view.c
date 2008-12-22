@@ -1,6 +1,11 @@
 #include "views.h"
 
 
+/*
+ * NOT USED ATM
+ */
+
+
 void contacts_button_call_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) {
     if(win->contacts_mode == MODE_LIST) {
         Etk_Tree_Row *row = etk_tree_selected_row_get(win->tree);

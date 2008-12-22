@@ -1,6 +1,11 @@
 #include "views.h"
 
 
+/*
+ * NOT USED AT THE MOMENT
+ */
+
+
 struct MessageFolderViewData {
     struct Window *win;
     int mode;
@@ -133,7 +138,4 @@ static void messages_button_show_clicked(struct MessageFolderViewData *data, Eva
     }
 
 }
-
-
-
 
