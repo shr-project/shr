@@ -5,4 +5,4 @@
 
 EAPI Evas_Object* elm_keypad_add(Evas_Object *parent);
 
-#endif;
+#endif
