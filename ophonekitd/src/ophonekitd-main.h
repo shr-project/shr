@@ -26,6 +26,7 @@ void ophonekitd_call_status_handler(const int id_call, const int status, GHashTa
 void ophonekitd_sim_auth_status_handler(const int status);
 void ophonekitd_sim_incoming_stored_message_handler(const int id);
 void ophonekitd_device_idle_notifier_state_handler(const int state);
+void ophonekitd_incoming_ussd_handler(const char* mode, const char* message);
 
 gboolean list_resources();
 void list_resources_callback(GError *error, char** resources, gpointer userdata);

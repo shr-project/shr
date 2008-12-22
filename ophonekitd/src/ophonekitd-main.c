@@ -72,6 +72,7 @@ int main(int argc, char ** argv) {
     fwHandler.simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
     fwHandler.callCallStatus = ophonekitd_call_status_handler;
     fwHandler.deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
+    fwHandler.incomingUssd = ophonekitd_incoming_ussd_handler;
 
     if (!g_thread_supported ())
         g_thread_init (NULL);
@@ -280,6 +281,10 @@ void ophonekitd_sim_incoming_stored_message_handler(const int id) {
 
     phonegui_message_show(id);
     ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
+}
+
+void ophonekitd_incoming_ussd_handler(const char* mode, const char* message) {
+    g_debug("ophonekitd_incoming_ussd_handler(mode=%s, message=%s)", mode, message);
 }
 
 
