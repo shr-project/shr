@@ -19,7 +19,7 @@
 
 #include "dialer-textview.h"
 #include "dialer-panel.h"
-#include <frameworkd-glib/frameworkd-glib-sim.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include "pin.h"
 
@@ -137,7 +137,7 @@ display_pin_error (const char *message)
                 if (gtk_dialog_run (GTK_DIALOG (staticData.dialog)) == GTK_RESPONSE_OK)
                 {
                         set_code_ui_state_busy ();
-                        sim_send_auth_code (staticData.code, sim_pin_puk_callback, NULL);
+                        ogsmd_sim_send_auth_code (staticData.code, sim_pin_puk_callback, NULL);
                 }
         }
 
@@ -160,7 +160,7 @@ void display_puk_dialog() {
                 return;
         }
         set_code_ui_state_busy ();
-        sim_unlock (puk, pin, sim_pin_puk_callback, NULL);
+        ogsmd_sim_unlock (puk, pin, sim_pin_puk_callback, NULL);
         
         g_free (pin);
         g_free (puk);
@@ -170,11 +170,11 @@ void display_puk_dialog() {
 sim_pin_puk_callback (GError *error, gpointer userdata)
 {
         if(error != NULL) {
-                if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
-                        /* display_pin_error("") */                    
-                } else if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
-                        /* display_pin_error("") */
-                }
+//                if(IS_SIM_ERROR(error, SIM_ERROR_BLOCKED)) {
+//                        /* display_pin_error("") */                    
+//                } else if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
+//                        /* display_pin_error("") */
+//                }
                 display_pin_puk_dialog();
         } else {
                 /* We should have SIM_READY then UI should be destroyed. */
