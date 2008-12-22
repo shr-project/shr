@@ -28,7 +28,7 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
-#include <frameworkd-glib/frameworkd-glib-call.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
 
 #include <libmokoui2/moko-stock.h>
 
