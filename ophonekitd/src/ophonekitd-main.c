@@ -310,7 +310,7 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
             g_debug("GSM not available, try again in 5s");
             g_timeout_add(5000, list_resources, NULL);
         }
-    } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
+    } else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
     } else {
@@ -329,7 +329,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
 
     if(error == NULL) {
 	power_up_antenna();
-    } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
+    } else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
     } else {
@@ -356,7 +356,7 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
 
         } else if(IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
             g_error("SIM card not present.");
-        } else if(IS_DBUS_ERROR(error, DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_DBUS_ERROR(error, DBUS_ERROR_NO_REPLY)) {
+        } else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
             g_debug("dbus not available, try again in 5s");
             g_timeout_add(5000, power_up_antenna, NULL);
         } else {
