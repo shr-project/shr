@@ -188,6 +188,9 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
     if(peerNumber != NULL) {
         number = g_strdup_value_contents (peerNumber);
     }
+    else {
+        number = "*****";
+    }
 
     switch(status) {
         case CALL_STATUS_INCOMING:
@@ -438,8 +441,11 @@ void cache_phonebook_entry(GValueArray *entry, void *data) {
 
 
 char *cache_phonebook_lookup(char *number) {
-    if (!number || !*number)
-        return ("unknown");
+    g_debug("looking for '%s' in contacts_cache", number);
+    if (!number || !*number || !strcmp(number, "*****")) {
+        g_debug("contact_cache: got unknown number");
+        return ("");
+    }
     if (*number == '"') {
         number++;
         char *s = number;
@@ -453,7 +459,6 @@ char *cache_phonebook_lookup(char *number) {
     }
 
     char *name = g_hash_table_lookup(contact_cache, number);
-    g_debug("looking for '%s' in contacts_cache", number);
     if (name)
         g_debug("found name '%s'", name);
     if (name && *name)
