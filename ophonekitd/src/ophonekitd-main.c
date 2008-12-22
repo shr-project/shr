@@ -424,7 +424,7 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
 
 void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata) {
     g_debug("creating contact_cache");
-    contact_cache = g_hash_table_new(g_str_hash, g_str_equal);
+    contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
     if (!contact_cache) {
         g_error("could not allocate contact cache");
         return;
