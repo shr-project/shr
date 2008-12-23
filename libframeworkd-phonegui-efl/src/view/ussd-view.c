@@ -6,6 +6,9 @@ struct UssdViewData {
     int mode;
     char *message;
     Evas_Object *bt_close;
+
+    void (*callback_close)(void *data);
+    void *callback_close_data;
 };
 
 
@@ -18,8 +21,12 @@ static void frame_ussd_close_clicked(struct UssdViewData *data, Evas_Object *obj
 struct UssdViewData *ussd_view_show(struct Window *win, GHashTable *options) {
     struct UssdViewData *data = g_slice_alloc0(sizeof(struct UssdViewData));
     data->win = win;
+    
+    assert(options != NULL);
     data->mode = (int) g_hash_table_lookup(options, "mode");
-    data->message = g_hash_table_lookup(options, "message");
+    data->message = string_replace_with_tags(g_hash_table_lookup(options, "message"));
+    data->callback_close = g_hash_table_lookup(options, "callback_close");
+    data->callback_close_data = g_hash_table_lookup(options, "callback_close_data");  
 
     window_frame_show(win, data, frame_ussd_show, frame_ussd_hide);
     window_show(win);
@@ -27,6 +34,9 @@ struct UssdViewData *ussd_view_show(struct Window *win, GHashTable *options) {
 }
 
 void ussd_view_hide(struct UssdViewData *data) {
+    if(data->callback_close != NULL)
+        data->callback_close(data->callback_close_data);
+    free(data->message);
     g_slice_free(struct UssdViewData, data);
 }
 
