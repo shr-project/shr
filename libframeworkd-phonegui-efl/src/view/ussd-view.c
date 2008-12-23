@@ -37,7 +37,7 @@ void ussd_view_hide(struct UssdViewData *data) {
 
 static void frame_ussd_show(struct UssdViewData *data) {
     struct Window *win = data->win;
-    window_layout_set(win, USSD_FILE, "main");
+    window_layout_set(win, USSD_FILE, "ussd");
     window_text_set(win, "mode", "Data:");
     window_text_set(win, "message", data->message);
 
