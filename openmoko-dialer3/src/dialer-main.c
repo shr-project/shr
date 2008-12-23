@@ -26,7 +26,7 @@
 
 int main(int argc, char **argv) {
     /* Connect to frameworkd */
-    connect_to_frameworkd();
+    frameworkd_handler_connect(frameworkd_handler_new());
 
     /* Load, connect and initiate phonegui */
     phonegui_load("openmoko-dialer3");
@@ -48,17 +48,6 @@ int main(int argc, char **argv) {
 gboolean start() {
     phonegui_dialer_show();    
     return FALSE;
-}
-
-void connect_to_frameworkd() {
-    FrameworkdHandlers fwHandler;
-    fwHandler.networkStatus = NULL;
-    fwHandler.networkSignalStrength = NULL;
-    fwHandler.simAuthStatus = NULL;
-    fwHandler.simIncomingStoredMessage = NULL;
-    fwHandler.callCallStatus = NULL;
-    fwHandler.deviceIdleNotifierState = NULL;
-    dbus_connect_to_bus(&fwHandler);
 }
 
 void exit_callback() {

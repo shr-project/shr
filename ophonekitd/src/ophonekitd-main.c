@@ -51,7 +51,7 @@ GHashTable *contact_cache = NULL;
 
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
-    FrameworkdHandlers fwHandler;
+    FrameworkdHandler *fwHandler;
     DBusGConnection *bus = NULL;
     DBusGProxy *bus_proxy = NULL;
 
@@ -66,13 +66,12 @@ int main(int argc, char ** argv) {
     g_debug("Phonelog database initiated");
 
     /* Register dbus handlers */
-    fwHandler.networkStatus = NULL;
-    fwHandler.networkSignalStrength = NULL;
-    fwHandler.simAuthStatus = ophonekitd_sim_auth_status_handler;
-    fwHandler.simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
-    fwHandler.callCallStatus = ophonekitd_call_status_handler;
-    fwHandler.deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
-    fwHandler.incomingUssd = ophonekitd_incoming_ussd_handler;
+    fwHandler = frameworkd_handler_new();
+    fwHandler->simAuthStatus = ophonekitd_sim_auth_status_handler;
+    fwHandler->simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
+    fwHandler->callCallStatus = ophonekitd_call_status_handler;
+    fwHandler->deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
+    fwHandler->incomingUssd = ophonekitd_incoming_ussd_handler;
 
     if (!g_thread_supported ())
         g_thread_init (NULL);
@@ -85,7 +84,7 @@ int main(int argc, char ** argv) {
     
     ophonekitd_dbus_start();
     
-    dbus_connect_to_bus(&fwHandler);
+    frameworkd_handler_connect(fwHandler);
     g_debug("Connected to the buses");
     
     /* Start glib main loop and run list_resources() */
