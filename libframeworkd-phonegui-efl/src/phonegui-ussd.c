@@ -8,12 +8,14 @@ static struct Window *win = NULL;
 
 static void _show(GHashTable *options);
 static void _hide(struct Window *win);
+static void _delete(void *data, Evas_Object *win, void *event_info);
 
 
 void phonegui_ussd_show(int mode, const char *message) {
     g_debug("phonegui_ussd_show(mode=%d, message=%s)", mode, message);
     if(win == NULL) {
         win = window_new("Service Data");
+        window_delete_callback_set(win, _delete);
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "win", win);
@@ -43,6 +45,11 @@ static void _show(GHashTable *options) {
 static void _hide(struct Window *win) {
     g_debug("_hide()");
     window_destroy(win, NULL);
+    win = NULL;
+}
+
+static void _delete(void *data, Evas_Object *win, void *event_info) {
+    g_debug("_delete()");
     win = NULL;
 }
 
