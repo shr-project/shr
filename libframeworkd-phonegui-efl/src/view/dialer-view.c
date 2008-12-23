@@ -160,7 +160,7 @@ static void frame_dialer_call_clicked(struct DialerViewData *data, Evas_Object *
     if(strlen(data->number)) {
         if(data->number[0] == '*') {
             g_debug("USSD Request");
-            ogsmd_network_send_request(data->number, NULL, NULL);
+            ogsmd_network_send_ussd_request(data->number, NULL, NULL);
         } else {
             g_debug("Initiate Call");
             ogsmd_call_initiate(data->number, "voice", frame_dialer_initiate_callback, data);
