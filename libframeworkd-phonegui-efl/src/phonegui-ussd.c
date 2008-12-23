@@ -15,7 +15,6 @@ void phonegui_ussd_show(int mode, const char *message) {
     g_debug("phonegui_ussd_show(mode=%d, message=%s)", mode, message);
     if(win == NULL) {
         win = window_new("Service Data");
-        window_delete_callback_set(win, _delete);
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "win", win);
@@ -39,6 +38,7 @@ static void _show(GHashTable *options) {
     assert(win != NULL);
 
     window_init(win);
+    window_delete_callback_set(win, _delete);
     window_view_show(win, options, ussd_view_show, ussd_view_hide);
 }
 
