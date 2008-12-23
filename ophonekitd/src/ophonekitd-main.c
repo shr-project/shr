@@ -283,8 +283,9 @@ void ophonekitd_sim_incoming_stored_message_handler(const int id) {
     ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
 
-void ophonekitd_incoming_ussd_handler(const char* mode, const char* message) {
-    g_debug("ophonekitd_incoming_ussd_handler(mode=%s, message=%s)", mode, message);
+void ophonekitd_incoming_ussd_handler(int mode, const char* message) {
+    g_debug("ophonekitd_incoming_ussd_handler(mode=%d, message=%s)", mode, message);
+    phonegui_ussd_show(mode, message);
 }
 
 

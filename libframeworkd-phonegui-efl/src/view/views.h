@@ -22,6 +22,7 @@
 #define KEYPAD_FILE "/usr/share/libframeworkd-phonegui-efl/keypad.edj"
 #define MESSAGE_FILE "/usr/share/libframeworkd-phonegui-efl/messages.edj"
 #define SIM_AUTH_FILE "/usr/share/libframeworkd-phonegui-efl/sim-auth.edj"
+#define USSD_FILE "/usr/share/libframeworkd-phonegui-efl/ussd.edj"
 
 struct DialerViewData *dialer_view_show(struct Window *win, GHashTable *options);
 void dialer_view_hide(struct DialerViewData *data);
@@ -61,6 +62,9 @@ void contact_edit_view_hide(struct ContactEditViewData *data);
 
 struct ContactDeleteViewData *contact_delete_view_show(struct Window *win, GHashTable *options);
 void contact_delete_view_hide(struct ContactDeleteViewData *data);
+
+struct UssdViewData *ussd_view_show(struct Window *win, GHashTable *options);
+void ussd_view_hide(struct UssdViewData *data);
 
 #endif
 

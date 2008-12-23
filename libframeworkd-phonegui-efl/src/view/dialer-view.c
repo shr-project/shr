@@ -157,8 +157,15 @@ static void frame_dialer_save_clicked(struct DialerViewData *data, Evas_Object *
 }
 
 static void frame_dialer_call_clicked(struct DialerViewData *data, Evas_Object *obj, void *event_info) {
-    if(strlen(data->number))
-        ogsmd_call_initiate(data->number, "voice", frame_dialer_initiate_callback, data);
+    if(strlen(data->number)) {
+        if(data->number[0] == '*') {
+            g_debug("USSD Request");
+            ogsmd_network_send_request(data->number, NULL, NULL);
+        } else {
+            g_debug("Initiate Call");
+            ogsmd_call_initiate(data->number, "voice", frame_dialer_initiate_callback, data);
+        }
+    }
 }
 
 static void frame_dialer_message_clicked(struct DialerViewData *data, Evas_Object *obj, void *event_info) {

@@ -27,5 +27,7 @@ void phonegui_connect() {
     phonegui_message_hide = phonegui_get_function("phonegui_message_hide");
     phonegui_dialog_show = phonegui_get_function("phonegui_dialog_show");
     phonegui_dialog_hide = phonegui_get_function("phonegui_dialog_hide");
+    phonegui_ussd_show = phonegui_get_function("phonegui_ussd_show");
+    phonegui_ussd_hide = phonegui_get_function("phonegui_ussd_hide");
 }
 

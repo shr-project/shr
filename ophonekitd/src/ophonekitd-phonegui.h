@@ -29,6 +29,8 @@ void (*phonegui_message_show)();
 void (*phonegui_message_hide)();
 void (*phonegui_dialog_show)(int type);
 void (*phonegui_dialog_hide)();
+void (*phonegui_ussd_show)(int mode, const char *message);
+void (*phonegui_ussd_hide)();
 
 void phonegui_connect();
 
