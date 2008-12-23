@@ -43,5 +43,6 @@ static void _show(GHashTable *options) {
 static void _hide(struct Window *win) {
     g_debug("_hide()");
     window_destroy(win, NULL);
+    win = NULL;
 }
 

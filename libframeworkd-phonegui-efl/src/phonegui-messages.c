@@ -36,5 +36,6 @@ static void _show(struct Window *win) {
 static void _hide(struct Window *win) {
     g_debug("_hide()");
     window_destroy(win, NULL);
+    win = NULL;
 }
 
