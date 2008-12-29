@@ -3,6 +3,8 @@ MAINTAINERCLEANFILES = Makefile.in
 ophonekitd-usage-service-glue.h: ${top_builddir}/src/dbus/ophonekitd-usage.xml
 	$(DBUSBINDINGTOOL) --mode=glib-server --output=$@ --prefix=ophonekitd_usage_service $^
 
+EXTRA_DIST = dbus/ophonekitd-usage.xml
+
 bin_PROGRAMS = ophonekitd
 dbus_sources = ophonekitd-usage-service-glue.h
 
@@ -19,7 +21,8 @@ ophonekitd_SOURCES = $(dbus_sources) \
 	ophonekitd-dbus-usage.c \
 	ophonekitd-dbus-usage.h \
 	ophonekitd-dbus.c \
-	ophonekitd-dbus.h 
+	ophonekitd-dbus.h \
+	ophonekitd-dbus-common.h
 
 ophonekitd_CFLAGS = \
 	-DDATADIR=\"$(datadir)\" \

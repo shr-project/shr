@@ -27,19 +27,20 @@ libframeworkd_phonegui_efl_la_SOURCES = \
 	util/async.h util/async.c \
 	util/window.h util/window.c \
 	util/view.h util/view.c \
-	view/dialer-view.h view/dialer-view.c \
-	view/dialog-view.h view/dialog-view.c \
-	view/contact-edit-view.h view/contact-edit-view.c \
-	view/contact-delete-view.h view/contact-delete-view.c \
-	view/contact-list-view.h view/contact-list-view.c \
-	view/message-new-view.h view/message-new-view.c \
-	view/message-delete-view.h view/message-delete-view.c \
-	view/message-show-view.h view/message-show-view.c \
-	view/message-list-view.h view/message-list-view.c \
-	view/message-folder-view.h view/message-folder-view.c \
+	view/views.h \
+	view/dialer-view.c \
+	view/dialog-view.c \
+	view/contact-edit-view.c \
+	view/contact-delete-view.c \
+	view/contact-list-view.c \
+	view/message-new-view.c \
+	view/message-delete-view.c \
+	view/message-show-view.c \
+	view/message-list-view.c \
+	view/message-folder-view.c \
 	view/call-common.h view/call-common.c \
-	view/call-incoming-view.h view/call-incoming-view.c \
-	view/call-active-view.h view/call-active-view.c \
-	view/sim-auth-input-view.h view/sim-auth-input-view.c \
-	view/ussd-view.h view/ussd-view.c
+	view/call-incoming-view.c \
+	view/call-active-view.c \
+	view/sim-auth-input-view.c \
+	view/ussd-view.c
 
