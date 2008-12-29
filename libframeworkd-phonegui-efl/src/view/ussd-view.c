@@ -37,7 +37,7 @@ void ussd_view_hide(struct UssdViewData *data) {
     if(data->callback_close != NULL)
         data->callback_close(data->callback_close_data);
     free(data->message);
-    g_slice_free(struct UssdViewData, data);
+    //g_slice_free(struct UssdViewData, data); // TODO: Why does this produce a segfault?
 }
 
 
