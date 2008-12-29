@@ -19,7 +19,8 @@
 #define FRAMEWORKD_PHONEGUI_CONFIG "/etc/frameworkd-phonegui.conf"
 
 typedef enum {
-    PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL
+    PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL,
+    PHONEGUI_DIALOG_SIM_NOT_PRESENT
 } PhoneguiDialogType;
 
 void phonegui_load(const char *application_name);

@@ -360,7 +360,8 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
             }
 
         } else if(IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
-            g_error("SIM card not present.");
+            g_message("SIM card not present.");
+            phonegui_dialog_show(PHONEGUI_DIALOG_SIM_NOT_PRESENT);
         } else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
             g_debug("dbus not available, try again in 5s");
             g_timeout_add(5000, power_up_antenna, NULL);

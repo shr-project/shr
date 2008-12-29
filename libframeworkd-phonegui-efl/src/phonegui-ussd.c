@@ -8,6 +8,7 @@ static struct Window *win_ussd = NULL;
 
 static void _show(GHashTable *options);
 static void _hide();
+static void _reset();
 
 
 void phonegui_ussd_show(int mode, const char *message) {
@@ -18,7 +19,7 @@ void phonegui_ussd_show(int mode, const char *message) {
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "mode", mode);
         g_hash_table_insert(options, "message", message);
-        g_hash_table_insert(options, "callback_close", _hide);
+        g_hash_table_insert(options, "callback_close", _reset);
         async_trigger(_show, options);
     }
 }
@@ -38,7 +39,10 @@ static void _show(GHashTable *options) {
 static void _hide() {
     g_debug("_hide()");
     window_destroy(win_ussd, NULL);
-    win_ussd = NULL;
 }
 
+static void _reset() {
+    g_debug("_reset()");
+    win_ussd = NULL;
+}
 

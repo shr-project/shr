@@ -45,7 +45,7 @@ static void _show(const int id, const int status, const char *number, int type) 
     window_delete_callback_set(win, _delete);
     instance_manager_add(INSTANCE_CALL, id, win);
 
-    GHashTable *options = g_hash_table_new(NULL, g_str_equal);
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "win", win);
     g_hash_table_insert(options, "id", id);
     g_hash_table_insert(options, "status", status);
