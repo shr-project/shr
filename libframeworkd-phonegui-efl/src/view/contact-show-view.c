@@ -108,6 +108,15 @@ void contacts_list_show(struct ContactsWindow *win) {
     window_swallow(win, "button_options", win->bt3);
     evas_object_show(win->bt3);
 
+    data->name = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->name,  "");
+    window_swallow(win, "name", data->name);
+    evas_object_show(data->name);
+
+    data->number = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->number,  "");
+    window_swallow(win, "number", data->number);
+    evas_object_show(data->number);
     
     win->tree = etk_tree_new();
     etk_tree_rows_height_set(ETK_TREE(win->tree), 80);
@@ -195,10 +204,6 @@ void contacts_options_hide(struct ContactsWindow *win) {
 
     window_unswallow(win, win->bt4);
     evas_object_del(win->bt4);
-}
-
-void contacts_loading_show(struct ContactsWindow *win) {
-    window_layout_set(win, UI_FILE, "loading");
 }
 
 void contacts_modify_show(struct ContactsWindow *win) {

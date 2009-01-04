@@ -4,8 +4,10 @@
 struct ContactEditViewData {
     struct Window *win;
     Evas_Object *bt1, *bt2;
+    Evas_Object *label_name, *label_number;
     Evas_Object *entry_name, *entry_number;
     Evas_Object *sc_name, *sc_number;
+    Evas_Object *loading;
 
     int id;
     char *name, *number;
@@ -181,6 +183,10 @@ static void frame_edit_show(struct ContactEditViewData *data) {
     window_swallow(win, "button_save", data->bt2);
     evas_object_show(data->bt2);
 
+    data->label_name = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->label_name,  "Name: ");
+    window_swallow(win, "label_name", data->label_name);
+    evas_object_show(data->label_name);
 
     data->entry_name = elm_entry_add(window_evas_object_get(win));
     elm_entry_entry_set(data->entry_name, data->name);
@@ -192,6 +198,10 @@ static void frame_edit_show(struct ContactEditViewData *data) {
     window_swallow(win, "entry_name", data->sc_name);
     evas_object_show(data->sc_name);
 
+    data->label_number = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->label_number,  "Number: ");
+    window_swallow(win, "label_number", data->label_number);
+    evas_object_show(data->label_number);
 
     data->entry_number = elm_entry_add(window_evas_object_get(win));
     elm_entry_entry_set(data->entry_number, data->number);
@@ -217,6 +227,8 @@ static void frame_edit_hide(struct ContactEditViewData *data) {
     evas_object_del(data->entry_number);
     evas_object_del(data->sc_name);
     evas_object_del(data->sc_number);
+    evas_object_del(data->label_name);
+    evas_object_del(data->label_number);
 
     window_kbd_hide(win);
 }
@@ -339,9 +351,15 @@ static void frame_close_no_clicked(struct ContactEditViewData *data, Evas_Object
 
 static void frame_loading_show(struct ContactEditViewData *data) {
     window_layout_set(data->win, CONTACTS_FILE, "loading");
+
+    data->loading = elm_label_add( window_evas_object_get(data->win) );
+    elm_label_label_set( data->loading,  "Loading... ");
+    window_swallow(data->win, "text", data->loading);
+    evas_object_show(data->loading);
 }
 
 static void frame_loading_hide(struct ContactEditViewData *data) {
-
+    
+    evas_object_del(data->loading);
 }
 

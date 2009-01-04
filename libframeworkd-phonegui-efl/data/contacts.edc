@@ -87,8 +87,8 @@ collections {
 	           type,   TEXT;
 	           mouse_events, 0;
 	           description {
-                   color, 0 0 0 255;
-		           state, "default" 0.0;
+                   state, "default" 0.0;
+		           color, 0 0 0 255;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -145,11 +145,11 @@ collections {
 
 	    part {
 	           name,   "text";
-	           type,   TEXT;
+	           type,   SWALLOW;
 	           mouse_events, 0;
 	           description {
-                   color, 0 0 0 255;
-		           state, "default" 0.0;
+                   state, "default" 0.0;
+                   max: 0 0;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -157,12 +157,6 @@ collections {
                    rel2 {
                                relative, 1.0 1.0;
                    }
-                   text {
-                               text, "Loading..";
-                               font, "redensek";
-                               size, 25;
-                               align, 0.5 0.5;
-                  }
             }
 	    }
 
@@ -184,12 +178,11 @@ collections {
 
 	    part {
 	           name,   "name";
-	           type,   TEXT;
+	           type,   SWALLOW;
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
-                   color, 0 0 0 255;
-		           rel1 {
+                   rel1 {
 		                       relative, 0.0 0.1;
 		                       offset, 0 0;
 		           }
@@ -197,34 +190,21 @@ collections {
                                relative, 1.0 0.2;
                                offset, 0 0;
                    }
-                   text {
-                               text, "";
-                               font, "redensek";
-                               size, 30;
-                               align, 0.5 0.5;
-                  }
             }
 	    }
 
 	    part {
 	           name,   "number";
-	           type,   TEXT;
+	           type,   SWALLOW;
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
-                   color, 0 0 0 255;
-		           rel1 {
+                   rel1 {
 		                       relative, 0.0 0.2;
 		           }
                    rel2 {
                                relative, 1.0 0.3;
                    }
-                   text {
-                               text, "";
-                               font, "redensek";
-                               size, 25;
-                               align, 0.5 0.5;
-                  }
             }
 	    }
 
@@ -291,11 +271,6 @@ collections {
 		           }
             }
 	    }
-
-
-
-
-
     }
    }
 
@@ -310,24 +285,17 @@ collections {
 
 
 	    part {
-	           name,   "text_name";
-	           type,   TEXT;
+	           name,   "label_name";
+	           type,   SWALLOW;
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
-                   color, 0 0 0 255;
-		           rel1 {
+                   rel1 {
 		                       relative, 0.1 0.0;
 		           }
                    rel2 {
                                relative, 1.0 0.1;
                    }
-                   text {
-                               text, "Name:";
-                               font, "redensek";
-                               size, 25;
-                               align, 0.0 0.5;
-                  }
             }
 	    }
 
@@ -351,24 +319,17 @@ collections {
 
 
 	    part {
-	           name,   "text_number";
-	           type,   TEXT;
+	           name,   "label_number";
+	           type,   SWALLOW;
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
-                   color, 0 0 0 255;
-		           rel1 {
+                   rel1 {
 		                       relative, 0.1 0.4;
 		           }
                    rel2 {
                                relative, 1.0 0.5;
                    }
-                   text {
-                               text, "Number:";
-                               font, "redensek";
-                               size, 25;
-                               align, 0.0 0.5;
-                  }
             }
 	    }
 
@@ -437,11 +398,11 @@ collections {
 
 	    part {
 	           name,   "info";
-	           type,   TEXT;
+	           type,   SWALLOW;
 	           mouse_events, 0;
 	           description {
 		           state, "default" 0.0;
-                   color, 0 0 0 255;
+                   max: 0 0;
 		           rel1 {
 		                       relative, 0.0 0.0;
 		                       offset, 0 0;
@@ -450,12 +411,6 @@ collections {
                                relative, 1.0 0.85;
                                offset, 0 0;
                    }
-                   text {
-                               text, "Do you really want to delete it?";
-                               font, "redensek";
-                               size, 20;
-                               align, 0.5 0.5;
-                  }
             }
 	    }
 
