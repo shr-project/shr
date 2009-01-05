@@ -18,7 +18,7 @@
 #define CONTACTS_FILE "/usr/share/libframeworkd-phonegui-efl/contacts.edj"
 #define DIALER_FILE "/usr/share/libframeworkd-phonegui-efl/dialer.edj"
 #define DIALOG_FILE "/usr/share/libframeworkd-phonegui-efl/dialog.edj"
-#define INCOMING_MESSAGE_FILE "/usr/share/libframeworkd-phonegui-efl/incoming-message.edj"
+//#define INCOMING_MESSAGE_FILE "/usr/share/libframeworkd-phonegui-efl/incoming-message.edj"
 #define KEYPAD_FILE "/usr/share/libframeworkd-phonegui-efl/keypad.edj"
 #define MESSAGE_FILE "/usr/share/libframeworkd-phonegui-efl/messages.edj"
 #define SIM_AUTH_FILE "/usr/share/libframeworkd-phonegui-efl/sim-auth.edj"

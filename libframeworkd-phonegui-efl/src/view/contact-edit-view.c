@@ -7,7 +7,7 @@ struct ContactEditViewData {
     Evas_Object *label_name, *label_number;
     Evas_Object *entry_name, *entry_number;
     Evas_Object *sc_name, *sc_number;
-    Evas_Object *loading;
+    Evas_Object *loading, *close_information;
 
     int id;
     char *name, *number;
@@ -316,7 +316,11 @@ static void frame_close_show(struct ContactEditViewData *data) {
     struct Window *win = data->win;
 
     window_layout_set(win, DIALOG_FILE, "close");
-    window_text_set(win, "information", "Do you really want to quit?");
+    
+    data->close_information = elm_label_add( window_evas_object_get(data->win) );
+    elm_label_label_set( data->close_information,  "Do you really want to quit?");
+    window_swallow(data->win, "information", data->close_information);
+    evas_object_show(data->close_information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, "Yes");
@@ -334,6 +338,7 @@ static void frame_close_show(struct ContactEditViewData *data) {
 static void frame_close_hide(struct ContactEditViewData *data) {
     evas_object_del(data->bt1);
     evas_object_del(data->bt2);
+    evas_object_del(data->close_information);
 }
 
 static void frame_close_yes_clicked(struct ContactEditViewData *data, Evas_Object *obj, void *event_info) {

@@ -6,6 +6,7 @@ struct DialerViewData {
     char number[64];
     int number_length;
     Evas_Object *keypad, *bt_options, *bt_call, *bt_exit, *hv, *bx, *bt_save, *bt_message;
+    Evas_Object *text_number, *text_number_info;
     Ecore_Timer *delete_timer;
 };
 
@@ -52,6 +53,16 @@ void dialer_view_hide(struct DialerViewData *data) {
 static void frame_dialer_show(struct DialerViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, DIALER_FILE, "main");
+
+    data->text_number = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->text_number,  "");
+    window_swallow(win, "text_number", data->text_number);
+    evas_object_show(data->text_number);
+
+    data->text_number_info = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->text_number_info,  "Click to open contactlist.");
+    window_swallow(win, "text_number_info", data->text_number_info);
+    evas_object_show(data->text_number_info);
 
     data->keypad = elm_keypad_add(window_evas_object_get(win));
     evas_object_smart_callback_add(data->keypad, "clicked", frame_dialer_keypad_clicked, data);
@@ -135,6 +146,12 @@ static void frame_dialer_hide(struct DialerViewData *data) {
 
     window_unswallow(win, data->hv);
     evas_object_del(data->hv);
+
+    window_unswallow(win, data->text_number);
+    evas_object_del(data->text_number);
+    
+    window_unswallow(win, data->text_number_info);
+    evas_object_del(data->text_number_info);
 }
 
 static void frame_dialer_options_clicked(struct DialerViewData *data, Evas_Object *obj, void *event_info) {
@@ -227,7 +244,7 @@ static void frame_dialer_number_clicked(struct DialerViewData *data, Evas_Object
 }
 
 static void frame_dialer_number_update(struct DialerViewData *data) {
-    window_text_set(data->win, "text_number", data->number);
+    elm_label_label_set( data->text_number,  data->number);
 }
 
 static void frame_dialer_number_clear(struct DialerViewData *data) {

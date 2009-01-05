@@ -4,6 +4,7 @@
 struct CallIncomingViewData {
     struct CallViewData parent;
     Evas_Object *bt1, *bt2;
+    Evas_Object *information, *number;
 };
 
 
@@ -18,7 +19,16 @@ struct CallIncomingViewData *call_incoming_view_show(struct Window *win, GHashTa
     data->parent.dtmf_active = FALSE;
 
     window_layout_set(win, CALL_FILE, "incoming_call");
-    window_text_set(win, "number", data->parent.number);
+    
+    data->number = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->number,  data->parent.number);
+    window_swallow(win, "number", data->number);
+    evas_object_show(data->number);
+
+    data->information = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->information,  "Incoming call");
+    window_swallow(win, "information", data->information);
+    evas_object_show(data->information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, "Accept");
@@ -39,6 +49,12 @@ void call_incoming_view_hide(struct CallIncomingViewData *data) {
     g_debug("call_incoming_view_hide()");
 
     struct Window *win = data->parent.win;
+
+    window_unswallow(win,data->information);
+    evas_object_del(data->information);
+
+    window_unswallow(win, data->number);
+    evas_object_del(data->number);
 
     window_unswallow(win, data->bt1);
     evas_object_del(data->bt1);

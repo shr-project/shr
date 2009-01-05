@@ -14,6 +14,7 @@ struct MessageNewViewData {
     char *content;
     Evas_Object *bb, *entry, *bt1, *bt2, *bt3, *bt4, *bt5, *hv, *bx, *hbt1, *hbt2, *hbt3, *sc;
     Evas_Object *list_contacts;
+    Evas_Object *information;
 
     GPtrArray *recipients;
     Evas_Object *list_recipients, *container_recipients_eo;
@@ -437,7 +438,11 @@ static void frame_close_show(struct MessageNewViewData *data) {
     struct Window *win = data->win;
 
     window_layout_set(win, DIALOG_FILE, "close");
-    window_text_set(win, "information", "Do you really want to quit?");
+
+    data->information = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->information,  "Do you really want to quit?");
+    window_swallow(win, "information", data->information);
+    evas_object_show(data->information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, "Yes");
@@ -455,6 +460,7 @@ static void frame_close_show(struct MessageNewViewData *data) {
 static void frame_close_hide(struct MessageNewViewData *data) {
     evas_object_del(data->bt1);
     evas_object_del(data->bt2);
+    evas_object_del(data->information);
 }
 
 static void frame_close_yes_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
