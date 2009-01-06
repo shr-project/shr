@@ -208,8 +208,8 @@ static void frame_edit_hide(struct ContactEditViewData *data) {
 
     free(data->name);
     free(data->number);
-    data->name = frame_edit_name_get(data);
-    data->number = frame_edit_number_get(data);
+    data->name = strdup( frame_edit_name_get(data) );
+    data->number = strdup( frame_edit_number_get(data) );
 
     evas_object_del(data->bt1);
     evas_object_del(data->bt2);
@@ -250,7 +250,8 @@ static void frame_edit_save_clicked(struct ContactEditViewData *data, Evas_Objec
 
     data->saved = TRUE;
 
-    // TODO: Free name and number
+    free(data->name);
+    free(data->number);
 }
 
 static void frame_edit_save_callback(GError *error, struct ContactEditViewData *data) {
