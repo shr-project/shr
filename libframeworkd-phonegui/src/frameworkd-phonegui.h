@@ -19,6 +19,9 @@
 #define FRAMEWORKD_PHONEGUI_CONFIG "/etc/frameworkd-phonegui.conf"
 
 typedef enum {
+    PHONEGUI_DIALOG_ERROR_DO_NOT_USE,  
+        // This value is used for checking if we get a wrong pointer out of a HashTable. 
+        // So do not use it, and leave it first in this enum. ( because 0 == NULL )
     PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL,
     PHONEGUI_DIALOG_SIM_NOT_PRESENT
 } PhoneguiDialogType;
