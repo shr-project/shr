@@ -24,6 +24,8 @@
 #define SIM_AUTH_FILE "/usr/share/libframeworkd-phonegui-efl/sim-auth.edj"
 #define USSD_FILE "/usr/share/libframeworkd-phonegui-efl/ussd.edj"
 
+#define DELETE_TEXT_ICON "/usr/share/libframeworkd-phonegui-efl/edit-undo.png"
+
 struct DialerViewData *dialer_view_show(struct Window *win, GHashTable *options);
 void dialer_view_hide(struct DialerViewData *data);
 
