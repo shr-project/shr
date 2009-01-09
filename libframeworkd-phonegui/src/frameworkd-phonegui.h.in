@@ -16,7 +16,7 @@
 #ifndef _FRAMEWORKD_PHONEGUI_H
 #define _FRAMEWORKD_PHONEGUI_H
 
-#define FRAMEWORKD_PHONEGUI_CONFIG "/etc/frameworkd-phonegui.conf"
+#define FRAMEWORKD_PHONEGUI_CONFIG "@SYSCONFDIR@/frameworkd-phonegui.conf"
 
 typedef enum {
     PHONEGUI_DIALOG_ERROR_DO_NOT_USE,  

@@ -2,6 +2,8 @@ SUBDIRS = src data
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libframeworkd-phonegui.pc
 
+ACLOCAL_AMFLAGS = -I m4
+
 MAINTAINERCLEANFILES = \
 	Makefile.in Makefile aclocal.m4 config.guess \
 	config.h.in config.sub configure install-sh \

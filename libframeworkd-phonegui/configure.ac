@@ -11,10 +11,14 @@ AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(GLIB, glib-2.0)
+
+EXPAND(SYSCONFDIR, $sysconfdir)
+
 AC_OUTPUT([
 Makefile
 data/Makefile
 src/Makefile
+src/frameworkd-phonegui.h
 libframeworkd-phonegui.pc
 ])
 
