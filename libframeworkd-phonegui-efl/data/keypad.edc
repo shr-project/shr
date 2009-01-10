@@ -993,10 +993,16 @@ collections {
                 action, SIGNAL_EMIT "*" "input";
         }
         program {
-                name, "button0_clicked";
+                name, "button0_mouse_down";
+                signal, "mouse,down,1";
+                source, "button0";
+                action, SIGNAL_EMIT "0" "mouse_down";
+        }
+        program {
+                name, "button0_mouse_up";
                 signal, "mouse,up,1";
                 source, "button0";
-                action, SIGNAL_EMIT "0" "input";
+                action, SIGNAL_EMIT "0" "mouse_up";
         }
         program {
                 name, "button_rhomb_clicked";
