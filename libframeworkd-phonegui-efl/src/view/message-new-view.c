@@ -41,7 +41,7 @@ static void frame_recipient_number_add_clicked(struct MessageNewViewData *data, 
 static void frame_recipient_delete_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info);
 static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info);
 static void frame_recipient_process_recipient(GHashTable *properties, struct MessageNewViewData *data);
-static void frame_recipient_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data);
+static void frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, struct MessageNewViewData *data);
 static void frame_recipient_send_callback2(struct MessageNewViewData *data);
 
 static void frame_contact_add_show(struct MessageNewViewData *data);
@@ -294,12 +294,12 @@ static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Ev
             GHashTable *options = g_hash_table_new(NULL, NULL);
             // TODO: Remove strdup
             ogsmd_sms_send_message(strdup(number), strdup(data->content), options, frame_recipient_send_callback, data);
-            frame_recipient_send_callback(NULL, 1, data);
+            frame_recipient_send_callback(NULL, 1, "", data);
         }
     }
 }
 
-static void frame_recipient_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) {
+static void frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, struct MessageNewViewData *data) {
     data->messages_sent++;
     if(data->messages_sent == data->recipients->len) {
         sleep(1);
