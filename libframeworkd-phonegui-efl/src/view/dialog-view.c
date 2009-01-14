@@ -14,7 +14,10 @@ struct DialogViewData *dialog_view_show(struct Window *win, GHashTable *options)
     struct DialogViewData *data = g_slice_alloc0(sizeof(struct DialogViewData));
     data->win = win;
     data->type = g_hash_table_lookup(options, "type");
-    assert(data->type != NULL);
+
+    // Check if type was provided
+    gboolean type_exists = g_hash_table_lookup_extended(options, "type", NULL, NULL);
+    assert(type_exists == TRUE);
 
     window_layout_set(win, DIALOG_FILE, "dialog");
     if(data->type == PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL)
