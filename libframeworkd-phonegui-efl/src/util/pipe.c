@@ -27,7 +27,7 @@ PipeMessage* pipe_read(PipeHandler h) {
     PipeMessage *m = malloc(sizeof(PipeMessage));
     r = read(h.input, m, sizeof(PipeMessage));
     if(r == -1)
-        return -1;
+        return NULL;
     else
         return m;
 }

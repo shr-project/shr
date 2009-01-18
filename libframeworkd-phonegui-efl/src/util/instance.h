@@ -9,7 +9,7 @@ enum InstanceType {
     INSTANCE_DIALOG
 };
 
-void instance_manager_add(int type, void *id, struct Window *win);
+void instance_manager_add(int type, int id, struct Window *win);
 struct Window *instance_manager_remove(int type, int id);
 struct Window *instance_manager_remove_by_ecore_evas(Ecore_Evas *ee);
 

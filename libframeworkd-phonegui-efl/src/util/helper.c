@@ -1,21 +1,22 @@
+#define _XOPEN_SOURCE /* glibc2 needs this for strptime */
 #include "time.h"
 #include <time.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <string.h>
 #include <glib.h>
 
 time_t time_stringtotimestamp(const char *str) {
+    time_t ts = 0;
+    struct tm date;
     // Set locale
     setlocale(LC_TIME, "C");
 
     // Parse date string, for example: Sun Sep 28 23:20:24 2008 +0200
-    struct tm date;
-    if(strptime(str, "%a %h %e %T %Y %z", &date) == NULL) {
-        return NULL;
+    if(strptime(str, "%a %h %e %T %Y %z", &date) != NULL) {
+        // Generate long from struct tm
+        ts = mktime(&date);
     }
-
-    // Generate long from struct tm
-    time_t ts = mktime(&date);
-
     return ts;
 }
 
@@ -102,7 +103,7 @@ gboolean string_is_number(const char *string) {
         return FALSE;
     }
 
-    char *p = string;
+    const char *p = string;
     while(*p && *p == '+')
         *p++;
 
@@ -119,7 +120,7 @@ gboolean string_is_pin(const char *string) {
     if(strlen(string) < 4 || strlen(string) > 8)
         return FALSE;
 
-    char *p = string;
+    const char *p = string;
     while(*p) {
         if(*p < '0' || *p > '9')
             return FALSE;
@@ -134,7 +135,7 @@ gboolean string_is_puk(const char *string) {
     if(strlen(string) != 8)
         return FALSE;
 
-    char *p = string;
+    const char *p = string;
     while(*p) {
         if(*p < '0' || *p > '9')
             return FALSE;

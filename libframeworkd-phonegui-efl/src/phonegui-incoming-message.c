@@ -18,7 +18,7 @@ void phonegui_message_show(const int id) {
 
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "win", win);
-    g_hash_table_insert(options, "id", id);
+    g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
     async_trigger(_show, options);
 }
 

@@ -25,7 +25,7 @@ typedef enum {
 } MessagesModes;
 
 
-static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, struct MessageShowViewData *data);
+static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data);
 static void retrieve_callback2(struct MessageShowViewData *data);
 static void message_show_view_close_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_answer_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
@@ -42,7 +42,7 @@ struct MessageShowViewData *message_show_view_show(struct Window *win, GHashTabl
 
     struct MessageShowViewData *data = g_slice_alloc0(sizeof(struct MessageShowViewData));
     data->win = win;
-    data->id = g_hash_table_lookup(options, "id");
+    data->id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
 
     if(options != NULL) {
         data->callback = g_hash_table_lookup(options, "delete_callback"); 
@@ -68,7 +68,8 @@ void message_show_view_hide(struct MessageShowViewData *data) {
 
 
 
-static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, struct MessageShowViewData *data) {
+static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer _data) {
+    struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
     g_debug("retrieve_callback()");
     data->status = strdup(status);
     data->number = strdup(number);
@@ -83,7 +84,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, MESSAGE_FILE, "message_show");
 
-    char *timestr = g_value_get_string(g_hash_table_lookup(data->properties, "timestamp"));
+    const char *timestr = g_value_get_string(g_hash_table_lookup(data->properties, "timestamp"));
     time_t timestamp = time_stringtotimestamp(timestr);
     char *status = data->status;
     char *number = data->number;
@@ -159,7 +160,7 @@ static void message_show_view_answer_clicked(struct MessageShowViewData *data, E
 
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(options, "id", data->id);
+    g_hash_table_insert(options, "id", GINT_TO_POINTER(data->id));
     g_hash_table_insert(options, "delete_callback", message_show_view_delete_callback);
     g_hash_table_insert(options, "delete_callback_data", data);
 

@@ -62,7 +62,7 @@ struct ContactEditViewData *contact_edit_view_show(struct Window *win, GHashTabl
             data->name = strdup(g_hash_table_lookup(options, "name"));
 
             // ID should only be set if name is specified
-            data->id = g_hash_table_lookup(options, "id");
+            data->id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
         }
 
         if(g_hash_table_lookup(options, "number")) {
@@ -107,7 +107,9 @@ static void get_phonebook_info_callback(GError *error, GHashTable *info, gpointe
 }
 
 
-void add_entry_index(GValueArray *entry, int* indizes) {
+void add_entry_index(gpointer _entry, gpointer _indizes) {
+    GValueArray *entry = (GValueArray *)_entry;
+    int *indizes = (int *)_indizes;
     int i = 0;
     while(indizes[i] != -1)
         i++;
@@ -218,8 +220,8 @@ static void frame_edit_hide(struct ContactEditViewData *data) {
 
     free(data->name);
     free(data->number);
-    data->name = strdup( frame_edit_name_get(data) );
-    data->number = strdup( frame_edit_number_get(data) );
+    data->name = frame_edit_name_get(data);
+    data->number = frame_edit_number_get(data);
 
     evas_object_del(data->bt1);
     evas_object_del(data->bt2);
@@ -234,8 +236,17 @@ static void frame_edit_hide(struct ContactEditViewData *data) {
 }
 
 static void frame_edit_save_clicked(struct ContactEditViewData *data, Evas_Object *obj, void *event_info) {
-    if(!strlen(frame_edit_name_get(data)) || !strlen(frame_edit_number_get(data)) || !string_is_number(frame_edit_number_get(data)))
+    char *temp_name = frame_edit_name_get(data);
+    char *temp_number = frame_edit_number_get(data);
+    if(!strlen(temp_name) || !strlen(temp_number) || !string_is_number(temp_number))
+    {
+        free (temp_name);
+        free (temp_number);
         return;
+    }
+
+    free (temp_name);
+    free (temp_number);
 
     window_frame_show(data->win, data, frame_loading_show, frame_loading_hide);
 
@@ -279,13 +290,13 @@ static void frame_edit_close_clicked(struct ContactEditViewData *data, Evas_Obje
 }
 
 static char* frame_edit_name_get(struct ContactEditViewData *data) {
-    char *name = g_strstrip(elm_entry_entry_get(data->entry_name));
+    char *name = g_strstrip(strdup(elm_entry_entry_get(data->entry_name)));
     string_strip_html(name);
     return name;
 }
 
 static char* frame_edit_number_get(struct ContactEditViewData *data) {
-    char *number = g_strstrip(elm_entry_entry_get(data->entry_number));
+    char *number = g_strstrip(strdup(elm_entry_entry_get(data->entry_number)));
     string_strip_html(number);
     return number;
 }

@@ -4,7 +4,7 @@
 
 struct Instance {
     int type;
-    void *id;
+    int id;
     struct Window *win;
 };
 
@@ -13,7 +13,7 @@ static int instances_size = 0;
 static struct Instance *instances;
 
 
-void instance_manager_add(int type, void *id, struct Window *win) {
+void instance_manager_add(int type, int id, struct Window *win) {
     g_debug("instance_manager_add: type=%d, id=%d, window=%d", type, id, win);
     instances_size++;
     if(instances_size == 1) {
@@ -45,7 +45,7 @@ struct Window *instance_manager_remove(int type, int id) {
 
     // TODO: Free things
 
-    return -1;
+    return NULL;
 }
 
 
@@ -62,7 +62,7 @@ struct Window *instance_manager_remove_by_ecore_evas(Ecore_Evas *ee) {
 
     // TODO: Free things
 
-    return -1;
+    return NULL;
 }
 
 

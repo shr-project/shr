@@ -32,12 +32,12 @@ enum SimAuthModes {
 void sim_auth_update(struct SimAuthInputViewData *data);
 void sim_auth_clear(struct SimAuthInputViewData *data);
 
-void pin_callback(GError* error, struct SimAuthInputViewData *data);
+void pin_callback(GError* error, gpointer data);
 gboolean pin_wrong_callback(struct SimAuthInputViewData *data);
-void puk_callback(GError* error,struct SimAuthInputViewData *data);
+void puk_callback(GError* error, gpointer data);
 void puk_callback2(struct SimAuthInputViewData *data);
 int pins_different_callback(struct SimAuthInputViewData *data);
-void sim_auth_callback(GError *error, int status, struct SimAuthInputViewData *data);
+void sim_auth_callback(GError *error, int status, gpointer data);
 int reset_callback(struct SimAuthInputViewData *data);
 
 void sim_auth_keypad_clicked(struct SimAuthInputViewData *data, Evas_Object *obj, char input);
@@ -62,7 +62,7 @@ struct SimAuthInputViewData *sim_auth_input_view_show(struct Window *win, GHashT
     struct SimAuthInputViewData *data = g_slice_alloc0(sizeof(struct SimAuthInputViewData));
     data->win = win;
 
-    int status = g_hash_table_lookup(options, "status");
+    int status = GPOINTER_TO_INT(g_hash_table_lookup(options, "status"));
     if(status == SIM_PIN_REQUIRED) {
         g_debug("SIM_PIN_REQUIRED");
         data->mode = MODE_PIN;
@@ -72,7 +72,7 @@ struct SimAuthInputViewData *sim_auth_input_view_show(struct Window *win, GHashT
     } else {
         g_error("Unknown status %d", status);
     }
-        
+
     window_frame_show(win, data, frame_input_show, frame_input_hide);
     return data;
 }
@@ -128,7 +128,8 @@ void sim_auth_clear(struct SimAuthInputViewData *data) {
 
 
 
-void pin_callback(GError* error, struct SimAuthInputViewData *data) {
+void pin_callback(GError* error, gpointer _data) {
+    struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
     g_debug("pin_callback()");
     if(error != NULL) {
         g_debug("error");
@@ -148,7 +149,8 @@ gboolean pin_wrong_callback(struct SimAuthInputViewData *data) {
 }
 
 
-void puk_callback(GError* error, struct SimAuthInputViewData *data) {
+void puk_callback(GError* error, gpointer _data) {
+    struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
     g_debug("puk_callback()");
     if(error != NULL) {
         if(IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED) || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
@@ -173,7 +175,8 @@ int reset_callback(struct SimAuthInputViewData *data) {
     return 0;
 }
 
-void sim_auth_callback(GError *error, int status, struct SimAuthInputViewData *data) {
+void sim_auth_callback(GError *error, int status, gpointer _data) {
+    struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
     g_debug("sim_auth_callback()");
 
     if(status == SIM_PIN_REQUIRED)

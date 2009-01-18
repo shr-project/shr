@@ -13,7 +13,7 @@ static void dialog_view_close_clicked(void *userdata, Evas_Object *obj, void *ev
 struct DialogViewData *dialog_view_show(struct Window *win, GHashTable *options) {
     struct DialogViewData *data = g_slice_alloc0(sizeof(struct DialogViewData));
     data->win = win;
-    data->type = g_hash_table_lookup(options, "type");
+    data->type = GPOINTER_TO_INT(g_hash_table_lookup(options, "type"));
 
     // Check if type was provided
     gboolean type_exists = g_hash_table_lookup_extended(options, "type", NULL, NULL);

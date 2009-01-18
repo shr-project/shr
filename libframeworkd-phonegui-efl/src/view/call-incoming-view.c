@@ -14,12 +14,12 @@ struct CallIncomingViewData *call_incoming_view_show(struct Window *win, GHashTa
     struct CallIncomingViewData *data = g_slice_alloc0(sizeof(struct CallIncomingViewData));
     data->parent.options = options;
     data->parent.win = win;
-    data->parent.id = g_hash_table_lookup(options, "id");
+    data->parent.id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
     data->parent.number = g_hash_table_lookup(options, "number");
     data->parent.dtmf_active = FALSE;
 
     window_layout_set(win, CALL_FILE, "incoming_call");
-    
+
     data->number = elm_label_add( window_evas_object_get(win) );
     elm_label_label_set( data->number,  data->parent.number);
     window_swallow(win, "number", data->number);
@@ -63,7 +63,7 @@ void call_incoming_view_hide(struct CallIncomingViewData *data) {
     evas_object_del(data->bt2);
 
     if(data->parent.dtmf_active) {
-        call_dtmf_disable(data);
+        call_dtmf_disable(&data->parent);
     }
 
     if(speaker_active) {

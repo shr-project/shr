@@ -15,7 +15,7 @@ void call_button_accept_clicked(struct CallViewData *data, Evas_Object *obj, voi
     ogsmd_call_activate(data->id, NULL, NULL);
 
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(options, "id", data->id);
+    g_hash_table_insert(options, "id", GINT_TO_POINTER(data->id));
     g_hash_table_insert(options, "number", strdup(data->number));
     window_view_show(data->win, options, call_active_view_show, call_active_view_hide);
 }

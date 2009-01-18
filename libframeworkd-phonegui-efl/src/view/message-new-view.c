@@ -40,7 +40,7 @@ static void frame_recipient_contact_add_clicked(struct MessageNewViewData *data,
 static void frame_recipient_number_add_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info);
 static void frame_recipient_delete_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info);
 static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info);
-static void frame_recipient_process_recipient(GHashTable *properties, struct MessageNewViewData *data);
+static void frame_recipient_process_recipient(gpointer _properties, gpointer _data);
 static void frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, struct MessageNewViewData *data);
 static void frame_recipient_send_callback2(struct MessageNewViewData *data);
 
@@ -140,7 +140,7 @@ static void frame_content_hide(struct MessageNewViewData *data) {
     struct Window *win = data->win;
 
     // Save content
-    data->content = strdup(g_strstrip(elm_entry_entry_get(data->entry)));
+    data->content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
     string_strip_html(data->content);
 
     // Free objects
@@ -157,7 +157,7 @@ static void frame_content_close_clicked(struct MessageNewViewData *data, Evas_Ob
 }
 
 static void frame_content_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
-    char *content = strdup(g_strstrip(elm_entry_entry_get(data->entry)));
+    char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
     string_strip_html(content);
     if(strlen(content)) {
         data->mode = MODE_RECIPIENT;
@@ -167,7 +167,7 @@ static void frame_content_continue_clicked(struct MessageNewViewData *data, Evas
 }
 
 static void frame_content_content_changed(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
-    char *content = strdup(g_strstrip(elm_entry_entry_get(data->entry)));
+    char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
     string_strip_html(content);
     g_debug("content: %s", content);
 
@@ -311,7 +311,10 @@ static void frame_recipient_send_callback2(struct MessageNewViewData *data) {
     window_destroy(data->win, NULL);
 }
 
-static void frame_recipient_process_recipient(GHashTable *properties, struct MessageNewViewData *data) {
+static void frame_recipient_process_recipient(gpointer _properties, gpointer _data) {
+    GHashTable *properties = (GHashTable *)_properties;
+    struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
+
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(data->tree_recipients), NULL, data->col1_recipients, properties, NULL);
     etk_tree_row_data_set(row, properties);
 }

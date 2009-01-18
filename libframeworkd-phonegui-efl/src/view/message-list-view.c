@@ -134,9 +134,10 @@ void message_list_view_hide(struct MessageListViewData *data) {
 }
 
 
-static void add_integer_timestamp_to_message(GValueArray *message) {
+static void add_integer_timestamp_to_message(gpointer _message, gpointer user_data) {
+    GValueArray *message = (GValueArray *)_message;
     GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
-    char *timestr = g_value_get_string(g_hash_table_lookup(details, "timestamp"));
+    const char *timestr = g_value_get_string(g_hash_table_lookup(details, "timestamp"));
     time_t timestamp = time_stringtotimestamp(timestr);
 
     // Insert integer timestamp into array
@@ -147,10 +148,12 @@ static void add_integer_timestamp_to_message(GValueArray *message) {
 }
 
 
-static gint compare_messages(GValueArray **a, GValueArray **b) {
+static gint compare_messages(gconstpointer _a, gconstpointer _b) {
+    GValueArray **a = (GValueArray **)_a;
+    GValueArray **b = (GValueArray **)_b;
     GHashTable *h1 = g_value_get_boxed(g_value_array_get_nth(*a, 4));
     GHashTable *h2 = g_value_get_boxed(g_value_array_get_nth(*b, 4));
-    
+
     long la = g_value_get_long(g_hash_table_lookup(h1, "timestamp_int"));
     long lb = g_value_get_long(g_hash_table_lookup(h2, "timestamp_int"));
 
@@ -163,7 +166,9 @@ static gint compare_messages(GValueArray **a, GValueArray **b) {
 }
 
 
-static void process_message(GValueArray *message, struct MessageListViewData *data) {
+static void process_message(gpointer _message, gpointer _data) {
+    GValueArray *message = (GValueArray *)_message;
+    struct MessageListViewData *data = (struct MessageListViewData *)_data;
     GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
     long timestamp = g_value_get_long(g_hash_table_lookup(details, "timestamp_int"));
     char datestr[32];
@@ -205,7 +210,7 @@ static void message_list_view_answer_clicked(struct MessageListViewData *data, E
         GValueArray *message = etk_tree_row_data_get(data->selected_row);
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-        g_hash_table_insert(options, "recipient", g_value_get_string(g_value_array_get_nth(message, 2)));
+        g_hash_table_insert(options, "recipient", (gpointer)g_value_get_string(g_value_array_get_nth(message, 2))); /* lose the const */
 
         struct Window *win = window_new("SMS Answer");
         window_init(win);
@@ -231,7 +236,7 @@ static void message_list_view_show_clicked(struct MessageListViewData *data, Eva
         GValueArray *message = etk_tree_row_data_get(data->selected_row);
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-        g_hash_table_insert(options, "id", g_value_get_int(g_value_array_get_nth(message, 0)));
+        g_hash_table_insert(options, "id", GINT_TO_POINTER(g_value_get_int(g_value_array_get_nth(message, 0))));
         g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
         g_hash_table_insert(options, "delete_callback_data", data);
 
@@ -251,7 +256,7 @@ static void message_list_view_delete_clicked(struct MessageListViewData *data, E
         GValueArray *message = etk_tree_row_data_get(data->selected_row);
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-        g_hash_table_insert(options, "id", g_value_get_int(g_value_array_get_nth(message, 0)));
+        g_hash_table_insert(options, "id", GINT_TO_POINTER(g_value_get_int(g_value_array_get_nth(message, 0))));
         g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
         g_hash_table_insert(options, "delete_callback_data", data);
 

@@ -16,7 +16,7 @@ int async_fd_input_get()
 
 void async_dispatch() {
     PipeMessage *m;
-    while((m = pipe_read(pipe_handler)) != -1) {
+    while((m = pipe_read(pipe_handler)) != NULL) {
         if(m->callback != NULL) {
             m->callback(m->userdata); 
         }

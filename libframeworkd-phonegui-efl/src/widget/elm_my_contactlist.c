@@ -27,7 +27,7 @@ static void _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *eve
 //static void _sub_del(void *data, Evas_Object *obj, void *event_info);
 static void _signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source);
 static void _retrieve_callback2(void *data);
-static void _process_entry(GValueArray *entry, void *data);
+static void _process_entry(gpointer _entry, gpointer data);
 
 static void
 _del_hook(Evas_Object *obj)
@@ -89,7 +89,9 @@ _signal_clicked(void *data, Evas_Object *o, const char *emission, const char *so
 
 
 static gint
-_compare_entries(GValueArray **a, GValueArray **b) {
+_compare_entries(gconstpointer _a, gconstpointer _b) {
+    GValueArray **a = (GValueArray **)_a;
+    GValueArray **b = (GValueArray **)_b;
     return strcasecmp(
         g_value_get_string(g_value_array_get_nth(*a, 1)),
         g_value_get_string(g_value_array_get_nth(*b, 1))
@@ -98,11 +100,12 @@ _compare_entries(GValueArray **a, GValueArray **b) {
 
 
 static void
-_process_entry(GValueArray *entry, void *data) {
+_process_entry(gpointer _entry, gpointer data) {
+    GValueArray *entry = _entry;
     Widget_Data *wd = elm_widget_data_get(data);
 
     GHashTable *parameters = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(parameters, strdup("id"), g_value_get_int(g_value_array_get_nth(entry, 0)));
+    g_hash_table_insert(parameters, strdup("id"), GINT_TO_POINTER(g_value_get_int(g_value_array_get_nth(entry, 0))));
     g_hash_table_insert(parameters, strdup("name"), strdup(g_value_get_string(g_value_array_get_nth(entry, 1))));
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(entry, 2))));
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(wd->tree), NULL, wd->col1, parameters, NULL);

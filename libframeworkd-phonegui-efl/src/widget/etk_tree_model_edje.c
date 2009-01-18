@@ -149,9 +149,10 @@ static void _edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Obj
 
 
 /* Edje: set_text_cb() */
-void _edje_set_text_cb(gpointer key, gpointer value, Evas_Object *cell_object) 
+void _edje_set_text_cb(gpointer key, gpointer value, gpointer user_data)
 {
    //g_debug("SET: %s", key);
+   Evas_Object *cell_object = user_data;
    edje_object_part_text_set(cell_object, key, value);
 }
 

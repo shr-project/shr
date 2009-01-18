@@ -47,10 +47,10 @@ static void _show(const int id, const int status, const char *number, int type) 
 
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "win", win);
-    g_hash_table_insert(options, "id", id);
-    g_hash_table_insert(options, "status", status);
-    g_hash_table_insert(options, "number", number);
-    g_hash_table_insert(options, "type", type);
+    g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
+    g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
+    g_hash_table_insert(options, "number", (char *)number); /* we just loose the const for now */
+    g_hash_table_insert(options, "type", GINT_TO_POINTER(type));
 
     async_trigger(_show_async, options);
 }

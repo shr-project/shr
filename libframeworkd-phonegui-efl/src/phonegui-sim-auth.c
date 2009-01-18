@@ -19,7 +19,7 @@ void phonegui_sim_auth_show(const int status) {
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "win", win);
-        g_hash_table_insert(options, "status", status);
+        g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
         async_trigger(_show, options);
     }
 }
