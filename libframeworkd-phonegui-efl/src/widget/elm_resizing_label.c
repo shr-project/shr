@@ -121,7 +121,7 @@ _signal_entry_changed(void *data, Evas_Object *obj, const char *emission, const 
    _sizing_eval(data);
 }
 
-EAPI Evas_Object *
+Evas_Object *
 elm_resizing_label_add(Evas_Object *parent)
 {
    Evas_Object *obj;
@@ -155,7 +155,7 @@ elm_resizing_label_add(Evas_Object *parent)
    return obj;
 }
 
-EAPI void
+void
 elm_resizing_label_label_set(Evas_Object *obj, const char *entry)
 {
    Widget_Data *wd = elm_widget_data_get(obj);
@@ -198,7 +198,7 @@ elm_resizing_label_label_set(Evas_Object *obj, const char *entry)
    _sizing_eval(obj);
 }
 
-EAPI const char *
+const char *
 elm_resizing_label_label_get(Evas_Object *obj)
 {
    Widget_Data *wd = elm_widget_data_get(obj);

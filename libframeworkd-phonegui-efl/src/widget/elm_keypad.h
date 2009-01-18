@@ -3,6 +3,6 @@
 
 #include <Elementary.h>
 
-EAPI Evas_Object* elm_keypad_add(Evas_Object *parent);
+Evas_Object* elm_keypad_add(Evas_Object *parent);
 
 #endif

@@ -110,7 +110,7 @@ _plus_trigered( void *data )
    evas_object_smart_callback_call(wd->widget, "clicked", '+');
 }
 
-EAPI Evas_Object *
+Evas_Object *
 elm_keypad_add(Evas_Object *parent)
 {
    // Evas_Object *obj; Instead I'm using the wd->widget variable

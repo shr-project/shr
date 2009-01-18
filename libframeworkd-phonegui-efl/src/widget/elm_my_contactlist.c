@@ -142,7 +142,7 @@ _retrieve_callback2(void *data) {
 }
 
 
-EAPI Evas_Object *
+Evas_Object *
 elm_my_contactlist_add(Evas_Object *parent)
 {
    // Evas_Object *obj; Instead I'm using the wd->widget variable
@@ -194,7 +194,7 @@ elm_my_contactlist_add(Evas_Object *parent)
    return wd->widget;
 }
 
-EAPI GHashTable *
+GHashTable *
 elm_my_contactlist_selected_row_get(void *data)
 {
     Widget_Data *wd = elm_widget_data_get(data);
@@ -206,7 +206,7 @@ elm_my_contactlist_selected_row_get(void *data)
     return NULL;
 }
 
-EAPI void
+void
 elm_my_contactlist_refresh(void *data)
 {
     Widget_Data *wd = elm_widget_data_get(data);
