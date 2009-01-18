@@ -28,7 +28,7 @@ static void _show(struct Window *win) {
     window_view_show(win, NULL, contact_list_view_show, contact_list_view_hide);
 }
 
-static void contacts_hide(struct Window *win) {
+static void _hide(struct Window *win) {
     window_destroy(win, NULL);
 }
 
