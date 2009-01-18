@@ -16,7 +16,7 @@ void phonegui_message_show(const int id) {
     struct Window *win = window_new("New Message");
     instance_manager_add(INSTANCE_INCOMING_MESSAGE, id, win);
 
-    GHashTable *options = g_hash_table_new(NULL, g_str_equal);
+    GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "win", win);
     g_hash_table_insert(options, "id", id);
     async_trigger(_show, options);

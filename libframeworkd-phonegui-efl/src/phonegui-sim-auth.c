@@ -17,7 +17,7 @@ void phonegui_sim_auth_show(const int status) {
     if(win == NULL) {
         win = window_new("SIM Auth");
 
-        GHashTable *options = g_hash_table_new(NULL, g_str_equal);
+        GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "win", win);
         g_hash_table_insert(options, "status", status);
         async_trigger(_show, options);
