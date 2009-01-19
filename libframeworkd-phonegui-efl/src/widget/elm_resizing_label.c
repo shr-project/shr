@@ -1,7 +1,7 @@
 #include <Elementary.h>
 #include "elm_resizing_label.h"
+#include "elm_config.h"
 
-#define ELM_RESIZING_LABEL "/usr/share/libframeworkd-phonegui-efl/elm-resizing-label.edj"
 #define ELM_NEW(t) calloc(1, sizeof(t))
 
 /*

@@ -3,7 +3,7 @@
 // for g_debug()
 #include <glib-2.0/glib.h>
 
-#define UI_FILE "/usr/share/libframeworkd-phonegui-efl/keypad.edj"
+#include "elm_config.h"
 
 // TODO: Talk about it with raster
 // got it from elm_priv.h
@@ -122,10 +122,10 @@ elm_keypad_add(Evas_Object *parent)
    wd->widget = elm_widget_add(e);
    elm_widget_data_set(wd->widget, wd);
    elm_widget_del_hook_set(wd->widget, _del_hook);
-   
+
    wd->keypad = edje_object_add(e);
    g_debug("keypad evas object: %d", wd->keypad);
-   edje_object_file_set(wd->keypad, UI_FILE, "keypad");
+   edje_object_file_set(wd->keypad, KEYPAD_FILE, "keypad");
    edje_object_signal_callback_add(wd->keypad, "*", "input", _signal_clicked, wd->widget);
    edje_object_signal_callback_add(wd->keypad, "0", "mouse_up", _zero_mouse_up, wd->widget);
    edje_object_signal_callback_add(wd->keypad, "0", "mouse_down", _zero_mouse_down, wd->widget);
@@ -133,7 +133,7 @@ elm_keypad_add(Evas_Object *parent)
 
    elm_widget_resize_object_set(wd->widget, wd->keypad);
    //evas_object_smart_callback_add(wd->widget, "sub-object-del", _sub_del, wd->widget);
-   
+
    _sizing_eval(wd->widget);
    return wd->widget;
 }

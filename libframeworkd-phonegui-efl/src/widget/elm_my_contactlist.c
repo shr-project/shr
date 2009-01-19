@@ -3,8 +3,7 @@
 #include <glib-object.h>
 #include <Etk.h>
 #include "async.h"
-
-#define UI_FILE "/usr/share/libframeworkd-phonegui-efl/contacts.edj"
+#include "elm_config.h"
 
 // TODO: Talk about it with raster
 // got it from elm_priv.h
@@ -158,10 +157,10 @@ elm_my_contactlist_add(Evas_Object *parent)
    wd->widget_pointer = malloc(sizeof(Evas_Object **));
    *(wd->widget_pointer) = wd->widget;
    elm_widget_del_hook_set(wd->widget, _del_hook);
-   
+
   /* wd->keypad = edje_object_add(e);
    g_debug("keypad evas object: %d", wd->keypad);
-   edje_object_file_set(wd->keypad, UI_FILE, "keypad");
+   edje_object_file_set(wd->keypad, KEYPAD_FILE, "keypad");
    edje_object_signal_callback_add(wd->keypad, "*", "input", _signal_clicked, wd->widget);*/
 
 
@@ -172,7 +171,7 @@ elm_my_contactlist_add(Evas_Object *parent)
     etk_tree_multiple_select_set(ETK_TREE(wd->tree), ETK_FALSE);
 
     wd->col1 = etk_tree_col_new(ETK_TREE(wd->tree), "Title", 300, 0.0);
-    etk_tree_col_model_add(wd->col1, etk_tree_model_edje_new(UI_FILE, "row"));
+    etk_tree_col_model_add(wd->col1, etk_tree_model_edje_new(CONTACTS_FILE, "row"));
     etk_tree_build(ETK_TREE(wd->tree));
 
     Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(wd->tree));

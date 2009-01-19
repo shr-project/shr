@@ -52,6 +52,7 @@ Makefile
 data/Makefile
 src/Makefile
 src/view/views.h
+src/widget/elm_config.h
 libframeworkd-phonegui-efl.pc
 ])
 
