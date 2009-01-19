@@ -87,10 +87,6 @@ void debug_sqlite3_error(const char* activity, const int rc, int fatal) {
 	} else {
 		g_debug("phonelog - error while %s: %s (code=%d)\n", activity, err, rc);
 	}
-
-	if (err) {
-		sqlite3_free(&err);
-	}
 }
 
 void phonelog_init_database() {
@@ -164,21 +160,12 @@ int phonelog_add_new_call(const gchar* number) {
 	if (db) {
 		g_debug("phonelog - add new call, number: %s", number);
 
-		if ((rc = sqlite3_reset(insert_call)) != SQLITE_OK)
-			goto sqlite_error;
-
-		if ((rc = sqlite3_bind_text(insert_call, 1, number, -1,
-				SQLITE_TRANSIENT)) != SQLITE_OK)
-			goto sqlite_error;
-
-		if ((rc = sqlite3_step(insert_call)) != SQLITE_DONE)
-			goto sqlite_error;
-
-		return sqlite3_last_insert_rowid(db);
+		if (((rc = sqlite3_reset(insert_call)) == SQLITE_OK) &&
+            ((rc = sqlite3_bind_text(insert_call, 1, number, -1, SQLITE_TRANSIENT)) == SQLITE_OK) &&
+            ((rc = sqlite3_step(insert_call)) == SQLITE_DONE))
+		    return sqlite3_last_insert_rowid(db);
+        debug_sqlite3_error("inserting call", rc, 0);
 	}
-	return -1;
-
-	sqlite_error: debug_sqlite3_error("inserting call", rc, 0);
 	return -1;
 }
 
@@ -189,20 +176,10 @@ void phonelog_log_call_event(const int unique_id, const int status) {
 		g_debug("phonelog - logging call event, unique id: %u, status: %u",
 				unique_id, status);
 
-		if ((rc = sqlite3_reset(insert_call_event)) != SQLITE_OK)
-			goto sqlite_error;
-
-		if ((rc = sqlite3_bind_int(insert_call_event, 1, unique_id))
-				!= SQLITE_OK)
-			goto sqlite_error;
-
-		if ((rc = sqlite3_bind_int(insert_call_event, 2, status)) != SQLITE_OK)
-			goto sqlite_error;
-
-		if ((rc = sqlite3_step(insert_call_event)) != SQLITE_DONE)
-			goto sqlite_error;
-	}
-	return;
-
-	sqlite_error: debug_sqlite3_error("inserting call event", rc, 0);
+		if (((rc = sqlite3_reset(insert_call_event)) != SQLITE_OK) ||
+		    ((rc = sqlite3_bind_int(insert_call_event, 1, unique_id)) != SQLITE_OK) ||
+            ((rc = sqlite3_bind_int(insert_call_event, 2, status)) != SQLITE_OK) ||
+            ((rc = sqlite3_step(insert_call_event)) != SQLITE_DONE))
+	        debug_sqlite3_error("inserting call event", rc, 0);
+    }
 }
