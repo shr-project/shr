@@ -44,12 +44,14 @@ AC_ARG_WITH(edje-cc,
 ])
 AC_SUBST(edje_cc)
 
+EXPAND(DATADIR, $datadir)
 
 # output stuff
 AC_OUTPUT([
 Makefile
 data/Makefile
 src/Makefile
+src/view/views.h
 libframeworkd-phonegui-efl.pc
 ])
 
