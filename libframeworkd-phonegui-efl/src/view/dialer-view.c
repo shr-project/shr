@@ -187,7 +187,7 @@ static void frame_dialer_save_clicked(struct DialerViewData *data, Evas_Object *
 
 static void frame_dialer_call_clicked(struct DialerViewData *data, Evas_Object *obj, void *event_info) {
     if(strlen(data->number)) {
-        if(data->number[0] == '*') {
+        if(data->number[strlen(data->number)-1] == '#') {
             g_debug("USSD Request");
             ogsmd_network_send_ussd_request(data->number, NULL, NULL);
         } else {
