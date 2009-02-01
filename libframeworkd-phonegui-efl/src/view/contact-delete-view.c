@@ -70,7 +70,7 @@ static void frame_delete_show(void *userdata) {
     window_layout_set(win, CONTACTS_FILE, "delete");
 
     data->info_label = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->info_label,  "Do you really want to delet it?");
+    elm_label_label_set( data->info_label,  "Do you really want to delete it?");
     window_swallow(win, "info", data->info_label);
     evas_object_show(data->info_label);
 
