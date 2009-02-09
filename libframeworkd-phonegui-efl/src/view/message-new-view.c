@@ -159,10 +159,11 @@ static void frame_content_close_clicked(struct MessageNewViewData *data, Evas_Ob
 static void frame_content_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
     char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
     string_strip_html(content);
-    if(strlen(content)) {
-        data->mode = MODE_RECIPIENT;
-        window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
+    if(strlen(content)==0) {
+        //TODO: display notify about sending blank message
     }
+    data->mode = MODE_RECIPIENT;
+    window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
     free(content);
 }
 
