@@ -195,7 +195,7 @@ static void frame_recipient_show(struct MessageNewViewData *data) {
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Continue");
+    elm_button_label_set(data->bt2, "Send");
     evas_object_smart_callback_add(data->bt2, "clicked", frame_recipient_continue_clicked, data);
     window_swallow(win, "button_continue", data->bt2);
     evas_object_show(data->bt2);
