@@ -173,7 +173,7 @@ static void frame_content_content_changed(struct MessageNewViewData *data, Evas_
     g_debug("content: %s", content);
 
     char text[64];
-    sprintf(text, "%d characters left", 160 - (strlen(content) % 160));
+    sprintf(text, "%d characters left [%d]", 160 - (strlen(content) % 160), strlen(content) / 160);
     window_text_set(data->win, "characters_left", text);
     free(content);
 }
