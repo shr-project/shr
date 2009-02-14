@@ -364,9 +364,9 @@ static void frame_contact_add_add_clicked(struct MessageNewViewData *data, Evas_
     GHashTable *properties = elm_my_contactlist_selected_row_get(data->list_contacts);
     if(properties != NULL) {
         g_ptr_array_add(data->recipients, properties);
+        data->mode = MODE_RECIPIENT;
+        window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
     }
-    data->mode = MODE_RECIPIENT;
-    window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
 }
 
 
