@@ -365,6 +365,8 @@ static void frame_contact_add_add_clicked(struct MessageNewViewData *data, Evas_
     if(properties != NULL) {
         g_ptr_array_add(data->recipients, properties);
     }
+    data->mode = MODE_RECIPIENT;
+    window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
 }
 
 
