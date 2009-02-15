@@ -452,19 +452,26 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
             phonegui_dialog_show(PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL);
         }
     } else {
+		  g_debug("MessageBookInfo failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         /* TODO */
     }
 }
 
 
 void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata) {
-    g_debug("creating contact_cache");
-    contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-    if (!contact_cache) {
-        g_error("could not allocate contact cache");
-        return;
-    }
-    g_ptr_array_foreach(contacts, cache_phonebook_entry, NULL);
+	 g_debug("cache_phonebook_callback called");
+	 if(error == NULL && contacts != NULL) {
+		  g_debug("creating contact_cache");
+		  contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+	 	  if (!contact_cache) {
+	 	      g_error("could not allocate contact cache");
+	 	      return;
+	 	  }
+	 	  g_ptr_array_foreach(contacts, cache_phonebook_entry, NULL);
+	 }
+	 else
+		  g_debug("caching phonebook failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+
 }
 
 
@@ -476,6 +483,7 @@ void cache_phonebook_entry(GValueArray *entry, void *data) {
 
 
 char *cache_phonebook_lookup(char *number) {
+    if(contact_cache == NULL) return ("");
     g_debug("looking for '%s' in contacts_cache", number);
     if (!number || !*number || !strcmp(number, "*****")) {
         g_debug("contact_cache: got unknown number");
