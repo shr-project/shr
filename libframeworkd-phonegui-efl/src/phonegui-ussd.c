@@ -18,7 +18,7 @@ void phonegui_ussd_show(int mode, const char *message) {
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "mode", GINT_TO_POINTER(mode));
-        g_hash_table_insert(options, "message", (char *)message); /* we lose the const here */
+        g_hash_table_insert(options, "message", g_strdup((char *)message)); /* we lose the const here */
         g_hash_table_insert(options, "callback_close", _reset);
         async_trigger(_show, options);
     }
