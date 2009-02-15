@@ -4,6 +4,7 @@
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
  *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -43,6 +44,7 @@ typedef struct {
 } call_t;
 
 gboolean sim_auth_active = FALSE;
+gboolean sim_ready = FALSE;
 call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
 int incoming_calls_size = 0;
@@ -68,6 +70,7 @@ int main(int argc, char ** argv) {
     /* Register dbus handlers */
     fwHandler = frameworkd_handler_new();
     fwHandler->simAuthStatus = ophonekitd_sim_auth_status_handler;
+    fwHandler->simReadyStatus = ophonekitd_sim_ready_status_handler;
     fwHandler->simIncomingStoredMessage = ophonekitd_sim_incoming_stored_message_handler;
     fwHandler->callCallStatus = ophonekitd_call_status_handler;
     fwHandler->deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
@@ -78,15 +81,15 @@ int main(int argc, char ** argv) {
 
     dbus_g_thread_init ();
 
-    
+
     mainloop = g_main_loop_new (NULL, FALSE);
     g_debug("Entering glib main loop");
-    
+
     ophonekitd_dbus_start();
-    
+
     frameworkd_handler_connect(fwHandler);
     g_debug("Connected to the buses");
-    
+
     /* Start glib main loop and run list_resources() */
     g_timeout_add(0, list_resources, NULL);
     g_main_loop_run(mainloop);
@@ -253,15 +256,13 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
 void ophonekitd_sim_auth_status_handler(const int status) {
     g_debug("ophonekitd_sim_auth_status_handler()");
     if(status == SIM_READY) {
-        g_debug("sim ready");
+        g_debug("sim auth ready");
 
         if(sim_auth_active) {
             sim_auth_active = FALSE;
             phonegui_sim_auth_hide(status);
         }
         ogsmd_network_register(register_to_network_callback, NULL);
-        ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
-        ogsmd_sim_retrieve_phonebook("contacts", cache_phonebook_callback, NULL);
     } else {
         g_debug("sim not ready");
         if(!sim_auth_active) {
@@ -269,6 +270,17 @@ void ophonekitd_sim_auth_status_handler(const int status) {
             phonegui_sim_auth_show(status);
         }
     }
+}
+
+
+void ophonekitd_sim_ready_status_handler(gboolean status) {
+	g_debug("ophonekitd_sim_ready_status_handler()");
+	if(status) {
+		g_debug("sim ready");
+		sim_ready = TRUE;
+		ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
+		ogsmd_sim_retrieve_phonebook("contacts", cache_phonebook_callback, NULL);
+	 }
 }
 
 
@@ -334,6 +346,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
 
     if(error == NULL) {
 	power_up_antenna();
+	ogsmd_sim_get_sim_ready(sim_ready_status_callback, NULL);
     } else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
@@ -390,11 +403,27 @@ void sim_auth_status_callback(GError *error, int status, gpointer userdata) {
     }
 }
 
+void sim_ready_status_callback(GError *error, gboolean status, gpointer userdata) {
+	/* if sim is already ready (by the ReadyStatus signal) - nothing to do */
+	if(sim_ready)
+		return;
+
+	g_debug("sim_ready_status_callback(status=%d)", status);
+	if(status) {
+		g_debug("sim ready");
+		sim_ready = TRUE;
+		ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
+		ogsmd_sim_retrieve_phonebook("contacts", cache_phonebook_callback, NULL);
+	}
+}
+
+
 void register_to_network_callback(GError *error, gpointer userdata) {
     g_debug("register_to_network_callback()");
     if(error == NULL) {
         /* Antenna works, registered to network */
     } else {
+		  g_debug("Registering to network failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         /* TODO */
     }
 }

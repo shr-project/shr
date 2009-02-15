@@ -3,6 +3,7 @@
  *      Authors (alphabetical) :
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
+ *              Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
  *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -24,6 +25,7 @@ int main(int argc, char ** argv);
 
 void ophonekitd_call_status_handler(const int id_call, const int status, GHashTable *properties);
 void ophonekitd_sim_auth_status_handler(const int status);
+void ophonekitd_sim_ready_status_handler(gboolean status);
 void ophonekitd_sim_incoming_stored_message_handler(const int id);
 void ophonekitd_device_idle_notifier_state_handler(const int state);
 void ophonekitd_incoming_ussd_handler(int mode, const char* message);
@@ -33,6 +35,7 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
 void request_resource_callback(GError *error, gpointer userdata);
 void power_up_antenna_callback(GError *error, gpointer userdata);
 void sim_auth_status_callback(GError *error, int status, gpointer userdata);
+void sim_ready_status_callback(GError *error, gboolean status, gpointer userdata);
 void register_to_network_callback(GError *error, gpointer userdata);
 void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer userdata);
 int exit_callback(void *data, int type, void *event);
