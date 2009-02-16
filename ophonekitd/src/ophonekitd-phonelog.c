@@ -69,7 +69,7 @@ int read_file(const char *name, char **content) {
 
 void debug_io_error(const char* activity, int fatal) {
     if (fatal) {
-        g_error("phonelog - error while %s\n", activity);
+        g_warning("phonelog - error while %s\n", activity);
         sqlite3_close(db);
         db = 0;
     } else {
@@ -81,7 +81,7 @@ void debug_sqlite3_error(const char* activity, const int rc, int fatal) {
     const char *err = sqlite3_errmsg(db);
 
     if (fatal) {
-        g_error("phonelog - error while %s: %s (code=%d)\n", activity, err, rc);
+        g_warning("phonelog - error while %s: %s (code=%d)\n", activity, err, rc);
         sqlite3_close(db);
         db = 0;
     } else {

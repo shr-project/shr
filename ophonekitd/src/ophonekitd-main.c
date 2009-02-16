@@ -248,7 +248,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             }
             break;
         default:
-            g_error("Unknown CallStatus");
+            g_warning("Unknown CallStatus");
     }
 }
 
@@ -331,7 +331,8 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
     } else {
-        g_error("Unknown error");
+        g_warning("Unknown error");
+        g_timeout_add(5000, list_resources, NULL);
     }
 }
 
@@ -353,7 +354,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
     } else {
         /* FIXME: Remove this when frameworkd code is ready */
         g_debug("request resource error, try again in 5s");
-        g_error("error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+        g_warning("error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         g_timeout_add(5000, list_resources, NULL);
     }
 }
@@ -379,7 +380,8 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
             g_debug("dbus not available, try again in 5s");
             g_timeout_add(5000, power_up_antenna, NULL);
         } else {
-            g_error("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+            g_warning("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+            g_timeout_add(5000, power_up_antenna, NULL);
         }
     }
 }
@@ -464,7 +466,7 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
 		  g_debug("creating contact_cache");
 		  contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	 	  if (!contact_cache) {
-	 	      g_error("could not allocate contact cache");
+	 	      g_warning("could not allocate contact cache");
 	 	      return;
 	 	  }
 	 	  g_ptr_array_foreach(contacts, cache_phonebook_entry, NULL);
