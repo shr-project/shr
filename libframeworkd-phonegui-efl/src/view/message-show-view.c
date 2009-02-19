@@ -32,6 +32,7 @@ static void message_show_view_answer_clicked(struct MessageShowViewData *data, E
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void message_show_view_delete_callback(struct MessageShowViewData *data);
 static void message_show_view_delete_callback_callback(struct MessageShowViewData *data);
+static void message_show_view_call_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info);
 
 
@@ -60,6 +61,7 @@ void message_show_view_hide(struct MessageShowViewData *data) {
     evas_object_del(data->bt2);
     evas_object_del(data->bt3);
     evas_object_del(data->hbt1);
+    evas_object_del(data->hbt2);
     evas_object_del(data->bx);
     evas_object_del(data->hv);
     g_slice_free(struct MessageShowViewData, data);
@@ -118,7 +120,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     elm_hover_target_set(data->hv, data->bt2);
 
     data->bx = elm_box_add(window_evas_object_get(win));
-    elm_box_horizontal_set(data->bx, 1);
+    elm_box_horizontal_set(data->bx, 0);
     elm_box_homogenous_set(data->bx, 1);
     evas_object_show(data->bx);
 
@@ -128,6 +130,13 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_delete_clicked, data);
     evas_object_show(data->hbt1);
     elm_box_pack_end(data->bx, data->hbt1);
+
+    data->hbt2 = elm_button_add(window_evas_object_get(win));
+    elm_button_label_set(data->hbt2, "Call");
+    evas_object_size_hint_min_set(data->hbt2, 130, 80);
+    evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_call_clicked, data);
+    evas_object_show(data->hbt2);
+    elm_box_pack_end(data->bx, data->hbt2);
 
     elm_hover_content_set(data->hv, "top", data->bx);
 
@@ -156,6 +165,10 @@ static void message_show_view_answer_clicked(struct MessageShowViewData *data, E
     struct Window *win = window_new("Compose SMS");
     window_init(win);
     window_view_show(win, options, message_new_view_show, message_new_view_hide);
+}
+
+static void message_show_view_call_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
+	ogsmd_call_initiate(data->number, "voice", NULL, NULL);
 }
 
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
