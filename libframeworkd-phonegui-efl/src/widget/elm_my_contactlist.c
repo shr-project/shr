@@ -99,6 +99,12 @@ _compare_entries(gconstpointer _a, gconstpointer _b) {
 
 
 static void
+_row_delete_callback(void *row_data)
+{
+    g_hash_table_destroy(row_data);
+}
+
+static void
 _process_entry(gpointer _entry, gpointer data) {
     GValueArray *entry = _entry;
     Widget_Data *wd = elm_widget_data_get(data);
@@ -109,7 +115,7 @@ _process_entry(gpointer _entry, gpointer data) {
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(entry, 2))));
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(wd->tree), NULL, wd->col1, parameters, NULL);
 
-    etk_tree_row_data_set(row, parameters);
+    etk_tree_row_data_set_full(row, parameters, _row_delete_callback);
 }
 
 
