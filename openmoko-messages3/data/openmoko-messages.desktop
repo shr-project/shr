@@ -1,7 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Messages
+Name[pl]=Wiadomości
 Comment=View and send SMS messages
+Comment[pl]=Przeglądaj i wysyłaj wiadomości SMS
 Exec=openmoko-messages
 Icon=openmoko-messages
 Terminal=false

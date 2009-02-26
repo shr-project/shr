@@ -1,7 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Contacts
-Comment=View Contacts 
+Name[pl]=Kontakty
+Comment=View Contacts
+Comment[pl]=Książka adresowa 
 Exec=openmoko-contacts
 Icon=openmoko-contacts
 Terminal=false
