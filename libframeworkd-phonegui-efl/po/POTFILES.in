@@ -1,0 +1,28 @@
+# List of source files containing translatable strings.
+
+# Package source files
+src/phonegui-call.c
+src/phonegui-contacts.c
+src/phonegui-dialer.c
+src/phonegui-dialog.c
+src/phonegui-incoming-message.c
+src/phonegui-messages.c
+src/phonegui-sim-auth.c
+src/phonegui-ussd.c
+src/view/call-active-view.c
+src/view/call-common.c
+src/view/call-incoming-view.c
+src/view/contact-delete-view.c
+src/view/contact-edit-view.c
+src/view/contact-list-view.c
+src/view/contact-show-view.c
+src/view/dialer-view.c
+src/view/dialog-view.c
+src/view/message-delete-view.c
+src/view/message-folder-view.c
+src/view/message-list-view.c
+src/view/message-new-view.c
+src/view/message-show-view.c
+src/view/sim-auth-input-view.c
+src/view/ussd-view.c
+src/widget/elm_keypad.c

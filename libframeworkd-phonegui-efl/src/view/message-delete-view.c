@@ -71,14 +71,16 @@ static void frame_delete_show(struct MessageDeleteViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, MESSAGE_FILE, "delete");
 
+    window_text_set(win, "info", D_("Do you really want to delete it?"));
+
     data->bt_yes = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_yes, "Yes");
+    elm_button_label_set(data->bt_yes, D_("Yes"));
     evas_object_smart_callback_add(data->bt_yes, "clicked", frame_delete_yes_clicked, data);
     window_swallow(win, "button_yes", data->bt_yes);
     evas_object_show(data->bt_yes);
 
     data->bt_no = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_no, "No");
+    elm_button_label_set(data->bt_no, D_("No"));
     evas_object_smart_callback_add(data->bt_no, "clicked", frame_delete_no_clicked, data);
     window_swallow(win, "button_no", data->bt_no);
     evas_object_show(data->bt_no);
@@ -110,5 +112,6 @@ static void frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *eve
 static void frame_deleting_show(struct MessageDeleteViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, MESSAGE_FILE, "deleting");
+    window_text_set(win, "text", D_("Deleting.."));
 }
 

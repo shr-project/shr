@@ -30,11 +30,11 @@ void call_button_speaker_clicked(struct CallViewData *data, Evas_Object *obj, vo
     if(speaker_active) {
         speaker_active = FALSE;
         call_speaker_enable();
-        window_text_set(data->win, "text_speaker", "Speaker");
+        window_text_set(data->win, "text_speaker", D_("Speaker"));
     } else {
         speaker_active = TRUE;
         call_speaker_disable();
-        window_text_set(data->win, "text_speaker", "No Speaker");
+        window_text_set(data->win, "text_speaker", D_("No Speaker"));
     }
 }
 
@@ -43,11 +43,11 @@ void call_button_dtmf_clicked(struct CallViewData *data, Evas_Object *obj, void 
     if(data->dtmf_active) {
         data->dtmf_active = FALSE;
         call_dtmf_disable(data);
-        window_text_set(data->win, "text_dtmf", "Show Keypad");
+        window_text_set(data->win, "text_dtmf", D_("Show Keypad"));
     } else {
         data->dtmf_active = TRUE;
         call_dtmf_enable(data);
-        window_text_set(data->win, "text_dtmf", "Hide Keypad");
+        window_text_set(data->win, "text_dtmf", D_("Hide Keypad"));
     }
 }
 

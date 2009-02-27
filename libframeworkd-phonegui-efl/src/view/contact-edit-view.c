@@ -169,24 +169,24 @@ static void frame_edit_show(struct ContactEditViewData *data) {
 
     window_layout_set(win, CONTACTS_FILE, "edit");
     if(data->id == -1)
-        window_text_set(win, "title", "New Contact");
+        window_text_set(win, "title", D_("New Contact"));
     else
-        window_text_set(win, "title", "Edit Contact");
+        window_text_set(win, "title", D_("Edit Contact"));
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Close");
+    elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_edit_close_clicked, data);
     window_swallow(win, "button_back", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Save");
+    elm_button_label_set(data->bt2, D_("Save"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_edit_save_clicked, data);
     window_swallow(win, "button_save", data->bt2);
     evas_object_show(data->bt2);
 
     data->label_name = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->label_name,  "Name: ");
+    elm_label_label_set( data->label_name,  D_("Name: "));
     window_swallow(win, "label_name", data->label_name);
     evas_object_show(data->label_name);
 
@@ -201,7 +201,7 @@ static void frame_edit_show(struct ContactEditViewData *data) {
     evas_object_show(data->sc_name);
 
     data->label_number = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->label_number,  "Number: ");
+    elm_label_label_set( data->label_number,  D_("Number: "));
     window_swallow(win, "label_number", data->label_number);
     evas_object_show(data->label_number);
 
@@ -330,18 +330,18 @@ static void frame_close_show(struct ContactEditViewData *data) {
     window_layout_set(win, DIALOG_FILE, "close");
     
     data->close_information = elm_label_add( window_evas_object_get(data->win) );
-    elm_label_label_set( data->close_information,  "Do you really want to quit?");
+    elm_label_label_set( data->close_information,  D_("Do you really want to quit?"));
     window_swallow(data->win, "information", data->close_information);
     evas_object_show(data->close_information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Yes");
+    elm_button_label_set(data->bt1, D_("Yes"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_close_yes_clicked, data);
     window_swallow(win, "button_yes", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "No");
+    elm_button_label_set(data->bt2, D_("No"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_close_no_clicked, data);
     window_swallow(win, "button_no", data->bt2);
     evas_object_show(data->bt2);
@@ -370,7 +370,7 @@ static void frame_loading_show(struct ContactEditViewData *data) {
     window_layout_set(data->win, CONTACTS_FILE, "loading");
 
     data->loading = elm_label_add( window_evas_object_get(data->win) );
-    elm_label_label_set( data->loading,  "Loading... ");
+    elm_label_label_set( data->loading,  D_("Loading... "));
     window_swallow(data->win, "text", data->loading);
     evas_object_show(data->loading);
 }

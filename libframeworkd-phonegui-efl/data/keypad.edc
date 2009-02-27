@@ -186,7 +186,7 @@ collections {
 	                                 to, "button2";
 	                     }
 	                     text {
-	                                 text, "ABC";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -237,7 +237,7 @@ collections {
 	                                 to, "button3";
 	                     }
 	                     text {
-	                                 text, "DEF";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -381,7 +381,7 @@ collections {
 	                                 to, "button4";
 	                     }
 	                     text {
-	                                 text, "GHI";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -432,7 +432,7 @@ collections {
 	                                 to, "button5";
 	                     }
 	                     text {
-	                                 text, "JKL";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -482,7 +482,7 @@ collections {
 	                                 to, "button6";
 	                     }
 	                     text {
-	                                 text, "MNO";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -625,7 +625,7 @@ collections {
 	                                 to, "button7";
 	                     }
 	                     text {
-	                                 text, "PQRS";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -675,7 +675,7 @@ collections {
 	                                 to, "button8";
 	                     }
 	                     text {
-	                                 text, "TUV";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;
@@ -726,7 +726,7 @@ collections {
 	                                 to, "button9";
 	                     }
 	                     text {
-	                                 text, "XYZ";
+	                                 text, "";
 	                                 font, "redensek";
 	                                 size, 20;
 	                                 align, 0.5 0.8;

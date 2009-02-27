@@ -99,9 +99,12 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     window_text_set(win, "text_number", number);
     window_text_set(win, "text_content", content);
     window_text_set(win, "text_date", datestr);
+    window_text_set(win, "label_number", D_("From:"));
+    window_text_set(win, "label_date", D_("Date:"));
+    window_text_set(win, "label_status", D_("Status:"));
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Close");
+    elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", message_show_view_close_clicked, data);
     window_swallow(win, "button_close", data->bt1);
     evas_object_show(data->bt1);
@@ -111,7 +114,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     data->hv = elm_hover_add(window_evas_object_get(win));
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Options");
+    elm_button_label_set(data->bt2, D_("Options"));
     evas_object_smart_callback_add(data->bt2, "clicked", my_hover_bt_1, data->hv);
     window_swallow(win, "button_options", data->bt2);
     evas_object_show(data->bt2);
@@ -125,14 +128,14 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     evas_object_show(data->bx);
 
     data->hbt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->hbt1, "Delete");
+    elm_button_label_set(data->hbt1, D_("Delete"));
     evas_object_size_hint_min_set(data->hbt1, 130, 80);
     evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_delete_clicked, data);
     evas_object_show(data->hbt1);
     elm_box_pack_end(data->bx, data->hbt1);
 
     data->hbt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->hbt2, "Call");
+    elm_button_label_set(data->hbt2, D_("Call"));
     evas_object_size_hint_min_set(data->hbt2, 130, 80);
     evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_call_clicked, data);
     evas_object_show(data->hbt2);
@@ -142,7 +145,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
 
 
     data->bt3 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt3, "Answer");
+    elm_button_label_set(data->bt3, D_("Answer"));
     evas_object_smart_callback_add(data->bt3, "clicked", message_show_view_answer_clicked, data);
     window_swallow(win, "button_answer", data->bt3);
     evas_object_show(data->bt3);
@@ -162,7 +165,7 @@ static void message_show_view_answer_clicked(struct MessageShowViewData *data, E
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "recipient", data->number);
 
-    struct Window *win = window_new("Compose SMS");
+    struct Window *win = window_new(D_("Compose SMS"));
     window_init(win);
     window_view_show(win, options, message_new_view_show, message_new_view_hide);
 }
@@ -177,7 +180,7 @@ static void message_show_view_delete_clicked(struct MessageShowViewData *data, E
     g_hash_table_insert(options, "delete_callback", message_show_view_delete_callback);
     g_hash_table_insert(options, "delete_callback_data", data);
 
-    struct Window *win = window_new("Delete Message");
+    struct Window *win = window_new(D_("Delete Message"));
     window_init(win);
     window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
 }

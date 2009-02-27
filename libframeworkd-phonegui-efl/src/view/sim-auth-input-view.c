@@ -205,13 +205,13 @@ void sim_auth_ok_clicked(struct SimAuthInputViewData *data, Evas_Object *obj, vo
         }
     } else if(data->mode == MODE_PUK && strcmp(data->puk, "")) {
         g_debug("Ask for a new PIN");
-        window_text_set(data->win, "instruction", "Enter a NEW PIN"); 
+        window_text_set(data->win, "instruction", D_("Enter a NEW PIN")); 
         data->mode = MODE_PUK_NEW_PIN;
         g_debug("MODE: %d", data->mode);
         sim_auth_update(data);
     } else if(data->mode == MODE_PUK_NEW_PIN && strcmp(data->pin, "")) {
         g_debug("Ask for new PIN confirmation");
-        window_text_set(data->win, "instruction", "Confirm your NEW PIN"); 
+        window_text_set(data->win, "instruction", D_("Confirm your NEW PIN")); 
         data->mode = MODE_PUK_NEW_PIN_CONFIRM;
         sim_auth_update(data);
     } else if(data->mode == MODE_PUK_NEW_PIN_CONFIRM) {
@@ -293,19 +293,19 @@ static void frame_input_show(struct SimAuthInputViewData *data) {
     window_layout_set(win, SIM_AUTH_FILE, "sim_auth_input");
 
     if(data->mode == MODE_PIN)
-        window_text_set(win, "instruction", "Please enter your PIN"); 
+        window_text_set(win, "instruction", D_("Please enter your PIN")); 
     else
-        window_text_set(win, "instruction", "Please enter your PUK"); 
+        window_text_set(win, "instruction", D_("Please enter your PUK")); 
 
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Delete");
+    elm_button_label_set(data->bt1, D_("Delete"));
     evas_object_smart_callback_add(data->bt1, "clicked", sim_auth_delete_clicked, data);
     window_swallow(win, "button_delete", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "OK");
+    elm_button_label_set(data->bt2, D_("OK"));
     evas_object_smart_callback_add(data->bt2, "clicked", sim_auth_ok_clicked, data);
     window_swallow(win, "button_ok", data->bt2);
     evas_object_show(data->bt2);
@@ -333,29 +333,36 @@ static void frame_input_hide(struct SimAuthInputViewData *data) {
 
 static void frame_checking_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_checking");
+    window_text_set(data->win, "text", D_("Checking"));
 }
 
 static void frame_pin_correct_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_pin_correct");
+    window_text_set(data->win, "text", D_("PIN correct"));
 }
 
 static void frame_pin_wrong_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_pin_wrong");
+    window_text_set(data->win, "text", D_("PIN wrong"));
 }
 
 static void frame_pins_different_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_pins_different");
+    window_text_set(data->win, "text", D_("PIN confirmation wrong"));
 }
 
 static void frame_puk_correct_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_puk_correct");
+    window_text_set(data->win, "text", D_("New PIN saved"));
 }
 
 static void frame_puk_wrong_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_puk_wrong");
+    window_text_set(data->win, "text", D_("PUK wrong"));
 }
 
 static void frame_pin_invalid_length_show(struct SimAuthInputViewData *data) {
     window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_pin_invalid_length");
+    window_text_set(data->win, "text", D_("PIN must be 4-8 chars long"));
 }
 

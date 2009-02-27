@@ -14,7 +14,7 @@ static void _reset();
 void phonegui_ussd_show(int mode, const char *message) {
     g_debug("phonegui_ussd_show(mode=%d, message=%s)", mode, message);
     if(win_ussd == NULL) {
-        win_ussd = window_new("Service Data");
+        win_ussd = window_new(D_("Service Data"));
 
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "mode", GINT_TO_POINTER(mode));

@@ -1,4 +1,4 @@
-SUBDIRS = src data
+SUBDIRS = src data po
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libframeworkd-phonegui-efl.pc
 

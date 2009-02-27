@@ -70,18 +70,18 @@ static void frame_delete_show(void *userdata) {
     window_layout_set(win, CONTACTS_FILE, "delete");
 
     data->info_label = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->info_label,  "Do you really want to delete it?");
+    elm_label_label_set( data->info_label,  D_("Do you really want to delete it?"));
     window_swallow(win, "info", data->info_label);
     evas_object_show(data->info_label);
 
     data->bt_yes = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_yes, "Yes");
+    elm_button_label_set(data->bt_yes, D_("Yes"));
     evas_object_smart_callback_add(data->bt_yes, "clicked", frame_delete_yes_clicked, data);
     window_swallow(win, "button_yes", data->bt_yes);
     evas_object_show(data->bt_yes);
 
     data->bt_no = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_no, "No");
+    elm_button_label_set(data->bt_no, D_("No"));
     evas_object_smart_callback_add(data->bt_no, "clicked", frame_delete_no_clicked, data);
     window_swallow(win, "button_no", data->bt_no);
     evas_object_show(data->bt_no);

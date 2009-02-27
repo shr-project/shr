@@ -130,6 +130,14 @@ elm_keypad_add(Evas_Object *parent)
    edje_object_signal_callback_add(wd->keypad, "0", "mouse_up", _zero_mouse_up, wd->widget);
    edje_object_signal_callback_add(wd->keypad, "0", "mouse_down", _zero_mouse_down, wd->widget);
 
+   edje_object_part_text_set(wd->keypad, "text2_desc", D_("ABC"));
+   edje_object_part_text_set(wd->keypad, "text3_desc", D_("DEF"));
+   edje_object_part_text_set(wd->keypad, "text4_desc", D_("GHI"));
+   edje_object_part_text_set(wd->keypad, "text5_desc", D_("JKL"));
+   edje_object_part_text_set(wd->keypad, "text6_desc", D_("MNO"));
+   edje_object_part_text_set(wd->keypad, "text7_desc", D_("PQRS"));
+   edje_object_part_text_set(wd->keypad, "text8_desc", D_("TUV"));
+   edje_object_part_text_set(wd->keypad, "text9_desc", D_("XYZ"));
 
    elm_widget_resize_object_set(wd->widget, wd->keypad);
    //evas_object_smart_callback_add(wd->widget, "sub-object-del", _sub_del, wd->widget);

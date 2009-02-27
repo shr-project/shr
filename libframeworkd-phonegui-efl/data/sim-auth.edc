@@ -18,7 +18,7 @@ collections {
                            relative, 1.0 1.0;
                     }
                     text {
-                           text, "Checking";
+                           text, "";
                            font, "redensek";
                            size, 30;
                            align, 0.5 0.5;
@@ -48,7 +48,7 @@ collections {
                            relative, 1.0 1.0;
                     }
                     text {
-                           text, "PIN correct";
+                           text, "";
                            font, "redensek";
                            size, 30;
                            align, 0.5 0.5;
@@ -77,7 +77,7 @@ collections {
                            relative, 1.0 1.0;
                     }
                     text {
-                           text, "PIN wrong";
+                           text, "";
                            font, "redensek";
                            size, 30;
                            align, 0.5 0.5;
@@ -107,7 +107,7 @@ collections {
                            relative, 1.0 1.0;
                     }
                     text {
-                           text, "New PIN saved";
+                           text, "";
                            font, "redensek";
                            size, 30;
                            align, 0.5 0.5;
@@ -137,7 +137,7 @@ collections {
                            relative, 1.0 1.0;
                     }
                     text {
-                           text, "PUK wrong";
+                           text, "";
                            font, "redensek";
                            size, 30;
                            align, 0.5 0.5;
@@ -168,7 +168,7 @@ collections {
                            offset, 0 0;
                     }
                     text {
-                           text, "PIN confirmation wrong";
+                           text, "";
                            font, "redensek";
                            size, 30;
                            align, 0.5 0.5;
@@ -197,7 +197,7 @@ collections {
                            offset, 0 0;
                     }
                     text {
-                           text, "PIN must be 4-8 chars long";
+                           text, "";
                            font, "redensek";
                            size, 25;
                            align, 0.5 0.5;

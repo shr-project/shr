@@ -52,19 +52,19 @@ static void frame_list_show(struct ContactListViewData *data) {
     evas_object_show(data->list);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "New");
+    elm_button_label_set(data->bt1, D_("New"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_list_new_clicked, data);
     window_swallow(win, "button_new", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Call");
+    elm_button_label_set(data->bt2, D_("Call"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_list_call_clicked, data);
     window_swallow(win, "button_call", data->bt2);
     evas_object_show(data->bt2);
 
     data->bt_options = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_options, "Options");
+    elm_button_label_set(data->bt_options, D_("Options"));
     evas_object_smart_callback_add(data->bt_options, "clicked", frame_list_options_clicked, data);
     window_swallow(win, "button_options", data->bt_options);
     evas_object_show(data->bt_options);
@@ -81,21 +81,21 @@ static void frame_list_show(struct ContactListViewData *data) {
     evas_object_show(data->bx);
 
     data->bt_message = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_message, "SMS");
+    elm_button_label_set(data->bt_message, D_("SMS"));
     evas_object_size_hint_min_set(data->bt_message, 130, 80);
     evas_object_smart_callback_add(data->bt_message, "clicked", frame_list_message_clicked, data);
     evas_object_show(data->bt_message);
     elm_box_pack_end(data->bx, data->bt_message);
 
     data->bt_edit = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_edit, "Edit");
+    elm_button_label_set(data->bt_edit, D_("Edit"));
     evas_object_size_hint_min_set(data->bt_edit, 130, 80);
     evas_object_smart_callback_add(data->bt_edit, "clicked", frame_list_edit_clicked, data);
     evas_object_show(data->bt_edit);
     elm_box_pack_end(data->bx, data->bt_edit);
 
     data->bt_delete = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_delete, "Delete");
+    elm_button_label_set(data->bt_delete, D_("Delete"));
     evas_object_size_hint_min_set(data->bt_delete, 130, 80);
     evas_object_smart_callback_add(data->bt_delete, "clicked", frame_list_delete_clicked, data);
     evas_object_show(data->bt_delete);
@@ -119,7 +119,7 @@ static void frame_list_new_clicked(struct ContactListViewData *data, Evas_Object
     g_hash_table_insert(options, "change_callback", frame_list_refresh);
     g_hash_table_insert(options, "change_callback_data", data);
 
-    struct Window *win = window_new("New Contact");
+    struct Window *win = window_new(D_("New Contact"));
     window_init(win);
     window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
 }
@@ -145,7 +145,7 @@ static void frame_list_message_clicked(struct ContactListViewData *data, Evas_Ob
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "recipient", g_hash_table_lookup(properties, "number"));
 
-        struct Window *win = window_new("Compose SMS");
+        struct Window *win = window_new(D_("Compose SMS"));
         window_init(win);
         window_view_show(win, options, message_new_view_show, message_new_view_hide);
     }
@@ -163,7 +163,7 @@ static void frame_list_edit_clicked(struct ContactListViewData *data, Evas_Objec
         g_hash_table_insert(options, "change_callback", frame_list_refresh);
         g_hash_table_insert(options, "change_callback_data", data);
 
-        struct Window *win = window_new("Edit Contact");
+        struct Window *win = window_new(D_("Edit Contact"));
         window_init(win);
         window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
     }
@@ -179,7 +179,7 @@ static void frame_list_delete_clicked(struct ContactListViewData *data, Evas_Obj
         g_hash_table_insert(options, "delete_callback", frame_list_refresh);
         g_hash_table_insert(options, "delete_callback_data", data);
 
-        struct Window *win = window_new("Delete Contact");
+        struct Window *win = window_new(D_("Delete Contact"));
         window_init(win);
         window_view_show(win, options, contact_delete_view_show, contact_delete_view_hide);
     }

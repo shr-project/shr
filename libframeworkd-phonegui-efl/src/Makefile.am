@@ -1,9 +1,9 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @LIBFRAMEWORKD_PHONEGUI_CFLAGS@ @GLIB_CFLAGS@ -g3
+AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" -DLOCALEDIR=\"$(localedir)\" @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @LIBFRAMEWORKD_PHONEGUI_CFLAGS@ @GLIB_CFLAGS@ -g3
 
 lib_LTLIBRARIES = libframeworkd-phonegui-efl.la
-libframeworkd_phonegui_efl_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @LIBFRAMEWORKD_PHONEGUI_LIBS@ @GLIB_LIBS@ @E_LIBS@ -lpthread
+libframeworkd_phonegui_efl_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @LIBFRAMEWORKD_PHONEGUI_LIBS@ @GLIB_LIBS@ @E_LIBS@ @LTLIBINTL@ -lpthread
 libframeworkd_phonegui_efl_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 libframeworkd_phonegui_efldir = $(includedir)/frameworkd-phonegui-efl
 libframeworkd_phonegui_efl_HEADERS = 

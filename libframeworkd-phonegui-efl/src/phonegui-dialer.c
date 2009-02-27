@@ -13,7 +13,7 @@ static void _hide(struct Window *win);
 void phonegui_dialer_show() {
     g_debug("phonegui_dialer_show()");
     if(win == NULL) {
-        win = window_new("Dialer");
+        win = window_new(D_("Dialer"));
         async_trigger(_show, win);
     }
 }

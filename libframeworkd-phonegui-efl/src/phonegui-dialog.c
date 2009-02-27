@@ -11,7 +11,7 @@ static void _hide(struct Window *win);
 
 
 void phonegui_dialog_show(int type) {
-    struct Window *win = window_new("Information");
+    struct Window *win = window_new(D_("Information"));
     instance_manager_add(INSTANCE_DIALOG, type, win);
 
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);

@@ -13,7 +13,7 @@ static void _hide(struct Window *win);
 void phonegui_messages_show(int argc, char** argv) {
     g_debug("phonegui_messages_show()");
     if(win == NULL) {
-        win = window_new("Messages");
+        win = window_new(D_("Messages"));
         async_trigger(_show, win);
     }
 }

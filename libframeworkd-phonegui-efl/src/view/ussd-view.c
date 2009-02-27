@@ -48,11 +48,11 @@ void ussd_view_hide(struct UssdViewData *data) {
 static void frame_ussd_show(struct UssdViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, USSD_FILE, "ussd");
-    window_text_set(win, "mode", "Data:");
+    window_text_set(win, "mode", D_("Data:"));
     window_text_set(win, "message", data->message);
 
     data->bt_close = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_close, "Close");
+    elm_button_label_set(data->bt_close, D_("Close"));
     evas_object_smart_callback_add(data->bt_close, "clicked", frame_ussd_close_clicked, data);
     window_swallow(win, "button_close", data->bt_close);
     evas_object_show(data->bt_close);

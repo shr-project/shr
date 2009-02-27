@@ -41,7 +41,7 @@ void phonegui_outgoing_call_hide(const int id) {
 
 
 static void _show(const int id, const int status, const char *number, int type) {
-    struct Window *win = window_new("Call");
+    struct Window *win = window_new(D_("Call"));
     window_delete_callback_set(win, _delete);
     instance_manager_add(INSTANCE_CALL, id, win);
 

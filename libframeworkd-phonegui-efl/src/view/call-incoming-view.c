@@ -26,18 +26,18 @@ struct CallIncomingViewData *call_incoming_view_show(struct Window *win, GHashTa
     evas_object_show(data->number);
 
     data->information = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->information,  "Incoming call");
+    elm_label_label_set( data->information,  D_("Incoming call"));
     window_swallow(win, "information", data->information);
     evas_object_show(data->information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Accept");
+    elm_button_label_set(data->bt1, D_("Accept"));
     evas_object_smart_callback_add(data->bt1, "clicked", call_button_accept_clicked, data);
     window_swallow(win, "button_accept", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Release");
+    elm_button_label_set(data->bt2, D_("Release"));
     evas_object_smart_callback_add(data->bt2, "clicked", call_button_release_clicked, data);
     window_swallow(win, "button_release", data->bt2);
     evas_object_show(data->bt2);

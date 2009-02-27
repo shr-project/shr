@@ -32,10 +32,10 @@ struct MessageListViewData *message_list_view_show(struct Window *win, GHashTabl
     data->win = win;
 
     window_layout_set(win, MESSAGE_FILE, "list");
-    window_text_set(win, "title", "Inbox"); 
+    window_text_set(win, "title", D_("Inbox")); 
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "New");
+    elm_button_label_set(data->bt1, D_("New"));
     evas_object_smart_callback_add(data->bt1, "clicked", message_list_view_new_clicked, data);
     window_swallow(win, "button_new", data->bt1);
     evas_object_show(data->bt1);
@@ -45,7 +45,7 @@ struct MessageListViewData *message_list_view_show(struct Window *win, GHashTabl
     data->hv = elm_hover_add(window_evas_object_get(win));
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Options");
+    elm_button_label_set(data->bt2, D_("Options"));
     evas_object_smart_callback_add(data->bt2, "clicked", my_hover_bt_1, data->hv);
     window_swallow(win, "button_options", data->bt2);
     evas_object_show(data->bt2);
@@ -59,14 +59,14 @@ struct MessageListViewData *message_list_view_show(struct Window *win, GHashTabl
     evas_object_show(data->bx);
 
     data->button_answer = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->button_answer, "Answer");
+    elm_button_label_set(data->button_answer, D_("Answer"));
     evas_object_size_hint_min_set(data->button_answer, 130, 80);
     evas_object_smart_callback_add(data->button_answer, "clicked", message_list_view_answer_clicked, data);
     evas_object_show(data->button_answer);
     elm_box_pack_end(data->bx, data->button_answer);
 
     data->button_delete = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->button_delete, "Delete");
+    elm_button_label_set(data->button_delete, D_("Delete"));
     evas_object_size_hint_min_set(data->button_delete, 130, 80);
     evas_object_smart_callback_add(data->button_delete, "clicked", message_list_view_delete_clicked, data);
     evas_object_show(data->button_delete);
@@ -76,7 +76,7 @@ struct MessageListViewData *message_list_view_show(struct Window *win, GHashTabl
 
 
     data->bt3 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt3, "Show");
+    elm_button_label_set(data->bt3, D_("Show"));
     evas_object_smart_callback_add(data->bt3, "clicked", message_list_view_show_clicked, data);
     window_swallow(win, "button_show", data->bt3);
     evas_object_show(data->bt3);
@@ -212,7 +212,7 @@ static void message_list_view_answer_clicked(struct MessageListViewData *data, E
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "recipient", (gpointer)g_value_get_string(g_value_array_get_nth(message, 2))); /* lose the const */
 
-        struct Window *win = window_new("SMS Answer");
+        struct Window *win = window_new(D_("SMS Answer"));
         window_init(win);
         window_view_show(win, options, message_new_view_show, message_new_view_hide);
     }
@@ -222,7 +222,7 @@ static void message_list_view_answer_clicked(struct MessageListViewData *data, E
 static void message_list_view_new_clicked(struct MessageListViewData *data, Evas_Object *obj, void *event_info) {
     g_debug("message_list_view_new_clicked()");
 
-    struct Window *win = window_new("Compose SMS");
+    struct Window *win = window_new(D_("Compose SMS"));
     window_init(win);
     window_view_show(win, NULL, message_new_view_show, message_new_view_hide);
 }
@@ -240,7 +240,7 @@ static void message_list_view_show_clicked(struct MessageListViewData *data, Eva
         g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
         g_hash_table_insert(options, "delete_callback_data", data);
 
-        struct Window *win = window_new("Show Message");
+        struct Window *win = window_new(D_("Show Message"));
         window_init(win);
         window_view_show(win, options, message_show_view_show, message_show_view_hide);
     }
@@ -260,7 +260,7 @@ static void message_list_view_delete_clicked(struct MessageListViewData *data, E
         g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
         g_hash_table_insert(options, "delete_callback_data", data);
 
-        struct Window *win = window_new("Delete Message");
+        struct Window *win = window_new(D_("Delete Message"));
         window_init(win);
         window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
     }

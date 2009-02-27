@@ -21,14 +21,14 @@ struct DialogViewData *dialog_view_show(struct Window *win, GHashTable *options)
 
     window_layout_set(win, DIALOG_FILE, "dialog");
     if(data->type == PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL)
-        window_text_set(win, "content", "Your storage is full. Please delete some messages or you are not going to receive messages anymore!");
+        window_text_set(win, "content", D_("Your storage is full. Please delete some messages or you are not going to receive messages anymore!"));
     else if(data->type == PHONEGUI_DIALOG_SIM_NOT_PRESENT)
-        window_text_set(win, "content", "GSM is not available, because no SIM card is present.");
+        window_text_set(win, "content", D_("GSM is not available, because no SIM card is present."));
     else
-        window_text_set(win, "content", "Unknown message.");
+        window_text_set(win, "content", D_("Unknown message."));
 
     data->bt_close = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_close, "Close");
+    elm_button_label_set(data->bt_close, D_("Close"));
     evas_object_smart_callback_add(data->bt_close, "clicked", dialog_view_close_clicked, data);
     window_swallow(win, "button_close", data->bt_close);
     evas_object_show(data->bt_close);

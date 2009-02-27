@@ -113,7 +113,7 @@ collections {
                                relative, 1.0 0.1;
                    }
                    text {
-                               text, "Define Recipients";
+                               text, "";
                                font, "redensek";
                                size, 22;
                                align, 0.5 0.5;
@@ -247,7 +247,7 @@ collections {
                                relative, 1.0 0.1;
                    }
                    text {
-                               text, "Add a Contact";
+                               text, "";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -337,7 +337,7 @@ collections {
                                relative, 1.0 0.1;
                    }
                    text {
-                               text, "Add a Number";
+                               text, "";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -429,7 +429,7 @@ collections {
                                relative, 1.0 0.1;
                    }
                    text {
-                               text, "Folders";
+                               text, "";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -597,7 +597,7 @@ collections {
                                  offset, 0 0;
                      }
                      text {
-                                 text, "From:";
+                                 text, "";
                                  font, "redensek";
                                  size, 20;
                                  align, 0.0 0.5;
@@ -647,7 +647,7 @@ collections {
                                  offset, 0 0;
                      }
                      text {
-                                 text, "Date:";
+                                 text, "";
                                  font, "redensek";
                                  size, 20;
                                  align, 0.0 0.5;
@@ -696,7 +696,7 @@ collections {
                                  relative, 1.0 0.15;
                      }
                      text {
-                                 text, "Status:";
+                                 text, "";
                                  font, "redensek";
                                  size, 20;
                                  align, 0.0 0.5;
@@ -827,7 +827,7 @@ collections {
                                relative, 1.0 1.0;
                    }
                    text {
-                               text, "Loading..";
+                               text, "";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -1018,7 +1018,7 @@ collections {
                                offset, 0 0;
                    }
                    text {
-                               text, "Do you really want to delete it?";
+                               text, "";
                                font, "redensek";
                                size, 20;
                                align, 0.5 0.5;
@@ -1090,7 +1090,7 @@ collections {
                                relative, 1.0 1.0;
                    }
                    text {
-                               text, "Sending..";
+                               text, "";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;
@@ -1123,7 +1123,7 @@ collections {
                                relative, 1.0 1.0;
                    }
                    text {
-                               text, "Deleting..";
+                               text, "";
                                font, "redensek";
                                size, 25;
                                align, 0.5 0.5;

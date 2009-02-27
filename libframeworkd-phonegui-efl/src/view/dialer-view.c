@@ -58,7 +58,7 @@ static void frame_dialer_show(struct DialerViewData *data) {
     evas_object_show(data->text_number);
 
     data->text_number_info = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->text_number_info,  "Click to open contactlist.");
+    elm_label_label_set( data->text_number_info,  D_("Click to open contactlist."));
     window_swallow(win, "text_number_info", data->text_number_info);
     evas_object_show(data->text_number_info);
 
@@ -81,19 +81,19 @@ static void frame_dialer_show(struct DialerViewData *data) {
     evas_object_show(data->keypad);
 
     data->bt_exit = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_exit, "Close");
+    elm_button_label_set(data->bt_exit, D_("Close"));
     evas_object_smart_callback_add(data->bt_exit, "clicked", frame_dialer_exit_clicked, data);
     window_swallow(win, "button_exit", data->bt_exit);
     evas_object_show(data->bt_exit);
 
     data->bt_options = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_options, "More");
+    elm_button_label_set(data->bt_options, D_("More"));
     evas_object_smart_callback_add(data->bt_options, "clicked", frame_dialer_options_clicked, data);
     window_swallow(win, "button_options", data->bt_options);
     evas_object_show(data->bt_options);
 
     data->bt_call = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_call, "Call");
+    elm_button_label_set(data->bt_call, D_("Call"));
     evas_object_smart_callback_add(data->bt_call, "clicked", frame_dialer_call_clicked, data);
     window_swallow(win, "button_call", data->bt_call);
     evas_object_show(data->bt_call);
@@ -112,14 +112,14 @@ static void frame_dialer_show(struct DialerViewData *data) {
     evas_object_show(data->bx);
 
     data->bt_save = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_save, "Save");
+    elm_button_label_set(data->bt_save, D_("Save"));
     evas_object_size_hint_min_set(data->bt_save, 130, 80);
     evas_object_smart_callback_add(data->bt_save, "clicked", frame_dialer_save_clicked, data);
     evas_object_show(data->bt_save);
     elm_box_pack_end(data->bx, data->bt_save);
 
     data->bt_message = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt_message, "Send SMS");
+    elm_button_label_set(data->bt_message, D_("Send SMS"));
     evas_object_size_hint_min_set(data->bt_message, 130, 80);
     evas_object_smart_callback_add(data->bt_message, "clicked", frame_dialer_message_clicked, data);
     evas_object_show(data->bt_message);
@@ -178,7 +178,7 @@ static void frame_dialer_save_clicked(struct DialerViewData *data, Evas_Object *
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "number", data->number);
 
-    struct Window *win = window_new("Add Contact");
+    struct Window *win = window_new(D_("Add Contact"));
     window_init(win);
     window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
 
@@ -201,7 +201,7 @@ static void frame_dialer_message_clicked(struct DialerViewData *data, Evas_Objec
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "recipient", data->number);
 
-    struct Window *win = window_new("Compose SMS");
+    struct Window *win = window_new(D_("Compose SMS"));
     window_init(win);
     window_view_show(win, options, message_new_view_show, message_new_view_hide);
 
@@ -251,7 +251,7 @@ static void frame_dialer_delete_mouse_down(struct DialerViewData *data, Evas_Obj
 
 static void frame_dialer_number_clicked(struct DialerViewData *data, Evas_Object *o, const char *emission, const char *source) {
     if(!strlen(data->number)) {
-        struct Window *win = window_new("Contacts");
+        struct Window *win = window_new(D_("Contacts"));
         window_init(win);
         window_view_show(win, NULL, contact_list_view_show, contact_list_view_hide);
 

@@ -33,6 +33,12 @@ void ui_init() {
 }
 
 void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
+
+    // Initialize gettext
+    setlocale (LC_ALL, "");
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
+
     // Assign arguments
     phonegui_argc = argc;
     phonegui_argv = argv;

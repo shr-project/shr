@@ -109,13 +109,13 @@ static void frame_content_show(struct MessageNewViewData *data) {
     window_layout_set(win, MESSAGE_FILE, "content_edit");
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Close");
+    elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_content_close_clicked, data);
     window_swallow(win, "button_close", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Continue");
+    elm_button_label_set(data->bt2, D_("Continue"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_content_continue_clicked, data);
     window_swallow(win, "button_continue", data->bt2);
     evas_object_show(data->bt2);
@@ -173,7 +173,7 @@ static void frame_content_content_changed(struct MessageNewViewData *data, Evas_
     g_debug("content: %s", content);
 
     char text[64];
-    sprintf(text, "%d characters left [%d]", 160 - (strlen(content) % 160), (strlen(content) / 160) + 1);
+    sprintf(text, D_("%d characters left [%d]"), 160 - (strlen(content) % 160), (strlen(content) / 160) + 1);
     window_text_set(data->win, "characters_left", text);
     free(content);
 }
@@ -189,32 +189,34 @@ static void frame_recipient_show(struct MessageNewViewData *data) {
 
     window_layout_set(win, MESSAGE_FILE, "recipient_edit");
 
+    window_text_set(win, "title", D_("Define Recipients"));
+
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Back");
+    elm_button_label_set(data->bt1, D_("Back"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_recipient_back_clicked, data);
     window_swallow(win, "button_back", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Send");
+    elm_button_label_set(data->bt2, D_("Send"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_recipient_continue_clicked, data);
     window_swallow(win, "button_continue", data->bt2);
     evas_object_show(data->bt2);
 
     data->bt3 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt3, "Add Contact");
+    elm_button_label_set(data->bt3, D_("Add Contact"));
     evas_object_smart_callback_add(data->bt3, "clicked", frame_recipient_contact_add_clicked, data);
     window_swallow(win, "button_contact_add", data->bt3);
     evas_object_show(data->bt3);
 
     data->bt4 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt4, "Add Number");
+    elm_button_label_set(data->bt4, D_("Add Number"));
     evas_object_smart_callback_add(data->bt4, "clicked", frame_recipient_number_add_clicked, data);
     window_swallow(win, "button_number_add", data->bt4);
     evas_object_show(data->bt4);
 
     data->bt5 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt5, "Remove");
+    elm_button_label_set(data->bt5, D_("Remove"));
     evas_object_smart_callback_add(data->bt5, "clicked", frame_recipient_delete_clicked, data);
     window_swallow(win, "button_delete", data->bt5);
     evas_object_show(data->bt5);
@@ -330,14 +332,16 @@ static void frame_contact_add_show(struct MessageNewViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, MESSAGE_FILE, "recipient_contact_add");
 
+    window_text_set(win, "title", D_("Add a Contact"));
+
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Back");
+    elm_button_label_set(data->bt1, D_("Back"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_contact_add_back_clicked, data);
     window_swallow(win, "button_back", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Add");
+    elm_button_label_set(data->bt2, D_("Add"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_contact_add_add_clicked, data);
     window_swallow(win, "button_add", data->bt2);
     evas_object_show(data->bt2);
@@ -380,14 +384,16 @@ static void frame_number_add_show(struct MessageNewViewData *data) {
 
     window_layout_set(win, MESSAGE_FILE, "recipient_number_add");
 
+    window_text_set(win, "title", D_("Add a Number"));
+
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Back");
+    elm_button_label_set(data->bt1, D_("Back"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_number_add_back_clicked, data);
     window_swallow(win, "button_back", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Add");
+    elm_button_label_set(data->bt2, D_("Add"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_number_add_add_clicked, data);
     window_swallow(win, "button_add", data->bt2);
     evas_object_show(data->bt2);
@@ -446,18 +452,18 @@ static void frame_close_show(struct MessageNewViewData *data) {
     window_layout_set(win, DIALOG_FILE, "close");
 
     data->information = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->information,  "Do you really want to quit?");
+    elm_label_label_set( data->information,  D_("Do you really want to quit?"));
     window_swallow(win, "information", data->information);
     evas_object_show(data->information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Yes");
+    elm_button_label_set(data->bt1, D_("Yes"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_close_yes_clicked, data);
     window_swallow(win, "button_yes", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "No");
+    elm_button_label_set(data->bt2, D_("No"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_close_no_clicked, data);
     window_swallow(win, "button_no", data->bt2);
     evas_object_show(data->bt2);
@@ -485,6 +491,7 @@ static void frame_close_no_clicked(struct MessageNewViewData *data, Evas_Object 
 
 static void frame_sending_show(struct MessageNewViewData *data) {
     window_layout_set(data->win, MESSAGE_FILE, "sending");
+    window_text_set(data->win, "text", D_("Sending.."));
 }
 
 static void frame_sending_hide(struct MessageNewViewData *data) {

@@ -46,6 +46,11 @@ AC_SUBST(edje_cc)
 
 EXPAND(DATADIR, $datadir)
 
+ALL_LINGUAS="fi_FI"
+AC_SUBST(ALL_LINGUAS)
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.12.1])
+
 # output stuff
 AC_OUTPUT([
 Makefile
@@ -54,5 +59,6 @@ src/Makefile
 src/view/views.h
 src/widget/elm_config.h
 libframeworkd-phonegui-efl.pc
+po/Makefile.in
 ])
 

@@ -91,19 +91,19 @@ void contacts_list_show(struct ContactsWindow *win) {
     window_layout_set(win, UI_FILE, "list");
 
     win->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt1, "New");
+    elm_button_label_set(win->bt1, D_("New"));
     evas_object_smart_callback_add(win->bt1, "clicked", contacts_button_new_clicked, win);
     window_swallow(win, "button_new", win->bt1);
     evas_object_show(win->bt1);
 
     win->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt2, "Call");
+    elm_button_label_set(win->bt2, D_("Call"));
     evas_object_smart_callback_add(win->bt2, "clicked", contacts_button_call_clicked, win);
     window_swallow(win, "button_call", win->bt2);
     evas_object_show(win->bt2);
 
     win->bt3 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt3, "Options");
+    elm_button_label_set(win->bt3, D_("Options"));
     evas_object_smart_callback_add(win->bt3, "clicked", contacts_button_options_clicked, win);
     window_swallow(win, "button_options", win->bt3);
     evas_object_show(win->bt3);
@@ -168,25 +168,25 @@ void contacts_options_show(struct ContactsWindow *win) {
     window_text_set(win, "number", g_value_get_string(g_value_array_get_nth(win->tmp_entry, 2)));
 
     win->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt1, "Back");
+    elm_button_label_set(win->bt1, D_("Back"));
     evas_object_smart_callback_add(win->bt1, "clicked", contacts_button_back_clicked, win);
     window_swallow(win, "button_back", win->bt1);
     evas_object_show(win->bt1);
 
     win->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt2, "Call");
+    elm_button_label_set(win->bt2, D_("Call"));
     evas_object_smart_callback_add(win->bt2, "clicked", contacts_button_call_clicked, win);
     window_swallow(win, "button_call", win->bt2);
     evas_object_show(win->bt2);
 
     win->bt3 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt3, "Modify");
+    elm_button_label_set(win->bt3, D_("Modify"));
     evas_object_smart_callback_add(win->bt3, "clicked", contacts_button_modify_clicked, win);
     window_swallow(win, "button_modify", win->bt3);
     evas_object_show(win->bt3);
 
     win->bt4 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt4, "Delete");
+    elm_button_label_set(win->bt4, D_("Delete"));
     evas_object_smart_callback_add(win->bt4, "clicked", contacts_button_delete_clicked, win);
     window_swallow(win, "button_delete", win->bt4);
     evas_object_show(win->bt4);
@@ -209,7 +209,7 @@ void contacts_options_hide(struct ContactsWindow *win) {
 void contacts_modify_show(struct ContactsWindow *win) {
     contacts_new_hide(win);
 
-    window_text_set(win, "title", "Modify Contact");
+    window_text_set(win, "title", D_("Modify Contact"));
 
     etk_entry_text_set(win->entry_number, g_value_get_string(g_value_array_get_nth(win->tmp_entry, 2)));
     etk_entry_text_set(win->entry_name, g_value_get_string(g_value_array_get_nth(win->tmp_entry, 1)));
@@ -223,16 +223,16 @@ void contacts_new_show(struct ContactsWindow *win) {
     window_kbd_show(win, KEYBOARD_ALPHA);
 
     window_layout_set(win, UI_FILE, "modify");
-    window_text_set(win, "title", "New Contact");
+    window_text_set(win, "title", D_("New Contact"));
 
     win->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt1, "Back");
+    elm_button_label_set(win->bt1, D_("Back"));
     evas_object_smart_callback_add(win->bt1, "clicked", contacts_button_back_clicked, win);
     window_swallow(win, "button_back", win->bt1);
     evas_object_show(win->bt1);
 
     win->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt2, "Save");
+    elm_button_label_set(win->bt2, D_("Save"));
     evas_object_smart_callback_add(win->bt2, "clicked", contacts_button_save_clicked, win);
     window_swallow(win, "button_save", win->bt2);
     evas_object_show(win->bt2);
@@ -270,13 +270,13 @@ void contacts_delete_show(struct ContactsWindow *win) {
     window_layout_set(win, UI_FILE, "delete");
 
     win->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt1, "Yes");
+    elm_button_label_set(win->bt1, D_("Yes"));
     evas_object_smart_callback_add(win->bt1, "clicked", contacts_button_delete_yes_clicked, win);
     window_swallow(win, "button_yes", win->bt1);
     evas_object_show(win->bt1);
 
     win->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt2, "No");
+    elm_button_label_set(win->bt2, D_("No"));
     evas_object_smart_callback_add(win->bt2, "clicked", contacts_button_delete_no_clicked, win);
     window_swallow(win, "button_no", win->bt2);
     evas_object_show(win->bt2);
@@ -292,10 +292,10 @@ void contacts_delete_hide(struct ContactsWindow *win) {
 
 void contacts_sim_full_show(struct ContactsWindow *win) {
     window_layout_set(win, UI_FILE, "dialog");
-    window_text_set(win, "content", "Your storage is full. Before adding new contacts, you have to delete some old ones.");
+    window_text_set(win, "content", D_("Your storage is full. Before adding new contacts, you have to delete some old ones."));
 
     win->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(win->bt1, "Close");
+    elm_button_label_set(win->bt1, D_("Close"));
     evas_object_smart_callback_add(win->bt1, "clicked", contacts_button_close_clicked, win);
     window_swallow(win, "button_close", win->bt1);
     evas_object_show(win->bt1);

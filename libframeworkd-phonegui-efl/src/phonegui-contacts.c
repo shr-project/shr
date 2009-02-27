@@ -13,7 +13,7 @@ static void _hide(struct Window *win);
 void phonegui_contacts_show() {
     g_debug("phonegui_contacts_show()");
     if(win == NULL) {
-        win = window_new("Contacts");
+        win = window_new(D_("Contacts"));
         async_trigger(_show, win);
     }
 }

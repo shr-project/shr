@@ -32,6 +32,7 @@ struct MessageFolderViewData *message_folder_view_show(struct Window *win, GHash
     data->win = win;
 
     window_layout_set(win, MESSAGE_FILE, "loading");
+    window_text_set(win, "text", D_("Loading.."));
     window_show(win);
 
     ogsmd_sim_retrieve_messagebook("read", message_folder_view_retrieve_messagebook_callback, data);
@@ -64,14 +65,16 @@ static void message_folder_view_retrieve_messagebook_callback2(struct MessageFol
 
     window_layout_set(win, MESSAGE_FILE, "folders");
 
+    window_text_set(win, "title", D_("Folders"));
+
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "New");
+    elm_button_label_set(data->bt1, D_("New"));
     evas_object_smart_callback_add(data->bt1, "clicked", messages_button_new_clicked, win);
     window_swallow(win, "button_new", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Show");
+    elm_button_label_set(data->bt2, D_("Show"));
     evas_object_smart_callback_add(data->bt2, "clicked", messages_button_show_clicked, win);
     window_swallow(win, "button_show", data->bt2);
     evas_object_show(data->bt2);
@@ -94,7 +97,7 @@ static void message_folder_view_retrieve_messagebook_callback2(struct MessageFol
     // Example entry inbox
     g_debug("Messagecount: %d", data->tmp_messages->len);
     char label[32];
-    sprintf(label, "%d messages", data->tmp_messages->len);
+    sprintf(label, D_("%d messages"), data->tmp_messages->len);
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("name"), strdup("Inbox"));
     g_hash_table_insert(parameters, strdup("info"), strdup(label));
@@ -113,7 +116,7 @@ static void message_folder_view_retrieve_messagebook_callback2(struct MessageFol
 static void messages_button_new_clicked(struct MessageFolderViewData *data, Evas_Object *obj, void *event_info) {
     g_debug("messages_button_new_clicked()");
 
-    struct Window *win = window_new("Compose SMS");
+    struct Window *win = window_new(D_("Compose SMS"));
     window_init(win);
     window_view_show(win, NULL, message_new_view_show, message_new_view_hide);
 }

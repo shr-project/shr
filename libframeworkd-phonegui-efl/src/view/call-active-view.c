@@ -26,24 +26,24 @@ struct CallActiveViewData *call_active_view_show(struct Window *win, GHashTable 
     evas_object_show(data->number);
 
     data->information = elm_label_add( window_evas_object_get(win) );
-    elm_label_label_set( data->information,  "Active call");
+    elm_label_label_set( data->information,  D_("Active call"));
     window_swallow(win, "text", data->information);
     evas_object_show(data->information);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt1, "Release");
+    elm_button_label_set(data->bt1, D_("Release"));
     evas_object_smart_callback_add(data->bt1, "clicked", call_button_release_clicked, data);
     window_swallow(win, "button_release", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt2, "Speaker");
+    elm_button_label_set(data->bt2, D_("Speaker"));
     evas_object_smart_callback_add(data->bt2, "clicked", call_button_speaker_clicked, data);
     window_swallow(win, "button_speaker", data->bt2);
     evas_object_show(data->bt2);
 
     data->bt3 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->bt3, "Keypad");
+    elm_button_label_set(data->bt3, D_("Keypad"));
     evas_object_smart_callback_add(data->bt3, "clicked", call_button_dtmf_clicked, data);
     window_swallow(win, "button_dtmf", data->bt3);
     evas_object_show(data->bt3);

@@ -14,6 +14,8 @@
 #include "async.h"
 #include "window.h"
 
+#define D_(String) dgettext(PACKAGE, String)
+
 #define CALL_FILE "@DATADIR@/libframeworkd-phonegui-efl/call.edj"
 #define CONTACTS_FILE "@DATADIR@/libframeworkd-phonegui-efl/contacts.edj"
 #define DIALER_FILE "@DATADIR@/libframeworkd-phonegui-efl/dialer.edj"
