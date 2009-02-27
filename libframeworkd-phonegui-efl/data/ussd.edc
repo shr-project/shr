@@ -1,3 +1,11 @@
+styles {
+
+  style {
+    name: "content_style";
+    base: "font=Edje-Vera font_size=20 align=left valign=bottom color=#000  wrap=word";
+  }
+}
+
 collections {
     group {
         name, "ussd";
@@ -29,24 +37,20 @@ collections {
 
             part {
                 name,   "message";
-                type,   TEXT;
+                type,   TEXTBLOCK;
                 mouse_events, 0;
                 description {
                     state, "default" 0.0;
-                    color, 0 0 0 255;
                     rel1 {
                         relative, 0.0 0.15;
-                        offset, 0 0;
+                        offset, 5 5;
                     }
                     rel2 {
                         relative, 1.0 0.85;
-                        offset, 0 0;
+                        offset, 5 5;
                     }
                     text {
-                        text, "";
-                        font, "redensek";
-                        size, 20;
-                        align, 0.5 0.5;
+                        style, "content_style";
                     }
                 }
             }
