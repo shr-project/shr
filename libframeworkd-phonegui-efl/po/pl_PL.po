@@ -303,7 +303,7 @@ msgstr "Wyświetl wiadomość"
 
 #: src/view/dialer-view.c:63
 msgid "Click to open contactlist."
-msgstr "Kliknij, aby wyświetlić listę kontaktów."
+msgstr "Kliknij, aby pokazać listę kontaktów."
 
 #: src/view/dialer-view.c:92
 msgid "More"
@@ -349,7 +349,7 @@ msgstr "Autoryzacja SIM"
 
 #: src/phonegui-dialer.c:16
 msgid "Dialer"
-msgstr "Dialer"
+msgstr "Zadzwoń"
 
 #: src/phonegui-dialog.c:14
 msgid "Information"
