@@ -1,13 +1,13 @@
-# Finnish translations for libframeworkd-phonegui-efl
-# This file is put in the public domain.
-# Jussi Timperi <jussi.timperi@gmail.com>, 2009.
+# Polish translations for libframeworkd-phonegui-efl
+# This file is put in the same licence, as libframeworkd-phonegui-efl package.
+# Sebastian Krzyszkowiak <seba.dos1@gmail.com>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libframeworkd-phonegui-efl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-28 01:45+0100\n"
-"PO-Revision-Date: 2009-02-25 10:01+0100\n"
+"PO-Revision-Date: 2009-02-28 19:26+0100\n"
 "Last-Translator: Sebastian Krzyszkowiak <seba.dos1@gmail.com>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
