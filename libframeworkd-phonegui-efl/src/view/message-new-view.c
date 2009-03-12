@@ -106,34 +106,33 @@ static void message_send_callback(GError *error, int transaction_index, struct M
 static void frame_content_show(struct MessageNewViewData *data) {
     struct Window *win = data->win;
 
-    window_layout_set(win, MESSAGE_FILE, "content_edit");
+    elm_layout_file_set(win->layout, MESSAGE_FILE, "content_edit");
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_content_close_clicked, data);
-    window_swallow(win, "button_close", data->bt1);
+    elm_layout_content_set(win->layout, "button_close", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt2, D_("Continue"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_content_continue_clicked, data);
-    window_swallow(win, "button_continue", data->bt2);
+    elm_layout_content_set(win->layout, "button_continue", data->bt2);
     evas_object_show(data->bt2);
 
+    data->sc = elm_scroller_add(window_evas_object_get(win));
     data->entry = elm_entry_add(window_evas_object_get(win));
     evas_object_smart_callback_add(data->entry, "changed", frame_content_content_changed, data);
-    evas_object_show(data->entry);
-    elm_widget_focus_set(data->entry, 1);
     if(data->content != NULL) {
         elm_entry_entry_set(data->entry, data->content);
     }
-
-    data->sc = elm_scroller_add(window_evas_object_get(win));
     elm_scroller_content_set(data->sc, data->entry);
-    window_swallow(win, "entry", data->sc);
+    evas_object_show(data->entry);
+
+    elm_layout_content_set(win->layout, "entry", data->sc);
     evas_object_show(data->sc);
 
-    window_kbd_show(win, KEYBOARD_ALPHA);
+    elm_object_focus(data->entry);
 }
 
 static void frame_content_hide(struct MessageNewViewData *data) {
