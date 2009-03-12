@@ -176,42 +176,45 @@ static void frame_edit_show(struct ContactEditViewData *data) {
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_edit_close_clicked, data);
-    window_swallow(win, "button_back", data->bt1);
+    elm_layout_content_set(win->layout, "buton_back", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt2, D_("Save"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_edit_save_clicked, data);
-    window_swallow(win, "button_save", data->bt2);
+    elm_layout_content_set(win->layout, "button_save", data->bt2);
     evas_object_show(data->bt2);
 
     data->label_name = elm_label_add( window_evas_object_get(win) );
     elm_label_label_set( data->label_name,  D_("Name: "));
+    elm_layout_content_set(win->layout, "label_name", data->label_name);
     window_swallow(win, "label_name", data->label_name);
     evas_object_show(data->label_name);
 
+    data->sc_name = elm_scroller_add(window_evas_object_get(win));
     data->entry_name = elm_entry_add(window_evas_object_get(win));
     elm_entry_entry_set(data->entry_name, data->name);
-    evas_object_show(data->entry_name);
     elm_widget_focus_set(data->entry_name, 1);
 
-    data->sc_name = elm_scroller_add(window_evas_object_get(win));
     elm_scroller_content_set(data->sc_name, data->entry_name);
-    window_swallow(win, "entry_name", data->sc_name);
+    elm_layout_content_set(win->layout, "entry_name", data->sc_name);
+    evas_object_show(data->entry_name);
     evas_object_show(data->sc_name);
 
     data->label_number = elm_label_add( window_evas_object_get(win) );
     elm_label_label_set( data->label_number,  D_("Number: "));
-    window_swallow(win, "label_number", data->label_number);
+    elm_layout_content_set(win->layout, "label_number", data->label_number);
     evas_object_show(data->label_number);
+
+    data->sc_number = elm_scroller_add(window_evas_object_get(win));
 
     data->entry_number = elm_entry_add(window_evas_object_get(win));
     elm_entry_entry_set(data->entry_number, data->number);
-    evas_object_show(data->entry_number);
 
-    data->sc_number = elm_scroller_add(window_evas_object_get(win));
     elm_scroller_content_set(data->sc_number, data->entry_number);
-    window_swallow(win, "entry_number", data->sc_number);
+    elm_layout_content_set(win->layout, "entry_number", data->sc_number);
+
+    evas_object_show(data->entry_number);
     evas_object_show(data->sc_number);
 }
 
