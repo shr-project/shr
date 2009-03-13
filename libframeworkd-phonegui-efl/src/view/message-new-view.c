@@ -111,13 +111,13 @@ static void frame_content_show(struct MessageNewViewData *data) {
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_content_close_clicked, data);
-    elm_layout_content_set(win->layout, "button_close", data->bt1);
+    window_swallow(win, "button_close", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt2, D_("Continue"));
     evas_object_smart_callback_add(data->bt2, "clicked", frame_content_continue_clicked, data);
-    elm_layout_content_set(win->layout, "button_continue", data->bt2);
+    window_swallow(win, "button_continue", data->bt2);
     evas_object_show(data->bt2);
 
     data->sc = elm_scroller_add(window_evas_object_get(win));
@@ -129,7 +129,7 @@ static void frame_content_show(struct MessageNewViewData *data) {
     elm_scroller_content_set(data->sc, data->entry);
     evas_object_show(data->entry);
 
-    elm_layout_content_set(win->layout, "entry", data->sc);
+    window_swallow(win, "entry", data->sc);
     evas_object_show(data->sc);
 
     elm_object_focus(data->entry);
