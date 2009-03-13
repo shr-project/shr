@@ -81,7 +81,7 @@ void window_text_set(struct Window *win, const char *key, const char *value) {
 
 void window_swallow(struct Window *win, const char *key, Evas_Object *object) {
     assert(win != NULL);
-    edje_object_part_swallow(elm_layout_edje_get(win->layout), key, object);
+    elm_layout_content_set(win->layout, key, object);
 }
 
 void window_unswallow(struct Window *win, Evas_Object *object) {
