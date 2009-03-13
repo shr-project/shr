@@ -64,19 +64,10 @@ void call_active_view_hide(struct CallActiveViewData *data) {
         call_speaker_disable();
     }
 
-    window_unswallow(win,data->information);
     evas_object_del(data->information);
-
-    window_unswallow(win, data->number);
     evas_object_del(data->number);
-
-    window_unswallow(win, data->bt1);
     evas_object_del(data->bt1);
-
-    window_unswallow(win, data->bt2);
     evas_object_del(data->bt2);
-
-    window_unswallow(win, data->bt3);
     evas_object_del(data->bt3);
 }
 

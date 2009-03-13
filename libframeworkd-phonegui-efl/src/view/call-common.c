@@ -65,7 +65,6 @@ void call_dtmf_enable(struct CallViewData *data) {
 
 void call_dtmf_disable(struct CallViewData *data) {
     g_debug("call_dtmf_disable()");
-    window_unswallow(data->win, data->keypad);
     evas_object_smart_callback_del(data->keypad, "clicked", call_button_keypad_clicked);
     evas_object_del(data->keypad);
 }

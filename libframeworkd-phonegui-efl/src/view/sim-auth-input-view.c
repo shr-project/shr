@@ -320,13 +320,8 @@ static void frame_input_hide(struct SimAuthInputViewData *data) {
     g_debug("frame_input_hide()");
     struct Window *win = data->win;
 
-    window_unswallow(win, data->bt1);
     evas_object_del(data->bt1);
-
-    window_unswallow(win, data->bt2);
     evas_object_del(data->bt2);
-
-    window_unswallow(win, data->keypad);
     evas_object_smart_callback_del(data->keypad, "clicked", sim_auth_keypad_clicked);
     evas_object_del(data->keypad);
 }

@@ -149,16 +149,9 @@ void contacts_list_show(struct ContactsWindow *win) {
 }
 
 void contacts_list_hide(struct ContactsWindow *win) {
-    window_unswallow(win, win->bt1);
     evas_object_del(win->bt1);
-
-    window_unswallow(win, win->bt2);
     evas_object_del(win->bt2);
-
-    window_unswallow(win, win->bt3);
     evas_object_del(win->bt3);
-
-    window_unswallow(win, win->container);
     etk_widget_hide_all(win->container);
 }
 
@@ -193,16 +186,9 @@ void contacts_options_show(struct ContactsWindow *win) {
 }
 
 void contacts_options_hide(struct ContactsWindow *win) {
-    window_unswallow(win, win->bt1);
     evas_object_del(win->bt1);
-
-    window_unswallow(win, win->bt2);
     evas_object_del(win->bt2);
-
-    window_unswallow(win, win->bt3);
     evas_object_del(win->bt3);
-
-    window_unswallow(win, win->bt4);
     evas_object_del(win->bt4);
 }
 
@@ -251,16 +237,9 @@ void contacts_new_show(struct ContactsWindow *win) {
 }
 
 void contacts_new_hide(struct ContactsWindow *win) {
-    window_unswallow(win, win->bt1);
     evas_object_del(win->bt1);
-
-    window_unswallow(win, win->bt2);
     evas_object_del(win->bt2);
-
-    window_unswallow(win, win->container_number);
     etk_widget_hide_all(win->container_number);
-
-    window_unswallow(win, win->container_name);
     etk_widget_hide_all(win->container_name);
 
     window_kbd_hide(win);
@@ -283,10 +262,7 @@ void contacts_delete_show(struct ContactsWindow *win) {
 }
 
 void contacts_delete_hide(struct ContactsWindow *win) {
-    window_unswallow(win, win->bt1);
     evas_object_del(win->bt1);
-
-    window_unswallow(win, win->bt2);
     evas_object_del(win->bt2);
 }
 
@@ -302,6 +278,5 @@ void contacts_sim_full_show(struct ContactsWindow *win) {
 }
 
 void contacts_sim_full_hide(struct ContactsWindow *win) {
-    window_unswallow(win, win->bt1);
     evas_object_del(win->bt1);
 }

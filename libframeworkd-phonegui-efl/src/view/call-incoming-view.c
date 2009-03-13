@@ -50,16 +50,9 @@ void call_incoming_view_hide(struct CallIncomingViewData *data) {
 
     struct Window *win = data->parent.win;
 
-    window_unswallow(win,data->information);
     evas_object_del(data->information);
-
-    window_unswallow(win, data->number);
     evas_object_del(data->number);
-
-    window_unswallow(win, data->bt1);
     evas_object_del(data->bt1);
-
-    window_unswallow(win, data->bt2);
     evas_object_del(data->bt2);
 
     if(data->parent.dtmf_active) {

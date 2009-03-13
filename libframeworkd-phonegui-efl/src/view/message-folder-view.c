@@ -39,13 +39,8 @@ struct MessageFolderViewData *message_folder_view_show(struct Window *win, GHash
 }
 
 void message_folder_view_hide(struct MessageFolderViewData *data) {
-    window_unswallow(data->win, data->bt1);
     evas_object_del(data->bt1);
-
-    window_unswallow(data->win, data->bt2);
     evas_object_del(data->bt2);
-
-    window_unswallow(data->win, data->container);
     etk_widget_hide_all(data->container);
 }
 

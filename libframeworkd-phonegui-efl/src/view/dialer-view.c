@@ -131,38 +131,17 @@ static void frame_dialer_show(struct DialerViewData *data) {
 static void frame_dialer_hide(struct DialerViewData *data) {
     struct Window *win = data->win;
 
-    window_unswallow(win, data->keypad);
     evas_object_smart_callback_del(data->keypad, "clicked", frame_dialer_keypad_clicked);
     evas_object_del(data->keypad);
-
-    window_unswallow(win, data->bt_options);
     evas_object_del(data->bt_options);
-
-    window_unswallow(win, data->bt_call);
     evas_object_del(data->bt_call);
-
-    window_unswallow(win, data->bt_exit);
     evas_object_del(data->bt_exit);
-
-    window_unswallow(win, data->bt_message);
     evas_object_del(data->bt_message);
-
-    window_unswallow(win, data->bt_save);
     evas_object_del(data->bt_save);
-
-    window_unswallow(win, data->bx);
     evas_object_del(data->bx);
-
-    window_unswallow(win, data->hv);
     evas_object_del(data->hv);
-
-    window_unswallow(win, data->text_number);
     evas_object_del(data->text_number);
-    
-    window_unswallow(win, data->text_number_info);
     evas_object_del(data->text_number_info);
-
-    window_unswallow(win, data->delete_text_button);
     evas_object_del(data->delete_text_button);
 }
 
