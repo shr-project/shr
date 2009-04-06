@@ -331,8 +331,8 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
     } else {
-        g_warning("Unknown error");
-        g_timeout_add(5000, list_resources, NULL);
+        g_warning("Unknown error, try again in 10s");
+        g_timeout_add(10000, list_resources, NULL);
     }
 }
 
