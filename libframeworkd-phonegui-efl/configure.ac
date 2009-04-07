@@ -46,7 +46,7 @@ AC_SUBST(edje_cc)
 
 EXPAND(DATADIR, $datadir)
 
-ALL_LINGUAS="fi pl"
+ALL_LINGUAS="ca es fi pl"
 AC_SUBST(ALL_LINGUAS)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.12.1])
