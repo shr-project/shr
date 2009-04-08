@@ -1,0 +1,403 @@
+# Russian translation for libframeworkd-phonegui-efl
+# This file is put in the public domain.
+# Maksim 'max_posedon' Melnikau <maxposedon@gmail.com>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: libframework-phonegui-efl\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-04-07 23:50+0300\n"
+"PO-Revision-Date: 2009-04-08 00:42+0300\n"
+"Last-Translator: Maksim 'max_posedon' Melnikau <maxposedon@gmail.com>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/view/message-show-view.c:102
+msgid "From:"
+msgstr "От:"
+
+#: src/view/message-show-view.c:103
+msgid "Date:"
+msgstr "Дата:"
+
+#: src/view/message-show-view.c:104
+msgid "Status:"
+msgstr "Статус:"
+
+#: src/view/message-show-view.c:107 src/view/ussd-view.c:55
+#: src/view/message-new-view.c:112 src/view/contact-show-view.c:298
+#: src/view/dialer-view.c:84 src/view/dialog-view.c:31
+#: src/view/contact-edit-view.c:177
+msgid "Close"
+msgstr "Закрыть"
+
+#: src/view/message-show-view.c:117 src/view/contact-list-view.c:67
+#: src/view/contact-show-view.c:106 src/view/message-list-view.c:48
+msgid "Options"
+msgstr "Дополнительно"
+
+#: src/view/message-show-view.c:131 src/view/contact-list-view.c:98
+#: src/view/contact-show-view.c:189 src/view/sim-auth-input-view.c:302
+#: src/view/message-list-view.c:69
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/view/message-show-view.c:138 src/view/contact-list-view.c:61
+#: src/view/contact-show-view.c:100 src/view/contact-show-view.c:177
+#: src/view/dialer-view.c:96 src/phonegui-call.c:44
+msgid "Call"
+msgstr "Звонит"
+
+#: src/view/message-show-view.c:148 src/view/message-list-view.c:62
+msgid "Answer"
+msgstr "Ответить"
+
+#: src/view/message-show-view.c:168 src/view/message-folder-view.c:119
+#: src/view/contact-list-view.c:148 src/view/message-list-view.c:225
+#: src/view/dialer-view.c:204
+msgid "Compose SMS"
+msgstr "Написать SMS"
+
+#: src/view/message-show-view.c:183 src/view/message-list-view.c:263
+msgid "Delete Message"
+msgstr "Удалить сообщение"
+
+#: src/view/ussd-view.c:51
+msgid "Data:"
+msgstr "Данные:"
+
+#: src/view/call-common.c:33 src/view/call-active-view.c:40
+msgid "Speaker"
+msgstr "Спикер"
+
+#: src/view/call-common.c:37
+msgid "No Speaker"
+msgstr "Выключить Спикер"
+
+#: src/view/call-common.c:46
+msgid "Show Keypad"
+msgstr "Клавиатура"
+
+#: src/view/call-common.c:50
+msgid "Hide Keypad"
+msgstr "Спрятать Клавиатуру"
+
+#: src/view/message-new-view.c:118
+msgid "Continue"
+msgstr "Продолжить"
+
+#: src/view/message-new-view.c:175
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d символов осталось [%d]"
+
+#: src/view/message-new-view.c:191
+msgid "Define Recipients"
+msgstr "Получатели"
+
+#: src/view/message-new-view.c:194 src/view/message-new-view.c:337
+#: src/view/message-new-view.c:389 src/view/contact-show-view.c:171
+#: src/view/contact-show-view.c:229
+msgid "Back"
+msgstr "Назад"
+
+#: src/view/message-new-view.c:200
+msgid "Send"
+msgstr "Отправить"
+
+#: src/view/message-new-view.c:206 src/view/dialer-view.c:181
+msgid "Add Contact"
+msgstr "Добавить Контакт"
+
+#: src/view/message-new-view.c:212
+msgid "Add Number"
+msgstr "Добавить Номер"
+
+#: src/view/message-new-view.c:218
+msgid "Remove"
+msgstr "Удалить"
+
+#: src/view/message-new-view.c:334
+msgid "Add a Contact"
+msgstr "Добавить Контакт"
+
+#: src/view/message-new-view.c:343 src/view/message-new-view.c:395
+msgid "Add"
+msgstr "Добавить"
+
+#: src/view/message-new-view.c:386
+msgid "Add a Number"
+msgstr "Добавить Номер"
+
+#: src/view/message-new-view.c:454 src/view/contact-edit-view.c:336
+msgid "Do you really want to quit?"
+msgstr "Вы действительно хотите выйти?"
+
+#: src/view/message-new-view.c:459 src/view/contact-show-view.c:273
+#: src/view/contact-delete-view.c:78 src/view/message-delete-view.c:77
+#: src/view/contact-edit-view.c:341
+msgid "Yes"
+msgstr "Да"
+
+#: src/view/message-new-view.c:465 src/view/contact-show-view.c:279
+#: src/view/contact-delete-view.c:84 src/view/message-delete-view.c:83
+#: src/view/contact-edit-view.c:347
+msgid "No"
+msgstr "Нет"
+
+#: src/view/message-new-view.c:493
+msgid "Sending.."
+msgstr "Отправляется.."
+
+#: src/view/message-folder-view.c:35
+msgid "Loading.."
+msgstr "Загружается.."
+
+#: src/view/message-folder-view.c:68
+msgid "Folders"
+msgstr "Директории"
+
+#: src/view/message-folder-view.c:71 src/view/contact-list-view.c:55
+#: src/view/contact-show-view.c:94 src/view/message-list-view.c:38
+msgid "New"
+msgstr "Новый"
+
+#: src/view/message-folder-view.c:77 src/view/message-list-view.c:79
+msgid "Show"
+msgstr "Показать"
+
+#: src/view/message-folder-view.c:100
+#, c-format
+msgid "%d messages"
+msgstr "%d сообщений"
+
+#: src/view/contact-list-view.c:84
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:91
+msgid "Edit"
+msgstr "Редактировать"
+
+#: src/view/contact-list-view.c:122 src/view/contact-show-view.c:226
+#: src/view/contact-edit-view.c:172
+msgid "New Contact"
+msgstr "Новый Контакт"
+
+#: src/view/contact-list-view.c:166 src/view/contact-edit-view.c:174
+msgid "Edit Contact"
+msgstr "Изменить Контакт"
+
+#: src/view/contact-list-view.c:182
+msgid "Delete Contact"
+msgstr "Удалить Контакт"
+
+#: src/view/call-active-view.c:29
+msgid "Active call"
+msgstr "Текущий звонок"
+
+#: src/view/call-active-view.c:34 src/view/call-incoming-view.c:40
+msgid "Release"
+msgstr "Закончить"
+
+#: src/view/call-active-view.c:46
+msgid "Keypad"
+msgstr "Клавиатура"
+
+#: src/view/call-incoming-view.c:29
+msgid "Incoming call"
+msgstr "Входящий звонок"
+
+#: src/view/call-incoming-view.c:34
+msgid "Accept"
+msgstr "Принять"
+
+#: src/view/contact-show-view.c:183
+msgid "Modify"
+msgstr "Изменить"
+
+#: src/view/contact-show-view.c:212
+msgid "Modify Contact"
+msgstr "Изменить Контакт"
+
+#: src/view/contact-show-view.c:235 src/view/dialer-view.c:115
+#: src/view/contact-edit-view.c:183
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/view/contact-show-view.c:295
+msgid ""
+"Your storage is full. Before adding new contacts, you have to delete some "
+"old ones."
+msgstr ""
+"Нет места. Для добавления новых контактов, вам нужно удалить другие, более старые."
+
+#: src/view/contact-delete-view.c:73 src/view/message-delete-view.c:74
+msgid "Do you really want to delete it?"
+msgstr "Вы действительно хотите удалить?"
+
+#: src/view/message-delete-view.c:115
+msgid "Deleting.."
+msgstr "Удаление.."
+
+#: src/view/sim-auth-input-view.c:208
+msgid "Enter a NEW PIN"
+msgstr "Введите новый PIN"
+
+#: src/view/sim-auth-input-view.c:214
+msgid "Confirm your NEW PIN"
+msgstr "Подтвердите новый PIN"
+
+#: src/view/sim-auth-input-view.c:296
+msgid "Please enter your PIN"
+msgstr "Пожалуйста введите новый PIN"
+
+#: src/view/sim-auth-input-view.c:298
+msgid "Please enter your PUK"
+msgstr "Пожалуйста введите PUK"
+a
+#: src/view/sim-auth-input-view.c:308
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:336
+msgid "Checking"
+msgstr "Проверка"
+
+#: src/view/sim-auth-input-view.c:341
+msgid "PIN correct"
+msgstr "PIN введен верно"
+
+#: src/view/sim-auth-input-view.c:346
+msgid "PIN wrong"
+msgstr "PIN введен неверно"
+
+#: src/view/sim-auth-input-view.c:351
+msgid "PIN confirmation wrong"
+msgstr "PIN не подтверждeн"
+
+#: src/view/sim-auth-input-view.c:356
+msgid "New PIN saved"
+msgstr "Новый PIN сохранен"
+
+#: src/view/sim-auth-input-view.c:361
+msgid "PUK wrong"
+msgstr "Неверный PUK"
+
+#: src/view/sim-auth-input-view.c:366
+msgid "PIN must be 4-8 chars long"
+msgstr "PIN должен быть длиной 4-8 символов"
+
+#: src/view/message-list-view.c:35
+msgid "Inbox"
+msgstr "Входящие"
+
+#: src/view/message-list-view.c:215
+msgid "SMS Answer"
+msgstr "Ответить на SMS"
+
+#: src/view/message-list-view.c:243
+msgid "Show Message"
+msgstr "Показать Сообщение"
+
+#: src/view/dialer-view.c:61
+msgid "Click to open contactlist."
+msgstr "Нажмите для открытия списка контактов"
+
+#: src/view/dialer-view.c:90
+msgid "More"
+msgstr "Еще"
+
+#: src/view/dialer-view.c:122
+msgid "Send SMS"
+msgstr "Отправить SMS"
+
+#: src/view/dialer-view.c:254 src/phonegui-contacts.c:16
+msgid "Contacts"
+msgstr "Контакты"
+
+#: src/view/dialog-view.c:24
+msgid ""
+"Your storage is full. Please delete some messages or you are not going to "
+"receive messages anymore!"
+msgstr ""
+"Нет места. Пожалуйста удалите старые сообщения, иначе вы не будите получать новые!"
+
+#: src/view/dialog-view.c:26
+msgid "GSM is not available, because no SIM card is present."
+msgstr "GSM не доступен, поскольку отсутствует SIM-ка."
+
+#: src/view/dialog-view.c:28
+msgid "Unknown message."
+msgstr "Неизвестное сообщение"
+
+#: src/view/contact-edit-view.c:189
+msgid "Name: "
+msgstr "Имя:"
+
+#: src/view/contact-edit-view.c:205
+msgid "Number: "
+msgstr "Номер:"
+
+#: src/view/contact-edit-view.c:376
+msgid "Loading... "
+msgstr "Загрузка... "
+
+#: src/phonegui-sim-auth.c:18
+msgid "SIM Auth"
+msgstr "Авторизация SIM"
+
+#: src/phonegui-dialer.c:16
+msgid "Dialer"
+msgstr "Звонить"
+
+#: src/phonegui-dialog.c:14
+msgid "Information"
+msgstr "Информация"
+
+#: src/phonegui-messages.c:16
+msgid "Messages"
+msgstr "Сообщения"
+
+#: src/phonegui-incoming-message.c:16
+msgid "New Message"
+msgstr "Новое сообщение"
+
+#: src/widget/elm_keypad.c:133
+msgid "ABC"
+msgstr "АБВГ"
+
+#: src/widget/elm_keypad.c:134
+msgid "DEF"
+msgstr "ДЕЁЖЗ"
+
+#: src/widget/elm_keypad.c:135
+msgid "GHI"
+msgstr "ИЙКЛ"
+
+#: src/widget/elm_keypad.c:136
+msgid "JKL"
+msgstr "МНОП"
+
+#: src/widget/elm_keypad.c:137
+msgid "MNO"
+msgstr "РСТУ"
+
+#: src/widget/elm_keypad.c:138
+msgid "PQRS"
+msgstr "ФХЦЧ"
+
+#: src/widget/elm_keypad.c:139
+msgid "TUV"
+msgstr "ШЩЪЫ"
+
+#: src/widget/elm_keypad.c:140
+msgid "XYZ"
+msgstr "ЬЭЮЯ"
+
+#: src/phonegui-ussd.c:17
+msgid "Service Data"
+msgstr "Данные Сервиса"
