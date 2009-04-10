@@ -63,7 +63,7 @@ char *string_replace_with_tags(char *string)
             case '\t':    newlen += 4; break;
             case '<':
 	    case '>':	  newlen += 3; break;
-            case '\t':    newlen += 4; break;
+            case '&':    newlen += 4; break;
         }
     }
 
