@@ -61,6 +61,9 @@ char *string_replace_with_tags(char *string)
         switch (*in_p++) {
             case '\n':    newlen += 3; break;
             case '\t':    newlen += 4; break;
+            case '<':
+	    case '>':	  newlen += 3; break;
+            case '\t':    newlen += 4; break;
         }
     }
 
@@ -85,6 +88,25 @@ char *string_replace_with_tags(char *string)
                 *out_p++ = 'a';
                 *out_p++ = 'b';
                 *out_p++ = '>';
+                break;
+            case '<':
+                *out_p++ = '&';
+                *out_p++ = 'l';
+                *out_p++ = 't';
+                *out_p++ = ';';
+                break;
+            case '>':
+                *out_p++ = '&';
+                *out_p++ = 'g';
+                *out_p++ = 't';
+                *out_p++ = ';';
+                break;
+            case '&':
+                *out_p++ = '&';
+                *out_p++ = 'a';
+                *out_p++ = 'm';
+                *out_p++ = 'p';
+                *out_p++ = ';';
                 break;
             default:
                 *out_p++ = *in_p;
