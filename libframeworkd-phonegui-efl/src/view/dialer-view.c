@@ -190,6 +190,10 @@ static void frame_dialer_call_clicked(struct DialerViewData *data, Evas_Object *
         if((data->number[strlen(data->number)-1] == '#') || (strlen(data->number) <= 2)) {
             g_debug("USSD Request");
             ogsmd_network_send_ussd_request(data->number, NULL, NULL);
+            //Clean number in dialer
+            data->number[0] = '\0';
+            frame_dialer_number_update(data);
+            edje_object_signal_emit(elm_layout_edje_get(window_layout_get(data->win)), "number_empty", "elm");
         } else {
             g_debug("Initiate Call");
             ogsmd_call_initiate(data->number, "voice", frame_dialer_initiate_callback, data);
