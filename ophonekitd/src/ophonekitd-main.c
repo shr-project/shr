@@ -286,10 +286,6 @@ void ophonekitd_sim_ready_status_handler(gboolean status) {
 
 void ophonekitd_sim_incoming_stored_message_handler(const int id) {
     g_debug("ophonekitd_sim_incoming_stored_message_handler()");
-
-    /* FIXME: Quick and dirty hack to avoid the GSM not enable error after suspend */
-    sleep(10);
-
     phonegui_message_show(id);
     ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
