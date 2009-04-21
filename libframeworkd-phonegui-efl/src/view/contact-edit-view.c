@@ -176,7 +176,7 @@ static void frame_edit_show(struct ContactEditViewData *data) {
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, D_("Close"));
     evas_object_smart_callback_add(data->bt1, "clicked", frame_edit_close_clicked, data);
-    window_swallow(win, "buton_back", data->bt1);
+    window_swallow(win, "button_back", data->bt1);
     evas_object_show(data->bt1);
 
     data->bt2 = elm_button_add(window_evas_object_get(win));
