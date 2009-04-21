@@ -106,7 +106,7 @@ struct MessageListViewData *message_list_view_show(struct Window *win, GHashTabl
     window_swallow(win, "list", etk_embed_object_get(ETK_EMBED(data->container)));
 
 
-    ogsmd_sim_retrieve_messagebook("read", retrieve_messagebook_callback, data);
+    ogsmd_sim_retrieve_messagebook("all", retrieve_messagebook_callback, data);
     window_show(win);
     return data;
 }
