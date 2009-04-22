@@ -21,7 +21,6 @@ libframeworkd_phonegui_efl_la_SOURCES = \
 	widget/etk_tree_model_edje.h widget/etk_tree_model_edje.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	widget/elm_my_contactlist.h widget/elm_my_contactlist.c \
-	widget/elm_resizing_label.h widget/elm_resizing_label.c \
 	util/pipe.h util/pipe.c \
 	util/helper.h util/helper.c \
 	util/instance.h util/instance.c \

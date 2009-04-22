@@ -52,8 +52,9 @@ static void frame_dialer_show(struct DialerViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, DIALER_FILE, "main");
     
-    data->text_number = elm_resizing_label_add( window_evas_object_get(win) );
-    elm_resizing_label_label_set( data->text_number,  "");
+    data->text_number = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->text_number,  "");
+    evas_object_size_hint_align_set(data->text_number, 0.0, 0.5);
     window_swallow(win, "text_number", data->text_number);
     evas_object_show(data->text_number);
 
@@ -243,7 +244,43 @@ static void frame_dialer_number_clicked(struct DialerViewData *data, Evas_Object
 }
 
 static void frame_dialer_number_update(struct DialerViewData *data) {
-    elm_resizing_label_label_set( data->text_number,  data->number);
+    int length = strlen( data->number );
+    char *number = data->number;
+    static char tmp[73];
+
+    if (length < 7)
+        elm_object_scale_set( data->text_number, 4.0 );
+    else if (length < 9)
+        elm_object_scale_set( data->text_number, 3.0 );
+    else if (length < 24) {
+        elm_object_scale_set( data->text_number, 2.0 );
+        if (length > 12) {
+            tmp[0] = 0;
+            strncat(tmp, number, 12);
+            strcat(tmp, "<br>");
+            strcat(tmp, number+12);
+            number = tmp;
+        }
+    } else {
+        elm_object_scale_set( data->text_number, 1.0 );
+        if (length > 52) {
+            tmp[0] = 0;
+            strncat(tmp, number, 26);
+            strcat(tmp, "<br>");
+            strncat(tmp, number+26, 26);
+            strcat(tmp, "<br>");
+            strcat(tmp, number+52);
+            number = tmp;
+        } else if (length > 26) {
+            tmp[0] = 0;
+            strncat(tmp, number, 26);
+            strcat(tmp, "<br>");
+            strcat(tmp, number+26);
+            number = tmp;
+        }
+    }
+
+    elm_label_label_set( data->text_number, number );
 }
 
 
