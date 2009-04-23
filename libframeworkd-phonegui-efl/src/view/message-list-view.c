@@ -137,11 +137,15 @@ void message_list_view_hide(struct MessageListViewData *data) {
 static void add_integer_timestamp_to_message(gpointer _message, gpointer user_data) {
     GValueArray *message = (GValueArray *)_message;
     GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
-    const char *timestr = g_value_get_string(g_hash_table_lookup(details, "timestamp"));
-    time_t timestamp = time_stringtotimestamp(timestr);
+    GValue *value = g_hash_table_lookup(details, "timestamp");
+    time_t timestamp = 0;
+    if( value ) {
+        const char *timestr = g_value_get_string(value);
+        timestamp = time_stringtotimestamp(timestr);
+    }
 
     // Insert integer timestamp into array
-    GValue *value = g_slice_alloc0(sizeof(GValue));
+    value = g_slice_alloc0(sizeof(GValue));
     g_value_init(value, G_TYPE_LONG);
     g_value_set_long(value, timestamp);
     g_hash_table_insert(details, strdup("timestamp_int"), value);

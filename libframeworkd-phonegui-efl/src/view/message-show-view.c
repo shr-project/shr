@@ -118,8 +118,12 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     struct Window *win = data->win;
     window_layout_set(win, MESSAGE_FILE, "message_show");
 
-    const char *timestr = g_value_get_string(g_hash_table_lookup(data->properties, "timestamp"));
-    time_t timestamp = time_stringtotimestamp(timestr);
+    time_t timestamp = 0;
+    GValue *value = g_hash_table_lookup(data->properties, "timestamp");
+    if( value ) {
+        const char *timestr = g_value_get_string(value);
+        timestamp = time_stringtotimestamp(timestr);
+    }
     char *status = data->status;
     char *number = data->number;
     char *content = data->content;
