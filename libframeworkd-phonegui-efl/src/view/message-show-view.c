@@ -6,7 +6,7 @@
 struct MessageShowViewData {
     struct Window *win;
     int id;
-    char *status, *number, *content;
+    char *status, *number, *name, *content;
     GHashTable *properties;
     GValueArray *message;
     Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *hbt1, *hbt2, *hbt3;
@@ -25,6 +25,9 @@ typedef enum {
 } MessagesModes;
 
 
+static void search_number(gpointer _entry, gpointer _data);
+static void name_callback(GError *error, GPtrArray *contacts, void *data);
+static void name_callback2(struct MessageShowViewData *data);
 static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data);
 static void retrieve_callback2(struct MessageShowViewData *data);
 static void message_show_view_close_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
@@ -69,14 +72,43 @@ void message_show_view_hide(struct MessageShowViewData *data) {
 
 
 
+static void search_number(gpointer _entry, gpointer _data)
+{
+	GValueArray *entry = (GValueArray *)_entry;
+	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+
+	/* do nothing if the number was already found */
+	if (data->name) return;
+
+	if( strcmp(g_value_get_string(g_value_array_get_nth(entry, 2)), data->number) == 0 ) {
+		data->name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
+		async_trigger(name_callback2, data);
+	}
+}
+
+static void name_callback(GError *error, GPtrArray *contacts, void *data)
+{
+    if (error == NULL) {
+        g_ptr_array_foreach(contacts, search_number, data);
+    }
+}
+
+static void name_callback2(struct MessageShowViewData *data)
+{
+    window_text_set(data->win, "text_number", data->name);
+}
+
 
 static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer _data) {
     struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
     g_debug("retrieve_callback()");
     data->status = strdup(status);
     data->number = strdup(number);
+	 data->name = NULL;
     data->content = elm_entry_utf8_to_markup(content);
     data->properties = properties; // TODO: copy
+
+    ogsmd_sim_retrieve_phonebook("contacts", name_callback, data);
 
     async_trigger(retrieve_callback2, data);
 }
