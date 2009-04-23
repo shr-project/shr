@@ -75,7 +75,7 @@ static void retrieve_callback(GError *error, char *status, char *number, char *c
     g_debug("retrieve_callback()");
     data->status = strdup(status);
     data->number = strdup(number);
-    data->content = strdup(content);
+    data->content = elm_entry_utf8_to_markup(content);
     data->properties = properties; // TODO: copy
 
     async_trigger(retrieve_callback2, data);
@@ -90,7 +90,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     time_t timestamp = time_stringtotimestamp(timestr);
     char *status = data->status;
     char *number = data->number;
-    char *content = string_replace_with_tags(data->content);
+    char *content = data->content;
 
     char datestr[32];
     strftime(datestr, 31, "%d.%m.%Y, %H:%M", gmtime(&timestamp));

@@ -139,8 +139,7 @@ static void frame_content_hide(struct MessageNewViewData *data) {
     struct Window *win = data->win;
 
     // Save content
-    data->content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-    string_strip_html(data->content);
+    data->content = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
 
     // Free objects
     evas_object_del(data->bt1);
@@ -156,8 +155,7 @@ static void frame_content_close_clicked(struct MessageNewViewData *data, Evas_Ob
 }
 
 static void frame_content_continue_clicked(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
-    char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-    string_strip_html(content);
+    char *content = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
     if(strlen(content)==0) {
         //TODO: display notify about sending blank message
     }
@@ -167,8 +165,7 @@ static void frame_content_continue_clicked(struct MessageNewViewData *data, Evas
 }
 
 static void frame_content_content_changed(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
-    char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-    string_strip_html(content);
+    char *content = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
     g_debug("content: %s", content);
 
     char text[64];
