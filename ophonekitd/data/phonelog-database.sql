@@ -16,53 +16,19 @@ BEGIN
 END;
 
 CREATE VIEW calls AS
-SELECT 
-	id,
-	
-	(SELECT number
-		FROM call_ids
-		WHERE call_ids.id = call_events.id
-	)
-	AS number,
-	
-	(SELECT status
-		FROM call_events as e
-		WHERE e.id = call_events.id
-			AND (e.status = 0 OR e.status = 1)
-	)
-	AS direction,
-	
-	(SELECT eventTime
-		FROM call_events as e
-		WHERE e.id = call_events.id
-			AND (e.status = 0 OR e.status = 1)
-	)
-	AS startTime,
-	
-	(SELECT eventTime
-		FROM call_events as e
-		WHERE e.id = call_events.id
-			AND e.status = 2
-	)
-	AS activeTime,
-	
-	(SELECT eventTime
-		FROM call_events as e
-		WHERE e.id = call_events.id
-			AND e.status = 4
-	)
-	AS releaseTime,
-	
-	strftime('%M:%S',strftime('%s',(SELECT eventTime
-		FROM call_events as e
-		WHERE e.id = call_events.id
-			AND e.status = 4
-	)) - strftime('%s',(SELECT eventTime
-		FROM call_events as e
-		WHERE e.id = call_events.id
-			AND e.status = 2
-	)), "unixepoch")
-	AS duration
+SELECT e.id, 
+       call_ids.number, 
+       e.status AS direction, 
+       e.eventTime AS startTime, 
+       act.eventTime AS activeTime, 
+       rel.eventTime AS releaseTime, 
+       strftime("%s", rel.eventTime)-strftime("%s", act.eventTime) AS duration
+       FROM call_events AS e
+       INNER JOIN call_ids ON e.id = call_ids.id
+       LEFT JOIN  call_events AS act ON e.id=act.id and act.status=2
+       INNER JOIN call_events AS rel ON e.id=rel.id and rel.status=4
+       WHERE e.status in (0,1) group by e.id;
+
 	
 FROM call_events
 GROUP BY id;
