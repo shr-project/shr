@@ -176,7 +176,7 @@ static void process_message(gpointer _message, gpointer _data) {
     GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
     long timestamp = g_value_get_long(g_hash_table_lookup(details, "timestamp_int"));
     char datestr[32];
-    strftime(datestr, 31, "%e.%m.%Y, %H:%M", gmtime(&timestamp));
+    strftime(datestr, 31, "%e.%m.%Y, %H:%M", localtime(&timestamp));
 
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
     g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
