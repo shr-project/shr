@@ -129,7 +129,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     char *content = data->content;
 
     char datestr[32];
-    strftime(datestr, 31, "%d.%m.%Y, %H:%M", gmtime(&timestamp));
+    strftime(datestr, 31, "%d.%m.%Y, %H:%M", localtime(&timestamp));
 
     window_text_set(win, "text_status", status);
     window_text_set(win, "text_number", number);
