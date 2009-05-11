@@ -4,6 +4,7 @@
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
  *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -24,7 +25,9 @@
 #include "ophonekitd-dbus.h"
 #include "ophonekitd-dbus-common.h"
 #include "ophonekitd-dbus-usage.h"
+#include "ophonekitd-dbus-contact-cache.h"
 #include "ophonekitd-usage-service-glue.h"
+#include "ophonekitd-contact-cache-service-glue.h"
 
     static gpointer
 dbus_register_object (DBusGConnection *connection,
@@ -56,12 +59,11 @@ void ophonekitd_dbus_start() {
     if(!org_freedesktop_DBus_request_name (proxy,
                 OPHONEKITD_USAGE_SERVICE_NAME, 
                 DBUS_NAME_FLAG_DO_NOT_QUEUE, &result, &error)) {
-        g_debug("Error requesting name! %s", error->message);
+        g_debug("Error requesting name (Usage)! %s", error->message);
     }
 
-
     if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
-        g_debug ("Got result code %u from requesting name", result);
+        g_debug ("Got result code %u from requesting name (Usage)", result);
     }
 
     dbus_register_object (connection, 
@@ -69,4 +71,22 @@ void ophonekitd_dbus_start() {
             OPHONEKITD_TYPE_USAGE_SERVICE,
             &dbus_glib_ophonekitd_usage_service_object_info,
             OPHONEKITD_USAGE_SERVICE_PATH);
+
+    if(!org_freedesktop_DBus_request_name (proxy,
+                OPHONEKITD_CONTACT_CACHE_SERVICE_NAME, 
+                DBUS_NAME_FLAG_DO_NOT_QUEUE, &result, &error)) {
+        g_debug("Error requesting name (ContactCache)! %s", error->message);
+    }
+
+    if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
+        g_debug ("Got result code %u from requesting name (ContactCache)", result);
+    }
+
+    dbus_register_object (connection, 
+            proxy,
+            OPHONEKITD_TYPE_CONTACT_CACHE_SERVICE,
+            &dbus_glib_ophonekitd_contact_cache_service_object_info,
+            OPHONEKITD_CONTACT_CACHE_SERVICE_PATH);
 }
+
+

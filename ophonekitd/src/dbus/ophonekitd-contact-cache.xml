@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<node name="/org/shr/ophonekitd/ContactCache">
+  <interface name="org.shr.ophonekitd.ContactCache">
+    <method name="Lookup">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value="true"/>
+      <arg type="s" name="number" direction="in" />
+      <arg type="s" name="name" direction="out" />
+    </method>
+  </interface>
+</node>
+

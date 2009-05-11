@@ -41,8 +41,5 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
 int exit_callback(void *data, int type, void *event);
 gboolean power_up_antenna();
 
-void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata);
-void cache_phonebook_entry(GValueArray *entry, void *data);
-char *cache_phonebook_lookup(char *number);
 
 #endif
