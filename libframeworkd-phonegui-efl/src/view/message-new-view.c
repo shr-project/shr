@@ -121,7 +121,10 @@ static void frame_content_show(struct MessageNewViewData *data) {
     evas_object_show(data->bt2);
 
     data->sc = elm_scroller_add(window_evas_object_get(win));
+    elm_scroller_policy_set(data->sc, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_ON);
     data->entry = elm_entry_add(window_evas_object_get(win));
+    evas_object_size_hint_weight_set(data->entry, 1.0, 1.0);
+    evas_object_size_hint_align_set(data->entry, -1.0, -1.0);
     evas_object_smart_callback_add(data->entry, "changed", frame_content_content_changed, data);
     if(data->content != NULL) {
         elm_entry_entry_set(data->entry, data->content);
