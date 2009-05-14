@@ -167,12 +167,39 @@ static void frame_content_continue_clicked(struct MessageNewViewData *data, Evas
     free(content);
 }
 
-static void frame_content_content_changed(struct MessageNewViewData *data, Evas_Object *obj, void *event_info) {
-    char *content = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
-    g_debug("content: %s", content);
+/* important notice: not sure how sms split is handled,
+ * iirc at a certain point msg lens are not the same as before,
+ * not 100% sure. should verify
+ */
+static void
+frame_content_content_changed(struct MessageNewViewData *data, Evas_Object *obj, void *event_info)
+{
 
+    char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
+    int limit; /* the limit of the sms */
+    int len; /* the number of characters in the sms */
+    int size; /* the "memory" size of the sms */
     char text[64];
-    sprintf(text, D_("%d characters left [%d]"), 160 - (strlen(content) % 160), (strlen(content) / 160) + 1);
+
+    string_strip_html(content);
+
+    //g_debug("content: %s", content);
+
+    
+    for (size = 0, len = 0; content[size]; len++) 
+	evas_common_font_utf8_get_next((unsigned char *)content, &size);
+    
+    /* if it includes chars that can't be represented
+     * with 7bit encoding, this sms will be sent as ucs-2 treat
+     * it this way! */
+    if (size > len) 
+	limit = 70; /* ucs-2 number of chars limit */
+    else 
+	limit = 160; /* regular number of chars limit */
+    
+
+    /*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
+    sprintf(text, D_("%d characters left [%d]"), limit - (len % limit), (len / limit) + 1);
     window_text_set(data->win, "characters_left", text);
     free(content);
 }
