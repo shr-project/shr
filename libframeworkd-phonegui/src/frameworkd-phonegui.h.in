@@ -31,4 +31,7 @@ void phonegui_load(const char *application_name);
 void* phonegui_get_function(const char *function_name);
 gchar* phonegui_get_user_home_prefix();
 gchar* phonegui_get_user_home_code();
+char *phonegui_contact_cache_lookup(char *number);
+void phonegui_init_contacts_cache();
+void phonegui_destroy_contacts_cache();
 #endif

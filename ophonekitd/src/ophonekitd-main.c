@@ -49,7 +49,6 @@ call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
 int incoming_calls_size = 0;
 int outgoing_calls_size = 0;
-GHashTable *contact_cache = NULL;
 
 int main(int argc, char ** argv) {
     GMainLoop *mainloop = NULL;
@@ -100,7 +99,7 @@ int main(int argc, char ** argv) {
 
     free(incoming_calls);
     free(outgoing_calls);
-    g_hash_table_destroy(contact_cache);
+    phonegui_destroy_contacts_cache();
 
     exit(EXIT_SUCCESS);
 }
@@ -202,7 +201,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
                 int unique_id = phonelog_add_new_call(number);
                 ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id, unique_id);
                 phonelog_log_call_event(unique_id, status);
-                phonegui_incoming_call_show(call_id, status, cache_phonebook_lookup(number));
+                phonegui_incoming_call_show(call_id, status, phonegui_contact_cache_lookup(number));
             }
             break;
         case CALL_STATUS_OUTGOING:
@@ -211,7 +210,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
                 int unique_id = phonelog_add_new_call(number);
                 ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id, unique_id);
                 phonelog_log_call_event(unique_id, status);
-                phonegui_outgoing_call_show(call_id, status, cache_phonebook_lookup(number));
+                phonegui_outgoing_call_show(call_id, status, phonegui_contact_cache_lookup(number));
             }
             break;
         case CALL_STATUS_RELEASE:
@@ -411,8 +410,8 @@ void sim_ready_status_callback(GError *error, gboolean status, gpointer userdata
 		g_debug("sim ready");
 		sim_ready = TRUE;
 		ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
-		ogsmd_sim_retrieve_phonebook("contacts", cache_phonebook_callback, NULL);
-	}
+	    phonegui_init_contacts_cache();
+    }
 }
 
 
@@ -454,59 +453,6 @@ void get_messagebook_info_callback(GError *error, GHashTable *info, gpointer use
         /* TODO */
     }
 }
-
-
-void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata) {
-	 g_debug("cache_phonebook_callback called");
-	 if(error == NULL && contacts != NULL) {
-		  g_debug("creating contact_cache");
-		  contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-	 	  if (!contact_cache) {
-	 	      g_warning("could not allocate contact cache");
-	 	      return;
-	 	  }
-	 	  g_ptr_array_foreach(contacts, cache_phonebook_entry, NULL);
-	 }
-	 else
-		  g_debug("caching phonebook failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
-
-}
-
-
-void cache_phonebook_entry(GValueArray *entry, void *data) {
-    char *number = strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
-    char *name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
-    g_hash_table_insert(contact_cache, number, name);
-}
-
-
-char *cache_phonebook_lookup(char *number) {
-    if(contact_cache == NULL) return ("");
-    g_debug("looking for '%s' in contacts_cache", number);
-    if (!number || !*number || !strcmp(number, "*****")) {
-        g_debug("contact_cache: got unknown number");
-        return ("");
-    }
-    if (*number == '"') {
-        number++;
-        char *s = number;
-        while (*s) {
-            if (*s == '"') {
-                *s = '\0';
-                break;
-            }
-            s++;
-        }
-    }
-
-    char *name = g_hash_table_lookup(contact_cache, number);
-    if (name)
-        g_debug("found name '%s'", name);
-    if (name && *name)
-        return (name);
-    return (number);
-}
-
 
 int exit_callback(void *data, int type, void *event) {
     /* called on ctrl-c, kill $pid, SIGINT, SIGTERM and SIGQIT */

@@ -1,5 +1,5 @@
 #include "views.h"
-
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 struct MessageListViewData {
     struct Window *win;
@@ -186,7 +186,7 @@ static void process_message(gpointer _message, gpointer _data) {
     strftime(datestr, 31, "%e.%m.%Y, %H:%M", localtime(&timestamp));
 
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
-    g_hash_table_insert(parameters, strdup("number"), strdup(cache_phonebook_lookup(data->contact_cache, (char *)g_value_get_string(g_value_array_get_nth(message, 2)))));
+    g_hash_table_insert(parameters, strdup("number"), strdup(phonegui_contact_cache_lookup((char *)g_value_get_string(g_value_array_get_nth(message, 2)))));
     char *content = strdup(g_value_get_string(g_value_array_get_nth(message, 3)));
     string_replace_newline(content);
     g_hash_table_insert(parameters, strdup("content"), content);

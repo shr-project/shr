@@ -71,46 +71,16 @@ void message_show_view_hide(struct MessageShowViewData *data) {
 }
 
 
-
-static void search_number(gpointer _entry, gpointer _data)
-{
-	GValueArray *entry = (GValueArray *)_entry;
-    gchar *number = NULL;
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
-
-	/* do nothing if the number was already found */
-	if (data->name) return;
-    number = g_value_get_string(g_value_array_get_nth(entry, 2));
-	if( strcmp(number, data->number) == 0 || strcmp(g_strconcat(phonegui_get_user_home_code(),g_strndup(number+strlen(phonegui_get_user_home_prefix()),strlen(data->number)-strlen(phonegui_get_user_home_prefix())),NULL),data->number) == 0) {
-		data->name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
-		async_trigger(name_callback2, data);
-	} 
-    
-}
-
-static void name_callback(GError *error, GPtrArray *contacts, void *data)
-{
-    if (error == NULL) {
-        g_ptr_array_foreach(contacts, search_number, data);
-    }
-}
-
-static void name_callback2(struct MessageShowViewData *data)
-{
-    window_text_set(data->win, "text_number", data->name);
-}
-
-
 static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer _data) {
     struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
     g_debug("retrieve_callback()");
     data->status = strdup(status);
     data->number = strdup(number);
-	 data->name = NULL;
+    data->name =  strdup(phonegui_contact_cache_lookup(number));
+
     data->content = elm_entry_utf8_to_markup(content);
     data->properties = properties; // TODO: copy
 
-    ogsmd_sim_retrieve_phonebook("contacts", name_callback, data);
 
     async_trigger(retrieve_callback2, data);
 }
@@ -140,6 +110,7 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     window_text_set(win, "label_number", D_("From:"));
     window_text_set(win, "label_date", D_("Date:"));
     window_text_set(win, "label_status", D_("Status:"));
+    window_text_set(win, "text_number", data->name);
 
     data->bt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->bt1, D_("Close"));
