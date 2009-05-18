@@ -81,7 +81,7 @@ static void search_number(gpointer _entry, gpointer _data)
 	/* do nothing if the number was already found */
 	if (data->name) return;
     number = g_value_get_string(g_value_array_get_nth(entry, 2));
-	if( strcmp(number, data->number) == 0 || strcmp(g_strconcat(phonegui_get_user_home_code(),g_strndup(number+strlen(phonegui_get_user_home_prefix(),strlen(data->number)-strlen(phonegui_get_user_home_prefix())),NULL),data->number)) == 0) {
+	if( strcmp(number, data->number) == 0 || strcmp(g_strconcat(phonegui_get_user_home_code(),g_strndup(number+strlen(phonegui_get_user_home_prefix(),strlen(data->number)-strlen(phonegui_get_user_home_prefix())),NULL)),data->number) == 0) {
 		data->name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
 		async_trigger(name_callback2, data);
 	} 
