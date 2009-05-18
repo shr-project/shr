@@ -126,15 +126,10 @@ gchar *normalize_phone_number(gchar *_number) {
 	number = g_strdup(_number[conf->international_prefix_len - 1]);
         *number = '+';
     }
-    else {
-	number = g_strdup(_number);
-    }
-
-    /* step 2: normalize national prefix to +<CC> */
-    if (conf->national_prefix_len > 0 && strncmp(number, conf->national_prefix, conf->national_prefix_len) == 0) {
-        gchar *ret = g_strconcat("+", conf->country_code, number + conf->national_prefix_len, NULL);
-        g_free(number);
-        return (ret);
+    /* step 2: normalize national prefix to +<CC>
+     * if national_prefix = "" assume it's a match */
+    else if (conf->national_prefix_len >= 0 && strncmp(_number, conf->national_prefix, conf->national_prefix_len) == 0) {
+        number = g_strconcat("+", conf->country_code, _number + conf->national_prefix_len, NULL);
     }
 
     return (number);
