@@ -119,25 +119,26 @@ gchar* phonegui_get_user_home_code() {
 
 gchar *normalize_phone_number(gchar *_number) {
 
-    gchar *org_number = g_strdup(_number);
-    gchar *number = org_number;
+    gchar *number;
 
     /* step 1: normalize 00 to + */
-    if (conf->international_prefix_len > 0 && strncmp(number, conf->international_prefix, conf->international_prefix_len) == 0) {
-        number += conf->international_prefix_len - 1;
+    if (conf->international_prefix_len > 0 && strncmp(_number, conf->international_prefix, conf->international_prefix_len) == 0) {
+	number = g_strdup(_number[conf->international_prefix_len - 1]);
         *number = '+';
+    }
+    else {
+	number = g_strdup(_number);
     }
 
     /* step 2: normalize national prefix to +<CC> */
     if (conf->national_prefix_len > 0 && strncmp(number, conf->national_prefix, conf->national_prefix_len) == 0) {
         gchar *ret = g_strconcat("+", conf->country_code, number + conf->national_prefix_len, NULL);
-        g_free(org_number);
+        g_free(number);
         return (ret);
     }
 
     return (number);
 }
-
 
 gboolean phone_number_equal(gconstpointer _a, gconstpointer _b)
 {
