@@ -25,6 +25,7 @@
 #define MESSAGE_FILE "@DATADIR@/libframeworkd-phonegui-efl/messages.edj"
 #define SIM_AUTH_FILE "@DATADIR@/libframeworkd-phonegui-efl/sim-auth.edj"
 #define USSD_FILE "@DATADIR@/libframeworkd-phonegui-efl/ussd.edj"
+#define MESSAGE_RECEIPT_FILE "@DATADIR@/libframeworkd-phonegui-efl/message-receipt.edj"
 
 #define DELETE_TEXT_ICON "@DATADIR@/libframeworkd-phonegui-efl/edit-undo.png"
 
@@ -69,6 +70,9 @@ void contact_delete_view_hide(struct ContactDeleteViewData *data);
 
 struct UssdViewData *ussd_view_show(struct Window *win, GHashTable *options);
 void ussd_view_hide(struct UssdViewData *data);
+
+struct MessageReceiptViewData *message_receipt_view_show(struct Window *win, GHashTable *options);
+void message_receipt_view_hide(struct MessageReceiptViewData *data);
 
 #endif
 

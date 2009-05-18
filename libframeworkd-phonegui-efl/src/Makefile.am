@@ -18,6 +18,7 @@ libframeworkd_phonegui_efl_la_SOURCES = \
 	phonegui-call.h phonegui-call.c \
 	phonegui-contacts.h phonegui-contacts.c \
 	phonegui-ussd.h phonegui-ussd.c \
+	phonegui-message-receipt.h phonegui-message-receipt.c \
 	widget/etk_tree_model_edje.h widget/etk_tree_model_edje.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	widget/elm_my_contactlist.h widget/elm_my_contactlist.c \
@@ -42,5 +43,6 @@ libframeworkd_phonegui_efl_la_SOURCES = \
 	view/call-incoming-view.c \
 	view/call-active-view.c \
 	view/sim-auth-input-view.c \
-	view/ussd-view.c
+	view/ussd-view.c \
+	view/message-receipt-view.c
 

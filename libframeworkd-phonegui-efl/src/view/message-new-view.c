@@ -12,6 +12,7 @@ struct MessageNewViewData {
     struct Window *win;
     int mode;
     char *content;
+    int content_length;
     Evas_Object *bb, *entry, *bt1, *bt2, *bt3, *bt4, *bt5, *hv, *bx, *hbt1, *hbt2, *hbt3, *sc;
     Evas_Object *list_contacts;
     Evas_Object *information;
@@ -21,6 +22,7 @@ struct MessageNewViewData {
     Etk_Widget *container_recipients, *tree_recipients;
     Etk_Tree_Col *col1_recipients;
 
+    int limit; // how many letters can we send in one message (70 for usc2 / 160 for gsm_default)
     int messages_sent;
 };
 
@@ -68,8 +70,10 @@ struct MessageNewViewData *message_new_view_show(struct Window *win, GHashTable 
     data->win = win;
     data->mode = MODE_CONTENT;
     data->content = NULL;
+    data->content_length = 0;
     data->recipients = g_ptr_array_new();
     data->messages_sent = 0;
+    data->limit = 160;
 
     if(options != NULL) {
         char *recipient = g_hash_table_lookup(options, "recipient");
@@ -192,14 +196,16 @@ frame_content_content_changed(struct MessageNewViewData *data, Evas_Object *obj,
     /* if it includes chars that can't be represented
      * with 7bit encoding, this sms will be sent as ucs-2 treat
      * it this way! */
-    if (size > len) 
-	limit = 70; /* ucs-2 number of chars limit */
-    else 
-	limit = 160; /* regular number of chars limit */
+    if (size > len) {
+    	data->limit = 70; /* ucs-2 number of chars limit */
+    }
+    else { 
+	    data->limit = 160; /* regular number of chars limit */
+    }
     
 
     /*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
-    sprintf(text, D_("%d characters left [%d]"), limit - (len % limit), (len / limit) + 1);
+    sprintf(text, D_("%d characters left [%d]"), data->limit - (len % data->limit), (len / data->limit) + 1);
     window_text_set(data->win, "characters_left", text);
     free(content);
 }
@@ -314,16 +320,59 @@ static void frame_recipient_continue_clicked(struct MessageNewViewData *data, Ev
     if(data->recipients->len) {
         window_frame_show(data->win, data, frame_sending_show, frame_sending_hide);
 
+        int csm_num = 0, csm_id = 1;
+        int len = strlen(data->content);
+
+        GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+
+        /* we want to receive a receipt */
+        g_hash_table_insert(options, "status-report-request", TRUE);
+        
+        /* set alphabet, if needed */
+        //if( data->limit == 70 ) {
+        //	 g_debug("sending usc2, because content is not 7-bit");
+        //	 g_hash_table_insert(options, "alphabet", "usc2");
+        //}
+
+        /* check if we have to split into multiple messages */
+        //if( len > data->limit ) {
+        //    g_debug("we have to split the message... to long (%d, limit is %d)", len, data->limit);
+        //    csm_num = len / data->limit;
+        //    if( len % data->limit > 0 )
+        //        csm_num++;
+
+        //    g_hash_table_insert(options, "csm_id", csm_id);
+        //    g_hash_table_insert(options, "csm_num", csm_num);
+        //}
+
         int i;
         for (i = 0 ; i < data->recipients->len; i++) {
             GHashTable *properties = (GHashTable *) g_ptr_array_index(data->recipients, i);
             char *number = (char *) g_hash_table_lookup(properties, "number");
             assert(number != NULL);
 
-            GHashTable *options = g_hash_table_new(NULL, NULL);
-            // TODO: Remove strdup
-            ogsmd_sms_send_message(strdup(number), strdup(data->content), options, frame_recipient_send_callback, data);
-            frame_recipient_send_callback(NULL, 1, "", data);
+            /* send a multipart SMS */
+            //if( csm_num ) {
+            //    g_debug("sending multipart SMS");
+            //    char *p = data->content;
+            //    char *buf = malloc(data->limit + 1);
+            //    int csm_seq;
+            //    for (csm_seq = 1; csm_seq <= csm_num; csm_seq++) {
+            //        g_hash_table_replace(options, "csm_seq", csm_seq);
+            //        snprintf(buf, data->limit, p);
+            //        ogsmd_sms_send_message(number, buf, options, NULL, NULL);
+            //        p += data->limit;
+            //    }
+            //}
+            ///* send a single part SMS */
+            //else {
+                g_debug("sending single part SMS");
+                ogsmd_sms_send_message(number, g_strdup(data->content), options, NULL, NULL);
+            //}
+
+            //frame_recipient_send_callback(NULL, 1, "", data);
+            g_debug("done sending");
+            async_trigger(frame_recipient_send_callback2, data);
         }
     }
 }

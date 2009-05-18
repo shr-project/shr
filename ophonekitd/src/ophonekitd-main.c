@@ -295,6 +295,11 @@ void ophonekitd_incoming_ussd_handler(int mode, const char* message) {
     phonegui_ussd_show(mode, message);
 }
 
+void ophonekitd_incoming_message_receipt_handler(const char *number, const char *content, GHashTable *properties)
+{
+    g_debug("ophonekitd_incoming_message_receipt_handler(number=%s)", number);
+    phonegui_message_receipt_show(number, content, properties);
+}
 
 gboolean list_resources() {
     g_debug("list_resources()");
