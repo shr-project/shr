@@ -113,7 +113,7 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
 
 
 char *phonegui_contact_cache_lookup(char *number) {
-    if(conf->contact_cache == NULL) return ("");
+    if(conf->contact_cache == NULL) return (number);
     g_debug("looking for '%s' in contacts_cache", number);
     if (!number || !*number || !strcmp(number, "*****")) {
         g_debug("contact_cache: got unknown number");
@@ -130,14 +130,14 @@ char *phonegui_contact_cache_lookup(char *number) {
             s++;
         }
     }
-
+    
     char *name = g_hash_table_lookup(conf->contact_cache, number);
     if (name)
         g_debug("found name '%s'", name);
     if (name && *name)
         return (name);
     int offset = ((strncmp(number, "00", 2) == 0) ? 1 : 0);
-    gchar * number_without_prefix = g_strndup(number+ strlen(conf->home_code) + offset,strlen(number)-strlen(conf->home_code)-offset);
+    gchar * number_without_prefix = g_strndup(number + strlen(conf->home_code) + offset,strlen(number)-strlen(conf->home_code)-offset);
     gchar * number_locally_prefixed = g_strconcat(conf->home_prefix,number_without_prefix);
     name = g_hash_table_lookup(conf->contact_cache, number_locally_prefixed);
     g_free(number_without_prefix);
