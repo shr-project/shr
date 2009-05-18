@@ -15,6 +15,7 @@
 
 #ifndef _FRAMEWORKD_PHONEGUI_H
 #define _FRAMEWORKD_PHONEGUI_H
+#include <glib.h>
 
 #define FRAMEWORKD_PHONEGUI_CONFIG "@SYSCONFDIR@/frameworkd-phonegui.conf"
 
