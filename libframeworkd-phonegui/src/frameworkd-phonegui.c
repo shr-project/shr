@@ -15,6 +15,8 @@
  */
 
 #include "frameworkd-phonegui.h"
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 #include <stdio.h>
 #include <string.h>
