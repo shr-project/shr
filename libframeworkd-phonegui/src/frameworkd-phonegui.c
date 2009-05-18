@@ -28,8 +28,12 @@
 typedef struct
 {
     gchar *library;
+    gchar *international_prefix;
+    gint international_prefix_len;
+    gchar *national_prefix;
+    gint national_prefix_len;
+    gchar *country_code;
     gchar *home_code;
-    gchar *home_prefix;
     GHashTable *contact_cache;
 } Settings;
 
@@ -51,9 +55,12 @@ void phonegui_load(const char *application_name) {
 
     conf = g_slice_new (Settings);
     conf->library = g_key_file_get_string(keyfile,"phonegui","library",NULL);
+    conf->international_prefix = g_key_file_get_string(keyfile,"local","international_prefix",NULL);
+    conf->international_prefix_len = strlen(conf->international_prefix);
+    conf->national_prefix = g_key_file_get_string(keyfile,"local","national_prefix",NULL);
+    conf->national_prefix_len = strlen(conf->national_prefix);
+    conf->country_code = g_key_file_get_string(keyfile,"local","country_code",NULL);
     conf->home_code = g_key_file_get_string(keyfile,"local","home_code",NULL);
-    conf->home_prefix = g_key_file_get_string(keyfile,"local","home_prefix",NULL);
-
 
 
     /* Load library */
@@ -82,12 +89,71 @@ void phonegui_load(const char *application_name) {
         return pointer;
     }
 
+gchar *phonegui_get_user_international_prefix() {
+    return conf->international_prefix;
+}
+
+gchar *phonegui_get_user_national_prefix() {
+    return conf->national_prefix;
+}
+
+gchar* phonegui_get_user_country_code() {
+    return conf->country_code;
+}
+
 gchar* phonegui_get_user_home_code() {
     return conf->home_code;
 }
 
-gchar* phonegui_get_user_home_prefix() {
-    return conf->home_prefix;
+
+/*
+
+17:43 < DocScrutinizer> so: 
+17:43 < DocScrutinizer> Nr1 := Nr s/<IP>(.*)/\+$1/   #00 49 911 12345 -> + 49 911 12345
+17:43 < DocScrutinizer> Nr2 = Nr1 s/<NP>/\+<CC>/  # 0 911 12345 ->  + 49 911 12345
+17:43 < DocScrutinizer> Nr3 = Nr2 s/[^\+](.*)/\+<CC><HC>$1/  # 12345 ->  + 49 911 12345
+17:43 < DocScrutinizer> step3 above isn't considered very practical for cellphones
+17:43 < DocScrutinizer> <IP>, <CC>, <NP>, and <HC> are user definable config-values
+17:47 < DocScrutinizer> oops, for correctness:    non-normalized my be: <NUMBER> | <NationalPrefix><anyHC><NUMBER> | 
+<InterntlPrefix><anyCC><anyHC><NUMBER>
+*/
+
+gchar *normalize_phone_number(gchar *number) {
+
+    g_debug("normalizing number '%s'", number);
+    /* step 1: normalize 00 to + */
+    if (conf->international_prefix_len > 0 && strncmp(number, conf->international_prefix, conf->international_prefix_len) == 0) {
+        number += conf->international_prefix_len - 1;
+        *number = '+';
+    }
+
+    g_debug("step 1: '%s'", number);
+
+    /* step 2: normalize national prefix to +<CC> */
+    if (conf->national_prefix_len > 0 && strncmp(number, conf->national_prefix, conf->national_prefix_len) == 0) {
+        return (g_strconcat("+", conf->country_code, number, NULL));
+    }
+
+    return (g_strdup(number));
+}
+
+
+gboolean phone_number_equal(gconstpointer _a, gconstpointer _b)
+{
+    gboolean ret = FALSE;
+    gchar *a = normalize_phone_number((gchar *)_a);
+    gchar *b = normalize_phone_number((gchar *)_b);
+
+    g_debug("normalized number a '%s' ---> '%s'", (char *)_a, a);
+    g_debug("normalized number b '%s' ---> '%s'", (char *)_b, b);
+
+    if (strcmp(a, b) == 0)
+        ret = TRUE;
+
+    g_free(a);
+    g_free(b);
+
+    return ret;
 }
 
 void cache_phonebook_entry(GValueArray *entry, void *data) {
@@ -95,11 +161,13 @@ void cache_phonebook_entry(GValueArray *entry, void *data) {
     char *name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
     g_hash_table_insert(conf->contact_cache, number, name);
 }
+
+
 void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata) {
     g_debug("cache_phonebook_callback called");
     if(error == NULL && contacts != NULL) {
         g_debug("creating contact_cache");
-        conf->contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+        conf->contact_cache = g_hash_table_new_full(g_str_hash, phone_number_equal, free, free);
         if (!conf->contact_cache) {
             g_warning("could not allocate contact cache");
             return;
@@ -110,6 +178,7 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
         g_debug("caching phonebook failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
 
 }
+
 
 
 char *phonegui_contact_cache_lookup(char *number) {
@@ -130,23 +199,12 @@ char *phonegui_contact_cache_lookup(char *number) {
             s++;
         }
     }
-    
-    char *name = g_hash_table_lookup(conf->contact_cache, number);
-    if (name)
-        g_debug("found name '%s'", name);
-    if (name && *name)
-        return (name);
-    int offset = ((strncmp(number, "00", 2) == 0) ? 1 : 0);
-    gchar * number_without_prefix = g_strndup(number + strlen(conf->home_code) + offset,strlen(number)-strlen(conf->home_code)-offset);
-    gchar * number_locally_prefixed = g_strconcat(conf->home_prefix,number_without_prefix);
-    name = g_hash_table_lookup(conf->contact_cache, number_locally_prefixed);
-    g_free(number_without_prefix);
-    g_free(number_locally_prefixed);
-    if (name)
-        g_debug("found name '%s'", name);
-    if (name && *name)
-        return (name);
 
+    char *name = g_hash_table_lookup(conf->contact_cache, number);
+    if (name && *name) {
+        g_debug("found name '%s'", name);
+        return (name);
+    }
     return (number);
 }
 
