@@ -20,6 +20,8 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #include <glib.h>
+#include <stdlib.h>
+
 typedef struct
 {
     gchar *library;
