@@ -75,19 +75,18 @@ void phonegui_load(const char *application_name) {
 }
 
 
-    void *phonegui_get_function(const char *name) {
-        if(phonegui_library == NULL)
-        {
-            g_error("phonegui library not loaded");
-        }
-
-        void *pointer = dlsym(phonegui_library, name);
-        char *error;
-        if((error = dlerror()) != NULL)  {
-            g_error("Symbol not found: %s", error);
-        }
-        return pointer;
+void *phonegui_get_function(const char *name) {
+    if(phonegui_library == NULL) {
+        g_error("phonegui library not loaded");
     }
+
+    void *pointer = dlsym(phonegui_library, name);
+    char *error;
+    if((error = dlerror()) != NULL)  {
+        g_error("Symbol not found: %s", error);
+    }
+    return pointer;
+}
 
 gchar *phonegui_get_user_international_prefix() {
     return conf->international_prefix;
@@ -120,9 +119,8 @@ gchar* phonegui_get_user_home_code() {
 
 gchar *normalize_phone_number(gchar *_number) {
 
-    gchar *number = g_strdup(_number);
-
-    g_debug("normalizing number '%s'", number);
+    gchar *org_number = g_strdup(_number);
+    gchar *number = org_number;
 
     /* step 1: normalize 00 to + */
     if (conf->international_prefix_len > 0 && strncmp(number, conf->international_prefix, conf->international_prefix_len) == 0) {
@@ -130,12 +128,10 @@ gchar *normalize_phone_number(gchar *_number) {
         *number = '+';
     }
 
-    g_debug("step 1: '%s'", number);
-
     /* step 2: normalize national prefix to +<CC> */
     if (conf->national_prefix_len > 0 && strncmp(number, conf->national_prefix, conf->national_prefix_len) == 0) {
-        gchar *ret = g_strconcat("+", conf->country_code, number, NULL);
-        g_free(number);
+        gchar *ret = g_strconcat("+", conf->country_code, number + conf->national_prefix_len, NULL);
+        g_free(org_number);
         return (ret);
     }
 
@@ -149,9 +145,6 @@ gboolean phone_number_equal(gconstpointer _a, gconstpointer _b)
     gchar *a = normalize_phone_number((gchar *)_a);
     gchar *b = normalize_phone_number((gchar *)_b);
 
-    g_debug("normalized number a '%s' ---> '%s'", (char *)_a, a);
-    g_debug("normalized number b '%s' ---> '%s'", (char *)_b, b);
-
     if (strcmp(a, b) == 0)
         ret = TRUE;
 
@@ -159,6 +152,14 @@ gboolean phone_number_equal(gconstpointer _a, gconstpointer _b)
     g_free(b);
 
     return ret;
+}
+
+guint phone_number_hash(gconstpointer v)
+{
+    gchar *n = normalize_phone_number((gchar *)v);
+    guint ret = g_str_hash(n);
+    g_free(n);
+    return (ret);
 }
 
 void cache_phonebook_entry(GValueArray *entry, void *data) {
@@ -172,7 +173,7 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
     g_debug("cache_phonebook_callback called");
     if(error == NULL && contacts != NULL) {
         g_debug("creating contact_cache");
-        conf->contact_cache = g_hash_table_new_full(g_str_hash, phone_number_equal, free, free);
+        conf->contact_cache = g_hash_table_new_full(phone_number_hash, phone_number_equal, free, free);
         if (!conf->contact_cache) {
             g_warning("could not allocate contact cache");
             return;
