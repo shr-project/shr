@@ -15,6 +15,7 @@
  */
 
 #include "frameworkd-phonegui.h"
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -87,6 +88,11 @@ gchar* phonegui_get_user_home_prefix() {
     return conf->home_prefix;
 }
 
+void cache_phonebook_entry(GValueArray *entry, void *data) {
+    char *number = strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
+    char *name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
+    g_hash_table_insert(conf->contact_cache, number, name);
+}
 void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userdata) {
     g_debug("cache_phonebook_callback called");
     if(error == NULL && contacts != NULL) {
@@ -101,13 +107,6 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
     else
         g_debug("caching phonebook failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
 
-}
-
-
-void cache_phonebook_entry(GValueArray *entry, void *data) {
-    char *number = strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
-    char *name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
-    g_hash_table_insert(conf->contact_cache, number, name);
 }
 
 
@@ -136,7 +135,7 @@ char *phonegui_contact_cache_lookup(char *number) {
     if (name && *name)
         return (name);
     int offset = ((strncmp(number, "00", 2) == 0) ? 1 : 0);
-    gchar * number_without_prefix = g_strndup(number+ strlen(conf->home_code) + offset,,strlen(number)-strlen(conf->home_code)-offset);
+    gchar * number_without_prefix = g_strndup(number+ strlen(conf->home_code) + offset,strlen(number)-strlen(conf->home_code)-offset);
     gchar * number_locally_prefixed = g_strconcat(conf->home_prefix,number_without_prefix);
     name = g_hash_table_lookup(conf->contact_cache, number_locally_prefixed);
     g_free(number_without_prefix);
