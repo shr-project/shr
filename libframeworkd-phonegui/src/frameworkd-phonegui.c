@@ -31,7 +31,7 @@ typedef struct
 } Settings;
 
 void phonegui_load(const char *application_name) {
-    Settings *configuration;
+    Settings *conf;
     GKeyFile *keyfile;
     GKeyFileFlags flags;
     GError *error = NULL;
@@ -41,7 +41,7 @@ void phonegui_load(const char *application_name) {
     if (!g_key_file_load_from_file (keyfile, FRAMEWORKD_PHONEGUI_CONFIG, flags, &error))
     {
         g_error (error->message);
-        return -1;
+        return;
     }
 
     conf = g_slice_new (Settings);
