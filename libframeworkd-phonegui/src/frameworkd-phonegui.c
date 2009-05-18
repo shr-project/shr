@@ -20,9 +20,6 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #include <glib.h>
-
-static void *phonegui_library = NULL;
-
 typedef struct
 {
     gchar *library;
@@ -30,8 +27,10 @@ typedef struct
     gchar *home_prefix;
 } Settings;
 
+static void *phonegui_library = NULL;
+static Settings *conf = NULL;
+
 void phonegui_load(const char *application_name) {
-    Settings *conf;
     GKeyFile *keyfile;
     GKeyFileFlags flags;
     GError *error = NULL;
@@ -55,10 +54,10 @@ void phonegui_load(const char *application_name) {
     if(conf->library != NULL) {
         phonegui_library = dlopen(conf->library, RTLD_LOCAL | RTLD_LAZY);
         if(!phonegui_library) {
-            g_error("Loading %s failed: %s", name, dlerror());
+            g_error("Loading %s failed: %s", conf->library, dlerror());
         } 
     } else {
-        g_error("Loading %s failed: %s", name, dlerror());
+        g_error("Loading failed. Conf->library not set.");
     }
 }
 
