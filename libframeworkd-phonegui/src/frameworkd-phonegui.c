@@ -118,9 +118,12 @@ gchar* phonegui_get_user_home_code() {
 <InterntlPrefix><anyCC><anyHC><NUMBER>
 */
 
-gchar *normalize_phone_number(gchar *number) {
+gchar *normalize_phone_number(gchar *_number) {
+
+    gchar *number = g_strdup(_number);
 
     g_debug("normalizing number '%s'", number);
+
     /* step 1: normalize 00 to + */
     if (conf->international_prefix_len > 0 && strncmp(number, conf->international_prefix, conf->international_prefix_len) == 0) {
         number += conf->international_prefix_len - 1;
@@ -131,10 +134,12 @@ gchar *normalize_phone_number(gchar *number) {
 
     /* step 2: normalize national prefix to +<CC> */
     if (conf->national_prefix_len > 0 && strncmp(number, conf->national_prefix, conf->national_prefix_len) == 0) {
-        return (g_strconcat("+", conf->country_code, number, NULL));
+        g_char *ret = g_strconcat("+", conf->country_code, number, NULL);
+        g_free(number);
+        return (ret);
     }
 
-    return (g_strdup(number));
+    return (number);
 }
 
 
