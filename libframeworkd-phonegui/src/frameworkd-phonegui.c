@@ -129,13 +129,14 @@ gchar *normalize_phone_number(gchar *_number) {
     /* step 2: normalize national prefix to +<CC>
      * if national_prefix = "" assume it's a match */
     else if (conf->national_prefix_len >= 0 && strncmp(_number, conf->national_prefix, conf->national_prefix_len) == 0) {
-        number = g_strconcat("+", conf->country_code, _number + conf->national_prefix_len, NULL);
+        number = g_strconcat("+", conf->country_code, _number[conf->national_prefix_len], NULL);
     }
     else {
 	number = g_strdup(_number);
     }
     g_debug("Normalized %s to %s\n", _number, number);
-    return (number);
+
+    return number;
 }
 
 gboolean phone_number_equal(gconstpointer _a, gconstpointer _b)
