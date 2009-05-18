@@ -131,6 +131,9 @@ gchar *normalize_phone_number(gchar *_number) {
     else if (conf->national_prefix_len >= 0 && strncmp(_number, conf->national_prefix, conf->national_prefix_len) == 0) {
         number = g_strconcat("+", conf->country_code, _number + conf->national_prefix_len, NULL);
     }
+    else {
+	number = g_strdup(_number);
+    }
 
     return (number);
 }
