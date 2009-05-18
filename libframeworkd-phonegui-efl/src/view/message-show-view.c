@@ -1,7 +1,7 @@
 #include "views.h"
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
-
 
 struct MessageShowViewData {
     struct Window *win;
@@ -75,15 +75,17 @@ void message_show_view_hide(struct MessageShowViewData *data) {
 static void search_number(gpointer _entry, gpointer _data)
 {
 	GValueArray *entry = (GValueArray *)_entry;
+    gchar *number = NULL;
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
 	/* do nothing if the number was already found */
 	if (data->name) return;
-
-	if( strcmp(g_value_get_string(g_value_array_get_nth(entry, 2)), data->number) == 0 ) {
+    number = g_value_get_string(g_value_array_get_nth(entry, 2));
+	if( strcmp(number, data->number) == 0 || strcmp(g_strconcat(phonegui_get_user_home_code(),phonegui_get_user_home_prefix(),number,NULL),data->number) == 0) {
 		data->name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
 		async_trigger(name_callback2, data);
-	}
+	} 
+    
 }
 
 static void name_callback(GError *error, GPtrArray *contacts, void *data)
