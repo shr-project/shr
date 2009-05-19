@@ -137,7 +137,6 @@ gchar *normalize_phone_number(gchar *_number) {
     else {
 	number = g_strdup(_number);
     }
-    g_debug("Normalized %s to %s\n", _number, number);
 
     return number;
 }
