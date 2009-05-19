@@ -120,9 +120,12 @@ gchar* phonegui_get_user_home_code() {
 gchar *normalize_phone_number(gchar *_number) {
 
     gchar *number;
-
+    /* if normalized, skip */
+    if (_number[0] == '+') {
+        number = g_strdup(_number);
+    }
     /* step 1: normalize 00 to + */
-    if (conf->international_prefix_len > 0 && strncmp(_number, conf->international_prefix, conf->international_prefix_len) == 0) {
+    else if (conf->international_prefix_len > 0 && strncmp(_number, conf->international_prefix, conf->international_prefix_len) == 0) {
 	number = g_strdup(&_number[conf->international_prefix_len - 1]);
         *number = '+';
     }
