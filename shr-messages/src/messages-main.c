@@ -36,11 +36,11 @@ int main(int argc, char **argv) {
     GMainLoop *mainloop = NULL;
     g_type_init();
     mainloop = g_main_loop_new (NULL, FALSE);
-
-    /* Run glib main loop and start ui */
+    phonegui_init_contacts_cache();
+    /* Run glib main loop and start ui */	  
     g_timeout_add(0, start, NULL);
     g_main_loop_run(mainloop);
-
+    phonegui_destroy_contacts_cache();
     return EXIT_SUCCESS;
 }
 

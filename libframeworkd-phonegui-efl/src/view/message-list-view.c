@@ -1,5 +1,5 @@
 #include "views.h"
-
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 struct MessageListViewData {
     struct Window *win;
@@ -9,8 +9,6 @@ struct MessageListViewData {
     Etk_Widget *container, *tree;
     Etk_Tree_Row *selected_row;
     Etk_Tree_Col *col1;
-
-    GHashTable *contact_cache;
 
     GPtrArray *messages;
 };
@@ -25,11 +23,6 @@ static void message_list_view_message_deleted(struct MessageListViewData *data);
 static void message_list_view_message_deleted_callback(struct MessageListViewData *data);
 static void retrieve_messagebook_callback(GError*error, GPtrArray*messages, struct MessageListViewData *data);
 static void retrieve_messagebook_callback2(struct MessageListViewData *data);
-
-static void cache_contacts_callback(GError *error, GPtrArray *contacts, gpointer userdata);
-void cache_phonebook_entry(GValueArray *entry, void *_data);
-char *cache_phonebook_lookup(GHashTable *contact_cache, char *number);
-
 
 struct MessageListViewData *message_list_view_show(struct Window *win, GHashTable *options) {
     g_debug("message_list_view_show()");
@@ -111,7 +104,7 @@ struct MessageListViewData *message_list_view_show(struct Window *win, GHashTabl
     window_swallow(win, "list", etk_embed_object_get(ETK_EMBED(data->container)));
 
 
-    ogsmd_sim_retrieve_phonebook("contacts", cache_contacts_callback, data);
+    ogsmd_sim_retrieve_messagebook("all", retrieve_messagebook_callback, data);
     window_show(win);
     return data;
 }
@@ -130,8 +123,6 @@ void message_list_view_hide(struct MessageListViewData *data) {
 
     window_unswallow(win, data->container);
     etk_widget_hide_all(data->container);
-
-    g_hash_table_destroy(data->contact_cache);
 
     // TODO: Free tree memory
     //etk_object_destroy(col1);
@@ -186,7 +177,7 @@ static void process_message(gpointer _message, gpointer _data) {
     strftime(datestr, 31, "%e.%m.%Y, %H:%M", localtime(&timestamp));
 
     GHashTable *parameters = g_hash_table_new(NULL, NULL);
-    g_hash_table_insert(parameters, strdup("number"), strdup(cache_phonebook_lookup(data->contact_cache, (char *)g_value_get_string(g_value_array_get_nth(message, 2)))));
+    g_hash_table_insert(parameters, strdup("number"), strdup(phonegui_contact_cache_lookup((char *)g_value_get_string(g_value_array_get_nth(message, 2)))));
     char *content = strdup(g_value_get_string(g_value_array_get_nth(message, 3)));
     string_replace_newline(content);
     g_hash_table_insert(parameters, strdup("content"), content);
@@ -196,65 +187,6 @@ static void process_message(gpointer _message, gpointer _data) {
     Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(data->tree), NULL, data->col1, parameters, NULL);
     etk_tree_row_data_set(row, g_value_array_copy(message));
 }
-
-
-
-void cache_phonebook_entry(GValueArray *entry, void *_data) {
-    struct MessageListViewData *data = (struct MessageListViewData *)_data;
-    char *number = strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
-    char *name = strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
-    g_hash_table_insert(data->contact_cache, number, name);
-}
-
-
-
-static void cache_contacts_callback(GError *error, GPtrArray *contacts, gpointer userdata)
-{
-    struct MessageListViewData *data = (struct MessageListViewData *)userdata;
-    g_debug("cache_contacts_callback called");
-    if( error == NULL && contacts != NULL ) {
-        g_debug("creating contact_cache");
-        data->contact_cache = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-        if( data->contact_cache == NULL ) {
-            g_debug("could not allocate contact cache");
-            return;
-        }
-        g_ptr_array_foreach(contacts, cache_phonebook_entry, data);
-    }
-    ogsmd_sim_retrieve_messagebook("all", retrieve_messagebook_callback, data);
-}
-
-
-
-char *cache_phonebook_lookup(GHashTable *contact_cache, char *number) {
-    if( contact_cache == NULL ) return (number);
-    g_debug("looking for '%s' in contacts_cache", number);
-    if (!number || !*number || !strcmp(number, "*****")) {
-        g_debug("contact_cache: got unknown number");
-        return ("");
-    }
-    if (*number == '"') {
-        number++;
-        char *s = number;
-        while (*s) {
-            if (*s == '"') {
-                *s = '\0';
-                break;
-            }
-            s++;
-        }
-    }
-
-    char *name = g_hash_table_lookup(contact_cache, number);
-    if (name)
-        g_debug("found name '%s'", name);
-    if (name && *name)
-        return (name);
-    return (number);
-}
-
-
-
 
 static void retrieve_messagebook_callback(GError*error, GPtrArray*messages, struct MessageListViewData *data) {
     g_debug("retrieve messagebook callback(error=%d)", error);
