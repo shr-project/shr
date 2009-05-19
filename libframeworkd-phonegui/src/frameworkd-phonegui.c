@@ -134,8 +134,9 @@ gchar *normalize_phone_number(gchar *_number) {
     else if (conf->national_prefix_len >= 0 && strncmp(_number, conf->national_prefix, conf->national_prefix_len) == 0) {
         number = g_strconcat("+", conf->country_code, &_number[conf->national_prefix_len], NULL);
     }
+    /* by default, just try to add +<CC> to the start, better than not trying at all. */
     else {
-	number = g_strdup(_number);
+	number = g_strconcat("+", conf->country_code, _number, NULL);
     }
 
     return number;
