@@ -74,8 +74,11 @@ struct MessageNewViewData *message_new_view_show(struct Window *win, GHashTable 
     if(options != NULL) {
         char *recipient = g_hash_table_lookup(options, "recipient");
         if(recipient != NULL) {
-            GHashTable *properties = g_hash_table_new(g_str_hash, g_str_equal);
-            g_hash_table_insert(properties, strdup("name"), strdup("Number"));
+            char *name = g_hash_table_lookup(options, "name");
+            if (!name || !*name)
+                name = "Number";
+            GHashTable *properties = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+            g_hash_table_insert(properties, strdup("name"), strdup(name));
             g_hash_table_insert(properties, strdup("number"), strdup(recipient));
             g_ptr_array_add(data->recipients, properties);
         }
@@ -456,7 +459,10 @@ static void frame_number_add_add_clicked(struct MessageNewViewData *data, Evas_O
 
     if(string_is_number(number)) {
         GHashTable *properties = g_hash_table_new(g_str_hash, g_str_equal);
-        g_hash_table_insert(properties, strdup("name"), strdup("Number"));
+        char *name = phonegui_contact_cache_lookup(number);
+        if (!name || !*name)
+            name = "Number";
+        g_hash_table_insert(properties, strdup("name"), strdup(name));
         g_hash_table_insert(properties, strdup("number"), strdup(number));
         g_ptr_array_add(data->recipients, properties);
 
