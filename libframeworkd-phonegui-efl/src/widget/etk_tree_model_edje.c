@@ -160,7 +160,7 @@ void _edje_set_text_cb(gpointer key, gpointer value, gpointer user_data)
 /* Edje: render() */
 static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas)
 {
-   g_debug("render called");
+   //g_debug("render called");
 
    Etk_Tree_Model_Edje *edje_model;
    Etk_Tree_Model_Edje_Data *edje_data;
