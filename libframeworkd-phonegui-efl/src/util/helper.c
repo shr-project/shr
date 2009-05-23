@@ -130,7 +130,7 @@ gboolean string_is_number(const char *string) {
         *p++;
 
     while(*p) {
-        if(*p < '0' || *p > '9')
+        if ((*p < '0' || *p > '9') && (*p != '*') && (*p != '#'))
             return FALSE;
         *p++;
     }
