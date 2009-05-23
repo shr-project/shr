@@ -39,7 +39,7 @@ call_incoming_view_show(struct Window *win, GHashTable *options) {
 	evas_object_show(data->bt1);
 
 	data->bt2 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt2, D_("Release"));
+	elm_button_label_set(data->bt2, D_("Reject"));
 	evas_object_smart_callback_add(data->bt2, "clicked", call_button_release_clicked, data);
 	window_swallow(win, "button_release", data->bt2);
 	evas_object_show(data->bt2);
