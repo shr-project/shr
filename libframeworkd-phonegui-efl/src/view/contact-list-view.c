@@ -124,11 +124,25 @@ static void frame_list_new_clicked(struct ContactListViewData *data, Evas_Object
     window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
 }
 
-static void frame_list_call_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
-    GHashTable *properties = elm_my_contactlist_selected_row_get(data->list);
-    if(properties != NULL) {
-        ogsmd_call_initiate(g_hash_table_lookup(properties, "number"), "voice", NULL, NULL);
-    }
+static void 
+frame_list_call_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info)
+{
+	GHashTable *props = elm_my_contactlist_selected_row_get(data->list);
+	if (props == NULL)
+		return;
+
+	char *number = g_hash_table_lookup(props, "number");
+	if (!number || !*number)
+		return;
+
+	/* if the number is either ending with # or does not have more than
+	 * two digits we have to handle it as USSD request */
+	if ((number[strlen(number)-1] == '#') || (strlen(number) <= 2)) {
+		g_debug("USSD Request");
+		ogsmd_network_send_ussd_request(number, NULL, NULL);
+	}
+	else
+		ogsmd_call_initiate(number, "voice", NULL, NULL);
 }
 
 static void frame_list_options_clicked(struct ContactListViewData *data, Evas_Object *obj, void *event_info) {
