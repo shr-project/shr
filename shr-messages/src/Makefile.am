@@ -10,7 +10,7 @@ AM_LDFLAGS = \
 	$(FRAMEWORKD_GLIB_LIBS) \
 	$(FRAMEWORKD_PHONEGUI_LIBS)
 
-bin_PROGRAMS=openmoko-messages
+bin_PROGRAMS=shr-messages
 
 openmoko_messages_SOURCES = \
 	messages-main.c \

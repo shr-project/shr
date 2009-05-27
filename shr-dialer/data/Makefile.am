@@ -5,7 +5,7 @@ MAINTAINERCLEANFILES = Makefile.in
 # desktop integration: .desktop file
 #
 desktopdir = $(datadir)/applications
-dist_desktop_DATA = openmoko-dialer.desktop
+dist_desktop_DATA = 0000-shr-dialer.desktop
 
 #
 # desktop integration: application icon
