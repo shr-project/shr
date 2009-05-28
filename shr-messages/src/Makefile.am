@@ -12,7 +12,7 @@ AM_LDFLAGS = \
 
 bin_PROGRAMS=shr-messages
 
-openmoko_messages_SOURCES = \
+shr_messages_SOURCES = \
 	messages-main.c \
 	messages-main.h \ 
 	messages-phonegui.c \

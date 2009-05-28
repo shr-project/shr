@@ -10,7 +10,7 @@ AM_LDFLAGS = @FRAMEWORKD_GLIB_LIBS@ @FRAMEWORKD_PHONEGUI_LIBS@ -ldl
 
 bin_PROGRAMS=shr-contacts
 
-openmoko_contacts_SOURCES = \
+shr_contacts_SOURCES = \
 	contacts-main.c \
 	contacts-main.h \ 
 	contacts-phonegui.c \

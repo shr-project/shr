@@ -6,6 +6,6 @@ AM_LDFLAGS = -ldl $(DBUS_GLIB_LIBS) $(FRAMEWORKD_GLIB_LIBS) $(FRAMEWORKD_PHONEGU
  			 
 bin_PROGRAMS = shr-dialer
 
-openmoko_dialer_SOURCES = dialer-main.c dialer-main.h dialer-phonegui.c dialer-phonegui.h
+shr_dialer_SOURCES = dialer-main.c dialer-main.h dialer-phonegui.c dialer-phonegui.h
 
-openmoko_dialer_LDADD = @DIALER_LIBS@ -ldl
+shr_dialer_LDADD = @DIALER_LIBS@ -ldl
