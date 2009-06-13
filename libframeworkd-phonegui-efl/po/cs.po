@@ -1,0 +1,435 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-12 16:16+0200\n"
+"PO-Revision-Date: 2009-06-12 16:57+0100\n"
+"Last-Translator: Petr Vanek <vanous@penguin.cz>\n"
+"Language-Team: LANGUAGE <vanous@pengin.cz>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Czech\n"
+"X-Poedit-Country: CZECH REPUBLIC\n"
+"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: src/phonegui-dialog.c:14
+msgid "Information"
+msgstr "Informace"
+
+#: src/widget/elm_keypad.c:133
+msgid "ABC"
+msgstr "ABC"
+
+#: src/widget/elm_keypad.c:134
+msgid "DEF"
+msgstr "DEF"
+
+#: src/widget/elm_keypad.c:135
+msgid "GHI"
+msgstr "GHI"
+
+#: src/widget/elm_keypad.c:136
+msgid "JKL"
+msgstr "JKL"
+
+#: src/widget/elm_keypad.c:137
+msgid "MNO"
+msgstr "MNO"
+
+#: src/widget/elm_keypad.c:138
+msgid "PQRS"
+msgstr "PQRS"
+
+#: src/widget/elm_keypad.c:139
+msgid "TUV"
+msgstr "TUV"
+
+#: src/widget/elm_keypad.c:140
+msgid "XYZ"
+msgstr "XYZ"
+
+#: src/phonegui-ussd.c:17
+msgid "Service Data"
+msgstr "Servisní data"
+
+#: src/phonegui-sim-auth.c:18
+msgid "SIM Auth"
+msgstr "SIM Auth"
+
+#: src/phonegui-incoming-message.c:16
+msgid "New Message"
+msgstr "Nová zpráva"
+
+#: src/phonegui-call.c:44
+#: src/view/contact-list-view.c:61
+#: src/view/contact-show-view.c:100
+#: src/view/contact-show-view.c:170
+#: src/view/dialer-view.c:97
+#: src/view/message-show-view.c:147
+msgid "Call"
+msgstr "Hovor"
+
+#: src/view/message-delete-view.c:74
+#: src/view/contact-delete-view.c:73
+msgid "Do you really want to delete it?"
+msgstr "Opravdu zmazat?"
+
+#: src/view/message-delete-view.c:77
+#: src/view/contact-delete-view.c:78
+#: src/view/contact-show-view.c:252
+#: src/view/message-new-view.c:492
+#: src/view/contact-edit-view.c:340
+msgid "Yes"
+msgstr "Ano"
+
+#: src/view/message-delete-view.c:83
+#: src/view/contact-delete-view.c:84
+#: src/view/contact-show-view.c:258
+#: src/view/message-new-view.c:498
+#: src/view/contact-edit-view.c:346
+msgid "No"
+msgstr "Ne"
+
+#: src/view/message-delete-view.c:115
+msgid "Deleting.."
+msgstr "Mazání..."
+
+#: src/view/call-incoming-view.c:31
+msgid "Incoming call"
+msgstr "Příchozí hovor"
+
+#: src/view/call-incoming-view.c:36
+msgid "Accept"
+msgstr "Přijmout"
+
+#: src/view/call-incoming-view.c:42
+msgid "Reject"
+msgstr "Odmítnout"
+
+#: src/view/contact-list-view.c:55
+#: src/view/contact-show-view.c:94
+#: src/view/message-folder-view.c:66
+#: src/view/message-list-view.c:36
+msgid "New"
+msgstr "Nový"
+
+#: src/view/contact-list-view.c:67
+#: src/view/contact-show-view.c:106
+#: src/view/message-show-view.c:126
+#: src/view/message-list-view.c:46
+msgid "Options"
+msgstr "Možnosti"
+
+#: src/view/contact-list-view.c:84
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:91
+msgid "Edit"
+msgstr "Editovat"
+
+#: src/view/contact-list-view.c:98
+#: src/view/contact-show-view.c:182
+#: src/view/message-show-view.c:140
+#: src/view/sim-auth-input-view.c:302
+#: src/view/message-list-view.c:67
+msgid "Delete"
+msgstr "Zmazat"
+
+#: src/view/contact-list-view.c:122
+#: src/view/contact-show-view.c:212
+#: src/view/contact-edit-view.c:172
+msgid "New Contact"
+msgstr "Nový Kontakt"
+
+#: src/view/contact-list-view.c:163
+#: src/view/dialer-view.c:188
+#: src/view/message-show-view.c:177
+#: src/view/message-folder-view.c:114
+#: src/view/message-list-view.c:227
+msgid "Compose SMS"
+msgstr "Napsat SMS"
+
+#: src/view/contact-list-view.c:181
+#: src/view/contact-edit-view.c:174
+msgid "Edit Contact"
+msgstr "Editovat Kontakt"
+
+#: src/view/contact-list-view.c:197
+msgid "Delete Contact"
+msgstr "Zmazat Kontakt"
+
+#: src/view/ussd-view.c:51
+msgid "Data:"
+msgstr "Data:"
+
+#: src/view/ussd-view.c:55
+#: src/view/contact-show-view.c:274
+#: src/view/message-new-view.c:115
+#: src/view/dialer-view.c:85
+#: src/view/message-show-view.c:116
+#: src/view/contact-edit-view.c:177
+#: src/view/dialog-view.c:31
+msgid "Close"
+msgstr "Zavřít"
+
+#: src/view/contact-show-view.c:164
+#: src/view/contact-show-view.c:215
+#: src/view/message-new-view.c:224
+#: src/view/message-new-view.c:367
+#: src/view/message-new-view.c:419
+msgid "Back"
+msgstr "Zpět"
+
+#: src/view/contact-show-view.c:176
+msgid "Modify"
+msgstr "Změnit"
+
+#: src/view/contact-show-view.c:198
+msgid "Modify Contact"
+msgstr "Změnit Kontakt"
+
+#: src/view/contact-show-view.c:221
+#: src/view/dialer-view.c:116
+#: src/view/contact-edit-view.c:183
+msgid "Save"
+msgstr "Uložit"
+
+#: src/view/contact-show-view.c:271
+msgid "Your storage is full. Before adding new contacts, you have to delete some old ones."
+msgstr "Úložuště je plné. Před vytvořením nových kontaktů musíte vymazat nějaké staré."
+
+#: src/view/message-new-view.c:121
+msgid "Continue"
+msgstr "Pokračovat"
+
+#: src/view/message-new-view.c:205
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d znaků zbývá [%d]"
+
+#: src/view/message-new-view.c:221
+msgid "Define Recipients"
+msgstr "Zvolit Příjemce"
+
+#: src/view/message-new-view.c:230
+msgid "Send"
+msgstr "Odeslat"
+
+#: src/view/message-new-view.c:236
+#: src/view/dialer-view.c:161
+msgid "Add Contact"
+msgstr "Přidat Kontakt"
+
+#: src/view/message-new-view.c:242
+msgid "Add Number"
+msgstr "Přidat Číslo"
+
+#: src/view/message-new-view.c:248
+msgid "Remove"
+msgstr "Odebrat"
+
+#: src/view/message-new-view.c:364
+msgid "Add a Contact"
+msgstr "Přidat Kontakt"
+
+#: src/view/message-new-view.c:373
+#: src/view/message-new-view.c:425
+msgid "Add"
+msgstr "Přidat"
+
+#: src/view/message-new-view.c:416
+msgid "Add a Number"
+msgstr "Přidat Číslo"
+
+#: src/view/message-new-view.c:487
+#: src/view/contact-edit-view.c:335
+msgid "Do you really want to quit?"
+msgstr "Opravdu ukončit?"
+
+#: src/view/message-new-view.c:526
+msgid "Sending.."
+msgstr "Odesílání..."
+
+#: src/view/dialer-view.c:62
+msgid "Click to open contactlist."
+msgstr "Klikněte pro seznam kontaktů"
+
+#: src/view/dialer-view.c:91
+msgid "More"
+msgstr "Další"
+
+#: src/view/dialer-view.c:123
+msgid "Send SMS"
+msgstr "Poslat SMS"
+
+#: src/view/dialer-view.c:238
+#: src/phonegui-contacts.c:16
+msgid "Contacts"
+msgstr "Kontakty"
+
+#: src/view/message-show-view.c:110
+msgid "From:"
+msgstr "Od:"
+
+#: src/view/message-show-view.c:111
+msgid "Date:"
+msgstr "Datum:"
+
+#: src/view/message-show-view.c:112
+msgid "Status:"
+msgstr "Stav:"
+
+#: src/view/message-show-view.c:157
+#: src/view/message-list-view.c:60
+msgid "Answer"
+msgstr "Odepsat"
+
+#: src/view/message-show-view.c:192
+#: src/view/message-list-view.c:265
+msgid "Delete Message"
+msgstr "Smazat Zprávu"
+
+#: src/view/sim-auth-input-view.c:208
+msgid "Enter a NEW PIN"
+msgstr "Zadejte NOVÝ PIN"
+
+#: src/view/sim-auth-input-view.c:214
+msgid "Confirm your NEW PIN"
+msgstr "Potvrďte NOVÝ PIN"
+
+#: src/view/sim-auth-input-view.c:296
+msgid "Please enter your PIN"
+msgstr "Prosím zadejte PIN"
+
+#: src/view/sim-auth-input-view.c:298
+msgid "Please enter your PUK"
+msgstr "Prosím zadejte PUK"
+
+#: src/view/sim-auth-input-view.c:308
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:331
+msgid "Checking"
+msgstr "Ověřování"
+
+#: src/view/sim-auth-input-view.c:336
+msgid "PIN correct"
+msgstr "Správný PIN"
+
+#: src/view/sim-auth-input-view.c:341
+msgid "PIN wrong"
+msgstr "Nesprávný PIN"
+
+#: src/view/sim-auth-input-view.c:346
+msgid "PIN confirmation wrong"
+msgstr "Nesprávné potvrzení PIN "
+
+#: src/view/sim-auth-input-view.c:351
+msgid "New PIN saved"
+msgstr "Nový PIN uložen"
+
+#: src/view/sim-auth-input-view.c:356
+msgid "PUK wrong"
+msgstr "Nesprávný PUK"
+
+#: src/view/sim-auth-input-view.c:361
+msgid "PIN must be 4-8 chars long"
+msgstr "PIN musí být 4-8 znaků dlouhý"
+
+#: src/view/message-folder-view.c:35
+msgid "Loading.."
+msgstr "Načítání.."
+
+#: src/view/message-folder-view.c:63
+msgid "Folders"
+msgstr "Složky"
+
+#: src/view/message-folder-view.c:72
+#: src/view/message-list-view.c:77
+msgid "Show"
+msgstr "Zobrazit"
+
+#: src/view/message-folder-view.c:95
+#, c-format
+msgid "%d messages"
+msgstr "%d zpráv"
+
+#: src/view/contact-edit-view.c:189
+msgid "Name: "
+msgstr "Jméno:"
+
+#: src/view/contact-edit-view.c:204
+msgid "Number: "
+msgstr "Číslo:"
+
+#: src/view/contact-edit-view.c:375
+msgid "Loading... "
+msgstr "Načítání.."
+
+#: src/view/message-list-view.c:33
+msgid "Inbox"
+msgstr "Doručené"
+
+#: src/view/message-list-view.c:217
+msgid "SMS Answer"
+msgstr "SMS Odpověď"
+
+#: src/view/message-list-view.c:245
+msgid "Show Message"
+msgstr "Zobrazit zprávu"
+
+#: src/view/call-active-view.c:33
+msgid "Active call"
+msgstr "Aktivní hovor"
+
+#: src/view/call-active-view.c:38
+msgid "Release"
+msgstr "Zavěsit"
+
+#: src/view/call-active-view.c:44
+#: src/view/call-active-view.c:89
+msgid "Speaker"
+msgstr "Hlasitý odposlech"
+
+#: src/view/call-active-view.c:50
+#: src/view/call-active-view.c:107
+msgid "Keypad"
+msgstr "DTMF tóny"
+
+#: src/view/call-active-view.c:95
+#, fuzzy
+msgid "Handset"
+msgstr "Sluchátko"
+
+#: src/view/call-active-view.c:113
+msgid "Hide Keypad"
+msgstr "Skrýt klávesnici"
+
+#: src/view/dialog-view.c:24
+msgid "Your storage is full. Please delete some messages or you are not going to receive messages anymore!"
+msgstr "Úložiště je plné. Prosím vymažte nějaké zprávy jinak nebude možno přijmout nové zprávy!"
+
+#: src/view/dialog-view.c:26
+msgid "GSM is not available, because no SIM card is present."
+msgstr "GSM není dostupné protože není vložena SIM karta ."
+
+#: src/view/dialog-view.c:28
+msgid "Unknown message."
+msgstr "Neznámá zpráva."
+
+#: src/phonegui-messages.c:16
+msgid "Messages"
+msgstr "Zprávy"
+
+#: src/phonegui-dialer.c:16
+#, fuzzy
+msgid "Dialer"
+msgstr "Číselník"
+
