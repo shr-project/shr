@@ -137,16 +137,16 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
     evas_object_show(data->bx);
 
     data->hbt1 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->hbt1, D_("Delete"));
+    elm_button_label_set(data->hbt1, D_("Call"));
     evas_object_size_hint_min_set(data->hbt1, 130, 80);
-    evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_delete_clicked, data);
+    evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_call_clicked, data);
     evas_object_show(data->hbt1);
     elm_box_pack_end(data->bx, data->hbt1);
 
     data->hbt2 = elm_button_add(window_evas_object_get(win));
-    elm_button_label_set(data->hbt2, D_("Call"));
+    elm_button_label_set(data->hbt2, D_("Delete"));
     evas_object_size_hint_min_set(data->hbt2, 130, 80);
-    evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_call_clicked, data);
+    evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_delete_clicked, data);
     evas_object_show(data->hbt2);
     elm_box_pack_end(data->bx, data->hbt2);
 
