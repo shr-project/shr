@@ -3,12 +3,16 @@ CREATE TABLE call_ids (
 	number TEXT
 );
 
+CREATE INDEX call_ids_id_idx ON call_ids (id);
+
 CREATE TABLE call_events (
 	id INTEGER,
 	status INTEGER,
 	eventTime TIMESTAMP,
 	FOREIGN KEY (id) REFERENCES call_ids(id)
 );
+
+CREATE INDEX call_events_id_idx ON call_events (id);
 
 CREATE TRIGGER insert_call_events_eventTime AFTER  INSERT ON call_events
 BEGIN
