@@ -27,16 +27,14 @@ SELECT e.id,
        act.eventTime AS activeTime, 
        rel.eventTime AS releaseTime, 
        strftime("%s", rel.eventTime)-strftime("%s", act.eventTime) AS duration
-       FROM call_events AS e
+FROM call_events AS e
        INNER JOIN call_ids ON e.id = call_ids.id
        LEFT JOIN  call_events AS act ON e.id=act.id and act.status=2
        INNER JOIN call_events AS rel ON e.id=rel.id and rel.status=4
-       WHERE e.status in (0,1) group by e.id;
+WHERE e.status in (0,1) 
+GROUP BY e.id;
 
 	
-FROM call_events
-GROUP BY id;
-
 CREATE VIEW missed_calls AS
 SELECT id, number, direction, startTime FROM calls WHERE activeTime IS NULL;
 
