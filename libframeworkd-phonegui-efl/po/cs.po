@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-06-12 16:16+0200\n"
-"PO-Revision-Date: 2009-06-12 16:57+0100\n"
+"PO-Revision-Date: 2009-06-29 20:39+0100\n"
 "Last-Translator: Petr Vanek <vanous@penguin.cz>\n"
 "Language-Team: LANGUAGE <vanous@pengin.cz>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Czech\n"
 "X-Poedit-Country: CZECH REPUBLIC\n"
-"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: src/phonegui-dialog.c:14
 msgid "Information"
@@ -72,7 +72,7 @@ msgstr "Nová zpráva"
 #: src/view/dialer-view.c:97
 #: src/view/message-show-view.c:147
 msgid "Call"
-msgstr "Hovor"
+msgstr "Volat"
 
 #: src/view/message-delete-view.c:74
 #: src/view/contact-delete-view.c:73
@@ -116,7 +116,7 @@ msgstr "Odmítnout"
 #: src/view/message-folder-view.c:66
 #: src/view/message-list-view.c:36
 msgid "New"
-msgstr "Nový"
+msgstr "Vytvořit"
 
 #: src/view/contact-list-view.c:67
 #: src/view/contact-show-view.c:106
@@ -202,7 +202,7 @@ msgstr "Uložit"
 
 #: src/view/contact-show-view.c:271
 msgid "Your storage is full. Before adding new contacts, you have to delete some old ones."
-msgstr "Úložuště je plné. Před vytvořením nových kontaktů musíte vymazat nějaké staré."
+msgstr "Úložiště je plné. Před vytvořením nových kontaktů musíte vymazat nějaké staré."
 
 #: src/view/message-new-view.c:121
 msgid "Continue"
@@ -401,10 +401,9 @@ msgstr "Hlasitý odposlech"
 #: src/view/call-active-view.c:50
 #: src/view/call-active-view.c:107
 msgid "Keypad"
-msgstr "DTMF tóny"
+msgstr "Klávesnice"
 
 #: src/view/call-active-view.c:95
-#, fuzzy
 msgid "Handset"
 msgstr "Sluchátko"
 
@@ -429,7 +428,6 @@ msgid "Messages"
 msgstr "Zprávy"
 
 #: src/phonegui-dialer.c:16
-#, fuzzy
 msgid "Dialer"
 msgstr "Číselník"
 
