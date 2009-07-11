@@ -10,7 +10,7 @@ msgstr ""
 "POT-Creation-Date: 2009-07-06 12:04+0200\n"
 "PO-Revision-Date: 2009-07-06 13:19+0200\n"
 "Last-Translator: Helge Hafting <helge.hafting@hist.no>\n"
-"Language-Team: Norwegian (bokmål) <LL@li.org>\n"
+"Language-Team: Norwegian (bokmÃ¥l) <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -112,7 +112,7 @@ msgstr "Vis"
 
 #: src/view/message-list-view.c:217
 msgid "SMS Answer"
-msgstr "Svar på SMS"
+msgstr "Svar pÃ¥ SMS"
 
 #: src/view/message-list-view.c:245
 msgid "Show Message"
@@ -126,7 +126,7 @@ msgstr "Slett melding"
 msgid ""
 "Your storage is full. Please delete some messages or you are not going to "
 "receive messages anymore!"
-msgstr "Meldingslageret er fullt. Du må slette noen meldinger nå, ellers kan du ikke ta imot flere!"
+msgstr "Meldingslageret er fullt. Du mÃ¥ slette noen meldinger nÃ¥, ellers kan du ikke ta imot flere!"
 
 #: src/view/dialog-view.c:26
 msgid "GSM is not available, because no SIM card is present."
@@ -150,15 +150,15 @@ msgstr "Status:"
 
 #: src/view/call-active-view.c:33
 msgid "Active call"
-msgstr "Telefonsamtale pågår"
+msgstr "Telefonsamtale pÃ¥gÃ¥r"
 
 #: src/view/call-active-view.c:38
 msgid "Release"
-msgstr "Legg på"
+msgstr "Legg pÃ¥"
 
 #: src/view/call-active-view.c:44 src/view/call-active-view.c:89
 msgid "Speaker"
-msgstr "Høyttaler"
+msgstr "HÃ¸yttaler"
 
 #: src/view/call-active-view.c:50 src/view/call-active-view.c:107
 msgid "Keypad"
@@ -166,7 +166,7 @@ msgstr "Telefontastatur"
 
 #: src/view/call-active-view.c:95
 msgid "Handset"
-msgstr "Telefonrør"
+msgstr "TelefonrÃ¸r"
 
 #: src/view/call-active-view.c:113
 msgid "Hide Keypad"
@@ -220,7 +220,7 @@ msgstr "Nei"
 msgid ""
 "Your storage is full. Before adding new contacts, you have to delete some "
 "old ones."
-msgstr "Registeret er fullt. Du må slette noen gamle kontakter, før du kan legge til nye."
+msgstr "Registeret er fullt. Du mÃ¥ slette noen gamle kontakter, fÃ¸r du kan legge til nye."
 
 #: src/view/message-delete-view.c:74 src/view/contact-delete-view.c:73
 msgid "Do you really want to delete it?"
@@ -349,7 +349,7 @@ msgstr "Feil PUK"
 
 #: src/view/sim-auth-input-view.c:361
 msgid "PIN must be 4-8 chars long"
-msgstr "PIN må være 4-8 tegn"
+msgstr "PIN mÃ¥ vÃ¦re 4-8 tegn"
 
 #: src/view/contact-list-view.c:84
 msgid "SMS"
