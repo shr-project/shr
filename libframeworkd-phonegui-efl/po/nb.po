@@ -1,0 +1,400 @@
+# Norwegian (bokmÃ¥l) translations for libframeworkd-phonegui-efl
+# This file is put in the public domain.
+# Helge Hafting <helge.hafting@hist.no>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: libframeworkd-phonegui-efl\n"
+"Report-Msgid-Bugs-To: helge.hafting@hist.no\n"
+"POT-Creation-Date: 2009-07-06 12:04+0200\n"
+"PO-Revision-Date: 2009-07-06 13:19+0200\n"
+"Last-Translator: Helge Hafting <helge.hafting@hist.no>\n"
+"Language-Team: Norwegian (bokmål) <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/phonegui-incoming-message.c:16
+msgid "New Message"
+msgstr "Ny melding"
+
+#: src/phonegui-messages.c:16
+msgid "Messages"
+msgstr "Meldinger"
+
+#: src/phonegui-dialog.c:14
+msgid "Information"
+msgstr "Informasjon"
+
+#: src/phonegui-dialer.c:16
+msgid "Dialer"
+msgstr "Ringe"
+
+#: src/phonegui-ussd.c:17
+msgid "Service Data"
+msgstr ""
+
+#: src/view/ussd-view.c:51
+msgid "Data:"
+msgstr ""
+
+#: src/view/ussd-view.c:55 src/view/dialer-view.c:85 src/view/dialog-view.c:31
+#: src/view/message-show-view.c:116 src/view/contact-show-view.c:274
+#: src/view/message-new-view.c:115 src/view/contact-edit-view.c:177
+msgid "Close"
+msgstr "Avslutt"
+
+#: src/view/dialer-view.c:62
+msgid "Click to open contactlist."
+msgstr "Klikk for kontaktliste"
+
+#: src/view/dialer-view.c:91
+msgid "More"
+msgstr "Mer"
+
+#: src/view/dialer-view.c:97 src/view/message-show-view.c:140
+#: src/view/contact-show-view.c:100 src/view/contact-show-view.c:170
+#: src/view/contact-list-view.c:61 src/phonegui-call.c:44
+msgid "Call"
+msgstr "Ring"
+
+#: src/view/dialer-view.c:116 src/view/contact-show-view.c:221
+#: src/view/contact-edit-view.c:183
+msgid "Save"
+msgstr "Lagre"
+
+#: src/view/dialer-view.c:123
+msgid "Send SMS"
+msgstr "Send SMS"
+
+#: src/view/dialer-view.c:161 src/view/message-new-view.c:236
+msgid "Add Contact"
+msgstr "Legg til kontakt"
+
+#: src/view/dialer-view.c:188 src/view/message-list-view.c:227
+#: src/view/message-show-view.c:177 src/view/message-folder-view.c:114
+#: src/view/contact-list-view.c:163
+msgid "Compose SMS"
+msgstr "Skriv SMS"
+
+#: src/view/dialer-view.c:238 src/phonegui-contacts.c:16
+msgid "Contacts"
+msgstr "Kontakter"
+
+#: src/view/message-list-view.c:33
+msgid "Inbox"
+msgstr "Innboks"
+
+#: src/view/message-list-view.c:36 src/view/message-folder-view.c:66
+#: src/view/contact-show-view.c:94 src/view/contact-list-view.c:55
+msgid "New"
+msgstr "Ny"
+
+#: src/view/message-list-view.c:46 src/view/message-show-view.c:126
+#: src/view/contact-show-view.c:106 src/view/contact-list-view.c:67
+msgid "Options"
+msgstr "Valg"
+
+#: src/view/message-list-view.c:60 src/view/message-show-view.c:157
+msgid "Answer"
+msgstr "Svar"
+
+#: src/view/message-list-view.c:67 src/view/message-show-view.c:147
+#: src/view/contact-show-view.c:182 src/view/sim-auth-input-view.c:302
+#: src/view/contact-list-view.c:98
+msgid "Delete"
+msgstr "Slett"
+
+#: src/view/message-list-view.c:77 src/view/message-folder-view.c:72
+msgid "Show"
+msgstr "Vis"
+
+#: src/view/message-list-view.c:217
+msgid "SMS Answer"
+msgstr "Svar på SMS"
+
+#: src/view/message-list-view.c:245
+msgid "Show Message"
+msgstr "Vis melding"
+
+#: src/view/message-list-view.c:265 src/view/message-show-view.c:192
+msgid "Delete Message"
+msgstr "Slett melding"
+
+#: src/view/dialog-view.c:24
+msgid ""
+"Your storage is full. Please delete some messages or you are not going to "
+"receive messages anymore!"
+msgstr "Meldingslageret er fullt. Du må slette noen meldinger nå, ellers kan du ikke ta imot flere!"
+
+#: src/view/dialog-view.c:26
+msgid "GSM is not available, because no SIM card is present."
+msgstr "GSM er ikke tilgjengelig, fordi det ikke er noe SIM-kort i telefonen."
+
+#: src/view/dialog-view.c:28
+msgid "Unknown message."
+msgstr "Ukjent melding."
+
+#: src/view/message-show-view.c:110
+msgid "From:"
+msgstr "Fra:"
+
+#: src/view/message-show-view.c:111
+msgid "Date:"
+msgstr "Dato:"
+
+#: src/view/message-show-view.c:112
+msgid "Status:"
+msgstr "Status:"
+
+#: src/view/call-active-view.c:33
+msgid "Active call"
+msgstr "Telefonsamtale pågår"
+
+#: src/view/call-active-view.c:38
+msgid "Release"
+msgstr "Legg på"
+
+#: src/view/call-active-view.c:44 src/view/call-active-view.c:89
+msgid "Speaker"
+msgstr "Høyttaler"
+
+#: src/view/call-active-view.c:50 src/view/call-active-view.c:107
+msgid "Keypad"
+msgstr "Telefontastatur"
+
+#: src/view/call-active-view.c:95
+msgid "Handset"
+msgstr "Telefonrør"
+
+#: src/view/call-active-view.c:113
+msgid "Hide Keypad"
+msgstr "Skjul tastene"
+
+#: src/view/message-folder-view.c:35
+msgid "Loading.."
+msgstr "Laster.."
+
+#: src/view/message-folder-view.c:63
+msgid "Folders"
+msgstr "Mapper"
+
+#: src/view/message-folder-view.c:95
+#, c-format
+msgid "%d messages"
+msgstr "%d meldinger"
+
+#: src/view/contact-show-view.c:164 src/view/contact-show-view.c:215
+#: src/view/message-new-view.c:224 src/view/message-new-view.c:367
+#: src/view/message-new-view.c:419
+msgid "Back"
+msgstr "Tilbake"
+
+#: src/view/contact-show-view.c:176
+msgid "Modify"
+msgstr "Endre"
+
+#: src/view/contact-show-view.c:198
+msgid "Modify Contact"
+msgstr "Endre kontakt"
+
+#: src/view/contact-show-view.c:212 src/view/contact-edit-view.c:172
+#: src/view/contact-list-view.c:122
+msgid "New Contact"
+msgstr "Ny kontakt"
+
+#: src/view/contact-show-view.c:252 src/view/message-delete-view.c:77
+#: src/view/message-new-view.c:492 src/view/contact-edit-view.c:340
+#: src/view/contact-delete-view.c:78
+msgid "Yes"
+msgstr "Ja"
+
+#: src/view/contact-show-view.c:258 src/view/message-delete-view.c:83
+#: src/view/message-new-view.c:498 src/view/contact-edit-view.c:346
+#: src/view/contact-delete-view.c:84
+msgid "No"
+msgstr "Nei"
+
+#: src/view/contact-show-view.c:271
+msgid ""
+"Your storage is full. Before adding new contacts, you have to delete some "
+"old ones."
+msgstr "Registeret er fullt. Du må slette noen gamle kontakter, før du kan legge til nye."
+
+#: src/view/message-delete-view.c:74 src/view/contact-delete-view.c:73
+msgid "Do you really want to delete it?"
+msgstr "Vil du virkelig slette denne?"
+
+#: src/view/message-delete-view.c:115
+msgid "Deleting.."
+msgstr "Sletter.."
+
+#: src/view/message-new-view.c:121
+msgid "Continue"
+msgstr "Videre"
+
+#: src/view/message-new-view.c:205
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d bokstaver igjen [%d]"
+
+#: src/view/message-new-view.c:221
+msgid "Define Recipients"
+msgstr "Spesifiser mottakere"
+
+#: src/view/message-new-view.c:230
+msgid "Send"
+msgstr "Send"
+
+#: src/view/message-new-view.c:242
+msgid "Add Number"
+msgstr "Legg til nummer"
+
+#: src/view/message-new-view.c:248
+msgid "Remove"
+msgstr "Fjern"
+
+#: src/view/message-new-view.c:364
+msgid "Add a Contact"
+msgstr "Legg til kontakt"
+
+#: src/view/message-new-view.c:373 src/view/message-new-view.c:425
+msgid "Add"
+msgstr "Legg til"
+
+#: src/view/message-new-view.c:416
+msgid "Add a Number"
+msgstr "Legg til et nummer"
+
+#: src/view/message-new-view.c:487 src/view/contact-edit-view.c:335
+msgid "Do you really want to quit?"
+msgstr "Vil du virkelig avbryte?"
+
+#: src/view/message-new-view.c:526
+msgid "Sending.."
+msgstr "Sender.."
+
+#: src/view/call-incoming-view.c:31
+msgid "Incoming call"
+msgstr "Innkommende samtale"
+
+#: src/view/call-incoming-view.c:36
+msgid "Accept"
+msgstr "Ta telefonen"
+
+#: src/view/call-incoming-view.c:42
+msgid "Reject"
+msgstr "Avvis"
+
+#: src/view/contact-edit-view.c:174 src/view/contact-list-view.c:181
+msgid "Edit Contact"
+msgstr "Redigere kontakt"
+
+#: src/view/contact-edit-view.c:189
+msgid "Name: "
+msgstr "Navn: "
+
+#: src/view/contact-edit-view.c:204
+msgid "Number: "
+msgstr "Nummer: "
+
+#: src/view/contact-edit-view.c:375
+msgid "Loading... "
+msgstr "Laster... "
+
+#: src/view/sim-auth-input-view.c:208
+msgid "Enter a NEW PIN"
+msgstr "Oppgi NY PIN"
+
+#: src/view/sim-auth-input-view.c:214
+msgid "Confirm your NEW PIN"
+msgstr "Bekreft din NYE PIN"
+
+#: src/view/sim-auth-input-view.c:296
+msgid "Please enter your PIN"
+msgstr "Skriv inn PIN-kode"
+
+#: src/view/sim-auth-input-view.c:298
+msgid "Please enter your PUK"
+msgstr "Skriv inn PUK-kode"
+
+#: src/view/sim-auth-input-view.c:308
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:331
+msgid "Checking"
+msgstr "Sjekker"
+
+#: src/view/sim-auth-input-view.c:336
+msgid "PIN correct"
+msgstr "Riktig PIN"
+
+#: src/view/sim-auth-input-view.c:341
+msgid "PIN wrong"
+msgstr "Gal PIN"
+
+#: src/view/sim-auth-input-view.c:346
+msgid "PIN confirmation wrong"
+msgstr "PIN ikke bekreftet"
+
+#: src/view/sim-auth-input-view.c:351
+msgid "New PIN saved"
+msgstr "Lagret ny PIN"
+
+#: src/view/sim-auth-input-view.c:356
+msgid "PUK wrong"
+msgstr "Feil PUK"
+
+#: src/view/sim-auth-input-view.c:361
+msgid "PIN must be 4-8 chars long"
+msgstr "PIN må være 4-8 tegn"
+
+#: src/view/contact-list-view.c:84
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:91
+msgid "Edit"
+msgstr "Endre"
+
+#: src/view/contact-list-view.c:197
+msgid "Delete Contact"
+msgstr "Slett kontakt"
+
+#: src/widget/elm_keypad.c:133
+msgid "ABC"
+msgstr "ABC"
+
+#: src/widget/elm_keypad.c:134
+msgid "DEF"
+msgstr "DEF"
+
+#: src/widget/elm_keypad.c:135
+msgid "GHI"
+msgstr "GHI"
+
+#: src/widget/elm_keypad.c:136
+msgid "JKL"
+msgstr "JKL"
+
+#: src/widget/elm_keypad.c:137
+msgid "MNO"
+msgstr "MNO"
+
+#: src/widget/elm_keypad.c:138
+msgid "PQRS"
+msgstr "PQRS"
+
+#: src/widget/elm_keypad.c:139
+msgid "TUV"
+msgstr "TUV"
+
+#: src/widget/elm_keypad.c:140
+msgid "XYZ"
+msgstr "XYZ"
+
+#: src/phonegui-sim-auth.c:18
+msgid "SIM Auth"
+msgstr "SIM Autentisering"
