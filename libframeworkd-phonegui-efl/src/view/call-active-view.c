@@ -5,6 +5,7 @@ struct CallActiveViewData {
     struct CallViewData parent;
     Evas_Object *bt1, *bt2, *bt3;
     Evas_Object *information, *number;
+    Evas_Object *slider
 };
 
 static void call_button_speaker_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
@@ -33,6 +34,10 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	elm_label_label_set( data->information,  D_("Active call"));
 	window_swallow(win, "text", data->information);
 	evas_object_show(data->information);
+
+        data->slider = elm_slider_add( window_evas_object_get(win) );
+        window_swallow(win, "slider_volume", data->slider);
+        evas_object_show(data->slider);
 
 	data->bt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt1, D_("Release"));
@@ -102,12 +107,14 @@ call_button_dtmf_clicked(struct CallActiveViewData *data, Evas_Object *obj, void
 	g_debug("dtmf_clicked()");
 	if(data->parent.dtmf_active) {
 		data->parent.dtmf_active = FALSE;
+                evas_object_show(data->slider);
 		call_dtmf_disable(data);
 		//window_text_set(data->win, "text_dtmf", D_("Show Keypad"));
 		elm_button_label_set(data->bt3, D_("Keypad"));	
 	}
 	else {
 		data->parent.dtmf_active = TRUE;
+                evas_object_hide(data->slider);
 		call_dtmf_enable(data);
 		//window_text_set(data->win, "text_dtmf", D_("Hide Keypad"));
 		 elm_button_label_set(data->bt3, D_("Hide Keypad"));
