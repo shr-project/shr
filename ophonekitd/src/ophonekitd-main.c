@@ -96,7 +96,7 @@ int main(int argc, char ** argv) {
 
 
 void ophonekitd_call_add(call_t **calls, int *size, int id) {
-	g_debug("ophonekitd_call_add(%d, %u)", id, unique_id);
+	g_debug("ophonekitd_call_add(%d)", id);
     (*size)++;
     if(*size == 1)
         *calls = malloc(sizeof(call_t));
