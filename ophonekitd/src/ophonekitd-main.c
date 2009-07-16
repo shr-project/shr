@@ -35,12 +35,10 @@
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 #include "ophonekitd-phonegui.h"
-#include "ophonekitd-phonelog.h"
 #include "ophonekitd-dbus.h"
 
 typedef struct {
 	int id;
-	int unique_id;
 } call_t;
 
 gboolean sim_auth_active = FALSE;
@@ -61,10 +59,6 @@ int main(int argc, char ** argv) {
     phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
     g_debug("Phonegui initiated");
-
-    /* Initiate phonelog database */
-    phonelog_init_database();
-    g_debug("Phonelog database initiated");
 
     /* Register dbus handlers */
     fwHandler = frameworkd_handler_new();
@@ -93,10 +87,6 @@ int main(int argc, char ** argv) {
     g_timeout_add(0, list_resources, NULL);
     g_main_loop_run(mainloop);
 
-    /* Close phonelog database */
-    phonelog_close_database();
-    g_debug("Phonelog database closed");
-
     free(incoming_calls);
     free(outgoing_calls);
     phonegui_destroy_contacts_cache();
@@ -105,7 +95,7 @@ int main(int argc, char ** argv) {
 }
 
 
-void ophonekitd_call_add(call_t **calls, int *size, int id, int unique_id) {
+void ophonekitd_call_add(call_t **calls, int *size, int id) {
 	g_debug("ophonekitd_call_add(%d, %u)", id, unique_id);
     (*size)++;
     if(*size == 1)
@@ -113,7 +103,6 @@ void ophonekitd_call_add(call_t **calls, int *size, int id, int unique_id) {
     else
         *calls = realloc(calls, sizeof(call_t)*(*size));
     (*calls)[(*size)-1].id = id;
-    (*calls)[(*size)-1].unique_id = unique_id;
 }
 
 int ophonekitd_call_check(call_t *calls, int *size, int id) {
@@ -122,15 +111,6 @@ int ophonekitd_call_check(call_t *calls, int *size, int id) {
     for(i = 0; i < (*size) ; i++) {
         if(calls[i].id == id)
             return i;
-    }
-    return -1;
-}
-
-int ophonekitd_call_get_unique_id(call_t *calls, int *size, int id) {
-	g_debug("ophonekitd_call_get_unique_id(%d)", id);
-    int place = ophonekitd_call_check(calls, size, id);
-    if(place >= 0) {
-    	return calls[place].unique_id;
     }
     return -1;
 }
@@ -147,7 +127,6 @@ void ophonekitd_call_remove(call_t *calls, int *size, int id) {
             int i = place;
             for(i = place; i + 1 < (*size); i++) {
                 calls[i].id = calls[i+1].id;
-                calls[i].unique_id = calls[i+1].unique_id;
             }
             (*size)--;
             calls = realloc(calls, sizeof(call_t)*(*size));
@@ -198,34 +177,24 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
         case CALL_STATUS_INCOMING:
             g_debug("incoming call");
             if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) == -1) {
-                int unique_id = phonelog_add_new_call(number);
-                ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id, unique_id);
-                phonelog_log_call_event(unique_id, status);
+                ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id);
                 phonegui_incoming_call_show(call_id, status, phonegui_contact_cache_lookup(number));
             }
             break;
         case CALL_STATUS_OUTGOING:
             g_debug("outgoing call");
             if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) == -1) {
-                int unique_id = phonelog_add_new_call(number);
-                ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id, unique_id);
-                phonelog_log_call_event(unique_id, status);
+                ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id);
                 phonegui_outgoing_call_show(call_id, status, phonegui_contact_cache_lookup(number));
             }
             break;
         case CALL_STATUS_RELEASE:
             g_debug("release call");
             if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) != -1) {
-                int unique_id =
-                    ophonekitd_call_get_unique_id(incoming_calls, &incoming_calls_size, call_id);
-                phonelog_log_call_event(unique_id, status);
                 ophonekitd_call_remove(incoming_calls, &incoming_calls_size, call_id);
                 phonegui_incoming_call_hide(call_id);
             }
             if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) != -1) {
-                int unique_id =
-                    ophonekitd_call_get_unique_id(outgoing_calls, &outgoing_calls_size, call_id);
-                phonelog_log_call_event(unique_id, status);
                 ophonekitd_call_remove(outgoing_calls, &outgoing_calls_size, call_id);
                 phonegui_outgoing_call_hide(call_id);
             }
@@ -235,16 +204,6 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             break;
         case CALL_STATUS_ACTIVE:
             g_debug("active call");
-            if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) != -1) {
-                int unique_id =
-                    ophonekitd_call_get_unique_id(incoming_calls, &incoming_calls_size, call_id);
-                phonelog_log_call_event(unique_id, status);
-            }
-            if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) != -1) {
-                int unique_id =
-                    ophonekitd_call_get_unique_id(outgoing_calls, &outgoing_calls_size, call_id);
-                phonelog_log_call_event(unique_id, status);
-            }
             break;
         default:
             g_warning("Unknown CallStatus");
