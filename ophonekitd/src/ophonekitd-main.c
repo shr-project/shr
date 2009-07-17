@@ -206,7 +206,7 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
             g_debug("active call");
             break;
         default:
-            g_warning("Unknown CallStatus");
+            g_debug("Unknown CallStatus");
     }
 }
 
@@ -285,7 +285,7 @@ void list_resources_callback(GError *error, char** resources, gpointer userdata)
         g_debug("dbus not available, try again in 5s");
         g_timeout_add(5000, list_resources, NULL);
     } else {
-        g_warning("Unknown error, try again in 10s");
+        g_debug("Unknown error, try again in 10s");
         g_timeout_add(10000, list_resources, NULL);
     }
 }
@@ -308,7 +308,7 @@ void request_resource_callback(GError *error, gpointer userdata) {
     } else {
         /* FIXME: Remove this when frameworkd code is ready */
         g_debug("request resource error, try again in 5s");
-        g_warning("error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+        g_debug("error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
         g_timeout_add(5000, list_resources, NULL);
     }
 }
@@ -334,7 +334,7 @@ void power_up_antenna_callback(GError *error, gpointer userdata) {
             g_debug("dbus not available, try again in 5s");
             g_timeout_add(5000, power_up_antenna, NULL);
         } else {
-            g_warning("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+            g_debug("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
             g_timeout_add(5000, power_up_antenna, NULL);
         }
     }
