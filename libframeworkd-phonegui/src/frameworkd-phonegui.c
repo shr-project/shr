@@ -50,7 +50,7 @@ void phonegui_load(const char *application_name) {
     }
 
     conf = g_slice_new (Settings);
-
+    conf->library = g_key_file_get_string(keyfile,"phonegui","library",NULL);
     /* Load library */
     if(conf->library != NULL) {
         phonegui_library = dlopen(conf->library, RTLD_LOCAL | RTLD_LAZY);
