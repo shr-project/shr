@@ -16,8 +16,6 @@ ophonekitd_SOURCES = $(dbus_sources) \
 	ophonekitd-main.h \
 	ophonekitd-phonegui.c \
 	ophonekitd-phonegui.h \
-	ophonekitd-phonelog.c \
-	ophonekitd-phonelog.h \
 	ophonekitd-dbus-usage.c \
 	ophonekitd-dbus-usage.h \
 	ophonekitd-dbus.c \
