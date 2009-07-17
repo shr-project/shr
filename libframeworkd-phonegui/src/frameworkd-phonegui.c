@@ -25,11 +25,15 @@
 #include <glib.h>
 #include <stdlib.h>
 
-#include <phone-utils.h>
-
 typedef struct
 {
     gchar *library;
+    gchar *international_prefix;
+    gint international_prefix_len;
+    gchar *national_prefix;
+    gint national_prefix_len;
+    gchar *country_code;
+    gchar *home_code;
     GHashTable *contact_cache;
 } Settings;
 
@@ -50,6 +54,14 @@ void phonegui_load(const char *application_name) {
     }
 
     conf = g_slice_new (Settings);
+    conf->library = g_key_file_get_string(keyfile,"phonegui","library",NULL);
+    conf->international_prefix = g_key_file_get_string(keyfile,"local","international_prefix",NULL);
+    conf->international_prefix_len = strlen(conf->international_prefix);
+    conf->national_prefix = g_key_file_get_string(keyfile,"local","national_prefix",NULL);
+    conf->national_prefix_len = strlen(conf->national_prefix);
+    conf->country_code = g_key_file_get_string(keyfile,"local","country_code",NULL);
+    conf->home_code = g_key_file_get_string(keyfile,"local","home_code",NULL);
+
 
     /* Load library */
     if(conf->library != NULL) {
@@ -76,9 +88,78 @@ void *phonegui_get_function(const char *name) {
     return pointer;
 }
 
+gchar *phonegui_get_user_international_prefix() {
+    return conf->international_prefix;
+}
+
+gchar *phonegui_get_user_national_prefix() {
+    return conf->national_prefix;
+}
+
+gchar* phonegui_get_user_country_code() {
+    return conf->country_code;
+}
+
+gchar* phonegui_get_user_home_code() {
+    return conf->home_code;
+}
+
+
+/*
+
+17:43 < DocScrutinizer> so: 
+17:43 < DocScrutinizer> Nr1 := Nr s/<IP>(.*)/\+$1/   #00 49 911 12345 -> + 49 911 12345
+17:43 < DocScrutinizer> Nr2 = Nr1 s/<NP>/\+<CC>/  # 0 911 12345 ->  + 49 911 12345
+17:43 < DocScrutinizer> Nr3 = Nr2 s/[^\+](.*)/\+<CC><HC>$1/  # 12345 ->  + 49 911 12345
+17:43 < DocScrutinizer> step3 above isn't considered very practical for cellphones
+17:43 < DocScrutinizer> <IP>, <CC>, <NP>, and <HC> are user definable config-values
+17:47 < DocScrutinizer> oops, for correctness:    non-normalized my be: <NUMBER> | <NationalPrefix><anyHC><NUMBER> | 
+<InterntlPrefix><anyCC><anyHC><NUMBER>
+*/
+
+gchar *normalize_phone_number(gchar *_number) {
+
+    gchar *number;
+    /* if normalized, skip */
+    if (_number[0] == '+') {
+        number = g_strdup(_number);
+    }
+    /* step 1: normalize 00 to + */
+    else if (conf->international_prefix_len > 0 && strncmp(_number, conf->international_prefix, conf->international_prefix_len) == 0) {
+	number = g_strdup(&_number[conf->international_prefix_len - 1]);
+        *number = '+';
+    }
+    /* step 2: normalize national prefix to +<CC>
+     * if national_prefix = "" assume it's a match */
+    else if (conf->national_prefix_len >= 0 && strncmp(_number, conf->national_prefix, conf->national_prefix_len) == 0) {
+        number = g_strconcat("+", conf->country_code, &_number[conf->national_prefix_len], NULL);
+    }
+    /* by default, just try to add +<CC> to the start, better than not trying at all. */
+    else {
+	number = g_strconcat("+", conf->country_code, _number, NULL);
+    }
+
+    return number;
+}
+
+gboolean phone_number_equal(gconstpointer _a, gconstpointer _b)
+{
+    gboolean ret = FALSE;
+    gchar *a = normalize_phone_number((gchar *)_a);
+    gchar *b = normalize_phone_number((gchar *)_b);
+
+    if (strcmp(a, b) == 0)
+        ret = TRUE;
+
+    g_free(a);
+    g_free(b);
+
+    return ret;
+}
+
 guint phone_number_hash(gconstpointer v)
 {
-    gchar *n = phone_utils_normalize_number((char *)v);
+    gchar *n = normalize_phone_number((gchar *)v);
     guint ret = g_str_hash(n);
     g_free(n);
     return (ret);
