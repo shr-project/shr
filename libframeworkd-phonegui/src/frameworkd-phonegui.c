@@ -60,6 +60,10 @@ void phonegui_load(const char *application_name) {
     } else {
         g_error("Loading failed. Conf->library not set.");
     }
+
+    /* init phone utils */
+    /* FIXME: should deinit somewhere!*/
+    phone_utils_init();
 }
 
 
@@ -95,7 +99,7 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
     g_debug("cache_phonebook_callback called");
     if(error == NULL && contacts != NULL) {
         g_debug("creating contact_cache");
-        conf->contact_cache = g_hash_table_new_full(phone_number_hash, phone_number_equal, free, free);
+        conf->contact_cache = g_hash_table_new_full(phone_number_hash, phone_utils_numbers_equal, free, free);
         if (!conf->contact_cache) {
             g_warning("could not allocate contact cache");
             return;
