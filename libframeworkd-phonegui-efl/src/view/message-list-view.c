@@ -137,10 +137,12 @@ static void add_integer_timestamp_to_message(gpointer _message, gpointer user_da
     GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
     GValue *value = g_hash_table_lookup(details, "timestamp");
     time_t timestamp = 0;
-    if( value ) {
+    if (value) {
         const char *timestr = g_value_get_string(value);
         timestamp = time_stringtotimestamp(timestr);
     }
+    else
+	    g_debug("could not find a timestamp in message data !!!");
 
     // Insert integer timestamp into array
     value = g_slice_alloc0(sizeof(GValue));
