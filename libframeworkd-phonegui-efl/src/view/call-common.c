@@ -31,7 +31,7 @@ void
 call_common_window_to_pending(struct CallActiveViewData *win)
 {
 	if (win->state == CALL_STATE_ACTIVE) {
-		elm_button_label_set(win->bt2, D_("Pickup"));
+		elm_button_label_set(win->bt1, D_("Pickup"));
 	}
 	else if (win->state == CALL_STATE_PENDING) {
 		/*Do nothing as we want it to be pending*/
@@ -51,7 +51,7 @@ call_common_window_to_active(struct CallActiveViewData *win)
 		g_debug("Found an active call while expecting none!");
 	}
 	else if (win->state == CALL_STATE_PENDING) {
-		elm_button_label_set(win->bt2, D_("Release"));
+		elm_button_label_set(win->bt1, D_("Release"));
 	}
 	else {
 		g_debug("Bad state (%d) for an active call!", win->state);
