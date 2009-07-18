@@ -101,7 +101,7 @@ void ophonekitd_call_add(call_t **calls, int *size, int id) {
     if(*size == 1)
         *calls = malloc(sizeof(call_t));
     else
-        *calls = realloc(calls, sizeof(call_t)*(*size));
+        *calls = realloc(*calls, sizeof(call_t)*(*size));
     (*calls)[(*size)-1].id = id;
 }
 
@@ -115,21 +115,21 @@ int ophonekitd_call_check(call_t *calls, int *size, int id) {
     return -1;
 }
 
-void ophonekitd_call_remove(call_t *calls, int *size, int id) {
+void ophonekitd_call_remove(call_t **calls, int *size, int id) {
 	g_debug("ophonekitd_call_remove(%d)", id);
     if(*size == 1)  {
-        free(calls);
+        free(*calls);
         (*size)--;
-        calls = NULL;
+        *calls = NULL;
     } else {
-        int place = ophonekitd_call_check(calls, size, id);
+        int place = ophonekitd_call_check(*calls, size, id);
         if(place >= 0) {
             int i = place;
             for(i = place; i + 1 < (*size); i++) {
-                calls[i].id = calls[i+1].id;
+                (*calls)[i].id = (*calls)[i+1].id;
             }
             (*size)--;
-            calls = realloc(calls, sizeof(call_t)*(*size));
+            *calls = realloc(*calls, sizeof(call_t)*(*size));
         }
     }
 }
@@ -191,11 +191,11 @@ void ophonekitd_call_status_handler(const int call_id, const int status, GHashTa
         case CALL_STATUS_RELEASE:
             g_debug("release call");
             if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) != -1) {
-                ophonekitd_call_remove(incoming_calls, &incoming_calls_size, call_id);
+                ophonekitd_call_remove(&incoming_calls, &incoming_calls_size, call_id);
                 phonegui_incoming_call_hide(call_id);
             }
             if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) != -1) {
-                ophonekitd_call_remove(outgoing_calls, &outgoing_calls_size, call_id);
+                ophonekitd_call_remove(&outgoing_calls, &outgoing_calls_size, call_id);
                 phonegui_outgoing_call_hide(call_id);
             }
             break;
