@@ -8,6 +8,7 @@ struct CallIncomingViewData {
 };
 
 static void call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info);
+static void call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info);
 
 struct CallIncomingViewData*
 call_incoming_view_show(struct Window *win, GHashTable *options) {
@@ -80,4 +81,9 @@ call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object *obj, 
 	window_view_show(data->parent.win, options, call_active_view_show, call_active_view_hide);
 }
 
-
+static void
+call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info)
+{
+	g_debug("release_clicked()");
+	ogsmd_call_release(data->id, NULL, NULL);
+}

@@ -1,14 +1,9 @@
 #include "views.h"
 #include "call-common.h"
 
-struct CallActiveViewData {
-    struct CallViewData parent;
-    Evas_Object *bt1, *bt2, *bt3;
-    Evas_Object *information, *number;
-};
-
 static void call_button_speaker_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_dtmf_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
+static void call_button_release_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 
 struct CallActiveViewData *
 call_active_view_show(struct Window *win, GHashTable *options)
@@ -21,6 +16,7 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	data->parent.id = g_hash_table_lookup(options, "id");
 	data->parent.number = g_hash_table_lookup(options, "number");
 	data->parent.dtmf_active = FALSE;
+	data->state = CALL_STATE_ACTIVE;
 
 	window_layout_set(win, CALL_FILE, "call");
 
@@ -111,5 +107,22 @@ call_button_dtmf_clicked(struct CallActiveViewData *data, Evas_Object *obj, void
 		call_dtmf_enable(data);
 		//window_text_set(data->win, "text_dtmf", D_("Hide Keypad"));
 		 elm_button_label_set(data->bt3, D_("Hide Keypad"));
+	}
+}
+
+void
+call_button_release_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info)
+{
+	g_debug("release_clicked()");
+	if (data->state == CALL_STATE_ACTIVE) {
+		ogsmd_call_release(data->parent.id, NULL, NULL);
+	}
+	else if (data->state == CALL_STATE_PENDING) {
+		ogsmd_call_activate(data->parent.id, NULL, NULL);
+		call_common_window_new_active(data->parent.id);
+		data->state = CALL_STATE_ACTIVE;
+	}
+	else {
+		g_debug("bad state, BUG! shouldn't have gotten here");
 	}
 }
