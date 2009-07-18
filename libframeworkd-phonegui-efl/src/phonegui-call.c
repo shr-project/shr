@@ -1,4 +1,5 @@
 #include "phonegui-call.h"
+#include "call-common.h"
 #include <glib.h>
 #include <assert.h>
 #include "instance.h"
@@ -51,8 +52,7 @@ static void _show(const int id, const int status, const char *number, int type) 
     g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
     g_hash_table_insert(options, "number", (char *)number); /* we just loose the const for now */
     g_hash_table_insert(options, "type", GINT_TO_POINTER(type));
-
-    phone_common_active_call_add(id, win);	
+	
     async_trigger(_show_async, options);
 }
 
@@ -76,7 +76,7 @@ static void _show_async(GHashTable *options) {
 
 static void _hide(const int id) {
     g_debug("call_hide(id=%d)", id);
-    phone_common_active_call_remove(id);
+    call_common_active_call_remove(id);
 	
     struct Window *win = instance_manager_remove(INSTANCE_CALL, id);
     assert(win != NULL);

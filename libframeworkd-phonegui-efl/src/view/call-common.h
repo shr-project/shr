@@ -4,6 +4,7 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
+#include "views.h"
 
 struct CallViewData {
     struct Window *win;
@@ -27,9 +28,9 @@ struct CallActiveViewData {
 };
 
 typedef struct _CallsList CallsList;
-int call_common_active_call_add(int id, struct CallActiveViewData *win);
+int call_common_active_call_add(struct CallActiveViewData *win);
 int call_common_active_call_remove(int id);
-struct CallActiveViewData *call_common_active_call_get_window(int id);
+struct CallActiveViewData *call_common_active_calls_get_window(int id);
 void call_common_window_to_pending(struct CallActiveViewData *win);
 void call_common_window_to_active(struct CallActiveViewData *win);
 void call_common_window_new_active(int id);

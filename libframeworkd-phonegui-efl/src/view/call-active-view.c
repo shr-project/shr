@@ -48,6 +48,7 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	window_swallow(win, "button_dtmf", data->bt3);
 	evas_object_show(data->bt3);
 
+        call_common_active_call_add(data);
 	return data;
 }
 
