@@ -21,8 +21,12 @@ call_common_window_new_active(int id)
 	if (active_calls_list.len) {
 		int i;
 		for (i = 0 ; i < active_calls_list.len ; i++) {
-			if (id != active_calls_list.list[i].id)
+			if (id != active_calls_list.list[i].id) {
 				call_common_window_to_pending(active_calls_list.list[i].win);
+			}
+			else {
+				call_common_window_to_active(active_calls_list.list[i].win);
+			}
 		}
 	}
 }

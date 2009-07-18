@@ -121,7 +121,6 @@ call_button_release_clicked(struct CallActiveViewData *data, Evas_Object *obj, v
 	else if (data->state == CALL_STATE_PENDING) {
 		ogsmd_call_activate(data->parent.id, NULL, NULL);
 		call_common_window_new_active(data->parent.id);
-		data->state = CALL_STATE_ACTIVE;
 	}
 	else {
 		g_debug("bad state, BUG! shouldn't have gotten here");
