@@ -96,6 +96,8 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
         const char *timestr = g_value_get_string(value);
         timestamp = time_stringtotimestamp(timestr);
     }
+    else
+	    g_debug("no timestamp for message found !!!");
     char *status = data->status;
     char *number = data->number;
     char *content = data->content;
