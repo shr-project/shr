@@ -40,7 +40,13 @@ int main(int argc, char **argv) {
     mainloop = g_main_loop_new(NULL, FALSE);
 
     /* Enter glib main loop and start ui */
-    g_timeout_add(0, start, NULL);
+    if (argc == 2) {
+        g_timeout_add(0, start_contact_new, argv[1]);
+    }
+    else {
+        g_timeout_add(0, start, NULL);
+    }
+
     g_main_loop_run(mainloop);
 
     return EXIT_SUCCESS;
@@ -48,6 +54,11 @@ int main(int argc, char **argv) {
 
 gboolean start() {
     phonegui_contacts_show();
+    return FALSE;
+}
+
+gboolean start_contact_new(const char *number){
+    phonegui_contacts_new_show(NULL, number);
     return FALSE;
 }
 

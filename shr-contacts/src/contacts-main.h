@@ -22,5 +22,6 @@ int main(int argc, char **argv);
 void connect_to_frameworkd();
 void exit_callback();
 gboolean start();
+gboolean start_contact_new(const char *number);
 
 #endif

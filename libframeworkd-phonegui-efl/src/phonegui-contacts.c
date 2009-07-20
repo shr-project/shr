@@ -22,6 +22,34 @@ void phonegui_contacts_hide() {
     async_trigger(_hide, win);
 }
 
+typedef 
+struct _tmp_pack {
+	struct Window *win;
+	GHashTable *options;
+} tmp_pack;
+static void _show_new(tmp_pack *pack) {
+	window_init(pack->win);
+        window_view_show(pack->win, pack->options, contact_edit_view_show, contact_edit_view_hide);
+	free(pack);
+}
+
+void phonegui_contacts_new_show(const char *name, const char *number) 
+{
+	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+        g_hash_table_insert(options, "name", name);
+        g_hash_table_insert(options, "number", number);
+#if 0
+        g_hash_table_insert(options, "change_callback", frame_list_refresh);
+        g_hash_table_insert(options, "change_callback_data", data);
+#endif
+
+        struct Window *win = window_new(D_("New Contact"));
+	tmp_pack *tmp = malloc(sizeof(*tmp));
+	tmp->win = win;
+	tmp->options = options;
+	async_trigger(_show_new, tmp);
+}
+
 
 static void _show(struct Window *win) {
     window_init(win);
