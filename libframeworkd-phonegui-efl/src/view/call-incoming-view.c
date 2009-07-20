@@ -1,12 +1,6 @@
 #include "views.h"
 #include "call-common.h"
 
-struct CallIncomingViewData {
-    struct CallViewData parent;
-    Evas_Object *bt1, *bt2;
-    Evas_Object *information, *number;
-};
-
 static void call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info);
 
@@ -33,17 +27,17 @@ call_incoming_view_show(struct Window *win, GHashTable *options) {
 	window_swallow(win, "information", data->information);
 	evas_object_show(data->information);
 
-	data->bt1 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt1, D_("Accept"));
-	evas_object_smart_callback_add(data->bt1, "clicked", call_button_accept_clicked, data);
-	window_swallow(win, "button_accept", data->bt1);
-	evas_object_show(data->bt1);
+	data->bt_accept = elm_button_add(window_evas_object_get(win));
+	elm_button_label_set(data->bt_accept, D_("Accept"));
+	evas_object_smart_callback_add(data->bt_accept, "clicked", call_button_accept_clicked, data);
+	window_swallow(win, "button_accept", data->bt_accept);
+	evas_object_show(data->bt_accept);
 
-	data->bt2 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt2, D_("Reject"));
-	evas_object_smart_callback_add(data->bt2, "clicked", call_button_release_clicked, data);
-	window_swallow(win, "button_release", data->bt2);
-	evas_object_show(data->bt2);
+	data->bt_reject = elm_button_add(window_evas_object_get(win));
+	elm_button_label_set(data->bt_reject, D_("Reject"));
+	evas_object_smart_callback_add(data->bt_reject, "clicked", call_button_release_clicked, data);
+	window_swallow(win, "button_release", data->bt_reject);
+	evas_object_show(data->bt_reject);
 
 	return data;
 }
@@ -56,15 +50,11 @@ call_incoming_view_hide(struct CallIncomingViewData *data) {
 
 	evas_object_del(data->information);
 	evas_object_del(data->number);
-	evas_object_del(data->bt1);
-	evas_object_del(data->bt2);
+	evas_object_del(data->bt_accept);
+	evas_object_del(data->bt_reject);
 
 	if(data->parent.dtmf_active) {
 		call_dtmf_disable(&data->parent);
-	}
-
-	if(speaker_active) {
-		call_speaker_disable();
 	}
 }
 

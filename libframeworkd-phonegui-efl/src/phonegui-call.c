@@ -17,7 +17,6 @@ struct Call {
     struct Window *win;
 };
 
-
 static void _show(const int id, const int status, const char *number, int type);
 static void _show_async(GHashTable *options);
 static void _hide(const int id);
