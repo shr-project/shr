@@ -3,6 +3,8 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
+#include "phonegui-contacts.h"
+
 struct MessageShowViewData {
     struct Window *win;
     int id;
@@ -37,7 +39,7 @@ static void message_show_view_delete_callback(struct MessageShowViewData *data);
 static void message_show_view_delete_callback_callback(struct MessageShowViewData *data);
 static void message_show_view_call_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 static void my_hover_bt_1(void *data, Evas_Object *obj, void *event_info);
-
+static void message_show_view_new_contact_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info);
 
 
 struct MessageShowViewData *message_show_view_show(struct Window *win, GHashTable *options) {
@@ -65,6 +67,7 @@ void message_show_view_hide(struct MessageShowViewData *data) {
     evas_object_del(data->bt3);
     evas_object_del(data->hbt1);
     evas_object_del(data->hbt2);
+    evas_object_del(data->hbt3);
     evas_object_del(data->bx);
     evas_object_del(data->hv);
     g_slice_free(struct MessageShowViewData, data);
@@ -140,18 +143,25 @@ static void retrieve_callback2(struct MessageShowViewData *data) {
 
     data->hbt1 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->hbt1, D_("Call"));
-    evas_object_size_hint_min_set(data->hbt1, 130, 80);
+    evas_object_size_hint_min_set(data->hbt1, 140, 80);
     evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_call_clicked, data);
     evas_object_show(data->hbt1);
     elm_box_pack_end(data->bx, data->hbt1);
 
     data->hbt2 = elm_button_add(window_evas_object_get(win));
     elm_button_label_set(data->hbt2, D_("Delete"));
-    evas_object_size_hint_min_set(data->hbt2, 130, 80);
+    evas_object_size_hint_min_set(data->hbt2, 140, 80);
     evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_delete_clicked, data);
     evas_object_show(data->hbt2);
     elm_box_pack_end(data->bx, data->hbt2);
-
+	
+    data->hbt3 = elm_button_add(window_evas_object_get(win));
+    elm_button_label_set(data->hbt3, D_("Add Contact"));
+    evas_object_size_hint_min_set(data->hbt3, 140, 80);
+    evas_object_smart_callback_add(data->hbt3, "clicked", message_show_view_new_contact_clicked, data);
+    evas_object_show(data->hbt3);
+    elm_box_pack_end(data->bx, data->hbt3);
+	
     elm_hover_content_set(data->hv, "top", data->bx);
 
 
@@ -183,6 +193,10 @@ static void message_show_view_answer_clicked(struct MessageShowViewData *data, E
 
 static void message_show_view_call_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
 	ogsmd_call_initiate(data->number, "voice", NULL, NULL);
+}
+
+static void message_show_view_new_contact_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
+	phonegui_contacts_new_show(NULL, data->number);
 }
 
 static void message_show_view_delete_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
