@@ -1,0 +1,435 @@
+# Swedish translation for SHR. 
+# See http://trac.shr-project.org/trac/wiki/Translating
+# This file is put in the public domain.
+# Fredrik Wendt <fredrik@wendt.se>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: shr libframeworkd-phonegui\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-07-22 10:38+0200\n"
+"PO-Revision-Date: 1009-07-22 13:04+0200\n"
+"Last-Translator: Fredrik Wendt <fredrik@wendt.se>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/phonegui-call.c:44 src/view/contact-show-view.c:100
+#: src/view/contact-show-view.c:170 src/view/message-show-view.c:145
+#: src/view/contact-list-view.c:61 src/view/dialer-view.c:97
+msgid "Call"
+msgstr "Ring"
+# FIXME: 
+
+#: src/phonegui-dialer.c:16
+msgid "Dialer"
+msgstr "Telefon"
+
+#: src/phonegui-contacts.c:16 src/view/dialer-view.c:238
+msgid "Contacts"
+msgstr "Kontakter"
+
+#: src/phonegui-contacts.c:46 src/view/contact-edit-view.c:172
+#: src/view/contact-show-view.c:212 src/view/contact-list-view.c:122
+msgid "New Contact"
+msgstr "Ny kontakt"
+
+#: src/view/call-active-view.c:29
+msgid "Active call"
+msgstr "Aktivt samtal"
+
+#: src/view/call-active-view.c:34 src/view/call-common.c:165
+msgid "Release"
+msgstr "Lägg på"
+
+#: src/view/call-active-view.c:46 src/view/call-active-view.c:99
+msgid "Keypad"
+msgstr "Knappsats"
+# FIXME: 
+#msgstr "Tangenter"
+#msgstr "Knappar"
+#msgstr "Tangentbord"
+#msgstr "Numeriskt tangentbord"
+
+#: src/view/call-active-view.c:104
+msgid "Hide Keypad"
+msgstr "Dölj knappsats"
+# FIXME:
+#msgstr "Dölj tangenter"
+#msgstr "Dölj knappar"
+
+#: src/view/ussd-view.c:51
+msgid "Data:"
+msgstr "Data:"
+# FIXME: Uppgifter?
+
+#: src/view/ussd-view.c:55 src/view/dialog-view.c:31
+#: src/view/contact-edit-view.c:177 src/view/contact-show-view.c:274
+#: src/view/message-show-view.c:121 src/view/message-new-view.c:115
+#: src/view/dialer-view.c:85
+msgid "Close"
+msgstr "Stäng"
+
+#: src/view/call-common.c:98
+msgid "Handset"
+msgstr "Telefon"
+# FIXME: 
+#msgstr "Handenhet"
+# Gäller normalt trådlös telefon med handenhet, se t ex
+# http://www.usr.com/support/9630/9630-files/9630-sw-ug.pdf
+# http://www.usr.com/support/9630/9630-files/9630-ug.pdf
+
+#: src/view/call-common.c:105
+msgid "Speaker"
+msgstr "Högtalare"
+
+#: src/view/call-common.c:145
+msgid "Pickup"
+msgstr "Svara"
+
+#: src/view/message-delete-view.c:74 src/view/contact-delete-view.c:73
+msgid "Do you really want to delete it?"
+msgstr "Vill du verkligen ta bort?"
+# FIXME: denna, detta?
+
+#: src/view/message-delete-view.c:77 src/view/contact-edit-view.c:340
+#: src/view/contact-show-view.c:252 src/view/contact-delete-view.c:78
+#: src/view/message-new-view.c:492
+msgid "Yes"
+msgstr "Ja"
+
+#: src/view/message-delete-view.c:83 src/view/contact-edit-view.c:346
+#: src/view/contact-show-view.c:258 src/view/contact-delete-view.c:84
+#: src/view/message-new-view.c:498
+msgid "No"
+msgstr "Nej"
+
+#: src/view/message-delete-view.c:115
+msgid "Deleting.."
+msgstr "Tar bort ..."
+
+#: src/view/dialog-view.c:24
+msgid ""
+"Your storage is full. Please delete some messages or you are not going to "
+"receive messages anymore!"
+msgstr ""
+"Lagringsutrymmet är fullt! Du måste ta bort meddelanden för att kunna ta "
+"emot nya meddelanden!"
+
+#: src/view/dialog-view.c:26
+msgid "GSM is not available, because no SIM card is present."
+msgstr "GSM är inte tillgängligt då inget SIM-kort är tillgängligt."
+# FIXME
+
+#: src/view/dialog-view.c:28
+msgid "Unknown message."
+msgstr "Okänt meddelande."
+# FIXME
+
+#: src/view/message-list-view.c:33
+msgid "Inbox"
+msgstr "Inkorg"
+
+#: src/view/message-list-view.c:36 src/view/message-folder-view.c:66
+#: src/view/contact-show-view.c:94 src/view/contact-list-view.c:55
+msgid "New"
+msgstr "Nytt"
+
+#: src/view/message-list-view.c:46 src/view/contact-show-view.c:106
+#: src/view/message-show-view.c:131 src/view/contact-list-view.c:67
+msgid "Options"
+msgstr "Alternativ"
+# FIXME: msgstr "Inställningar"
+
+#: src/view/message-list-view.c:60 src/view/message-show-view.c:169
+msgid "Answer"
+msgstr "Svara"
+
+#: src/view/message-list-view.c:67 src/view/contact-show-view.c:182
+#: src/view/message-show-view.c:152 src/view/sim-auth-input-view.c:302
+#: src/view/contact-list-view.c:98
+msgid "Delete"
+msgstr "Ta bort"
+
+#: src/view/message-list-view.c:77 src/view/message-folder-view.c:72
+msgid "Show"
+msgstr "Visa"
+
+#: src/view/message-list-view.c:219
+msgid "SMS Answer"
+msgstr "SMS-svar"
+
+#: src/view/message-list-view.c:229 src/view/message-folder-view.c:114
+#: src/view/message-show-view.c:189 src/view/contact-list-view.c:163
+#: src/view/dialer-view.c:188
+msgid "Compose SMS"
+msgstr "Skriv SMS"
+
+#: src/view/message-list-view.c:247
+msgid "Show Message"
+msgstr "Visa meddelande"
+
+#: src/view/message-list-view.c:267 src/view/message-show-view.c:208
+msgid "Delete Message"
+msgstr "Ta bort meddelande"
+
+#: src/view/call-incoming-view.c:26
+msgid "Incoming call"
+msgstr "Inkommande samtal"
+
+#: src/view/call-incoming-view.c:31
+msgid "Accept"
+msgstr "Godkänn"
+
+#: src/view/call-incoming-view.c:37
+msgid "Reject"
+msgstr "Avslå"
+# FIXME: Avbryt
+
+#: src/view/contact-edit-view.c:174 src/view/contact-list-view.c:181
+msgid "Edit Contact"
+msgstr "Redigera kontakt"
+
+#: src/view/contact-edit-view.c:183 src/view/contact-show-view.c:221
+#: src/view/dialer-view.c:116
+msgid "Save"
+msgstr "Spara"
+
+#: src/view/contact-edit-view.c:189
+msgid "Name: "
+msgstr "Namn: "
+
+#: src/view/contact-edit-view.c:204
+msgid "Number: "
+msgstr "Nummer: "
+
+#: src/view/contact-edit-view.c:335 src/view/message-new-view.c:487
+msgid "Do you really want to quit?"
+msgstr "Vill du verkligen avsluta?"
+
+#: src/view/contact-edit-view.c:375
+msgid "Loading... "
+msgstr "Laddar ..."
+
+#: src/view/message-folder-view.c:35
+msgid "Loading.."
+msgstr "Laddar ..."
+
+#: src/view/message-folder-view.c:63
+msgid "Folders"
+msgstr "Mappar"
+
+#: src/view/message-folder-view.c:95
+#, c-format
+msgid "%d messages"
+msgstr "%d meddelanden"
+
+#: src/view/contact-show-view.c:164 src/view/contact-show-view.c:215
+#: src/view/message-new-view.c:224 src/view/message-new-view.c:367
+#: src/view/message-new-view.c:419
+msgid "Back"
+msgstr "Tillbaka"
+
+#: src/view/contact-show-view.c:176
+msgid "Modify"
+msgstr "Ändra"
+# FIXME: msgstr "Justera"
+# FIXME: msgstr "Redigera"
+
+#: src/view/contact-show-view.c:198
+msgid "Modify Contact"
+msgstr "Ändra kontakt"
+# FIXME: msgstr "Justera"
+# FIXME: msgstr "Redigera"
+
+#: src/view/contact-show-view.c:271
+msgid ""
+"Your storage is full. Before adding new contacts, you have to delete some "
+"old ones."
+msgstr ""
+"Lagringsutrymmet är fullt. Du måste ta bort kontakter för att kunna lägga "
+"till nya."
+
+#: src/view/message-show-view.c:115
+msgid "From:"
+msgstr "Från:"
+
+#: src/view/message-show-view.c:116
+msgid "Date:"
+msgstr "Datum:"
+
+#: src/view/message-show-view.c:117
+msgid "Status:"
+msgstr "Status:"
+
+#: src/view/message-show-view.c:159 src/view/message-new-view.c:236
+#: src/view/dialer-view.c:161
+msgid "Add Contact"
+msgstr "Lägg till kontakt"
+
+#: src/view/message-new-view.c:121
+msgid "Continue"
+msgstr "Fortsätt"
+
+#: src/view/message-new-view.c:205
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d tecken kvar [%d]"
+
+#: src/view/message-new-view.c:221
+msgid "Define Recipients"
+msgstr "Ange mottagare"
+
+#: src/view/message-new-view.c:230
+msgid "Send"
+msgstr "Skicka"
+
+#: src/view/message-new-view.c:242
+msgid "Add Number"
+msgstr "Lägg till nummer"
+
+#: src/view/message-new-view.c:248
+msgid "Remove"
+msgstr "Ta bort"
+
+#: src/view/message-new-view.c:364
+msgid "Add a Contact"
+msgstr "Lägg till en kontakt"
+
+#: src/view/message-new-view.c:373 src/view/message-new-view.c:425
+msgid "Add"
+msgstr "Lägg till"
+
+#: src/view/message-new-view.c:416
+msgid "Add a Number"
+msgstr "Lägg till ett nummer"
+
+#: src/view/message-new-view.c:526
+msgid "Sending.."
+msgstr "Skickar ..."
+
+#: src/view/sim-auth-input-view.c:208
+msgid "Enter a NEW PIN"
+msgstr "Ange NY PIN-kod"
+
+#: src/view/sim-auth-input-view.c:214
+msgid "Confirm your NEW PIN"
+msgstr "Bekräfta din NYA PIN-kod"
+
+#: src/view/sim-auth-input-view.c:296
+msgid "Please enter your PIN"
+msgstr "Ange din PIN-kod"
+
+#: src/view/sim-auth-input-view.c:298
+msgid "Please enter your PUK"
+msgstr "Ange din PUK-kod"
+
+#: src/view/sim-auth-input-view.c:308
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:331
+msgid "Checking"
+msgstr "Kontrollerar"
+
+#: src/view/sim-auth-input-view.c:336
+msgid "PIN correct"
+msgstr "PIN-kod korrekt"
+
+#: src/view/sim-auth-input-view.c:341
+msgid "PIN wrong"
+msgstr "PIN-kod felaktig"
+
+#: src/view/sim-auth-input-view.c:346
+msgid "PIN confirmation wrong"
+msgstr "PIN-kodsbekräftelse felaktig"
+
+#: src/view/sim-auth-input-view.c:351
+msgid "New PIN saved"
+msgstr "Ny PIN-kod sparad"
+
+#: src/view/sim-auth-input-view.c:356
+msgid "PUK wrong"
+msgstr "PUK-kod felaktig"
+
+#: src/view/sim-auth-input-view.c:361
+msgid "PIN must be 4-8 chars long"
+msgstr "PIN-koden måste vara 4-8 tecken lång"
+
+#: src/view/contact-list-view.c:84
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:91
+msgid "Edit"
+msgstr "Redigera"
+
+#: src/view/contact-list-view.c:197
+msgid "Delete Contact"
+msgstr "Ta bort kontakt"
+
+#: src/view/dialer-view.c:62
+msgid "Click to open contactlist."
+msgstr "Klicka för att öppna kontaktlista."
+
+#: src/view/dialer-view.c:91
+msgid "More"
+msgstr "Mer"
+
+#: src/view/dialer-view.c:123
+msgid "Send SMS"
+msgstr "Skicka SMS"
+
+#: src/phonegui-ussd.c:17
+msgid "Service Data"
+msgstr "Servicedata"
+
+#: src/phonegui-messages.c:16
+msgid "Messages"
+msgstr "Meddelanden"
+
+#: src/widget/elm_keypad.c:133
+msgid "ABC"
+msgstr "ABC"
+
+#: src/widget/elm_keypad.c:134
+msgid "DEF"
+msgstr "DEF"
+
+#: src/widget/elm_keypad.c:135
+msgid "GHI"
+msgstr "GHI"
+
+#: src/widget/elm_keypad.c:136
+msgid "JKL"
+msgstr "JKL"
+
+#: src/widget/elm_keypad.c:137
+msgid "MNO"
+msgstr "MNO"
+
+#: src/widget/elm_keypad.c:138
+msgid "PQRS"
+msgstr "PQRS"
+
+#: src/widget/elm_keypad.c:139
+msgid "TUV"
+msgstr "TUV"
+
+#: src/widget/elm_keypad.c:140
+msgid "XYZ"
+msgstr "XYZ"
+
+#: src/phonegui-sim-auth.c:18
+msgid "SIM Auth"
+msgstr "SIM-autentisering"
+
+#: src/phonegui-incoming-message.c:16
+msgid "New Message"
+msgstr "Nytt meddelande"
+
+#: src/phonegui-dialog.c:14
+msgid "Information"
+msgstr "Information"
