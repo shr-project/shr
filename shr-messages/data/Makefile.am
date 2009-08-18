@@ -1,6 +1,6 @@
 
 desktopdir = $(datadir)/applications
-desktop_DATA = 0000-shr-messages.desktop
+desktop_DATA = shr-messages.desktop
 
 
 #appicondir = $(datadir)/pixmaps
