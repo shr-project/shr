@@ -8,6 +8,6 @@ Exec=shr-messages
 Icon=openmoko-messages
 Terminal=false
 Type=Application
-Categories=GTK;Office;PIM;
+Categories=Application;PIM;Office;Bar;
 SingleInstance=true
 StartupNotify=true

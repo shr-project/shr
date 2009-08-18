@@ -8,6 +8,6 @@ Exec=shr-contacts
 Icon=openmoko-contacts
 Terminal=false
 Type=Application
-Categories=GTK;Office;PIM;
+Categories=Application;PIM;Office;Bar;
 SingleInstance=true
 StartupNotify=true
