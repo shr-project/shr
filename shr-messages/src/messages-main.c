@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
     frameworkd_handler_connect(frameworkd_handler_new());
 
     /* Load, connect and initiate phonegui */
-    phonegui_load("openmoko-messages3");
+    phonegui_load("shr-messages");
     phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
 
