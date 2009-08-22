@@ -4,12 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: SHR\n"
+"Project-Id-Version: libframeworkd-phonegui-efl 0.0.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-28 10:26+0200\n"
-"PO-Revision-Date: 2009-07-11 15:25+0100\n"
+"POT-Creation-Date: 2009-08-22 14:45+0200\n"
+"PO-Revision-Date: 2009-08-22 15:30+0100\n"
 "Last-Translator: Ole Carlsen <ole@carlsen-web.dk>\n"
-"Language-Team: Danish <LL@li.org>\n"
+"Language-Team: DANISH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,7 +23,7 @@ msgstr "Ny Besked"
 
 #: src/phonegui-call.c:44
 #: src/view/dialer-view.c:97
-#: src/view/message-show-view.c:140
+#: src/view/message-show-view.c:145
 #: src/view/contact-list-view.c:61
 #: src/view/contact-show-view.c:100
 #: src/view/contact-show-view.c:170
@@ -34,6 +34,13 @@ msgstr "Opkald"
 #: src/view/dialer-view.c:238
 msgid "Contacts"
 msgstr "Kontakter"
+
+#: src/phonegui-contacts.c:46
+#: src/view/contact-edit-view.c:172
+#: src/view/contact-list-view.c:122
+#: src/view/contact-show-view.c:212
+msgid "New Contact"
+msgstr "Ny Kontakt"
 
 #: src/phonegui-sim-auth.c:18
 msgid "SIM Auth"
@@ -64,7 +71,7 @@ msgstr "Ukendt besked."
 #: src/view/contact-edit-view.c:177
 #: src/view/ussd-view.c:55
 #: src/view/dialer-view.c:85
-#: src/view/message-show-view.c:116
+#: src/view/message-show-view.c:121
 #: src/view/contact-show-view.c:274
 msgid "Close"
 msgstr "Luk"
@@ -96,6 +103,7 @@ msgstr "Send"
 
 #: src/view/message-new-view.c:236
 #: src/view/dialer-view.c:161
+#: src/view/message-show-view.c:159
 msgid "Add Contact"
 msgstr "Tilføj Kontakt"
 
@@ -157,19 +165,19 @@ msgid "New"
 msgstr "Ny"
 
 #: src/view/message-list-view.c:46
-#: src/view/message-show-view.c:126
+#: src/view/message-show-view.c:131
 #: src/view/contact-list-view.c:67
 #: src/view/contact-show-view.c:106
 msgid "Options"
 msgstr "Valgmulighed"
 
 #: src/view/message-list-view.c:60
-#: src/view/message-show-view.c:157
+#: src/view/message-show-view.c:169
 msgid "Answer"
 msgstr "Svar"
 
 #: src/view/message-list-view.c:67
-#: src/view/message-show-view.c:147
+#: src/view/message-show-view.c:152
 #: src/view/contact-list-view.c:98
 #: src/view/sim-auth-input-view.c:302
 #: src/view/contact-show-view.c:182
@@ -181,32 +189,26 @@ msgstr "Slet"
 msgid "Show"
 msgstr "Vis"
 
-#: src/view/message-list-view.c:217
+#: src/view/message-list-view.c:219
 msgid "SMS Answer"
 msgstr "SMS Svar"
 
-#: src/view/message-list-view.c:227
+#: src/view/message-list-view.c:229
 #: src/view/dialer-view.c:188
-#: src/view/message-show-view.c:177
+#: src/view/message-show-view.c:189
 #: src/view/contact-list-view.c:163
 #: src/view/message-folder-view.c:114
 msgid "Compose SMS"
 msgstr "Skriv Ny SMS"
 
-#: src/view/message-list-view.c:245
+#: src/view/message-list-view.c:247
 msgid "Show Message"
 msgstr "Vis Besked"
 
-#: src/view/message-list-view.c:265
-#: src/view/message-show-view.c:192
+#: src/view/message-list-view.c:267
+#: src/view/message-show-view.c:208
 msgid "Delete Message"
 msgstr "Slet Besked"
-
-#: src/view/contact-edit-view.c:172
-#: src/view/contact-list-view.c:122
-#: src/view/contact-show-view.c:212
-msgid "New Contact"
-msgstr "Ny Kontakt"
 
 #: src/view/contact-edit-view.c:174
 #: src/view/contact-list-view.c:181
@@ -247,41 +249,33 @@ msgstr "Mere"
 msgid "Send SMS"
 msgstr "Send SMS"
 
-#: src/view/message-show-view.c:110
+#: src/view/message-show-view.c:115
 msgid "From:"
 msgstr "Fra:"
 
-#: src/view/message-show-view.c:111
+#: src/view/message-show-view.c:116
 msgid "Date:"
 msgstr "Dato:"
 
-#: src/view/message-show-view.c:112
+#: src/view/message-show-view.c:117
 msgid "Status:"
 msgstr "Status:"
 
-#: src/view/call-active-view.c:33
+#: src/view/call-active-view.c:29
 msgid "Active call"
 msgstr "Aktiv opkald"
 
-#: src/view/call-active-view.c:38
+#: src/view/call-active-view.c:34
+#: src/view/call-common.c:165
 msgid "Release"
 msgstr "Frigiv"
 
-#: src/view/call-active-view.c:44
-#: src/view/call-active-view.c:89
-msgid "Speaker"
-msgstr "Højtaler"
-
-#: src/view/call-active-view.c:50
-#: src/view/call-active-view.c:107
+#: src/view/call-active-view.c:46
+#: src/view/call-active-view.c:99
 msgid "Keypad"
 msgstr "Tastatur"
 
-#: src/view/call-active-view.c:95
-msgid "Handset"
-msgstr "Håndset"
-
-#: src/view/call-active-view.c:113
+#: src/view/call-active-view.c:104
 msgid "Hide Keypad"
 msgstr "Gem Tastatur"
 
@@ -354,6 +348,18 @@ msgstr "PUK forkert"
 msgid "PIN must be 4-8 chars long"
 msgstr "PIN skal være 4-8 karakter lang"
 
+#: src/view/call-common.c:98
+msgid "Handset"
+msgstr "Håndset"
+
+#: src/view/call-common.c:105
+msgid "Speaker"
+msgstr "Højtaler"
+
+#: src/view/call-common.c:145
+msgid "Pickup"
+msgstr "Løft"
+
 #: src/view/contact-show-view.c:176
 msgid "Modify"
 msgstr "Rediger"
@@ -379,15 +385,15 @@ msgstr "Mapper"
 msgid "%d messages"
 msgstr "%d beskeder"
 
-#: src/view/call-incoming-view.c:31
+#: src/view/call-incoming-view.c:26
 msgid "Incoming call"
 msgstr "Indgående opkald"
 
-#: src/view/call-incoming-view.c:36
+#: src/view/call-incoming-view.c:31
 msgid "Accept"
 msgstr "Acceptere"
 
-#: src/view/call-incoming-view.c:42
+#: src/view/call-incoming-view.c:37
 msgid "Reject"
 msgstr "Afvis"
 
