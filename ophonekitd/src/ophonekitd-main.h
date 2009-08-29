@@ -20,6 +20,7 @@
 #define _OPHONEKITD_MAIN_H
 
 #include <dbus/dbus-glib.h>
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 int main(int argc, char ** argv);
 

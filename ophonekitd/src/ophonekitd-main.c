@@ -43,6 +43,7 @@ typedef struct {
 
 gboolean sim_auth_active = FALSE;
 gboolean sim_ready = FALSE;
+gboolean show_incoming_sms = TRUE;
 call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
 int incoming_calls_size = 0;
@@ -55,6 +56,21 @@ main(int argc, char ** argv)
 	FrameworkdHandler *fwHandler;
 	DBusGConnection *bus = NULL;
 	DBusGProxy *bus_proxy = NULL;
+	/* Read the ophonekitd preferences */
+	GKeyFile *keyfile;
+	GKeyFileFlags flags;
+	GError *error = NULL;
+	
+	keyfile = g_key_file_new ();
+	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
+	if (g_key_file_load_from_file (keyfile, FRAMEWORKD_PHONEGUI_CONFIG, flags, &error)) {
+		show_incoming_sms = g_key_file_get_boolean(keyfile,"phonegui","show_incoming_sms",NULL);
+		g_debug("Configuration file read");
+	} else {
+		g_error (error->message);
+		g_debug("Reading configuration file error, skipping");
+	}
+
 
 	/* Load, connect and initiate phonegui library */
 	phonegui_load("ophonekitd");
@@ -272,7 +288,9 @@ void
 ophonekitd_sim_incoming_stored_message_handler(const int id)
 {
 	g_debug("ophonekitd_sim_incoming_stored_message_handler()");
-	phonegui_message_show(id);
+	if (show_incoming_sms == TRUE) {
+		phonegui_message_show(id);
+	}
 	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
 
