@@ -1,0 +1,413 @@
+# This file is put in the public domain.
+#
+# David Garabana Barro <david@garabana.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-29 19:57+0200\n"
+"PO-Revision-Date: 2009-08-30 03:08+0200\n"
+"Last-Translator: David Garabana Barro <david@garabana.com>\n"
+"Language-Team: Galician \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: src/view/message-show-view.c:115
+msgid "From:"
+msgstr "De:"
+
+#: src/view/message-show-view.c:116
+msgid "Date:"
+msgstr "Data:"
+
+#: src/view/message-show-view.c:117
+msgid "Status:"
+msgstr "Estado:"
+
+#: src/view/message-show-view.c:121 src/view/ussd-view.c:55
+#: src/view/message-new-view.c:115 src/view/contact-show-view.c:274
+#: src/view/dialer-view.c:85 src/view/dialog-view.c:31
+#: src/view/contact-edit-view.c:177
+msgid "Close"
+msgstr "Pechar"
+
+#: src/view/message-show-view.c:131 src/view/contact-list-view.c:67
+#: src/view/contact-show-view.c:106 src/view/message-list-view.c:46
+msgid "Options"
+msgstr "Opcións"
+
+#: src/view/message-show-view.c:145 src/view/contact-list-view.c:61
+#: src/view/contact-show-view.c:100 src/view/contact-show-view.c:170
+#: src/view/dialer-view.c:97 src/phonegui-call.c:44
+msgid "Call"
+msgstr "Chamar"
+
+#: src/view/message-show-view.c:152 src/view/contact-list-view.c:98
+#: src/view/contact-show-view.c:182 src/view/sim-auth-input-view.c:302
+#: src/view/message-list-view.c:67
+msgid "Delete"
+msgstr "Borrar"
+
+#: src/view/message-show-view.c:159 src/view/message-new-view.c:236
+#: src/view/dialer-view.c:161
+msgid "Add Contact"
+msgstr ""
+"Engadir"
+"contacto"
+
+#: src/view/message-show-view.c:169 src/view/message-list-view.c:60
+msgid "Answer"
+msgstr "Respostar"
+
+#: src/view/message-show-view.c:189 src/view/message-folder-view.c:114
+#: src/view/contact-list-view.c:163 src/view/message-list-view.c:229
+#: src/view/dialer-view.c:188
+msgid "Compose SMS"
+msgstr "Redactar unha mensaxe"
+
+#: src/view/message-show-view.c:208 src/view/message-list-view.c:267
+msgid "Delete Message"
+msgstr "Borrar a mensaxe"
+
+#: src/view/ussd-view.c:51
+msgid "Data:"
+msgstr "Datos:"
+
+#: src/view/call-common.c:98
+msgid "Handset"
+msgstr "Normal"
+
+#: src/view/call-common.c:105
+msgid "Speaker"
+msgstr "Altofalante"
+
+#: src/view/call-common.c:145
+msgid "Pickup"
+msgstr "Descolgar"
+
+#: src/view/call-common.c:165 src/view/call-active-view.c:34
+msgid "Release"
+msgstr "Colgar"
+
+#: src/view/message-new-view.c:121
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/view/message-new-view.c:205
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "Quedan %d caracteres dispoñibles [%d]"
+
+#: src/view/message-new-view.c:221
+msgid "Define Recipients"
+msgstr "Escolla de destinatarios"
+
+#: src/view/message-new-view.c:224 src/view/message-new-view.c:367
+#: src/view/message-new-view.c:419 src/view/contact-show-view.c:164
+#: src/view/contact-show-view.c:215
+msgid "Back"
+msgstr "Atrás"
+
+#: src/view/message-new-view.c:230
+msgid "Send"
+msgstr "Enviar"
+
+#: src/view/message-new-view.c:242
+msgid "Add Number"
+msgstr "Engadir un número"
+
+#: src/view/message-new-view.c:248
+msgid "Remove"
+msgstr "Eliminar"
+
+#: src/view/message-new-view.c:364
+msgid "Add a Contact"
+msgstr "Engadir un contacto"
+
+#: src/view/message-new-view.c:373 src/view/message-new-view.c:425
+msgid "Add"
+msgstr "Engadir"
+
+#: src/view/message-new-view.c:416
+msgid "Add a Number"
+msgstr "Engadir un número"
+
+#: src/view/message-new-view.c:487 src/view/contact-edit-view.c:335
+msgid "Do you really want to quit?"
+msgstr "Seguro que quere saír?"
+
+#: src/view/message-new-view.c:492 src/view/contact-show-view.c:252
+#: src/view/contact-delete-view.c:78 src/view/message-delete-view.c:77
+#: src/view/contact-edit-view.c:340
+msgid "Yes"
+msgstr "Sí"
+
+#: src/view/message-new-view.c:498 src/view/contact-show-view.c:258
+#: src/view/contact-delete-view.c:84 src/view/message-delete-view.c:83
+#: src/view/contact-edit-view.c:346
+msgid "No"
+msgstr "Non"
+
+#: src/view/message-new-view.c:526
+msgid "Sending.."
+msgstr "Enviando.."
+
+#: src/view/message-folder-view.c:35
+msgid "Loading.."
+msgstr "Cargando.."
+
+#: src/view/message-folder-view.c:63
+msgid "Folders"
+msgstr "Carpetas"
+
+#: src/view/message-folder-view.c:66 src/view/contact-list-view.c:55
+#: src/view/contact-show-view.c:94 src/view/message-list-view.c:36
+msgid "New"
+msgstr "Novo"
+
+#: src/view/message-folder-view.c:72 src/view/message-list-view.c:77
+msgid "Show"
+msgstr "Amosar"
+
+#: src/view/message-folder-view.c:95
+#, c-format
+msgid "%d messages"
+msgstr "%d mensaxes"
+
+#: src/view/contact-list-view.c:84
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:91
+msgid "Edit"
+msgstr "Editar"
+
+#: src/view/contact-list-view.c:122 src/view/contact-show-view.c:212
+#: src/view/contact-edit-view.c:172 src/phonegui-contacts.c:46
+msgid "New Contact"
+msgstr "Novo Contacto"
+
+#: src/view/contact-list-view.c:181 src/view/contact-edit-view.c:174
+msgid "Edit Contact"
+msgstr "Editar Contacto"
+
+#: src/view/contact-list-view.c:197
+msgid "Delete Contact"
+msgstr "Borrar Contacto"
+
+#: src/view/call-active-view.c:29
+msgid "Active call"
+msgstr "Chamada activa"
+
+#: src/view/call-active-view.c:46 src/view/call-active-view.c:99
+msgid "Keypad"
+msgstr "Teclado"
+
+#: src/view/call-active-view.c:104
+msgid "Hide Keypad"
+msgstr "Ocultar Teclado"
+
+#: src/view/call-incoming-view.c:26
+msgid "Incoming call"
+msgstr "Chamada entrante"
+
+#: src/view/call-incoming-view.c:31
+msgid "Accept"
+msgstr "Coller"
+
+#: src/view/call-incoming-view.c:37
+msgid "Reject"
+msgstr "Rexeitar"
+
+#: src/view/contact-show-view.c:176
+msgid "Modify"
+msgstr "Modificar"
+
+#: src/view/contact-show-view.c:198
+msgid "Modify Contact"
+msgstr "Modificar Contacto"
+
+#: src/view/contact-show-view.c:221 src/view/dialer-view.c:116
+#: src/view/contact-edit-view.c:183
+msgid "Save"
+msgstr "Gardar"
+
+#: src/view/contact-show-view.c:271
+msgid ""
+"Your storage is full. Before adding new contacts, you have to delete some "
+"old ones."
+msgstr ""
+"A memoria está chea. Para engadir novos contactos, ten que borrar algúns "
+"vellos."
+
+#: src/view/contact-delete-view.c:73 src/view/message-delete-view.c:74
+msgid "Do you really want to delete it?"
+msgstr "Está certo de que quere borralo?"
+
+#: src/view/message-delete-view.c:115
+msgid "Deleting.."
+msgstr "A borrar.."
+
+#: src/view/sim-auth-input-view.c:208
+msgid "Enter a NEW PIN"
+msgstr "Introduza o novo PIN"
+
+#: src/view/sim-auth-input-view.c:214
+msgid "Confirm your NEW PIN"
+msgstr "Confirme o novo PIN"
+
+#: src/view/sim-auth-input-view.c:296
+msgid "Please enter your PIN"
+msgstr "Introduza o PIN"
+
+#: src/view/sim-auth-input-view.c:298
+msgid "Please enter your PUK"
+msgstr "Introduza o PUK"
+
+#: src/view/sim-auth-input-view.c:308
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:331
+msgid "Checking"
+msgstr "Comprobando"
+
+#: src/view/sim-auth-input-view.c:336
+msgid "PIN correct"
+msgstr "PIN correcto"
+
+#: src/view/sim-auth-input-view.c:341
+msgid "PIN wrong"
+msgstr "PIN incorrecto"
+
+#: src/view/sim-auth-input-view.c:346
+msgid "PIN confirmation wrong"
+msgstr "Confirmación do PIN incorrecta"
+
+#: src/view/sim-auth-input-view.c:351
+msgid "New PIN saved"
+msgstr "Gardouse o novo PIN"
+
+#: src/view/sim-auth-input-view.c:356
+msgid "PUK wrong"
+msgstr "PUK incorrecto"
+
+#: src/view/sim-auth-input-view.c:361
+msgid "PIN must be 4-8 chars long"
+msgstr "O PIN ten que ter entre 4 e 8 caracteres"
+
+#: src/view/message-list-view.c:33
+msgid "Inbox"
+msgstr "Caixa de entrada"
+
+#: src/view/message-list-view.c:219
+msgid "SMS Answer"
+msgstr "Resposta ao SMS"
+
+#: src/view/message-list-view.c:247
+msgid "Show Message"
+msgstr "Amosar a mensaxe"
+
+#: src/view/dialer-view.c:62
+msgid "Click to open contactlist."
+msgstr "Premer para abrir a lista de contactos"
+
+#: src/view/dialer-view.c:91
+msgid "More"
+msgstr "Máis"
+
+#: src/view/dialer-view.c:123
+msgid "Send SMS"
+msgstr "Enviar unha SMS"
+
+#: src/view/dialer-view.c:238 src/phonegui-contacts.c:16
+msgid "Contacts"
+msgstr "Contactos"
+
+#: src/view/dialog-view.c:24
+msgid ""
+"Your storage is full. Please delete some messages or you are not going to "
+"receive messages anymore!"
+msgstr ""
+"A memoria está chea. Por favor, borre algunhas mensaxes antigas ou non "
+"poderá receber mensaxes novas"
+
+#: src/view/dialog-view.c:26
+msgid "GSM is not available, because no SIM card is present."
+msgstr "Non está dispoñible o GSM porque non hai tarxeta SIM."
+
+#: src/view/dialog-view.c:28
+msgid "Unknown message."
+msgstr "Mensaxe descoñecida."
+
+#: src/view/contact-edit-view.c:189
+msgid "Name: "
+msgstr "Nome: "
+
+#: src/view/contact-edit-view.c:204
+msgid "Number: "
+msgstr "Número: "
+
+#: src/view/contact-edit-view.c:375
+msgid "Loading... "
+msgstr "Cargando... "
+
+#: src/phonegui-sim-auth.c:18
+msgid "SIM Auth"
+msgstr "Identificación SIM"
+
+#: src/phonegui-dialer.c:16
+msgid "Dialer"
+msgstr "Marcador"
+
+#: src/phonegui-dialog.c:14
+msgid "Information"
+msgstr "Información"
+
+#: src/phonegui-messages.c:16
+msgid "Messages"
+msgstr "Mensaxes"
+
+#: src/phonegui-incoming-message.c:16
+msgid "New Message"
+msgstr "Nova Mensaxe"
+
+#: src/widget/elm_keypad.c:133
+msgid "ABC"
+msgstr "ABC"
+
+#: src/widget/elm_keypad.c:134
+msgid "DEF"
+msgstr "DEF"
+
+#: src/widget/elm_keypad.c:135
+msgid "GHI"
+msgstr "GHI"
+
+#: src/widget/elm_keypad.c:136
+msgid "JKL"
+msgstr "JKL"
+
+#: src/widget/elm_keypad.c:137
+msgid "MNO"
+msgstr "MNO"
+
+#: src/widget/elm_keypad.c:138
+msgid "PQRS"
+msgstr "PQRS"
+
+#: src/widget/elm_keypad.c:139
+msgid "TUV"
+msgstr "TUV"
+
+#: src/widget/elm_keypad.c:140
+msgid "XYZ"
+msgstr "WXYZ"
+
+#: src/phonegui-ussd.c:17
+msgid "Service Data"
+msgstr "Datos do Servizo"
+
