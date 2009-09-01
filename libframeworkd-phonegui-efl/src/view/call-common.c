@@ -118,7 +118,7 @@ call_common_set_sound_mode (CallSoundMode mode)
 	GError* error = NULL;
 	
 	sound_mode = mode;
-	int brightness;
+	int brightness=-1;
 	int sound=0;
 	
 	switch (sound_mode) {
@@ -137,11 +137,11 @@ call_common_set_sound_mode (CallSoundMode mode)
 
 	if(init_proxy(bus, &proxy_alsa, ODEVICED_BUS, DEVICE_AUDIO_PATH, DEVICE_AUDIO_IFACE))
 		return 1;	
-    if(sound) {
+    if(sound==1) {
 		g_debug("Play Sound!\n");
 		dbus_g_proxy_call (proxy_alsa, "PlaySound", &error, G_TYPE_STRING, ringtone_name, G_TYPE_INT, sound, G_TYPE_INT, sound_lenght, G_TYPE_INVALID, G_TYPE_INVALID);
 	}
-	else {
+	elseif (sound==0) {
 		g_debug("Stop Sound!\n");
 		if(!org_freesmartphone_Device_Audio_stop_sound (proxy_alsa, ringtone_name, &error)) {
 			g_debug ("Stop Sound failed: %s", error->message);
@@ -151,11 +151,13 @@ call_common_set_sound_mode (CallSoundMode mode)
 	
 	if(init_proxy(bus, &proxy_vibrator, ODEVICED_BUS, DEVICE_VIBRATOR_PATH, DEVICE_VIBRATOR_IFACE))
 		return 1;		
-	if(!dbus_g_proxy_call (proxy_vibrator, "SetBrightness", &error, G_TYPE_INT, brightness, G_TYPE_INVALID, G_TYPE_INVALID)) {		
-		g_debug ("Stop vibrator failed: %s", error->message);
-		g_error_free (error);
-	}
-	if(sound) {
+        if(brightness!=-1) {
+		if(!dbus_g_proxy_call (proxy_vibrator, "SetBrightness", &error, G_TYPE_INT, brightness, G_TYPE_INVALID, G_TYPE_INVALID)) {		
+			g_debug ("Stop vibrator failed: %s", error->message);
+			g_error_free (error);
+		}
+        }
+	if(brightness==100) {
 		dbus_g_proxy_call (proxy_vibrator, "SetBlinking", &error, G_TYPE_INT, on_duration , G_TYPE_INT, off_duration , G_TYPE_INVALID, G_TYPE_INVALID);
 	}	
 	return 0;		

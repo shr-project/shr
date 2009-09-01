@@ -47,6 +47,7 @@ call_incoming_view_show(struct Window *win, GHashTable *options) {
 	elm_button_label_set(data->bt_sound_state, D_("Silent"));
 	evas_object_smart_callback_add(data->bt_sound_state, "clicked", call_button_sound_state_clicked, data);
 	window_swallow(win, "button_silent", data->bt_sound_state);
+	call_common_set_sound_mode(CALL_SOUND_MODE_INIT);
 	call_common_window_update_mode(data, call_common_get_sound_mode());
 	evas_object_show(data->bt_sound_state);	
 	//end albacore	

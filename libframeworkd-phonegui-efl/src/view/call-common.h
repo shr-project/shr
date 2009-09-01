@@ -36,7 +36,8 @@ struct CallIncomingViewData {
 //albacore
 enum _CallSoundMode {	
 	CALL_SOUND_MODE_ACTIVE,
-	CALL_SOUND_MODE_SILENT
+	CALL_SOUND_MODE_SILENT,
+	CALL_SOUND_MODE_INIT
 };
 //end albacore
 typedef enum _CallSoundMode CallSoundMode;
