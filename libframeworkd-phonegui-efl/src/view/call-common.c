@@ -198,8 +198,9 @@ call_common_window_update_mode(struct CallIncomingViewData *win, CallSoundMode m
 	switch (mode) {
 		case CALL_SOUND_MODE_SILENT:
 			mode_string = D_("Ringtone");
-			break;		
+			break;
 		default:
+			mode_string = D_("Silent");
 			break;
 	}
 	
