@@ -141,7 +141,7 @@ call_common_set_sound_mode (CallSoundMode mode)
 		g_debug("Play Sound!\n");
 		dbus_g_proxy_call (proxy_alsa, "PlaySound", &error, G_TYPE_STRING, ringtone_name, G_TYPE_INT, sound, G_TYPE_INT, sound_lenght, G_TYPE_INVALID, G_TYPE_INVALID);
 	}
-	elseif (sound==0) {
+	else if (sound==0) {
 		g_debug("Stop Sound!\n");
 		if(!org_freesmartphone_Device_Audio_stop_sound (proxy_alsa, ringtone_name, &error)) {
 			g_debug ("Stop Sound failed: %s", error->message);
