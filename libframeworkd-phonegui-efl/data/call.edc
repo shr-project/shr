@@ -62,10 +62,10 @@ collections {
 	           description {
 		           state, "default" 0.0;
 		           rel1 {
-		                       relative, 0.33 0.85;
+		                       relative, 0.66 0.85;
     	           }
 		           rel2 {
-		                       relative, 0.66 1.0;
+		                       relative, 1.0 1.0;
 		           }
             }
 	    }
@@ -78,10 +78,10 @@ collections {
  	           description {
  		           state, "default" 0.0;
  		           rel1 {
- 		                       relative, 0.66 0.85;
+ 		                       relative, 0.33 0.85;
       	           }
   		           rel2 {
-  		                       relative, 1.0 1.0;
+  		                       relative, 0.66 1.0;
 			    }
 	    }
 	  }
