@@ -110,6 +110,9 @@ call_button_sound_state_clicked(struct CallIncomingViewData *data, Evas_Object *
 		else if (mode == CALL_SOUND_MODE_ACTIVE){
 			call_common_set_sound_mode(CALL_SOUND_MODE_SILENT);		
 		}
+                else if (mode == CALL_SOUND_MODE_INIT){
+                        call_common_set_sound_mode(CALL_SOUND_MODE_ACTIVE);
+                }
 		/* else if moree.... */
 		else {
 			g_debug("trying to set unknown sound mode %d failed!", mode);
