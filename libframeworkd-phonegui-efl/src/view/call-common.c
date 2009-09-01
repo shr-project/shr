@@ -144,7 +144,7 @@ call_common_set_sound_mode (CallSoundMode mode)
 	else {
 		g_debug("Stop Sound!\n");
 		if(!org_freesmartphone_Device_Audio_stop_sound (proxy_alsa, ringtone_name, &error)) {
-			g_warning ("Stop Sound failed: %s", error->message);
+			g_debug ("Stop Sound failed: %s", error->message);
 			g_error_free (error);
 		}	
 	}
@@ -152,7 +152,7 @@ call_common_set_sound_mode (CallSoundMode mode)
 	if(init_proxy(bus, &proxy_vibrator, ODEVICED_BUS, DEVICE_VIBRATOR_PATH, DEVICE_VIBRATOR_IFACE))
 		return 1;		
 	if(!dbus_g_proxy_call (proxy_vibrator, "SetBrightness", &error, G_TYPE_INT, brightness, G_TYPE_INVALID, G_TYPE_INVALID)) {		
-		g_warning ("Stop vibrator failed: %s", error->message);
+		g_debug ("Stop vibrator failed: %s", error->message);
 		g_error_free (error);
 	}
 	if(sound) {
