@@ -119,7 +119,7 @@ call_common_set_sound_mode (CallSoundMode mode)
 	
 	sound_mode = mode;
 	int brightness=-1;
-	int sound=0;
+	int sound=-1;
 	
 	switch (sound_mode) {
 		case CALL_SOUND_MODE_ACTIVE:
