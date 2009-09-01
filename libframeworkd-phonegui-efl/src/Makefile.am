@@ -41,6 +41,7 @@ libframeworkd_phonegui_efl_la_SOURCES = \
 	view/call-common.h view/call-common.c \
 	view/call-incoming-view.c \
 	view/call-active-view.c \
+	view/call-dbus.h view/call-dbus.c \
 	view/sim-auth-input-view.c \
 	view/ussd-view.c
 

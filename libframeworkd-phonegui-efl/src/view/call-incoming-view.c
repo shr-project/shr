@@ -1,8 +1,11 @@
 #include "views.h"
 #include "call-common.h"
 
+
+
 static void call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info);
+static void call_button_sound_state_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info); //albacore
 
 struct CallIncomingViewData*
 call_incoming_view_show(struct Window *win, GHashTable *options) {
@@ -39,6 +42,15 @@ call_incoming_view_show(struct Window *win, GHashTable *options) {
 	window_swallow(win, "button_release", data->bt_reject);
 	evas_object_show(data->bt_reject);
 
+	//albacore
+	data->bt_sound_state = elm_button_add(window_evas_object_get(win));
+	elm_button_label_set(data->bt_sound_state, D_("Silent"));
+	evas_object_smart_callback_add(data->bt_sound_state, "clicked", call_button_sound_state_clicked, data);
+	window_swallow(win, "button_silent", data->bt_sound_state);
+	call_common_window_update_mode(data, call_common_get_sound_mode());
+	evas_object_show(data->bt_sound_state);	
+	//end albacore	
+
 	return data;
 }
 
@@ -52,6 +64,7 @@ call_incoming_view_hide(struct CallIncomingViewData *data) {
 	evas_object_del(data->number);
 	evas_object_del(data->bt_accept);
 	evas_object_del(data->bt_reject);
+	evas_object_del(data->bt_sound_state); //albacore
 
 	if(data->parent.dtmf_active) {
 		call_dtmf_disable(&data->parent);
@@ -77,3 +90,30 @@ call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *e
 	g_debug("release_clicked()");
 	ogsmd_call_release(data->id, NULL, NULL);
 }
+
+
+//albacore
+static void
+call_button_sound_state_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info)
+{
+	CallSoundMode mode = call_common_get_sound_mode();
+	g_debug("sound_mode_clicked(id=%d,mode=%d)", data->parent.id, mode);
+
+	/* if it's not the first call, do nothing because the ringtone is already off
+	 Wait elementary disabled support, so the button 'll not active therefore the question will not take place any more to be*/
+	if(call_common_get_active_calls_list()==NULL)
+	{		
+		if(mode == CALL_SOUND_MODE_SILENT) {
+			call_common_set_sound_mode(CALL_SOUND_MODE_ACTIVE);		
+		}
+		else if (mode == CALL_SOUND_MODE_ACTIVE){
+			call_common_set_sound_mode(CALL_SOUND_MODE_SILENT);		
+		}
+		/* else if moree.... */
+		else {
+			g_debug("trying to set unknown sound mode %d failed!", mode);
+		}
+		call_common_window_update_mode(data, call_common_get_sound_mode());
+	}
+}
+//end albacore
