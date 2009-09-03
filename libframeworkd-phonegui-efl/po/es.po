@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: libframeworkd-phonegui-efl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-29 19:57+0200\n"
-"PO-Revision-Date: 2009-08-30 06:01+0200\n"
+"PO-Revision-Date: 2009-08-31 02:59+0200\n"
 "Last-Translator: David Garabana Barro <david@garabana.com>\n"
 "Language-Team: Galician <>\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Catalan\n"
 "X-Poedit-Country: SPAIN\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 0.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: src/view/message-show-view.c:115
@@ -54,7 +54,7 @@ msgstr "Borrar"
 #: src/view/message-show-view.c:159 src/view/message-new-view.c:236
 #: src/view/dialer-view.c:161
 msgid "Add Contact"
-msgstr "Añadir Contacto"
+msgstr "Añadir contacto"
 
 #: src/view/message-show-view.c:169 src/view/message-list-view.c:60
 msgid "Answer"
@@ -68,7 +68,7 @@ msgstr "Escribir SMS"
 
 #: src/view/message-show-view.c:208 src/view/message-list-view.c:267
 msgid "Delete Message"
-msgstr "Borrar el Mensaje"
+msgstr "Borrar el mensaje"
 
 #: src/view/ussd-view.c:51
 msgid "Data:"
@@ -97,11 +97,11 @@ msgstr "Continuar"
 #: src/view/message-new-view.c:205
 #, c-format
 msgid "%d characters left [%d]"
-msgstr "%d caracteres restantes [%d]"
+msgstr "Disponibles %d caracteres [%d]"
 
 #: src/view/message-new-view.c:221
 msgid "Define Recipients"
-msgstr "Escoger Destinatarios"
+msgstr "Escoja destinatarios"
 
 #: src/view/message-new-view.c:224 src/view/message-new-view.c:367
 #: src/view/message-new-view.c:419 src/view/contact-show-view.c:164
@@ -115,7 +115,7 @@ msgstr "Enviar"
 
 #: src/view/message-new-view.c:242
 msgid "Add Number"
-msgstr "Añadir Número"
+msgstr "Añadir número"
 
 #: src/view/message-new-view.c:248
 msgid "Remove"
@@ -123,7 +123,7 @@ msgstr "Suprimir"
 
 #: src/view/message-new-view.c:364
 msgid "Add a Contact"
-msgstr "Añadir un Contacto"
+msgstr "Añadir un contacto"
 
 #: src/view/message-new-view.c:373 src/view/message-new-view.c:425
 msgid "Add"
@@ -131,11 +131,12 @@ msgstr "Añadir"
 
 #: src/view/message-new-view.c:416
 msgid "Add a Number"
-msgstr "Añadir un Número"
+msgstr "Añadir un número"
 
 #: src/view/message-new-view.c:487 src/view/contact-edit-view.c:335
 msgid "Do you really want to quit?"
-msgstr "¿Estás seguro de que quieres salir?"
+msgstr "Si sale ahora, perderá todos los cambios.<br>"
+"¿Está seguro de que quiere salir?"
 
 #: src/view/message-new-view.c:492 src/view/contact-show-view.c:252
 #: src/view/contact-delete-view.c:78 src/view/message-delete-view.c:77
@@ -186,15 +187,15 @@ msgstr "Editar"
 #: src/view/contact-list-view.c:122 src/view/contact-show-view.c:212
 #: src/view/contact-edit-view.c:172 src/phonegui-contacts.c:46
 msgid "New Contact"
-msgstr "Contacto Nuevo"
+msgstr "Contacto nuevo"
 
 #: src/view/contact-list-view.c:181 src/view/contact-edit-view.c:174
 msgid "Edit Contact"
-msgstr "Editar Contacto"
+msgstr "Editar contacto"
 
 #: src/view/contact-list-view.c:197
 msgid "Delete Contact"
-msgstr "Eliminar Contacto"
+msgstr "Eliminar contacto"
 
 #: src/view/call-active-view.c:29
 msgid "Active call"
@@ -206,7 +207,7 @@ msgstr "Teclado"
 
 #: src/view/call-active-view.c:104
 msgid "Hide Keypad"
-msgstr "Esconder Teclado"
+msgstr "Ocultar teclado"
 
 #: src/view/call-incoming-view.c:26
 msgid "Incoming call"
@@ -226,7 +227,7 @@ msgstr "Modificar"
 
 #: src/view/contact-show-view.c:198
 msgid "Modify Contact"
-msgstr "Modificar Contacto"
+msgstr "Modificar contacto"
 
 #: src/view/contact-show-view.c:221 src/view/dialer-view.c:116
 #: src/view/contact-edit-view.c:183
@@ -238,12 +239,12 @@ msgid ""
 "Your storage is full. Before adding new contacts, you have to delete some "
 "old ones."
 msgstr ""
-"Almacenamiento lleno. Antes de añadir nuevos mensajes debes eliminar algún "
-"contacto antiguo."
+"La memoria de contactos está llena. No podrá añadir nuevos contactos hasta que no "
+"libere espacio."
 
 #: src/view/contact-delete-view.c:73 src/view/message-delete-view.c:74
 msgid "Do you really want to delete it?"
-msgstr "¿Estás seguro de que quieres eliminarlo?"
+msgstr "¿Está seguro de que quiere eliminarlo?"
 
 #: src/view/message-delete-view.c:115
 msgid "Deleting.."
@@ -267,11 +268,11 @@ msgstr "Introduzca el PUK"
 
 #: src/view/sim-auth-input-view.c:308
 msgid "OK"
-msgstr "De acuerdo"
+msgstr "Aceptar"
 
 #: src/view/sim-auth-input-view.c:331
 msgid "Checking"
-msgstr "Verificando"
+msgstr "Comprobando"
 
 #: src/view/sim-auth-input-view.c:336
 msgid "PIN correct"
@@ -283,7 +284,7 @@ msgstr "PIN incorrecto"
 
 #: src/view/sim-auth-input-view.c:346
 msgid "PIN confirmation wrong"
-msgstr "Confirmación del PIN incorrecta"
+msgstr "Los PIN no son iguales"
 
 #: src/view/sim-auth-input-view.c:351
 msgid "New PIN saved"
@@ -295,7 +296,7 @@ msgstr "PUK incorrecto"
 
 #: src/view/sim-auth-input-view.c:361
 msgid "PIN must be 4-8 chars long"
-msgstr "el PIN debe tener entre 4 y 8 caracteres"
+msgstr "El PIN debe tener entre 4 y 8 caracteres"
 
 #: src/view/message-list-view.c:33
 msgid "Inbox"
@@ -303,15 +304,15 @@ msgstr "Bandeja de entrada"
 
 #: src/view/message-list-view.c:219
 msgid "SMS Answer"
-msgstr "Responder SMS"
+msgstr "Respuesta al SMS"
 
 #: src/view/message-list-view.c:247
 msgid "Show Message"
-msgstr "Mostrar el Mensaje"
+msgstr "Mostrar el mensaje"
 
 #: src/view/dialer-view.c:62
 msgid "Click to open contactlist."
-msgstr "Pulsa para abrir la lista de contactos."
+msgstr "Pulse para abrir la lista de contactos."
 
 #: src/view/dialer-view.c:91
 msgid "More"
@@ -330,12 +331,13 @@ msgid ""
 "Your storage is full. Please delete some messages or you are not going to "
 "receive messages anymore!"
 msgstr ""
-"Almacenamiento lleno. Por favor, elimina algunos mensajes o no podrás "
-"recibir más!"
+"La memoria de mensajes SMS está llena. No podrá recibir mensajes hasta "
+"que no libere espacio."
 
 #: src/view/dialog-view.c:26
 msgid "GSM is not available, because no SIM card is present."
-msgstr "El GSM no está disponible porque no hay tarjeta SIM."
+msgstr "La tarjeta SIM no está insertada o es incorrecta."
+"La telefonía GSM no estará disponible."
 
 #: src/view/dialog-view.c:28
 msgid "Unknown message."
@@ -371,7 +373,7 @@ msgstr "Mensajes"
 
 #: src/phonegui-incoming-message.c:16
 msgid "New Message"
-msgstr "Mensaje Nuevo"
+msgstr "Mensaje nuevo"
 
 #: src/widget/elm_keypad.c:133
 msgid "ABC"
@@ -407,7 +409,7 @@ msgstr "WXYZ"
 
 #: src/phonegui-ussd.c:17
 msgid "Service Data"
-msgstr "Datos del Servicio"
+msgstr "Datos del servicio"
 
 #~ msgid "No Speaker"
 #~ msgstr "No Altavoz"
