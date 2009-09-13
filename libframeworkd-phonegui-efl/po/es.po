@@ -3,15 +3,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libframeworkd-phonegui-efl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-29 19:57+0200\n"
-"PO-Revision-Date: 2009-08-31 02:59+0200\n"
+"POT-Creation-Date: 2009-09-04 02:41+0200\n"
+"PO-Revision-Date: 2009-09-04 05:50+0200\n"
 "Last-Translator: David Garabana Barro <david@garabana.com>\n"
 "Language-Team: Galician <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Catalan\n"
-"X-Poedit-Country: SPAIN\n"
 "X-Generator: Lokalize 0.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
@@ -74,19 +72,27 @@ msgstr "Borrar el mensaje"
 msgid "Data:"
 msgstr "Datos:"
 
-#: src/view/call-common.c:98
+#: src/view/call-common.c:174
 msgid "Handset"
 msgstr "Normal"
 
-#: src/view/call-common.c:105
+#: src/view/call-common.c:181
 msgid "Speaker"
 msgstr "Altavoz"
 
-#: src/view/call-common.c:145
+#: src/view/call-common.c:200
+msgid "Ringtone"
+msgstr "Tono"
+
+#: src/view/call-common.c:203 src/view/call-incoming-view.c:47
+msgid "Silent"
+msgstr "Silenciar"
+
+#: src/view/call-common.c:240
 msgid "Pickup"
 msgstr "Descolgar"
 
-#: src/view/call-common.c:165 src/view/call-active-view.c:34
+#: src/view/call-common.c:260 src/view/call-active-view.c:34
 msgid "Release"
 msgstr "Colgar"
 
@@ -135,8 +141,9 @@ msgstr "Añadir un número"
 
 #: src/view/message-new-view.c:487 src/view/contact-edit-view.c:335
 msgid "Do you really want to quit?"
-msgstr "Si sale ahora, perderá todos los cambios.<br>"
-"¿Está seguro de que quiere salir?"
+msgstr ""
+"Si sale ahora, perderá todos los cambios.<br>¿Está seguro de que quiere "
+"salir?"
 
 #: src/view/message-new-view.c:492 src/view/contact-show-view.c:252
 #: src/view/contact-delete-view.c:78 src/view/message-delete-view.c:77
@@ -207,17 +214,17 @@ msgstr "Teclado"
 
 #: src/view/call-active-view.c:104
 msgid "Hide Keypad"
-msgstr "Ocultar teclado"
+msgstr "Ocultar"
 
-#: src/view/call-incoming-view.c:26
+#: src/view/call-incoming-view.c:29
 msgid "Incoming call"
 msgstr "Llamada entrante"
 
-#: src/view/call-incoming-view.c:31
+#: src/view/call-incoming-view.c:34
 msgid "Accept"
-msgstr "Aceptar"
+msgstr "Responder"
 
-#: src/view/call-incoming-view.c:37
+#: src/view/call-incoming-view.c:40
 msgid "Reject"
 msgstr "Rechazar"
 
@@ -239,8 +246,8 @@ msgid ""
 "Your storage is full. Before adding new contacts, you have to delete some "
 "old ones."
 msgstr ""
-"La memoria de contactos está llena. No podrá añadir nuevos contactos hasta que no "
-"libere espacio."
+"La memoria de contactos está llena. No podrá añadir nuevos contactos hasta "
+"que no libere espacio."
 
 #: src/view/contact-delete-view.c:73 src/view/message-delete-view.c:74
 msgid "Do you really want to delete it?"
@@ -296,7 +303,7 @@ msgstr "PUK incorrecto"
 
 #: src/view/sim-auth-input-view.c:361
 msgid "PIN must be 4-8 chars long"
-msgstr "El PIN debe tener entre 4 y 8 caracteres"
+msgstr "El PIN debe tener de 4 a 8 caracteres"
 
 #: src/view/message-list-view.c:33
 msgid "Inbox"
@@ -312,7 +319,7 @@ msgstr "Mostrar el mensaje"
 
 #: src/view/dialer-view.c:62
 msgid "Click to open contactlist."
-msgstr "Pulse para abrir la lista de contactos."
+msgstr " Pulse para abrir la lista de contactos."
 
 #: src/view/dialer-view.c:91
 msgid "More"
@@ -331,13 +338,14 @@ msgid ""
 "Your storage is full. Please delete some messages or you are not going to "
 "receive messages anymore!"
 msgstr ""
-"La memoria de mensajes SMS está llena. No podrá recibir mensajes hasta "
-"que no libere espacio."
+"La memoria de mensajes SMS está llena. No podrá recibir mensajes hasta que "
+"no libere espacio."
 
 #: src/view/dialog-view.c:26
 msgid "GSM is not available, because no SIM card is present."
-msgstr "La tarjeta SIM no está insertada o es incorrecta."
-"La telefonía GSM no estará disponible."
+msgstr ""
+"La tarjeta SIM no está insertada o es incorrecta.La telefonía GSM no estará "
+"disponible."
 
 #: src/view/dialog-view.c:28
 msgid "Unknown message."
