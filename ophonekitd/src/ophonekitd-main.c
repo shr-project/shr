@@ -43,6 +43,7 @@ typedef struct {
 
 gboolean sim_auth_active = FALSE;
 gboolean sim_ready = FALSE;
+gboolean gsm_ready = FALSE;
 gboolean show_incoming_sms = TRUE;
 call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
@@ -86,6 +87,7 @@ main(int argc, char ** argv)
 	fwHandler->callCallStatus = ophonekitd_call_status_handler;
 	fwHandler->deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
 	fwHandler->incomingUssd = ophonekitd_incoming_ussd_handler;
+	fwHandler->usageResourceChanged = ophonekitd_resource_changed_handler;
 
 	if (!g_thread_supported ())
 		g_thread_init (NULL);
@@ -362,8 +364,7 @@ request_resource_callback(GError *error, gpointer userdata)
 	g_debug("request_resource_callback()");
 
 	if(error == NULL) {
-		power_up_antenna();
-		ogsmd_sim_get_sim_ready(sim_ready_status_callback, NULL);
+		return;
 	}
 	else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
 		g_debug("dbus not available, try again in 5s");
@@ -496,6 +497,24 @@ get_messagebook_info_callback(GError *error, GHashTable *info, gpointer userdata
 		/* TODO */
 	}
 }
+
+void
+ophonekitd_resource_changed_handler(const char *name, gboolean state, GHashTable *attributes)
+{
+	g_debug("resource %s is now %s", name, state ? "enabled" : "disabled");
+	if (strcmp(name, "GSM") == 0) {
+		/* check if state actually really changed for GSM */
+		if (gsm_ready ^ state) {
+			gsm_ready = state;
+			if (gsm_ready) {
+				g_debug("GSM is ready now");
+				power_up_antenna();
+				ogsmd_sim_get_sim_ready(sim_ready_status_callback, NULL);
+			}
+		}
+	}
+}
+
 
 int
 exit_callback(void *data, int type, void *event)
