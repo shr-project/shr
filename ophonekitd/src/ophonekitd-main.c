@@ -44,6 +44,7 @@ typedef struct {
 gboolean sim_auth_active = FALSE;
 gboolean sim_ready = FALSE;
 gboolean gsm_ready = FALSE;
+gboolean gsm_available = FALSE;
 gboolean show_incoming_sms = TRUE;
 call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
@@ -61,7 +62,7 @@ main(int argc, char ** argv)
 	GKeyFile *keyfile;
 	GKeyFileFlags flags;
 	GError *error = NULL;
-	
+
 	keyfile = g_key_file_new ();
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
 	if (g_key_file_load_from_file (keyfile, FRAMEWORKD_PHONEGUI_CONFIG, flags, &error)) {
@@ -87,6 +88,7 @@ main(int argc, char ** argv)
 	fwHandler->callCallStatus = ophonekitd_call_status_handler;
 	fwHandler->deviceIdleNotifierState = ophonekitd_device_idle_notifier_state_handler;
 	fwHandler->incomingUssd = ophonekitd_incoming_ussd_handler;
+	fwHandler->usageResourceAvailable = ophonekitd_resource_available_handler;
 	fwHandler->usageResourceChanged = ophonekitd_resource_changed_handler;
 
 	if (!g_thread_supported ())
@@ -261,7 +263,7 @@ ophonekitd_sim_auth_status_handler(const int status)
 			sim_auth_active = FALSE;
 			phonegui_sim_auth_hide(status);
 		}
-		ogsmd_network_register(register_to_network_callback, NULL);
+		power_up_antenna();
 	}
 	else {
 		g_debug("sim not ready");
@@ -271,6 +273,7 @@ ophonekitd_sim_auth_status_handler(const int status)
 		}
 	}
 }
+
 
 
 void
@@ -304,11 +307,14 @@ ophonekitd_incoming_ussd_handler(int mode, const char* message)
 }
 
 
+
+
 gboolean
 list_resources()
 {
 	g_debug("list_resources()");
-	ousaged_list_resources(list_resources_callback, NULL);
+	if (!gsm_available)
+		ousaged_list_resources(list_resources_callback, NULL);
 	return FALSE;
 }
 
@@ -317,30 +323,25 @@ list_resources_callback(GError *error, char** resources, gpointer userdata)
 {
 	g_debug("list_resources_callback()");
 	if(error == NULL) {
-		gboolean available = FALSE;
 		int i = 0;
 		while(resources[i] != NULL) {
 			g_debug("Resource %s available", resources[i]);
 			if(!strcmp(resources[i], "GSM")) {
-				available = TRUE;
+				gsm_available = TRUE;
 				break;
 			}
 			i++;
 		}
 
-		if(available) {
+		if(gsm_available) {
 			g_debug("Request GSM resource");
 			ousaged_request_resource("GSM", request_resource_callback, NULL);
-		}
-		else {
-			g_debug("GSM not available, try again in 5s");
-			g_timeout_add(5000, list_resources, NULL);
 		}
 	}
 	else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE)
 		|| IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)
 		) {
-			
+
 		g_debug("dbus not available, try again in 5s");
 		g_timeout_add(5000, list_resources, NULL);
 	}
@@ -364,6 +365,9 @@ request_resource_callback(GError *error, gpointer userdata)
 	g_debug("request_resource_callback()");
 
 	if(error == NULL) {
+		/* nothing to do when there is no error
+		 * the signal handler for ResourceChanged
+		 * will do the rest */
 		return;
 	}
 	else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE) || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)) {
@@ -392,10 +396,12 @@ power_up_antenna_callback(GError *error, gpointer userdata)
 			if(!sim_auth_active) {
 				ogsmd_sim_get_auth_status(sim_auth_status_callback, NULL);
 			}
+			return;
 		}
 		else if(IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
 			g_message("SIM card not present.");
 			phonegui_dialog_show(PHONEGUI_DIALOG_SIM_NOT_PRESENT);
+			return;
 		}
 		else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE)
 			|| IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)
@@ -403,12 +409,16 @@ power_up_antenna_callback(GError *error, gpointer userdata)
 				
 			g_debug("dbus not available, try again in 5s");
 			g_timeout_add(5000, power_up_antenna, NULL);
+			return;
 		}
 		else {
 			g_debug("Unknown error: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
 			g_timeout_add(5000, power_up_antenna, NULL);
+			return;
 		}
 	}
+
+	ogsmd_network_register(register_to_network_callback, NULL);
 }
 
 void
@@ -422,15 +432,15 @@ sim_auth_status_callback(GError *error, int status, gpointer userdata)
 		phonegui_sim_auth_hide(status);
 	}
 
-	if(status == SIM_READY) {
-		ogsmd_network_register(register_to_network_callback, NULL);
-	}
-	else {
+	if(status != SIM_READY) {
 		if(!sim_auth_active) {
 			sim_auth_active = TRUE;
 			phonegui_sim_auth_show(status);
 		}
+		return;
 	}
+
+	power_up_antenna();
 }
 
 void
@@ -496,18 +506,48 @@ get_messagebook_info_callback(GError *error, GHashTable *info, gpointer userdata
 		g_debug("MessageBookInfo failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
 		/* TODO */
 	}
+	g_debug("get_messagebook_info_callback done");
 }
+
+
+
+void ophonekitd_resource_available_handler(const char *name, gboolean availability)
+{
+	g_debug("resource %s is now %s", name, availability ? "available" : "vanished");
+	if (strcmp(name, "GSM") == 0) {
+		if (gsm_available ^ availability) {
+			gsm_available = availability;
+			if (gsm_available) {
+				g_debug("Request GSM resource");
+				ousaged_request_resource("GSM", request_resource_callback, NULL);
+			}
+		}
+	}
+}
+
 
 void
 ophonekitd_resource_changed_handler(const char *name, gboolean state, GHashTable *attributes)
 {
+	gpointer p = NULL;
 	g_debug("resource %s is now %s", name, state ? "enabled" : "disabled");
+	p = g_hash_table_lookup(attributes, "policy");
+	if (p)
+		g_debug("   policy:   %d", g_value_get_int(p));
+	p = g_hash_table_lookup(attributes, "refcount");
+	if (p)
+		g_debug("   refcount: %d", g_value_get_int(p));
+
 	if (strcmp(name, "GSM") == 0) {
 		/* check if state actually really changed for GSM */
 		if (gsm_ready ^ state) {
 			gsm_ready = state;
 			if (gsm_ready) {
-				g_debug("GSM is ready now");
+				/* TODO: remove this workaround when fsousaged
+				 * sends the signal when the GSM resource
+				 * actually is really ready - until then give
+				 * it some time to get it ready ... */
+				sleep(3);
 				power_up_antenna();
 				ogsmd_sim_get_sim_ready(sim_ready_status_callback, NULL);
 			}

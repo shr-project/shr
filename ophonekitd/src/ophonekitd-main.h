@@ -30,6 +30,7 @@ void ophonekitd_sim_ready_status_handler(gboolean status);
 void ophonekitd_sim_incoming_stored_message_handler(const int id);
 void ophonekitd_device_idle_notifier_state_handler(const int state);
 void ophonekitd_incoming_ussd_handler(int mode, const char* message);
+void ophonekitd_resource_available_handler(const char *name, gboolean availability);
 void ophonekitd_resource_changed_handler(const char *name, gboolean state, GHashTable *attributes);
 
 gboolean list_resources();
