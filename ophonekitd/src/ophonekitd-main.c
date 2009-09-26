@@ -547,8 +547,7 @@ ophonekitd_resource_changed_handler(const char *name, gboolean state, GHashTable
 				 * sends the signal when the GSM resource
 				 * actually is really ready - until then give
 				 * it some time to get it ready ... */
-				sleep(3);
-				power_up_antenna();
+				g_timeout_add(5, power_up_antenna, NULL);
 				ogsmd_sim_get_sim_ready(sim_ready_status_callback, NULL);
 			}
 		}
