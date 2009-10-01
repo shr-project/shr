@@ -274,18 +274,23 @@ ophonekitd_sim_auth_status_handler(const int status)
 	}
 }
 
+void
+sim_ready_actions(void)
+{
+	g_debug("sim ready");
+	sim_ready = TRUE;
+	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
+	phonegui_init_contacts_cache();
+}
+
 
 
 void
 ophonekitd_sim_ready_status_handler(gboolean status)
 {
 	g_debug("ophonekitd_sim_ready_status_handler()");
-	if(status) {
-		g_debug("sim ready");
-		sim_ready = TRUE;
-		ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
-		ogsmd_sim_retrieve_phonebook("contacts", cache_phonebook_callback, NULL);
-	}
+	if (status)
+		sim_ready_actions();
 }
 
 
@@ -403,10 +408,13 @@ power_up_antenna_callback(GError *error, gpointer userdata)
 			phonegui_dialog_show(PHONEGUI_DIALOG_SIM_NOT_PRESENT);
 			return;
 		}
+		else if (IS_RESOURCE_ERROR(error, RESOURCE_ERROR_NOT_ENABLED)) {
+			g_message("GSM is not yet enabled, try again in 1s");
+			g_timeout_add(1000, power_up_antenna, NULL);
+		}
 		else if(IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_SERVICE_NOT_AVAILABLE)
 			|| IS_FRAMEWORKD_GLIB_DBUS_ERROR(error, FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)
 			) {
-				
 			g_debug("dbus not available, try again in 5s");
 			g_timeout_add(5000, power_up_antenna, NULL);
 			return;
@@ -447,17 +455,19 @@ void
 sim_ready_status_callback(GError *error, gboolean status, gpointer userdata)
 {
 	/* if sim is already ready (by the ReadyStatus signal) - nothing to do */
-	if(sim_ready)
+	if (sim_ready)
 		return;
 
-	g_debug("sim_ready_status_callback(status=%d)", status);
-	if(status) {
-		g_debug("sim ready");
-		sim_ready = TRUE;
-		ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
-		phonegui_init_contacts_cache();
+	if (error) {
+		g_debug("GetSimReady failed: %s %s %d", error->message, g_quark_to_string(error->domain), error->code);
+		return;
 	}
+
+	g_debug("sim_ready_status_callback(status=%d)", status);
+	if (status)
+		sim_ready_actions();
 }
+
 
 
 void
@@ -547,7 +557,7 @@ ophonekitd_resource_changed_handler(const char *name, gboolean state, GHashTable
 				 * sends the signal when the GSM resource
 				 * actually is really ready - until then give
 				 * it some time to get it ready ... */
-				g_timeout_add(5, power_up_antenna, NULL);
+				power_up_antenna();
 				ogsmd_sim_get_sim_ready(sim_ready_status_callback, NULL);
 			}
 		}
