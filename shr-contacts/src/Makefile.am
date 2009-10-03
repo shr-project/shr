@@ -12,9 +12,7 @@ bin_PROGRAMS=shr-contacts
 
 shr_contacts_SOURCES = \
 	contacts-main.c \
-	contacts-main.h \ 
-	contacts-phonegui.c \
-	contacts-phonegui.h
+	contacts-main.h 
 
         
 

@@ -20,8 +20,7 @@
 #include <string.h>
 #include <dbus/dbus-glib.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include "contacts-phonegui.h"
-
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 #define CONFIG_FILE "/etc/ophonekitd/gui.conf"
 
 
@@ -31,7 +30,6 @@ int main(int argc, char **argv) {
 
     /* Load, connect and initiate phonegui */
     phonegui_load(CONFIG_FILE);
-    phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
 
     /* Initialize glib main loop */
