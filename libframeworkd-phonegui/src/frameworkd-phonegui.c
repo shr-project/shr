@@ -24,6 +24,8 @@
 #include <dlfcn.h>
 #include <glib.h>
 #include <stdlib.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
 #include <phone-utils.h>
 
@@ -33,6 +35,7 @@ typedef struct
     GHashTable *contact_cache;
 } Settings;
 
+DBusGProxy *GQuery = NULL;
 static void *phonegui_library = NULL;
 static Settings *conf = NULL;
 
@@ -111,7 +114,44 @@ void cache_phonebook_callback(GError *error, GPtrArray *contacts, gpointer userd
 
 }
 
+static char *
+_lookup_add_prefix(const char *_number)
+{
+	char *number = NULL;
+	if (strncmp(_number, "tel:", 4)) {
+		number = malloc(strlen(_number) + 5); /* 5 is for "tel:" and the null */
+		if (!number) {
+			return NULL;
+		}
+		strcpy(number, "tel:");
+		strcat(number, _number);
+	}
 
+
+	return number;
+}
+
+void
+phonegui_contact_lookup(const char *_number, void (*name_callback)(GError *, char *, gpointer), void *data)
+{
+	GHashTable *query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+	char *number = _lookup_add_prefix(_number);
+		
+	g_debug("number = %s --> querying name...", _number);
+
+	
+	GValue *value = g_slice_alloc0(sizeof(GValue));
+	g_value_init(value, G_TYPE_STRING);
+	g_value_set_string(value, (number) ? number : _number); /*  we prefer using number */
+	g_hash_table_insert(query, "Phone", value);
+
+
+	opimd_contacts_get_single_entry_single_field(query, "Name", name_callback, data);
+
+	if (number)
+		free(number);
+
+}
 
 char *phonegui_contact_cache_lookup(char *number) {
     if(conf->contact_cache == NULL) return (number);
@@ -147,3 +187,5 @@ void phonegui_init_contacts_cache() {
 void phonegui_destroy_contacts_cache() {
     g_hash_table_destroy(conf->contact_cache);
 }
+
+
