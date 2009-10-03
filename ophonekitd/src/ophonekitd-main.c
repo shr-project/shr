@@ -47,6 +47,7 @@ gboolean sim_ready = FALSE;
 gboolean gsm_ready = FALSE;
 gboolean gsm_available = FALSE;
 gboolean show_incoming_sms = TRUE;
+gboolean use_contact_cache = TRUE;
 call_t *incoming_calls = NULL;
 call_t *outgoing_calls = NULL;
 int incoming_calls_size = 0;
@@ -68,6 +69,7 @@ main(int argc, char ** argv)
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
 	if (g_key_file_load_from_file (keyfile, FRAMEWORKD_PHONEGUI_CONFIG, flags, &error)) {
 		show_incoming_sms = g_key_file_get_boolean(keyfile,"phonegui","show_incoming_sms",NULL);
+		use_contact_cache = g_key_file_get_boolean(keyfile,"phonegui","use_contact_cache",NULL);
 		g_debug("Configuration file read");
 	} else {
 		g_error (error->message);
@@ -112,7 +114,9 @@ main(int argc, char ** argv)
 
 	free(incoming_calls);
 	free(outgoing_calls);
-	phonegui_destroy_contacts_cache();
+	if (use_contact_cache) {
+		phonegui_destroy_contacts_cache();
+	}
 
 	exit(EXIT_SUCCESS);
 }
@@ -227,14 +231,25 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 			g_debug("incoming call");
 			if(ophonekitd_call_check(incoming_calls, &incoming_calls_size, call_id) == -1) {
 				ophonekitd_call_add(&incoming_calls, &incoming_calls_size, call_id);
-				phonegui_incoming_call_show(call_id, status, phonegui_contact_cache_lookup(number));
+				if (use_contact_cache) {
+					phonegui_incoming_call_show(call_id, status, phonegui_contact_cache_lookup(number));
+				}
+				else {
+					phonegui_incoming_call_show(call_id, status, number);
+				}
 			}
 			break;
 		case CALL_STATUS_OUTGOING:
 			g_debug("outgoing call");
 			if(ophonekitd_call_check(outgoing_calls, &outgoing_calls_size, call_id) == -1) {
 				ophonekitd_call_add(&outgoing_calls, &outgoing_calls_size, call_id);
-				phonegui_outgoing_call_show(call_id, status, phonegui_contact_cache_lookup(number));
+				if (use_contact_cache) {
+					phonegui_outgoing_call_show(call_id, status, phonegui_contact_cache_lookup(number));
+				}
+				else {
+					phonegui_outgoing_call_show(call_id, status, number);
+
+				}
 			}
 			break;
 		case CALL_STATUS_RELEASE:
@@ -289,7 +304,9 @@ sim_ready_actions(void)
 	g_debug("sim ready");
 	sim_ready = TRUE;
 	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
-	phonegui_init_contacts_cache();
+	if (use_contact_cache) {
+		phonegui_init_contacts_cache();
+	}
 }
 
 
