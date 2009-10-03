@@ -115,6 +115,7 @@ main(int argc, char ** argv)
 	free(incoming_calls);
 	free(outgoing_calls);
 	if (use_contact_cache) {
+		g_debug("Using contact cache");
 		phonegui_destroy_contacts_cache();
 	}
 
