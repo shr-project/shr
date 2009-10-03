@@ -17,22 +17,47 @@
 #define _FRAMEWORKD_PHONEGUI_H
 #include <glib.h>
 
-#define FRAMEWORKD_PHONEGUI_CONFIG "@SYSCONFDIR@/frameworkd-phonegui.conf"
+#include "frameworkd-phonegui-utility.h"
 
-typedef enum {
-    PHONEGUI_DIALOG_ERROR_DO_NOT_USE,  
-        // This value is used for checking if we get a wrong pointer out of a HashTable. 
-        // So do not use it, and leave it first in this enum. ( because 0 == NULL )
-    PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL,
-    PHONEGUI_DIALOG_SIM_NOT_PRESENT
-} PhoneguiDialogType;
+#define FRAMEWORKD_PHONEGUI_CONFIG "@SYSCONFDIR@/frameworkd-phonegui.conf"
 
 void phonegui_load(const char *application_name);
 void* phonegui_get_function(const char *function_name);
-gchar* phonegui_get_user_home_prefix();
-gchar* phonegui_get_user_home_code();
-char *phonegui_contact_cache_lookup(char *number);
-void phonegui_contact_lookup(const char *number, void (*name_callback)(GError *, char *, gpointer), void *data);
-void phonegui_init_contacts_cache();
-void phonegui_destroy_contacts_cache();
+
+/* Implementation prototypes */
+void (*phonegui_init)(int argc, char **argv, void (*exit_cb)());
+
+/* Calls */
+void (*phonegui_incoming_call_show)(const int id, const int status, const char *number);
+void (*phonegui_incoming_call_hide)(const int id);
+void (*phonegui_outgoing_call_show)(const int id, const int status, const char *number);
+void (*phonegui_outgoing_call_hide)(const int id);
+
+/* Contacts */
+void (*phonegui_contacts_hide)();
+void (*phonegui_contacts_hide)();
+
+/* Dialer */
+void (*phonegui_dialer_show)();
+void (*phonegui_dialer_hide)();
+
+/* Dialog */
+void (*phonegui_dialog_show)(int type);
+void (*phonegui_dialog_hide)();
+
+/* Messages */
+void (*phonegui_messages_show)();
+void (*phonegui_messages_hide)();
+void (*phonegui_message_show)(const int id);
+void (*phonegui_message_hide)();
+
+/* Sim auth */
+void (*phonegui_sim_auth_show)(const int status);
+void (*phonegui_sim_auth_hide)(const int status);
+
+/* USSD */
+void (*phonegui_ussd_show)(int mode, const char *message);
+void (*phonegui_ussd_hide)();
+
+
 #endif
