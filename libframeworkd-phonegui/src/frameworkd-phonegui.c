@@ -38,6 +38,7 @@ void (*_phonegui_outgoing_call_hide)(const int id) = NULL;
 
 /* Contacts */
 void (*_phonegui_contacts_show)() = NULL;
+void (*_phonegui_contacts_new_show)() = NULL;
 void (*_phonegui_contacts_hide)() = NULL;
 
 /* Dialer */
@@ -228,27 +229,28 @@ void phonegui_destroy_contacts_cache() {
 static void
 phonegui_connect()
 {
-	_phonegui_init = phonegui_get_function("_phonegui_init");
+	_phonegui_init = phonegui_get_function("phonegui_init");
 
-	_phonegui_incoming_call_show = phonegui_get_function("_phonegui_incoming_call_show");
-	_phonegui_incoming_call_hide = phonegui_get_function("_phonegui_incoming_call_hide");
-	_phonegui_outgoing_call_show = phonegui_get_function("_phonegui_outgoing_call_show");
-	_phonegui_outgoing_call_hide = phonegui_get_function("_phonegui_outgoing_call_hide");
+	_phonegui_incoming_call_show = phonegui_get_function("phonegui_incoming_call_show");
+	_phonegui_incoming_call_hide = phonegui_get_function("phonegui_incoming_call_hide");
+	_phonegui_outgoing_call_show = phonegui_get_function("phonegui_outgoing_call_show");
+	_phonegui_outgoing_call_hide = phonegui_get_function("phonegui_outgoing_call_hide");
 
-	_phonegui_contacts_show = phonegui_get_function("_phonegui_contacts_show");
-	_phonegui_contacts_hide = phonegui_get_function("_phonegui_contacts_hide");
+	_phonegui_contacts_show = phonegui_get_function("phonegui_contacts_show");
+	_phonegui_contacts_new_show = phonegui_get_function("phonegui_contacts_new_show");
+	_phonegui_contacts_hide = phonegui_get_function("phonegui_contacts_hide");
 
-	_phonegui_dialer_show = phonegui_get_function("_phonegui_dialer_show");
-	_phonegui_dialer_hide = phonegui_get_function("_phonegui_dialer_hide");
+	_phonegui_dialer_show = phonegui_get_function("phonegui_dialer_show");
+	_phonegui_dialer_hide = phonegui_get_function("phonegui_dialer_hide");
 
-	_phonegui_dialog_show = phonegui_get_function("_phonegui_dialog_show");
-	_phonegui_dialog_hide = phonegui_get_function("_phonegui_dialog_hide");
+	_phonegui_dialog_show = phonegui_get_function("phonegui_dialog_show");
+	_phonegui_dialog_hide = phonegui_get_function("phonegui_dialog_hide");
 
-	_phonegui_message_show = phonegui_get_function("_phonegui_message_show");
-	_phonegui_message_hide = phonegui_get_function("_phonegui_message_hide");
-	_phonegui_messages_show = phonegui_get_function("_phonegui_messages_show");
-	_phonegui_messages_hide = phonegui_get_function("_phonegui_messages_hide");
-
+	_phonegui_message_show = phonegui_get_function("phonegui_message_show");
+	_phonegui_message_hide = phonegui_get_function("phonegui_message_hide");
+	_phonegui_messages_show = phonegui_get_function("phonegui_messages_show");
+	_phonegui_messages_hide = phonegui_get_function("phonegui_messages_hide");
+	
 	_phonegui_sim_auth_show = phonegui_get_function("phonegui_sim_auth_show");
 	_phonegui_sim_auth_hide = phonegui_get_function("phonegui_sim_auth_hide");
 
@@ -306,6 +308,14 @@ phonegui_contacts_show()
 {
 	if (_phonegui_contacts_show)
 		_phonegui_contacts_show();
+	else
+		g_debug("can't find function %s", __FUNCTION__);
+}
+void
+phonegui_contacts_show()
+{
+	if (_phonegui_contacts_new_show)
+		_phonegui_contacts_new_show();
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
