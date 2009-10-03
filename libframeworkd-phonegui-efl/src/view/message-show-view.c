@@ -1,5 +1,5 @@
 #include "views.h"
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 

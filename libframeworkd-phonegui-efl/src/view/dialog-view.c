@@ -1,5 +1,5 @@
 #include "views.h"
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 struct DialogViewData {
     struct Window *win;
