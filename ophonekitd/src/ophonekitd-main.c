@@ -35,7 +35,7 @@
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-idlenotifier.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
-#include "ophonekitd-phonegui.h"
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 #include "ophonekitd-dbus.h"
 
 typedef struct {
@@ -79,7 +79,6 @@ main(int argc, char ** argv)
 
 	/* Load, connect and initiate phonegui library */
 	phonegui_load("ophonekitd");
-	phonegui_connect();
 	phonegui_init(argc, argv, exit_callback);
 	g_debug("Phonegui initiated");
 
