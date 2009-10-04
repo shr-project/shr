@@ -1,0 +1,1 @@
+* change the name of the functions in the implementations (for example efl2) to phonegui_implementation or something like that, it'll save problems with using a couple of different implementations at the same time (i.e one for contacts one for messages) and after doing that, also change it in phonegui_connect.
