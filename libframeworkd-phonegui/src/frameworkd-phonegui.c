@@ -312,7 +312,7 @@ phonegui_contacts_show()
 		g_debug("can't find function %s", __FUNCTION__);
 }
 void
-phonegui_contacts_show()
+phonegui_contacts_new_show()
 {
 	if (_phonegui_contacts_new_show)
 		_phonegui_contacts_new_show();
