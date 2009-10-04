@@ -14,9 +14,6 @@ bin_PROGRAMS=shr-messages
 
 shr_messages_SOURCES = \
 	messages-main.c \
-	messages-main.h \ 
-	messages-phonegui.c \
-	messages-phonegui.h
-
+	messages-main.h 
         
 

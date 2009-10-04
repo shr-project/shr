@@ -21,8 +21,7 @@
 #include <stdlib.h>
 #include <dbus/dbus-glib.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
-#include "dialer-phonegui.h"
-
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 int main(int argc, char **argv) {
     /* Connect to frameworkd */
@@ -30,7 +29,6 @@ int main(int argc, char **argv) {
 
     /* Load, connect and initiate phonegui */
     phonegui_load("shr-dialer");
-    phonegui_connect();
     phonegui_init(argc, argv, exit_callback);
 
     /* Initiate glib main loop */
