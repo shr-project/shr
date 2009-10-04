@@ -178,12 +178,6 @@ ophonekitd_device_idle_notifier_power_state_handler(GError *error,
 			
 		ousaged_suspend(NULL, NULL);
 		g_debug("Suspend !");
-/* Suspend is working on my kernel, but unfortunately resume isn't
- * I'll suggest to check if SHR kernel image can resume before
- * commenting out this line ! */
-/* As of 10/13/2008 :
- * Working linux-openmoko git revision :
- * f5b973489beb1a1239dfad53e3ad6e36ff7ee958*/
 	}
 }
 
@@ -208,7 +202,21 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 	GValue *peerNumber = g_hash_table_lookup(properties, "peer");
 	gchar* number;
 	if(peerNumber != NULL) {
+		int len;
 		number = g_strdup_value_contents (peerNumber);
+		len = strlen(number);
+		/* FIXME: fix the ugly " bug
+		 * we potentially waste a couple of bytes, fix it in a normal manner*/
+		if (number[0] == '"') {
+			gchar *tmp;
+			tmp = strdup(number);
+			strcpy(number, &tmp[1]);
+			len--;
+		}
+		if (len > 0 && number[len - 1] == '"') {
+			number[len - 1] = '\0';
+		}
+		
 	}
 	else {
 		number = "*****";
