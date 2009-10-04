@@ -6,7 +6,7 @@ AM_CFLAGS = -Wall @GLIB_CFLAGS@ @DBUS_GLIB_CFLAGS@ @FRAMEWORKD_GLIB_CFLAGS@ @LIB
 
 lib_LTLIBRARIES = libframeworkd-phonegui.la
 
-libframeworkd_phonegui_la_SOURCES = frameworkd-phonegui.c frameworkd-phonegui.h
+libframeworkd_phonegui_la_SOURCES = frameworkd-phonegui.c frameworkd-phonegui.h frameworkd-phonegui-utility.h frameworkd-phonegui-utility.c 
 libframeworkd_phonegui_HEADERS = frameworkd-phonegui.h frameworkd-phonegui-utility.h
 
 
