@@ -39,6 +39,8 @@ DBusGProxy *GQuery = NULL;
 static void *phonegui_library = NULL;
 static Settings *conf = NULL;
 
+static void phonegui_connect();
+
 void phonegui_load(const char *application_name) {
     GKeyFile *keyfile;
     GKeyFileFlags flags;
@@ -63,10 +65,11 @@ void phonegui_load(const char *application_name) {
     } else {
         g_error("Loading failed. Conf->library not set.");
     }
-
+    phonegui_connect();
     /* init phone utils */
     /* FIXME: should deinit somewhere!*/
     phone_utils_init();
+    
 }
 
 
@@ -188,4 +191,33 @@ void phonegui_destroy_contacts_cache() {
     g_hash_table_destroy(conf->contact_cache);
 }
 
+static void
+phonegui_connect()
+{
+	phonegui_init = phonegui_get_function("phonegui_init");
 
+	phonegui_incoming_call_show = phonegui_get_function("phonegui_incoming_call_show");
+	phonegui_incoming_call_hide = phonegui_get_function("phonegui_incoming_call_hide");
+	phonegui_outgoing_call_show = phonegui_get_function("phonegui_outgoing_call_show");
+	phonegui_outgoing_call_hide = phonegui_get_function("phonegui_outgoing_call_hide");
+
+	phonegui_contacts_hide = phonegui_get_function("phonegui_contacts_hide");
+	phonegui_contacts_hide = phonegui_get_function("phonegui_contacts_hide");
+
+	phonegui_dialer_show = phonegui_get_function("phonegui_dialer_show");
+	phonegui_dialer_hide = phonegui_get_function("phonegui_dialer_hide");
+
+	phonegui_dialog_show = phonegui_get_function("phonegui_dialog_show");
+	phonegui_dialog_hide = phonegui_get_function("phonegui_dialog_hide");
+
+	phonegui_message_show = phonegui_get_function("phonegui_message_show");
+	phonegui_message_hide = phonegui_get_function("phonegui_message_hide");
+	phonegui_messages_show = phonegui_get_function("phonegui_messages_show");
+	phonegui_messages_hide = phonegui_get_function("phonegui_messages_hide");
+
+	phonegui_sim_auth_show = phonegui_get_function("phonegui_sim_auth_show");
+	phonegui_sim_auth_hide = phonegui_get_function("phonegui_sim_auth_hide");
+
+	phonegui_ussd_show = phonegui_get_function("phonegui_ussd_show");
+	phonegui_ussd_hide = phonegui_get_function("phonegui_ussd_hide");
+}
