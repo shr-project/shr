@@ -116,3 +116,88 @@ void phonegui_init_contacts_cache() {
 void phonegui_destroy_contacts_cache() {
     g_hash_table_destroy(conf->contact_cache);
 }
+
+int
+phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, void *callback2)
+/* FIXME: add real callbacks types when I find out */
+{
+	int len;
+	int ucs;
+	int i;
+	int csm_num = 0;
+	int csm_id = 1; /* do we need a better way? */
+	int csm_seq;
+	int ret_val = 0;
+	char **messages;
+	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+
+	if (!options) {
+		ret_val = 1;
+		goto end;
+	}
+	if (!recipients) {
+		ret_val = 1;
+		goto clean_hash;
+	}
+	
+	len = phone_utils_gsm_sms_strlen(message);
+	ucs = phone_utils_gsm_is_ucs(message);
+
+	/* set alphabet if needed */
+	if (ucs) {
+		g_debug("Sending message as ucs2");
+		g_hash_table_insert(options, "alphabet", "usc2");
+	}
+	else {
+		g_debug("Sending message as gsm default");
+	}
+
+	messages = phone_utils_gsm_sms_split_message(message, len, ucs);
+	if (!messages) {
+		ret_val = 1;
+		goto clean_hash;
+	}
+	/* conut the number of messages */
+	for (csm_num = 0 ; messages[csm_num] ; csm_num++);
+
+	if (csm_num > 1) {
+		g_hash_table_insert(options, "csm_id", csm_id);
+		g_hash_table_insert(options, "csm_num", csm_num);	
+	}
+	else if (csm_num == 0) { /* nothing to do */
+		ret_val = 1;
+		goto clean_messages;
+	}
+
+	g_debug("Sending %d parts with total length of %d", csm_num, len);
+
+	/* cycle through all the recipients */
+	for (i = 0 ; i < recipients->len; i++) {
+		GHashTable *properties = (GHashTable *) g_ptr_array_index(recipients, i);
+		char *number = (char *) g_hash_table_lookup(properties, "number");
+		assert(number != NULL);
+
+		if (csm_num > 1) {
+			for (csm_seq = 1; csm_seq <= csm_num; csm_seq++) {
+				g_debug("sending sms number %d", csm_seq);
+				g_hash_table_replace(options, "csm_seq", csm_seq);
+				ogsmd_sms_send_message(number, messages[csm_seq - 1], options, NULL, NULL);
+			}
+		}
+		else {
+			ogsmd_sms_send_message(number, messages[0], options, NULL, NULL);
+		}
+	}
+	
+clean_messages:
+	/* clean up */
+	for (i = 0 ; messages[i] ; i++) {
+		free(messages[i]);
+	}
+	free(messages);
+clean_hash:
+	g_hash_table_destroy(options);
+end:
+	return 0;
+	
+}
