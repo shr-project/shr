@@ -130,7 +130,7 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	int csm_seq;
 	int ret_val = 0;
 	char **messages;
-	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal); /* FIXME should handle freeing */
 
 	if (!options) {
 		ret_val = 1;
@@ -147,7 +147,7 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	/* set alphabet if needed */
 	if (ucs) {
 		g_debug("Sending message as ucs2");
-		g_hash_table_insert(options, "alphabet", "usc2");
+		g_hash_table_insert(options, "alphabet", strdup("usc2"));
 	}
 	else {
 		g_debug("Sending message as gsm default");
@@ -197,7 +197,7 @@ clean_messages:
 	}
 	free(messages);
 clean_hash:
-	g_hash_table_destroy(options);
+	/*g_hash_table_destroy(options);*/
 end:
 	return 0;
 	
