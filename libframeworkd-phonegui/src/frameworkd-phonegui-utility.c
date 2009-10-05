@@ -232,11 +232,16 @@ clean_messages:
 	free(messages);
 	
 clean_gvalues:
-	/*if (alphabet) free(alphabet);
+#if 0
+	/* FIXME: being done when hash table clears itself,
+	 * should probably do it on my own.
+	 * this will save me the reallocation in the loop (before the
+	 * actual send*/
+	if (alphabet) free(alphabet);
 	if (val_csm_num) free(val_csm_num);
 	if (val_csm_id) free(val_csm_id);
 	if (val_csm_seq) free(val_csm_seq);
-	*/
+#endif
 clean_hash:
 
 	g_hash_table_destroy(options);
