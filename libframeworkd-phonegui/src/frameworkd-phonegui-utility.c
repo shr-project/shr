@@ -122,6 +122,7 @@ int
 phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, void *callback2)
 /* FIXME: add real callbacks types when I find out */
 {
+	/*FIXME: seems ok, though should verify for potential memory leaks */
 	int len;
 	int ucs;
 	int i;
@@ -130,7 +131,7 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	int csm_seq;
 	int ret_val = 0;
 	char **messages;
-	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	GValue *alphabet, *val_csm_num, *val_csm_id, *val_csm_seq;
 	alphabet = val_csm_num = val_csm_id = val_csm_seq = NULL;
 	if (!options) {
@@ -151,7 +152,7 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	/* set alphabet if needed */
 	if (ucs) {
 		g_debug("Sending message as ucs2");
-		alphabet = g_slice_alloc0(sizeof(GValue));
+		alphabet = calloc(1, sizeof(GValue));
 		if (!alphabet) {
 			ret_val = 1;
 			goto clean_hash;
@@ -173,14 +174,14 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	for (csm_num = 0 ; messages[csm_num] ; csm_num++);
 
 	if (csm_num > 1) {
-		val_csm_num = g_slice_alloc0(sizeof(GValue));
+		val_csm_num = calloc(1, sizeof(GValue));
 		if (!val_csm_num) {
 			ret_val = 1;
 			goto clean_gvalues;
 		}
 		g_value_init(val_csm_num, G_TYPE_INT);
 		g_value_set_int(val_csm_num, csm_num);
-		val_csm_id = g_slice_alloc0(sizeof(GValue));
+		val_csm_id = calloc(1, sizeof(GValue));
 		if (!val_csm_id) {
 			ret_val = 1;
 			goto clean_gvalues;
@@ -197,12 +198,6 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	}
 
 	g_debug("Sending %d parts with total length of %d", csm_num, len);
-	val_csm_seq = g_slice_alloc0(sizeof(GValue));
-	if (!val_csm_seq) {
-		ret_val = 1;
-		goto clean_messages;
-	}
-	g_value_init(val_csm_seq, G_TYPE_INT);
 
 	/* cycle through all the recipients */
 	for (i = 0 ; i < recipients->len; i++) {
@@ -212,6 +207,12 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 
 		if (csm_num > 1) {
 			for (csm_seq = 1; csm_seq <= csm_num; csm_seq++) {
+				val_csm_seq = calloc(1, sizeof(GValue));
+				if (!val_csm_seq) {
+					ret_val = 1;
+					goto clean_messages;
+				}
+				g_value_init(val_csm_seq, G_TYPE_INT);
 				g_debug("sending sms number %d", csm_seq);
 				g_value_set_int(val_csm_seq, csm_seq);
 				g_hash_table_replace(options, "csm_seq", val_csm_seq);
@@ -231,13 +232,15 @@ clean_messages:
 	free(messages);
 	
 clean_gvalues:
-	if (alphabet) free(alphabet);
+	/*if (alphabet) free(alphabet);
 	if (val_csm_num) free(val_csm_num);
 	if (val_csm_id) free(val_csm_id);
 	if (val_csm_seq) free(val_csm_seq);
-	
+	*/
 clean_hash:
+
 	g_hash_table_destroy(options);
+	
 end:
 	return 0;
 	
