@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <phone-utils.h>
+#include <assert.h>
 
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
