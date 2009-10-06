@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <phone-utils.h>
 #include <assert.h>
+#include <time.h>
 
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
@@ -25,7 +26,7 @@ _new_gvalue_string(const char *value)
 	
 	return val;
 }
-static int
+static GValue *
 _new_gvalue_int(int value)
 {
 	GValue *val = calloc(1, sizeof(GValue));
@@ -33,11 +34,22 @@ _new_gvalue_int(int value)
 		return NULL;
 	}
 	g_value_init(val, G_TYPE_INT);
-	g_value_set_intg(val, value);
+	g_value_set_int(val, value);
 	
 	return val;
 }
-
+static GValue *
+_new_gvalue_boolean(int value)
+{
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, G_TYPE_BOOLEAN);
+	g_value_set_boolean(val, value);
+	
+	return val;
+}
 static
 guint phone_number_hash(gconstpointer v)
 {
@@ -144,6 +156,41 @@ void phonegui_destroy_contacts_cache() {
     g_hash_table_destroy(conf->contact_cache);
 }
 
+
+static void
+_add_opimd_message(const char *number, const char *message)
+{
+	/*FIXME: ATM it just saves it as saved and tell the user everything
+	 * is ok, even if it didn't save. We really need to fix that,
+	 * we should verify if frameworkd-glib's callbacks work */
+	/*TODO: add timzone and handle messagesent correctly */
+	/* add to opimd */
+	
+	GHashTable *message_opimd = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+	GValue *tmp;
+
+	tmp = _new_gvalue_string(number);
+	g_hash_table_insert(message_opimd, "Recipient", tmp);
+	
+	tmp = _new_gvalue_string("out");
+	g_hash_table_insert(message_opimd, "Direction", tmp);
+
+	tmp = _new_gvalue_string("SMS");
+	g_hash_table_insert(message_opimd, "Folder", tmp);
+
+	tmp = _new_gvalue_string(message);
+	g_hash_table_insert(message_opimd, "Content", tmp);
+
+	tmp = _new_gvalue_boolean(1);
+	g_hash_table_insert(message_opimd, "MessageSent", tmp);
+
+	tmp = _new_gvalue_int(time(NULL));
+	g_hash_table_insert(message_opimd, "Timestamp", tmp);
+
+	opimd_messages_add(message_opimd, NULL, NULL);
+
+	g_hash_table_destroy(message_opimd);
+}
 int
 phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, void *callback2)
 /* FIXME: add real callbacks types when I find out */
@@ -236,11 +283,13 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 				g_debug("sending sms number %d", csm_seq);
 				g_hash_table_replace(options, "csm_seq", val_csm_seq);
 				ogsmd_sms_send_message(number, messages[csm_seq - 1], options, NULL, NULL);
+
 			}
 		}
 		else {
 			ogsmd_sms_send_message(number, messages[0], options, NULL, NULL);
 		}
+		_add_opimd_message(number, message);
 	}
 	
 clean_messages:
