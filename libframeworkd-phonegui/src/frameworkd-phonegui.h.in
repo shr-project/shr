@@ -22,15 +22,17 @@
 #define FRAMEWORKD_PHONEGUI_CONFIG "@SYSCONFDIR@/frameworkd-phonegui.conf"
 
 void phonegui_load(const char *application_name);
-void* phonegui_get_function(const char *function_name);
+void *phonegui_get_function(const char *function_name);
 
 /* Implementation prototypes */
-void phonegui_init(int argc, char **argv, void (*exit_cb)());
+void phonegui_init(int argc, char **argv, void (*exit_cb) ());
 
 /* Calls */
-void phonegui_incoming_call_show(const int id, const int status, const char *number);
+void phonegui_incoming_call_show(const int id, const int status,
+				 const char *number);
 void phonegui_incoming_call_hide(const int id);
-void phonegui_outgoing_call_show(const int id, const int status, const char *number);
+void phonegui_outgoing_call_show(const int id, const int status,
+				 const char *number);
 void phonegui_outgoing_call_hide(const int id);
 
 /* Contacts */

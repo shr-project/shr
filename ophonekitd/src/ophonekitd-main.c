@@ -130,7 +130,7 @@ ophonekitd_call_add(call_t **calls, int *size, int id)
 	if(*size == 1)
 		*calls = malloc(sizeof(call_t));
 	else
-		*calls = realloc(*calls, sizeof(call_t)*(*size));
+		*calls = realloc(*calls, sizeof(call_t) * (*size));
 	(*calls)[(*size)-1].id = id;
 }
 
