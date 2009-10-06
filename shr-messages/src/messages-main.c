@@ -22,31 +22,37 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
 
-int main(int argc, char **argv) {
-    /* Connect to frameworkd */
-    frameworkd_handler_connect(frameworkd_handler_new());
+int
+main(int argc, char **argv)
+{
+	/* Connect to frameworkd */
+	frameworkd_handler_connect(frameworkd_handler_new());
 
-    /* Load, connect and initiate phonegui */
-    phonegui_load("shr-messages");
-    phonegui_init(argc, argv, exit_callback);
+	/* Load, connect and initiate phonegui */
+	phonegui_load("shr-messages");
+	phonegui_init(argc, argv, exit_callback);
 
-    /* Initiate glib main loop */
-    GMainLoop *mainloop = NULL;
-    g_type_init();
-    mainloop = g_main_loop_new (NULL, FALSE);
-    phonegui_init_contacts_cache();
-    /* Run glib main loop and start ui */	  
-    g_timeout_add(0, start, NULL);
-    g_main_loop_run(mainloop);
-    phonegui_destroy_contacts_cache();
-    return EXIT_SUCCESS;
+	/* Initiate glib main loop */
+	GMainLoop *mainloop = NULL;
+	g_type_init();
+	mainloop = g_main_loop_new(NULL, FALSE);
+	phonegui_init_contacts_cache();
+	/* Run glib main loop and start ui */
+	g_timeout_add(0, start, NULL);
+	g_main_loop_run(mainloop);
+	phonegui_destroy_contacts_cache();
+	return EXIT_SUCCESS;
 }
 
-gboolean start() {
-    phonegui_messages_show();
-    return FALSE;
+gboolean
+start()
+{
+	phonegui_messages_show();
+	return FALSE;
 }
 
-void exit_callback() {
-    exit(EXIT_SUCCESS);
+void
+exit_callback()
+{
+	exit(EXIT_SUCCESS);
 }
