@@ -23,19 +23,19 @@ static void _hide(const int id);
 static void _delete(void *data, Evas_Object *win, void *event_info);
 
 
-void phonegui_incoming_call_show(const int id, const int status, const char *number) {
+void phonegui_backend_incoming_call_show(const int id, const int status, const char *number) {
     _show(id, status, number, CALL_INCOMING);
 }
 
-void phonegui_incoming_call_hide(const int id) {
+void phonegui_backend_incoming_call_hide(const int id) {
     async_trigger(_hide, id);
 }
 
-void phonegui_outgoing_call_show(const int id, const int status, const char *number) {
+void phonegui_backend_outgoing_call_show(const int id, const int status, const char *number) {
     _show(id, status, number, CALL_ACTIVE);
 }
 
-void phonegui_outgoing_call_hide(const int id) {
+void phonegui_backend_outgoing_call_hide(const int id) {
     async_trigger(_hide, id);
 }
 

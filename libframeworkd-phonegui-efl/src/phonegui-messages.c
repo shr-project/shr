@@ -10,16 +10,16 @@ static void _show(struct Window *win);
 static void _hide(struct Window *win);
 
 
-void phonegui_messages_show(int argc, char** argv) {
-    g_debug("phonegui_messages_show()");
+void phonegui_backend_messages_show(int argc, char** argv) {
+    g_debug("phonegui_backend_messages_show()");
     if(win == NULL) {
         win = window_new(D_("Messages"));
         async_trigger(_show, win);
     }
 }
 
-void phonegui_messages_hide() {
-    g_debug("phonegui_messages_hide()");
+void phonegui_backend_messages_hide() {
+    g_debug("phonegui_backend_messages_hide()");
     if(win != NULL) {
         async_trigger(_hide, win);
         win = NULL;

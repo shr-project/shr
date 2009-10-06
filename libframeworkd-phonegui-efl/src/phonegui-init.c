@@ -32,7 +32,7 @@ void ui_init() {
     elm_run();
 }
 
-void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
+void phonegui_backend_init(int argc, char **argv, void (*exit_cb)()) {
 
     // Initialize gettext
     setlocale (LC_ALL, "");

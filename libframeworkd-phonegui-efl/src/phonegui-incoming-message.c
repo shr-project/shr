@@ -10,8 +10,8 @@ static void _show(GHashTable *options);
 static void _hide(struct Window *win);
 
 
-void phonegui_message_show(const int id) {
-    g_debug("phonegui_message_show(id=%d)", id);
+void phonegui_backend_message_show(const int id) {
+    g_debug("phonegui_backend_message_show(id=%d)", id);
 
     struct Window *win = window_new(D_("New Message"));
     instance_manager_add(INSTANCE_INCOMING_MESSAGE, id, win);
@@ -22,8 +22,8 @@ void phonegui_message_show(const int id) {
     async_trigger(_show, options);
 }
 
-void phonegui_message_hide(int id) {
-    g_debug("phonegui_message_hide()");
+void phonegui_backend_message_hide(int id) {
+    g_debug("phonegui_backend_message_hide()");
     struct Window *win = instance_manager_remove(INSTANCE_INCOMING_MESSAGE, id);
     async_trigger(_hide, win);
 }

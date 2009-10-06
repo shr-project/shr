@@ -10,15 +10,15 @@ static void _show(struct Window *win);
 static void _hide(struct Window *win);
 
 
-void phonegui_contacts_show() {
-    g_debug("phonegui_contacts_show()");
+void phonegui_backend_contacts_show() {
+    g_debug("phonegui_backend_contacts_show()");
     if(win == NULL) {
         win = window_new(D_("Contacts"));
         async_trigger(_show, win);
     }
 }
 
-void phonegui_contacts_hide() {
+void phonegui_backend_contacts_hide() {
     async_trigger(_hide, win);
 }
 
@@ -33,7 +33,7 @@ static void _show_new(tmp_pack *pack) {
 	free(pack);
 }
 
-void phonegui_contacts_new_show(const char *name, const char *number) 
+void phonegui_backend_contacts_new_show(const char *name, const char *number) 
 {
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
         g_hash_table_insert(options, "name", name);
