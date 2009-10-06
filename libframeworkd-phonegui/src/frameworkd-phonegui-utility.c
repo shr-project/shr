@@ -12,6 +12,32 @@
 #include "frameworkd-phonegui-utility.h"
 
 extern Settings *conf;
+
+static GValue *
+_new_gvalue_string(const char *value)
+{
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, G_TYPE_STRING);
+	g_value_set_string(val, value);
+	
+	return val;
+}
+static int
+_new_gvalue_int(int value)
+{
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, G_TYPE_INT);
+	g_value_set_intg(val, value);
+	
+	return val;
+}
+
 static
 guint phone_number_hash(gconstpointer v)
 {
@@ -152,13 +178,11 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	/* set alphabet if needed */
 	if (ucs) {
 		g_debug("Sending message as ucs2");
-		alphabet = calloc(1, sizeof(GValue));
+		alphabet = _new_gvalue_string("ucs2");
 		if (!alphabet) {
 			ret_val = 1;
 			goto clean_hash;
 		}
-		g_value_init(alphabet, G_TYPE_STRING);
-		g_value_set_string(alphabet, "ucs2"); 
 		g_hash_table_insert(options, "alphabet", alphabet);
 	}
 	else {
@@ -174,20 +198,16 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 	for (csm_num = 0 ; messages[csm_num] ; csm_num++);
 
 	if (csm_num > 1) {
-		val_csm_num = calloc(1, sizeof(GValue));
+		val_csm_num = _new_gvalue_int(csm_num);
 		if (!val_csm_num) {
 			ret_val = 1;
 			goto clean_gvalues;
 		}
-		g_value_init(val_csm_num, G_TYPE_INT);
-		g_value_set_int(val_csm_num, csm_num);
-		val_csm_id = calloc(1, sizeof(GValue));
+		val_csm_id = _new_gvalue_int(csm_id);
 		if (!val_csm_id) {
 			ret_val = 1;
 			goto clean_gvalues;
 		}
-		g_value_init(val_csm_id, G_TYPE_INT);
-		g_value_set_int(val_csm_id, csm_id);
 		
 		g_hash_table_insert(options, "csm_id", val_csm_id);
 		g_hash_table_insert(options, "csm_num", val_csm_num);	
@@ -207,14 +227,13 @@ phonegui_send_sms(const char *message, GPtrArray *recipients, void *callback1, v
 
 		if (csm_num > 1) {
 			for (csm_seq = 1; csm_seq <= csm_num; csm_seq++) {
-				val_csm_seq = calloc(1, sizeof(GValue));
+				val_csm_seq = _new_gvalue_int(csm_seq);
 				if (!val_csm_seq) {
 					ret_val = 1;
 					goto clean_messages;
 				}
-				g_value_init(val_csm_seq, G_TYPE_INT);
+
 				g_debug("sending sms number %d", csm_seq);
-				g_value_set_int(val_csm_seq, csm_seq);
 				g_hash_table_replace(options, "csm_seq", val_csm_seq);
 				ogsmd_sms_send_message(number, messages[csm_seq - 1], options, NULL, NULL);
 			}
