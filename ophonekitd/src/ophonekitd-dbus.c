@@ -26,47 +26,48 @@
 #include "ophonekitd-dbus-usage.h"
 #include "ophonekitd-usage-service-glue.h"
 
-    static gpointer
-dbus_register_object (DBusGConnection *connection,
-        DBusGProxy *proxy,
-        GType object_type,
-        const DBusGObjectInfo *info,
-        const gchar *path)
+static gpointer
+dbus_register_object(DBusGConnection * connection,
+		     DBusGProxy * proxy,
+		     GType object_type,
+		     const DBusGObjectInfo * info, const gchar * path)
 {
-    g_debug(path);
-    GObject *object = g_object_new (object_type, NULL);
-    dbus_g_object_type_install_info (object_type, info);
-    dbus_g_connection_register_g_object (connection, path, object);
-    return object;
+	g_debug(path);
+	GObject *object = g_object_new(object_type, NULL);
+	dbus_g_object_type_install_info(object_type, info);
+	dbus_g_connection_register_g_object(connection, path, object);
+	return object;
 }
 
-void ophonekitd_dbus_start() {
-    GError *error = NULL;
-    guint result;
-    DBusGConnection *connection;
-    DBusGProxy *proxy;
-    g_type_init();
-    connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
-    proxy = dbus_g_proxy_new_for_name (connection,
-            DBUS_SERVICE_DBUS,
-            DBUS_PATH_DBUS,
-            DBUS_INTERFACE_DBUS);
+void
+ophonekitd_dbus_start()
+{
+	GError *error = NULL;
+	guint result;
+	DBusGConnection *connection;
+	DBusGProxy *proxy;
+	g_type_init();
+	connection = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
+	proxy = dbus_g_proxy_new_for_name(connection,
+					  DBUS_SERVICE_DBUS,
+					  DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
 
 
-    if(!org_freedesktop_DBus_request_name (proxy,
-                OPHONEKITD_USAGE_SERVICE_NAME, 
-                DBUS_NAME_FLAG_DO_NOT_QUEUE, &result, &error)) {
-        g_debug("Error requesting name! %s", error->message);
-    }
+	if (!org_freedesktop_DBus_request_name(proxy,
+					       OPHONEKITD_USAGE_SERVICE_NAME,
+					       DBUS_NAME_FLAG_DO_NOT_QUEUE,
+					       &result, &error)) {
+		g_debug("Error requesting name! %s", error->message);
+	}
 
 
-    if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
-        g_debug ("Got result code %u from requesting name", result);
-    }
+	if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
+		g_debug("Got result code %u from requesting name", result);
+	}
 
-    dbus_register_object (connection, 
-            proxy,
-            OPHONEKITD_TYPE_USAGE_SERVICE,
-            &dbus_glib_ophonekitd_usage_service_object_info,
-            OPHONEKITD_USAGE_SERVICE_PATH);
+	dbus_register_object(connection,
+			     proxy,
+			     OPHONEKITD_TYPE_USAGE_SERVICE,
+			     &dbus_glib_ophonekitd_usage_service_object_info,
+			     OPHONEKITD_USAGE_SERVICE_PATH);
 }

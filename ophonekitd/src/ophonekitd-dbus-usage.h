@@ -31,20 +31,27 @@
 typedef struct _OphonekitdUsageService OphonekitdUsageService;
 typedef struct _OphonekitdUsageServiceClass OphonekitdUsageServiceClass;
 
-GType ophonekitd_usage_service_get_type (void);
+GType ophonekitd_usage_service_get_type(void);
 
 struct _OphonekitdUsageService {
-        GObject parent;
+	GObject parent;
 };
 
 struct _OphonekitdUsageServiceClass {
-        GObjectClass parent;
+	GObjectClass parent;
 };
 
-void ophonekitd_usage_service_get_resource_state (OphonekitdUsageService *object, const char* resource, DBusGMethodInvocation *context);
-void ophonekitd_usage_service_release_resource (OphonekitdUsageService *object, const char* resource, DBusGMethodInvocation *context);
-void ophonekitd_usage_service_request_resource (OphonekitdUsageService *object, const char* resource, DBusGMethodInvocation *context);
+void ophonekitd_usage_service_get_resource_state(OphonekitdUsageService *
+						 object, const char *resource,
+						 DBusGMethodInvocation *
+						 context);
+void ophonekitd_usage_service_release_resource(OphonekitdUsageService * object,
+					       const char *resource,
+					       DBusGMethodInvocation * context);
+void ophonekitd_usage_service_request_resource(OphonekitdUsageService * object,
+					       const char *resource,
+					       DBusGMethodInvocation * context);
 
-OphonekitdUsageService *ophonekitd_usage_service_new (void);
+OphonekitdUsageService *ophonekitd_usage_service_new(void);
 
 #endif
