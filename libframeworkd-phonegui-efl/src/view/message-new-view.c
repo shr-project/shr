@@ -421,11 +421,10 @@ frame_recipient_continue_clicked(struct MessageNewViewData *data,
 		int i;
 		for (i = 0; i < data->recipients->len; i++) {
 			GHashTable *properties =
-				(GHashTable *) g_ptr_array_index(data->
-								 recipients, i);
-			char *number =
-				(char *) g_hash_table_lookup(properties,
-							     "number");
+				(GHashTable *)
+				g_ptr_array_index(data->recipients, i);
+			char *number = (char *) g_hash_table_lookup(properties,
+								    "number");
 			assert(number != NULL);
 
 			GHashTable *options = g_hash_table_new(NULL, NULL);

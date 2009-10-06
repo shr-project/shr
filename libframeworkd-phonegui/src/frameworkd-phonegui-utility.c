@@ -54,7 +54,7 @@ _new_gvalue_boolean(int value)
 }
 
 static
-	guint
+  guint
 phone_number_hash(gconstpointer v)
 {
 	gchar *n = phone_utils_normalize_number((char *) v);

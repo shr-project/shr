@@ -23,8 +23,7 @@ struct MessageFolderViewData {
 
 static void message_folder_view_retrieve_messagebook_callback(GError * error,
 							      GPtrArray *
-							      messages,
-							      struct
+							      messages, struct
 							      MessageFolderViewData
 							      *data);
 static void message_folder_view_retrieve_messagebook_callback2(struct

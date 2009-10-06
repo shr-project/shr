@@ -43,13 +43,13 @@ string_replace_newline(char *string)
 	char *in_p = string, *out_p = string;
 	for (; *in_p; in_p++, out_p++) {
 		switch (*in_p) {
-			case '\n':
-			case '\t':
-				*out_p = ' ';
-				break;
-			default:
-				*out_p = *in_p;
-				break;
+		case '\n':
+		case '\t':
+			*out_p = ' ';
+			break;
+		default:
+			*out_p = *in_p;
+			break;
 		}
 	}
 	*out_p = '\0';
@@ -66,19 +66,19 @@ string_replace_with_tags(char *string)
 	/* scan the string to see how much longer we have to get */
 	while (*in_p) {
 		switch (*in_p++) {
-			case '\n':
-				newlen += 3;
-				break;
-			case '\t':
-				newlen += 4;
-				break;
-			case '<':
-			case '>':
-				newlen += 3;
-				break;
-			case '&':
-				newlen += 4;
-				break;
+		case '\n':
+			newlen += 3;
+			break;
+		case '\t':
+			newlen += 4;
+			break;
+		case '<':
+		case '>':
+			newlen += 3;
+			break;
+		case '&':
+			newlen += 4;
+			break;
 		}
 	}
 
@@ -91,41 +91,41 @@ string_replace_with_tags(char *string)
 	out_p = newstring;
 	while (*in_p) {
 		switch (*in_p) {
-			case '\n':
-				*out_p++ = '<';
-				*out_p++ = 'b';
-				*out_p++ = 'r';
-				*out_p++ = '>';
-				break;
-			case '\t':
-				*out_p++ = '<';
-				*out_p++ = 't';
-				*out_p++ = 'a';
-				*out_p++ = 'b';
-				*out_p++ = '>';
-				break;
-			case '<':
-				*out_p++ = '&';
-				*out_p++ = 'l';
-				*out_p++ = 't';
-				*out_p++ = ';';
-				break;
-			case '>':
-				*out_p++ = '&';
-				*out_p++ = 'g';
-				*out_p++ = 't';
-				*out_p++ = ';';
-				break;
-			case '&':
-				*out_p++ = '&';
-				*out_p++ = 'a';
-				*out_p++ = 'm';
-				*out_p++ = 'p';
-				*out_p++ = ';';
-				break;
-			default:
-				*out_p++ = *in_p;
-				break;
+		case '\n':
+			*out_p++ = '<';
+			*out_p++ = 'b';
+			*out_p++ = 'r';
+			*out_p++ = '>';
+			break;
+		case '\t':
+			*out_p++ = '<';
+			*out_p++ = 't';
+			*out_p++ = 'a';
+			*out_p++ = 'b';
+			*out_p++ = '>';
+			break;
+		case '<':
+			*out_p++ = '&';
+			*out_p++ = 'l';
+			*out_p++ = 't';
+			*out_p++ = ';';
+			break;
+		case '>':
+			*out_p++ = '&';
+			*out_p++ = 'g';
+			*out_p++ = 't';
+			*out_p++ = ';';
+			break;
+		case '&':
+			*out_p++ = '&';
+			*out_p++ = 'a';
+			*out_p++ = 'm';
+			*out_p++ = 'p';
+			*out_p++ = ';';
+			break;
+		default:
+			*out_p++ = *in_p;
+			break;
 		}
 		in_p++;
 	}

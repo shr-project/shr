@@ -51,11 +51,10 @@ contacts_button_save_clicked(struct ContactsWindow *win, Evas_Object * obj,
 			g_debug("NEW");
 			ogsmd_sim_store_entry("contacts",
 					      free_entry_index,
-					      etk_entry_text_get(win->
-								 entry_name),
-					      etk_entry_text_get(win->
-								 entry_number),
-					      NULL, NULL);
+					      etk_entry_text_get
+					      (win->entry_name),
+					      etk_entry_text_get
+					      (win->entry_number), NULL, NULL);
 		}
 		else if (win->contacts_mode == MODE_MODIFY) {
 			g_debug("MODIFY");
@@ -63,11 +62,10 @@ contacts_button_save_clicked(struct ContactsWindow *win, Evas_Object * obj,
 					      g_value_get_int
 					      (g_value_array_get_nth
 					       (win->tmp_entry, 0)),
-					      etk_entry_text_get(win->
-								 entry_name),
-					      etk_entry_text_get(win->
-								 entry_number),
-					      NULL, NULL);
+					      etk_entry_text_get
+					      (win->entry_name),
+					      etk_entry_text_get
+					      (win->entry_number), NULL, NULL);
 		}
 		g_debug("SAVED");
 		pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST, win);
