@@ -25,40 +25,40 @@
 
 #include <phone-utils.h>
 
-void (*_phonegui_init)(int argc, char **argv, void (*exit_cb)()) = NULL;
+static void (*_phonegui_init)(int argc, char **argv, void (*exit_cb)()) = NULL;
 
 /* Calls */
-void (*_phonegui_incoming_call_show)(const int id, const int status, const char *number) = NULL;
-void (*_phonegui_incoming_call_hide)(const int id) = NULL;
-void (*_phonegui_outgoing_call_show)(const int id, const int status, const char *number) = NULL;
-void (*_phonegui_outgoing_call_hide)(const int id) = NULL;
+static void (*_phonegui_incoming_call_show)(const int id, const int status, const char *number) = NULL;
+static void (*_phonegui_incoming_call_hide)(const int id) = NULL;
+static void (*_phonegui_outgoing_call_show)(const int id, const int status, const char *number) = NULL;
+static void (*_phonegui_outgoing_call_hide)(const int id) = NULL;
 
 /* Contacts */
-void (*_phonegui_contacts_show)() = NULL;
-void (*_phonegui_contacts_new_show)() = NULL;
-void (*_phonegui_contacts_hide)() = NULL;
+static void (*_phonegui_contacts_show)() = NULL;
+static void (*_phonegui_contacts_new_show)() = NULL;
+static void (*_phonegui_contacts_hide)() = NULL;
 
 /* Dialer */
-void (*_phonegui_dialer_show)() = NULL;
-void (*_phonegui_dialer_hide)() = NULL;
+static void (*_phonegui_dialer_show)() = NULL;
+static void (*_phonegui_dialer_hide)() = NULL;
 
 /* Dialog */
-void (*_phonegui_dialog_show)(int type) = NULL;
-void (*_phonegui_dialog_hide)() = NULL;
+static void (*_phonegui_dialog_show)(int type) = NULL;
+static void (*_phonegui_dialog_hide)() = NULL;
 
 /* Messages */
-void (*_phonegui_messages_show)() = NULL;
-void (*_phonegui_messages_hide)() = NULL;
-void (*_phonegui_message_show)(const int id) = NULL;
-void (*_phonegui_message_hide)() = NULL;
+static void (*_phonegui_messages_show)() = NULL;
+static void (*_phonegui_messages_hide)() = NULL;
+static void (*_phonegui_message_show)(const int id) = NULL;
+static void (*_phonegui_message_hide)() = NULL;
 
 /* Sim auth */
-void (*_phonegui_sim_auth_show)(const int status) = NULL;
-void (*_phonegui_sim_auth_hide)(const int status) = NULL;
+static void (*_phonegui_sim_auth_show)(const int status) = NULL;
+static void (*_phonegui_sim_auth_hide)(const int status) = NULL;
 
 /* USSD */
-void (*_phonegui_ussd_show)(int mode, const char *message) = NULL;
-void (*_phonegui_ussd_hide)() = NULL;
+static void (*_phonegui_ussd_show)(int mode, const char *message) = NULL;
+static void (*_phonegui_ussd_hide)() = NULL;
 
 
 static void *phonegui_library = NULL;
