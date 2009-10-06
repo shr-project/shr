@@ -114,33 +114,33 @@ void *phonegui_get_function(const char *name) {
 static void
 phonegui_connect()
 {
-	_phonegui_init = phonegui_get_function("phonegui_init");
+	_phonegui_init = phonegui_get_function("phonegui_backend_init");
 
-	_phonegui_incoming_call_show = phonegui_get_function("phonegui_incoming_call_show");
-	_phonegui_incoming_call_hide = phonegui_get_function("phonegui_incoming_call_hide");
-	_phonegui_outgoing_call_show = phonegui_get_function("phonegui_outgoing_call_show");
-	_phonegui_outgoing_call_hide = phonegui_get_function("phonegui_outgoing_call_hide");
+	_phonegui_incoming_call_show = phonegui_get_function("phonegui_backend_incoming_call_show");
+	_phonegui_incoming_call_hide = phonegui_get_function("phonegui_backend_incoming_call_hide");
+	_phonegui_outgoing_call_show = phonegui_get_function("phonegui_backend_outgoing_call_show");
+	_phonegui_outgoing_call_hide = phonegui_get_function("phonegui_backend_outgoing_call_hide");
 
-	_phonegui_contacts_show = phonegui_get_function("phonegui_contacts_show");
-	_phonegui_contacts_new_show = phonegui_get_function("phonegui_contacts_new_show");
-	_phonegui_contacts_hide = phonegui_get_function("phonegui_contacts_hide");
+	_phonegui_contacts_show = phonegui_get_function("phonegui_backend_contacts_show");
+	_phonegui_contacts_new_show = phonegui_get_function("phonegui_backend_contacts_new_show");
+	_phonegui_contacts_hide = phonegui_get_function("phonegui_backend_contacts_hide");
 
-	_phonegui_dialer_show = phonegui_get_function("phonegui_dialer_show");
-	_phonegui_dialer_hide = phonegui_get_function("phonegui_dialer_hide");
+	_phonegui_dialer_show = phonegui_get_function("phonegui_backend_dialer_show");
+	_phonegui_dialer_hide = phonegui_get_function("phonegui_backend_dialer_hide");
 
-	_phonegui_dialog_show = phonegui_get_function("phonegui_dialog_show");
-	_phonegui_dialog_hide = phonegui_get_function("phonegui_dialog_hide");
+	_phonegui_dialog_show = phonegui_get_function("phonegui_backend_dialog_show");
+	_phonegui_dialog_hide = phonegui_get_function("phonegui_backend_dialog_hide");
 
-	_phonegui_message_show = phonegui_get_function("phonegui_message_show");
-	_phonegui_message_hide = phonegui_get_function("phonegui_message_hide");
-	_phonegui_messages_show = phonegui_get_function("phonegui_messages_show");
-	_phonegui_messages_hide = phonegui_get_function("phonegui_messages_hide");
+	_phonegui_message_show = phonegui_get_function("phonegui_backend_message_show");
+	_phonegui_message_hide = phonegui_get_function("phonegui_backend_message_hide");
+	_phonegui_messages_show = phonegui_get_function("phonegui_backend_messages_show");
+	_phonegui_messages_hide = phonegui_get_function("phonegui_backend_messages_hide");
 	
-	_phonegui_sim_auth_show = phonegui_get_function("phonegui_sim_auth_show");
-	_phonegui_sim_auth_hide = phonegui_get_function("phonegui_sim_auth_hide");
+	_phonegui_sim_auth_show = phonegui_get_function("phonegui_backend_sim_auth_show");
+	_phonegui_sim_auth_hide = phonegui_get_function("phonegui_backend_sim_auth_hide");
 
-	_phonegui_ussd_show = phonegui_get_function("phonegui_ussd_show");
-	_phonegui_ussd_hide = phonegui_get_function("phonegui_ussd_hide");
+	_phonegui_ussd_show = phonegui_get_function("phonegui_backend_ussd_show");
+	_phonegui_ussd_hide = phonegui_get_function("phonegui_backend_ussd_hide");
 }
 
 /* Implementation prototypes */
