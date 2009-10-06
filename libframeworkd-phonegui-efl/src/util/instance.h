@@ -4,16 +4,13 @@
 #include "window.h"
 
 enum InstanceType {
-    INSTANCE_INCOMING_MESSAGE,
-    INSTANCE_CALL,
-    INSTANCE_DIALOG
+	INSTANCE_INCOMING_MESSAGE,
+	INSTANCE_CALL,
+	INSTANCE_DIALOG
 };
 
 void instance_manager_add(int type, int id, struct Window *win);
 struct Window *instance_manager_remove(int type, int id);
-struct Window *instance_manager_remove_by_ecore_evas(Ecore_Evas *ee);
+struct Window *instance_manager_remove_by_ecore_evas(Ecore_Evas * ee);
 
 #endif
-
-
-

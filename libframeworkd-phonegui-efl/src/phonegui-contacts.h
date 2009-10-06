@@ -6,4 +6,3 @@ void phonegui_backend_contacts_hide();
 void phonegui_backend_contacts_new_show(const char *name, const char *number);
 
 #endif
-

@@ -5,4 +5,3 @@ void phonegui_backend_dialer_show();
 void phonegui_backend_dialer_hide();
 
 #endif
-

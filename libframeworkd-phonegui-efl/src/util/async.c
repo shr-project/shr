@@ -4,25 +4,32 @@
 
 static PipeHandler pipe_handler;
 
-void async_init() {
-    pipe_handler = pipe_create();
-}
-
-int async_fd_input_get()
+void
+async_init()
 {
-    return pipe_handler.input;
+	pipe_handler = pipe_create();
+}
+
+int
+async_fd_input_get()
+{
+	return pipe_handler.input;
 }
 
 
-void async_dispatch() {
-    PipeMessage *m;
-    while((m = pipe_read(pipe_handler)) != NULL) {
-        if(m->callback != NULL) {
-            m->callback(m->userdata); 
-        }
-    }
+void
+async_dispatch()
+{
+	PipeMessage *m;
+	while ((m = pipe_read(pipe_handler)) != NULL) {
+		if (m->callback != NULL) {
+			m->callback(m->userdata);
+		}
+	}
 }
 
-void async_trigger(void (*cb)(), void *userdata) {
-    pipe_write(pipe_handler, cb, userdata);
+void
+async_trigger(void (*cb) (), void *userdata)
+{
+	pipe_write(pipe_handler, cb, userdata);
 }

@@ -5,18 +5,18 @@
 #include <fcntl.h>
 
 typedef struct {
-    int input;
-    int output;
+	int input;
+	int output;
 } PipeHandler;
 
 typedef struct {
-    void (*callback)();
-    void *userdata;
+	void (*callback) ();
+	void *userdata;
 } PipeMessage;
 
 
 PipeHandler pipe_create();
-PipeMessage* pipe_read(PipeHandler h);
-void pipe_write(PipeHandler h, void (*callback)(), void *userdata);
+PipeMessage *pipe_read(PipeHandler h);
+void pipe_write(PipeHandler h, void (*callback) (), void *userdata);
 
 #endif

@@ -28,47 +28,59 @@
 
 #define DELETE_TEXT_ICON "@DATADIR@/libframeworkd-phonegui-efl/edit-undo.png"
 
-struct DialerViewData *dialer_view_show(struct Window *win, GHashTable *options);
+struct DialerViewData *dialer_view_show(struct Window *win,
+					GHashTable * options);
 void dialer_view_hide(struct DialerViewData *data);
 
-struct DialogViewData *dialog_view_show(struct Window *win, GHashTable *options);
+struct DialogViewData *dialog_view_show(struct Window *win,
+					GHashTable * options);
 void dialog_view_hide(struct DialogViewData *data);
 
-struct MessageNewViewData *message_new_view_show(struct Window *win, GHashTable *options);
+struct MessageNewViewData *message_new_view_show(struct Window *win,
+						 GHashTable * options);
 void message_new_view_hide(struct MessageNewViewData *data);
 
-struct MessageFolderViewData *message_folder_view_show(struct Window *win, GHashTable *options);
+struct MessageFolderViewData *message_folder_view_show(struct Window *win,
+						       GHashTable * options);
 void message_folder_view_hide(struct MessageFolderViewData *data);
 
-struct MessageShowViewData *message_show_view_show(struct Window *win, GHashTable *options);
+struct MessageShowViewData *message_show_view_show(struct Window *win,
+						   GHashTable * options);
 void message_show_view_hide(struct MessageShowViewData *data);
 
-struct MessageDeleteViewData *message_delete_view_show(struct Window *win, GHashTable *options);
+struct MessageDeleteViewData *message_delete_view_show(struct Window *win,
+						       GHashTable * options);
 void message_delete_view_hide(struct MessageDeleteViewData *data);
 
-struct MessageListViewData *message_list_view_show(struct Window *win, GHashTable *options);
+struct MessageListViewData *message_list_view_show(struct Window *win,
+						   GHashTable * options);
 void message_list_view_hide(struct MessageListViewData *data);
 
-struct SimAuthInputViewData *sim_auth_input_view_show(struct Window *win, GHashTable *options);
+struct SimAuthInputViewData *sim_auth_input_view_show(struct Window *win,
+						      GHashTable * options);
 void sim_auth_input_view_hide(struct SimAuthInputViewData *data);
 
-struct CallIncomingViewData *call_incoming_view_show(struct Window *win, GHashTable *options);
+struct CallIncomingViewData *call_incoming_view_show(struct Window *win,
+						     GHashTable * options);
 void call_incoming_view_hide(struct CallIncomingViewData *data);
 
-struct CallActiveViewData *call_active_view_show(struct Window *win, GHashTable *options);
+struct CallActiveViewData *call_active_view_show(struct Window *win,
+						 GHashTable * options);
 void call_active_view_hide(struct CallActiveViewData *data);
 
-struct ContactListViewData *contact_list_view_show(struct Window *win, GHashTable *options);
+struct ContactListViewData *contact_list_view_show(struct Window *win,
+						   GHashTable * options);
 void contact_list_view_hide(struct ContactListViewData *data);
 
-struct ContactEditViewData *contact_edit_view_show(struct Window *win, GHashTable *options);
+struct ContactEditViewData *contact_edit_view_show(struct Window *win,
+						   GHashTable * options);
 void contact_edit_view_hide(struct ContactEditViewData *data);
 
-struct ContactDeleteViewData *contact_delete_view_show(struct Window *win, GHashTable *options);
+struct ContactDeleteViewData *contact_delete_view_show(struct Window *win,
+						       GHashTable * options);
 void contact_delete_view_hide(struct ContactDeleteViewData *data);
 
-struct UssdViewData *ussd_view_show(struct Window *win, GHashTable *options);
+struct UssdViewData *ussd_view_show(struct Window *win, GHashTable * options);
 void ussd_view_hide(struct UssdViewData *data);
 
 #endif
-
