@@ -364,3 +364,11 @@ phonegui_send_sms(const char *message, GPtrArray * recipients, void *callback1,
 	return 0;
 
 }
+
+
+int
+phonegui_initiate_call(const char *number, void (*callback)(GError *, int id_call, gpointer), gpointer userdata)
+{
+	ogsmd_call_initiate(number, "voice", callback, userdata);
+	return 0;
+}
