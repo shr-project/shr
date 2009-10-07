@@ -2,6 +2,14 @@
 #define _FRAMEWORKD_PHONEGUI_UTILITY_H
 #include <glib.h>
 
+typedef enum {
+	PHONEGUI_DIALOG_ERROR_DO_NOT_USE,
+	// This value is used for checking if we get a wrong pointer out of a HashTable. 
+	// So do not use it, and leave it first in this enum. ( because 0 == NULL )
+	PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL,
+	PHONEGUI_DIALOG_SIM_NOT_PRESENT
+} PhoneguiDialogType;
+
 typedef struct {
 	gchar *library;
 	GHashTable *contact_cache;
@@ -26,5 +34,8 @@ int phonegui_call_initiate(const char *number,
 				gpointer userdata);
 int phonegi_call_release(int call_id, 
 			void (*callback)(GError *, int id_call, gpointer),
-			gpointer userdata)
+			gpointer userdata);
+int phonegi_call_activate(int call_id, 
+			void (*callback)(GError *, int id_call, gpointer),
+			gpointer userdata);
 #endif
