@@ -32,10 +32,10 @@ int phonegui_sms_send(const char *message, GPtrArray * recipients,
 int phonegui_call_initiate(const char *number,
 				void (*callback)(GError *, int id_call, gpointer),
 				gpointer userdata);
-int phonegi_call_release(int call_id, 
+int phonegui_call_release(int call_id, 
 			void (*callback)(GError *, int id_call, gpointer),
 			gpointer userdata);
-int phonegi_call_activate(int call_id, 
+int phonegui_call_activate(int call_id, 
 			void (*callback)(GError *, int id_call, gpointer),
 			gpointer userdata);
 #endif

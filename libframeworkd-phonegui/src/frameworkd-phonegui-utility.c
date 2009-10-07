@@ -374,7 +374,7 @@ phonegui_call_initiate(const char *number,
 }
 
 int
-phonegi_call_release(int call_id, 
+phonegui_call_release(int call_id, 
 			void (*callback)(GError *, int id_call, gpointer),
 			gpointer userdata)
 {
@@ -383,7 +383,7 @@ phonegi_call_release(int call_id,
 }
 
 int
-phonegi_call_activate(int call_id, 
+phonegui_call_activate(int call_id, 
 			void (*callback)(GError *, int id_call, gpointer),
 			gpointer userdata)
 {
