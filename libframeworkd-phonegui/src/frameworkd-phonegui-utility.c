@@ -256,8 +256,6 @@ phonegui_sms_send(const char *message, GPtrArray * recipients, void *callback1,
 	ucs = phone_utils_gsm_is_ucs(message);
 
 
-
-
 	/* set alphabet if needed */
 	if (ucs) {
 		g_debug("Sending message as ucs2");
@@ -367,8 +365,19 @@ phonegui_sms_send(const char *message, GPtrArray * recipients, void *callback1,
 
 
 int
-phonegui_call_initiate(const char *number, void (*callback)(GError *, int id_call, gpointer), gpointer userdata)
+phonegui_call_initiate(const char *number,
+			void (*callback)(GError *, int id_call, gpointer),
+			gpointer userdata)
 {
 	ogsmd_call_initiate(number, "voice", callback, userdata);
+	return 0;
+}
+
+int
+phonegi_call_release(int call_id, 
+			void (*callback)(GError *, int id_call, gpointer),
+			gpointer userdata)
+{
+	ogsmd_call_release(call_id, callback, userdata);
 	return 0;
 }
