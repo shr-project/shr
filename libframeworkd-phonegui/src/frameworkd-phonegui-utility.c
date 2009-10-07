@@ -123,7 +123,7 @@ phonegui_contact_lookup(const char *_number,
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	char *number = _lookup_add_prefix(_number);
 
-	g_debug("Attempting to resolve name for: \"%\"", number);
+	g_debug("Attempting to resolve name for: \"%s\"", number);
 
 
 	GValue *value = g_slice_alloc0(sizeof(GValue));
