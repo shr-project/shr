@@ -122,13 +122,18 @@ phonegui_contact_lookup(const char *_number,
 	GHashTable *query =
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	char *number = _lookup_add_prefix(_number);
+	if (!number) {
+		return;
+	}
 
 	g_debug("Attempting to resolve name for: \"%s\"", number);
 
 
-	GValue *value = g_slice_alloc0(sizeof(GValue));
-	g_value_init(value, G_TYPE_STRING);
-	g_value_set_string(value, (number) ? number : _number);	/*  we prefer using number */
+	GValue *value = _new_gvalue_string((number) ? number : _number);	/*  we prefer using number */
+	if (!value) {
+		free(number);
+		return;
+	}
 	g_hash_table_insert(query, "Phone", value);
 
 
