@@ -226,7 +226,7 @@ _add_opimd_message(const char *number, const char *message)
 }
 
 int
-phonegui_send_sms(const char *message, GPtrArray * recipients, void *callback1,
+phonegui_sms_send(const char *message, GPtrArray * recipients, void *callback1,
 		  void *callback2)
 /* FIXME: add real callbacks types when I find out */
 {
@@ -367,7 +367,7 @@ phonegui_send_sms(const char *message, GPtrArray * recipients, void *callback1,
 
 
 int
-phonegui_initiate_call(const char *number, void (*callback)(GError *, int id_call, gpointer), gpointer userdata)
+phonegui_call_initiate(const char *number, void (*callback)(GError *, int id_call, gpointer), gpointer userdata)
 {
 	ogsmd_call_initiate(number, "voice", callback, userdata);
 	return 0;

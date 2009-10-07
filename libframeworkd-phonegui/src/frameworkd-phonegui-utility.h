@@ -23,9 +23,9 @@ void phonegui_contact_lookup(const char *number,
 			     void *data);
 void phonegui_init_contacts_cache();
 void phonegui_destroy_contacts_cache();
-int phonegui_send_sms(const char *message, GPtrArray * recipients,
+int phonegui_sms_send(const char *message, GPtrArray * recipients,
 		void *callback1, void *callback2);
-int phonegui_initiate_call(const char *number,
+int phonegui_call_initiate(const char *number,
 				void (*callback)(GError *, int id_call, gpointer),
 				gpointer userdata);
 #endif
