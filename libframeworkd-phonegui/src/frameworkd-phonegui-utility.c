@@ -122,13 +122,18 @@ phonegui_contact_lookup(const char *_number,
 	GHashTable *query =
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	char *number = _lookup_add_prefix(_number);
+	if (!number) {
+		return;
+	}
 
-	g_debug("Attempting to resolve name for: \"%\"", number);
+	g_debug("Attempting to resolve name for: \"%s\"", number);
 
 
-	GValue *value = g_slice_alloc0(sizeof(GValue));
-	g_value_init(value, G_TYPE_STRING);
-	g_value_set_string(value, (number) ? number : _number);	/*  we prefer using number */
+	GValue *value = _new_gvalue_string((number) ? number : _number);	/*  we prefer using number */
+	if (!value) {
+		free(number);
+		return;
+	}
 	g_hash_table_insert(query, "Phone", value);
 
 
@@ -221,7 +226,7 @@ _add_opimd_message(const char *number, const char *message)
 }
 
 int
-phonegui_send_sms(const char *message, GPtrArray * recipients, void *callback1,
+phonegui_sms_send(const char *message, GPtrArray * recipients, void *callback1,
 		  void *callback2)
 /* FIXME: add real callbacks types when I find out */
 {
@@ -249,8 +254,6 @@ phonegui_send_sms(const char *message, GPtrArray * recipients, void *callback1,
 
 	len = phone_utils_gsm_sms_strlen(message);
 	ucs = phone_utils_gsm_is_ucs(message);
-
-
 
 
 	/* set alphabet if needed */
@@ -358,4 +361,32 @@ phonegui_send_sms(const char *message, GPtrArray * recipients, void *callback1,
       end:
 	return 0;
 
+}
+
+
+int
+phonegui_call_initiate(const char *number,
+			void (*callback)(GError *, int id_call, gpointer),
+			gpointer userdata)
+{
+	ogsmd_call_initiate(number, "voice", callback, userdata);
+	return 0;
+}
+
+int
+phonegui_call_release(int call_id, 
+			void (*callback)(GError *, int id_call, gpointer),
+			gpointer userdata)
+{
+	ogsmd_call_release(call_id, callback, userdata);
+	return 0;
+}
+
+int
+phonegui_call_activate(int call_id, 
+			void (*callback)(GError *, int id_call, gpointer),
+			gpointer userdata)
+{
+	ogsmd_call_activate(call_id, callback, userdata);
+	return 0;
 }
