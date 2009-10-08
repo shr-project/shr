@@ -24,6 +24,7 @@
 #include <stdlib.h>
 
 #include <phone-utils.h>
+#include <frameworkd-glib/frameworkd-glib-dbus.h>
 
 static void (*_phonegui_init) (int argc, char **argv, void (*exit_cb) ()) =
 	NULL;
@@ -104,6 +105,9 @@ phonegui_load(const char *application_name)
 	/* init phone utils */
 	/* FIXME: should deinit somewhere! */
 	phone_utils_init();
+
+	/* Connect to frameworkd */
+	frameworkd_handler_connect(frameworkd_handler_new());
 
 }
 

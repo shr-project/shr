@@ -11,8 +11,7 @@ AM_LDFLAGS = @FRAMEWORKD_GLIB_LIBS@ @FRAMEWORKD_PHONEGUI_LIBS@ -ldl
 bin_PROGRAMS=shr-contacts
 
 shr_contacts_SOURCES = \
-	contacts-main.c \
-	contacts-main.h 
+	contacts-main.c
 
         
 
