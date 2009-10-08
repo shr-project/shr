@@ -117,7 +117,7 @@ phonegui_get_function(const char *name)
 	void *pointer = dlsym(phonegui_library, name);
 	char *error;
 	if ((error = dlerror()) != NULL) {
-		g_error("Symbol not found: %s", error);
+		g_debug("Symbol not found: %s", error);
 	}
 	return pointer;
 }
