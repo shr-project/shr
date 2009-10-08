@@ -37,8 +37,9 @@ void phonegui_outgoing_call_hide(const int id);
 
 /* Contacts */
 void phonegui_contacts_show();
-void phonegui_contacts_new_show();
 void phonegui_contacts_hide();
+void phonegui_contact_new_show(const char *name, const char *number);
+void phonegui_contact_hide();
 
 /* Dialer */
 void phonegui_dialer_show();
