@@ -55,6 +55,8 @@ static void (*_phonegui_dialog_hide) () = NULL;
 static void (*_phonegui_messages_show) () = NULL;
 static void (*_phonegui_messages_hide) () = NULL;
 static void (*_phonegui_message_show) (const int id) = NULL;
+static void (*_phonegui_message_new_show) (const char *message,
+		GPtrArray *recipients) = NULL;
 static void (*_phonegui_message_hide) () = NULL;
 
 /* Sim auth */
@@ -162,6 +164,8 @@ phonegui_connect()
 
 	_phonegui_message_show =
 		phonegui_get_function("phonegui_backend_message_show");
+	_phonegui_message_new_show =
+		phonegui_get_function("phonegui_backend_message_new_show");
 	_phonegui_message_hide =
 		phonegui_get_function("phonegui_backend_message_hide");
 	_phonegui_messages_show =
@@ -317,6 +321,15 @@ phonegui_message_show(const int id)
 {
 	if (_phonegui_message_show)
 		_phonegui_message_show(id);
+	else
+		g_debug("can't find function %s", __FUNCTION__);
+}
+
+void
+phonegui_message_new_show(const char *message, GPtrArray *recipients)
+{
+	if (_phonegui_message_new_show)
+		_phonegui_message_new_show(message, recipients);
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }

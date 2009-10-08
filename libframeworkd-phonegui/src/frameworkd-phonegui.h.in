@@ -53,6 +53,7 @@ void phonegui_dialog_hide();
 void phonegui_messages_show();
 void phonegui_messages_hide();
 void phonegui_message_show(const int id);
+void phonegui_message_new_show(const char *message, GPtrArray *recipients);
 void phonegui_message_hide();
 
 /* Sim auth */
