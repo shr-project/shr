@@ -38,8 +38,9 @@ static void (*_phonegui_outgoing_call_hide) (const int id) = NULL;
 
 /* Contacts */
 static void (*_phonegui_contacts_show) () = NULL;
-static void (*_phonegui_contacts_new_show) () = NULL;
 static void (*_phonegui_contacts_hide) () = NULL;
+static void (*_phonegui_contact_new_show) (const char *name, const char *number) = NULL;
+static void (*_phonegui_contact_hide) () = NULL;
 
 /* Dialer */
 static void (*_phonegui_dialer_show) () = NULL;
@@ -117,7 +118,7 @@ phonegui_get_function(const char *name)
 	void *pointer = dlsym(phonegui_library, name);
 	char *error;
 	if ((error = dlerror()) != NULL) {
-		g_error("Symbol not found: %s", error);
+		g_debug("Symbol not found: %s", error);
 	}
 	return pointer;
 }
@@ -138,10 +139,12 @@ phonegui_connect()
 
 	_phonegui_contacts_show =
 		phonegui_get_function("phonegui_backend_contacts_show");
-	_phonegui_contacts_new_show =
-		phonegui_get_function("phonegui_backend_contacts_new_show");
 	_phonegui_contacts_hide =
 		phonegui_get_function("phonegui_backend_contacts_hide");
+	_phonegui_contact_new_show =
+		phonegui_get_function("phonegui_backend_contact_new_show");
+	_phonegui_contact_hide =
+		phonegui_get_function("phonegui_backend_contact_hide");
 
 	_phonegui_dialer_show =
 		phonegui_get_function("phonegui_backend_dialer_show");
@@ -231,10 +234,10 @@ phonegui_contacts_show()
 }
 
 void
-phonegui_contacts_new_show()
+phonegui_contact_new_show(const char *name, const char *number)
 {
-	if (_phonegui_contacts_new_show)
-		_phonegui_contacts_new_show();
+	if (_phonegui_contact_new_show)
+		_phonegui_contact_new_show(name, number);
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
