@@ -361,7 +361,7 @@ ophonekitd_sim_incoming_stored_message_handler(const int id)
 {
 	g_debug("ophonekitd_sim_incoming_stored_message_handler()");
 	if (show_incoming_sms == TRUE) {
-		phonegui_message_show(id);
+		phonegui_messages_message_show(id);
 	}
 	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
