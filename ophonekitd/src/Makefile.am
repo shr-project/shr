@@ -14,6 +14,10 @@ BUILT_SOURCES = $(dbus_sources)
 ophonekitd_SOURCES = $(dbus_sources) \
 	ophonekitd-main.c \
 	ophonekitd-main.h \
+	ophonekitd-phonegui.c \
+	ophonekitd-phonegui.h \
+	ophonekitd-frameworkd.c \
+	ophonekitd-frameworkd.h \
 	ophonekitd-dbus-usage.c \
 	ophonekitd-dbus-usage.h \
 	ophonekitd-dbus.c \

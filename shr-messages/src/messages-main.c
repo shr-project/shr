@@ -21,7 +21,7 @@ main(int argc, char **argv)
 {
 	/* Load, connect and initiate phonegui */
 	phonegui_load("shr-messages");
-	phonegui_init(argc, argv, exit_callback);
+	phonegui_init(argc, argv, NULL);
 
 	phonegui_messages_show();
 

@@ -23,7 +23,7 @@ main(int argc, char **argv)
 {
 	/* Load, connect and initiate phonegui */
 	phonegui_load("shr-dialer");
-	phonegui_init(argc, argv, exit_callback);
+	phonegui_init(argc, argv, NULL);
 
 	phonegui_dialer_show();
 

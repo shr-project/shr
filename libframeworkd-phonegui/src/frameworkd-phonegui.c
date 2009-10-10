@@ -26,8 +26,8 @@
 #include <phone-utils.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 
-static void (*_phonegui_init) (int argc, char **argv, void (*exit_cb) ()) =
-	NULL;
+static void (*_phonegui_init) (int argc, char **argv, int (*idle_cb) (void *)) = NULL;
+static void (*_phonegui_loop) () = NULL;
 
 /* Calls */
 static void (*_phonegui_incoming_call_show) (const int id, const int status,
@@ -80,6 +80,11 @@ phonegui_load(const char *application_name)
 	GKeyFileFlags flags;
 	GError *error = NULL;
 
+	/* we have to call this before using any glib functions */
+	if (!g_thread_supported())
+		g_thread_init(NULL);
+	dbus_g_thread_init();
+
 	keyfile = g_key_file_new();
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
 	if (!g_key_file_load_from_file
@@ -110,7 +115,6 @@ phonegui_load(const char *application_name)
 
 	/* Connect to frameworkd */
 	frameworkd_handler_connect(frameworkd_handler_new());
-
 }
 
 
@@ -133,6 +137,7 @@ static void
 phonegui_connect()
 {
 	_phonegui_init = phonegui_get_function("phonegui_backend_init");
+	_phonegui_loop = phonegui_get_function("phonegui_backend_loop");
 
 	_phonegui_incoming_call_show =
 		phonegui_get_function("phonegui_backend_incoming_call_show");
@@ -186,13 +191,23 @@ phonegui_connect()
 
 /* Implementation prototypes */
 void
-phonegui_init(int argc, char **argv, void (*exit_cb) ())
+phonegui_init(int argc, char **argv, int (*idle_cb)(void *))
 {
 	if (_phonegui_init)
-		_phonegui_init(argc, argv, exit_cb);
+		_phonegui_init(argc, argv, idle_cb);
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
+
+void
+phonegui_loop()
+{
+	if (_phonegui_loop)
+		_phonegui_loop();
+	else
+		g_debug("can't find function %s", __FUNCTION__);
+}
+
 
 /* Calls */
 void

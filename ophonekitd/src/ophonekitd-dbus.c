@@ -4,6 +4,7 @@
  *              Marc-Olivier Barre <marco@marcochapeau.org>
  *              Julien Cassignol <ainulindale@gmail.com>
  *              Andreas Engelbredt Dalsgaard <andreas.dalsgaard@gmail.com>
+ *              Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
  *              quickdev
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -26,6 +27,8 @@
 #include "ophonekitd-dbus-usage.h"
 #include "ophonekitd-usage-service-glue.h"
 
+
+
 static gpointer
 dbus_register_object(DBusGConnection * connection,
 		     DBusGProxy * proxy,
@@ -39,15 +42,29 @@ dbus_register_object(DBusGConnection * connection,
 	return object;
 }
 
-void
-ophonekitd_dbus_start()
+void *
+ophonekitd_dbus_main(void *_data)
 {
+	GMainContext *ctx = NULL;
+	GMainLoop *loop = NULL;
 	GError *error = NULL;
 	guint result;
 	DBusGConnection *connection;
 	DBusGProxy *proxy;
-	g_type_init();
+
+	g_debug("[dbus] starting dbus thread");
+
+	ctx = g_main_context_new();
+	loop = g_main_loop_new(ctx, FALSE);
+
+	g_debug("[dbus] get on the bus");
 	connection = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
+	if (error) {
+		g_error("[dbus] %d: %s", error->code, error->message);
+		return (NULL);
+	}
+	dbus_connection_setup_with_g_main(
+			dbus_g_connection_get_connection(connection), loop);
 	proxy = dbus_g_proxy_new_for_name(connection,
 					  DBUS_SERVICE_DBUS,
 					  DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
@@ -57,12 +74,12 @@ ophonekitd_dbus_start()
 					       OPHONEKITD_USAGE_SERVICE_NAME,
 					       DBUS_NAME_FLAG_DO_NOT_QUEUE,
 					       &result, &error)) {
-		g_debug("Error requesting name! %s", error->message);
+		g_debug("[dbus] Error requesting name! %s", error->message);
 	}
 
 
 	if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
-		g_debug("Got result code %u from requesting name", result);
+		g_debug("[dbus] Got result code %u from requesting name", result);
 	}
 
 	dbus_register_object(connection,
