@@ -3,10 +3,10 @@ MAINTAINERCLEANFILES = Makefile.in
 INCLUDES = -I$(top_srcdir)/libhito
 
 AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" \
-                $(FRAMEWORKD_GLIB_CFLAGS) \
+                @DBUS_CFLAGS@ \
                 -Wall
 
-AM_LDFLAGS = @FRAMEWORKD_GLIB_LIBS@ @FRAMEWORKD_PHONEGUI_LIBS@ -ldl
+AM_LDFLAGS = @DBUS_LIBS@
 
 bin_PROGRAMS=shr-contacts
 
