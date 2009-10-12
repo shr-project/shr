@@ -26,6 +26,7 @@
 #include "ophonekitd-dbus-common.h"
 #include "ophonekitd-dbus-usage.h"
 #include "ophonekitd-usage-service-glue.h"
+#include "ophonekitd-globals.h"
 
 
 
@@ -42,30 +43,19 @@ dbus_register_object(DBusGConnection * connection,
 	return object;
 }
 
-void *
-ophonekitd_dbus_main(void *_data)
+void
+ophonekitd_dbus_setup()
 {
-	GMainContext *ctx = NULL;
-	GMainLoop *loop = NULL;
 	GError *error = NULL;
 	guint result;
-	DBusGConnection *connection;
 	DBusGProxy *proxy;
 
-	g_debug("[dbus] starting dbus thread");
-
-	ctx = g_main_context_new();
-	loop = g_main_loop_new(ctx, FALSE);
-
-	g_debug("[dbus] get on the bus");
-	connection = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
+	g_debug("get on the bus");
+	system_bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
 	if (error) {
-		g_error("[dbus] %d: %s", error->code, error->message);
-		return (NULL);
+		g_error("%d: %s", error->code, error->message);
 	}
-	dbus_connection_setup_with_g_main(
-			dbus_g_connection_get_connection(connection), loop);
-	proxy = dbus_g_proxy_new_for_name(connection,
+	proxy = dbus_g_proxy_new_for_name(system_bus,
 					  DBUS_SERVICE_DBUS,
 					  DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
 
@@ -74,17 +64,18 @@ ophonekitd_dbus_main(void *_data)
 					       OPHONEKITD_USAGE_SERVICE_NAME,
 					       DBUS_NAME_FLAG_DO_NOT_QUEUE,
 					       &result, &error)) {
-		g_debug("[dbus] Error requesting name! %s", error->message);
+		g_debug("Error requesting name! %s", error->message);
 	}
 
 
 	if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
-		g_debug("[dbus] Got result code %u from requesting name", result);
+		g_debug("Got result code %u from requesting name", result);
 	}
 
-	dbus_register_object(connection,
+	dbus_register_object(system_bus,
 			     proxy,
 			     OPHONEKITD_TYPE_USAGE_SERVICE,
 			     &dbus_glib_ophonekitd_usage_service_object_info,
 			     OPHONEKITD_USAGE_SERVICE_PATH);
+
 }

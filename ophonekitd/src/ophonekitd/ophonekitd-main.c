@@ -23,15 +23,14 @@
 #include <sys/inotify.h>
 #include <glib.h>
 #include <glib/gthread.h>
+#include <frameworkd-glib/frameworkd-glib-dbus.h>
 #include "ophonekitd-main.h"
 #include "ophonekitd-dbus.h"
-#include "ophonekitd-frameworkd.h"
-#include "ophonekitd-phonegui.h"
+#include "ophonekitd-fso.h"
 #include "ophonekitd-globals.h"
 
 
 
-static int running = TRUE;
 static int notify;
 
 int
@@ -39,6 +38,7 @@ main(int argc, char **argv)
 {
 	GError *error = NULL;
 	fd_set fdst;
+	FrameworkdHandler *fwHandler;
 
 	/* --- daemonize --- */
 	//close(STDIN_FILENO);
@@ -53,9 +53,6 @@ main(int argc, char **argv)
 	//setsid();
 	//setpgrp();
 
-	ophonekitd_argc = argc;
-	ophonekitd_argv = argv;
-
 	g_type_init();
 
 	/* init threading before accessing any glib functions ! */
@@ -63,49 +60,48 @@ main(int argc, char **argv)
 		g_thread_init(NULL);
 	dbus_g_thread_init();
 
+	GMainLoop *loop = g_main_loop_new(NULL, FALSE);
+
 	/* --- set up signal handling --- */
 	set_signals();
 
 	load_config();
 
-	notify = inotify_init();
-	inotify_add_watch(notify, FRAMEWORKD_PHONEGUI_CONFIG, IN_MODIFY);
+	/* setup dbus server part */
+	ophonekitd_dbus_setup();
 
-	phonegui_queue = g_async_queue_new();
+	/* initialize libframeworkd-glib */
+	g_debug("connect to frameworkd");
+	fwHandler = frameworkd_handler_new();
+	fwHandler->simAuthStatus = ophonekitd_sim_auth_status_handler;
+	fwHandler->simReadyStatus = ophonekitd_sim_ready_status_handler;
+	fwHandler->simIncomingStoredMessage =
+		ophonekitd_sim_incoming_stored_message_handler;
+	fwHandler->callCallStatus = ophonekitd_call_status_handler;
+	fwHandler->deviceIdleNotifierState =
+		ophonekitd_device_idle_notifier_state_handler;
+	fwHandler->incomingUssd = ophonekitd_incoming_ussd_handler;
+	fwHandler->usageResourceAvailable =
+		ophonekitd_resource_available_handler;
+	fwHandler->usageResourceChanged = ophonekitd_resource_changed_handler;
 
-	//if (!g_thread_create(ophonekitd_frameworkd_main, NULL,
-	//			FALSE, &error)) {
-	//	g_error("failed to create frameworkd thread");
-	//}
+	frameworkd_handler_connect(fwHandler);
+	g_debug("connected to the buses");
 
-	//if (!g_thread_create(ophonekitd_dbus_main, NULL,
-	//			FALSE, &error)) {
-	//	g_error("failed to create dbus thread");
-	//}
+	//notify = inotify_init();
+	//inotify_add_watch(notify, FRAMEWORKD_PHONEGUI_CONFIG, IN_MODIFY);
 
-	if (!g_thread_create(ophonekitd_phonegui_main, NULL,
-				FALSE, &error)) {
-		g_error("failed to create phonegui thread");
-	}
+	/* Start glib main loop and run list_resources() */
+	g_debug("entering glib main loop");
+	g_timeout_add(0, list_resources, NULL);
 
-	while (running) {
-		FD_ZERO(&fdst);
-		FD_SET(notify, &fdst);
-		switch (select(notify+1, &fdst, 0, 0, 0)) {
-		case -1:
-			g_debug("select failed with %s", strerror(errno));
-			break;
-		case 0:
-			g_debug("select gave 0");
-			break;
-		default:
-			if (FD_ISSET(notify, &fdst))
-				reload_config();
-			break;
-		}
-	}
+	g_main_loop_run(loop);
 
-	/* TODO: cleanup threads */
+	g_debug("finished mainloop");
+//	if (incoming_calls)
+//		free(incoming_calls);
+//	if (outgoing_calls)
+//		free(outgoing_calls);
 
 	exit(EXIT_SUCCESS);
 }
@@ -167,7 +163,7 @@ set_signals()
 static void
 sig_term(int i)
 {
-	running = 0;
+//	running = 0;
 }
 
 

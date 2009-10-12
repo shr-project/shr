@@ -36,5 +36,7 @@ AC_SUBST(GLIB_GENMARSHAL)
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/ophonekitd/Makefile
+src/phonegui/Makefile
 ])
 

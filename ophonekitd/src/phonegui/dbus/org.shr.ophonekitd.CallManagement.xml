@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/">
+  <interface name="org.shr.ophonekitd.CallManagement">
+    <method name="DisplayIncoming">
+	    <arg type="i" name="call_id" direction="in"/>
+	    <arg type="i" name="status" direction="in"/>
+	    <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="HideIncoming">
+      <arg type="i" name="call_id" direction="in"/>
+    </method>
+    <method name="DisplayOutgoing">
+	    <arg type="i" name="call_id" direction="in"/>
+	    <arg type="i" name="status" direction="in"/>
+	    <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="HideOutgoing">
+      <arg type="i" name="call_id" direction="in"/>
+    </method>
+  </interface>
+</node>

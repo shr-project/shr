@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/">
+  <interface name="org.shr.ophonekitd.Contacts">
+    <method name="DisplayList">
+	    <!--<arg type="a{sv}" name="filter" direction="in"/> -->
+    </method>
+    <method name="DisplayItem">
+      <arg type="s" name="path" direction="in"/>
+    </method>
+    <method name="CreateContact">
+      <arg type="a{sv}" name="values" direction="in"/>
+      <arg type="s" name="path" direction="out"/>
+    </method>
+    <method name="EditContact">
+      <arg type="s" name="path" direction="in"/>
+    </method>
+  </interface>
+</node>

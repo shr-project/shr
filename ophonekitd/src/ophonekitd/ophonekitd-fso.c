@@ -18,8 +18,8 @@
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
-#include "ophonekitd-frameworkd.h"
-#include "ophonekitd-phonegui.h"
+#include "ophonekitd-phonegui-dbus.h"
+#include "ophonekitd-fso.h"
 #include "ophonekitd-globals.h"
 
 typedef struct {
@@ -36,58 +36,10 @@ static int incoming_calls_size = 0;
 static int outgoing_calls_size = 0;
 
 
-
-void *
-ophonekitd_frameworkd_main(void *_data)
-{
-	GMainContext *ctx = NULL;
-	GMainLoop *loop = NULL;
-
-	FrameworkdHandler *fwHandler;
-
-	g_debug("[fso] starting frameworkd thread");
-
-	ctx = g_main_context_new();
-	//g_main_context_push_thread_default(ctx);
-	loop = g_main_loop_new(ctx, FALSE);
-
-	/* Register dbus handlers */
-	g_debug("[fso] connect to frameworkd");
-	fwHandler = frameworkd_handler_new();
-	fwHandler->simAuthStatus = ophonekitd_sim_auth_status_handler;
-	fwHandler->simReadyStatus = ophonekitd_sim_ready_status_handler;
-	fwHandler->simIncomingStoredMessage =
-		ophonekitd_sim_incoming_stored_message_handler;
-	fwHandler->callCallStatus = ophonekitd_call_status_handler;
-	fwHandler->deviceIdleNotifierState =
-		ophonekitd_device_idle_notifier_state_handler;
-	fwHandler->incomingUssd = ophonekitd_incoming_ussd_handler;
-	fwHandler->usageResourceAvailable =
-		ophonekitd_resource_available_handler;
-	fwHandler->usageResourceChanged = ophonekitd_resource_changed_handler;
-
-
-	DBusGConnection *bus = frameworkd_handler_connect(fwHandler);
-	dbus_connection_setup_with_g_main(
-			dbus_g_connection_get_connection(bus), loop);
-	g_debug("[fso] connected to the buses");
-
-	/* Start glib main loop and run list_resources() */
-	g_debug("[fso] entering frameworkd glib main loop");
-	g_timeout_add(0, list_resources, NULL);
-	g_main_loop_run(loop);
-
-	g_debug("[fso] finished mainloop");
-	if (incoming_calls)
-		free(incoming_calls);
-	if (outgoing_calls)
-		free(outgoing_calls);
-}
-
 void
 ophonekitd_call_add(call_t ** calls, int *size, int id)
 {
-	g_debug("[fso] ophonekitd_call_add(%d)", id);
+	g_debug("ophonekitd_call_add(%d)", id);
 	(*size)++;
 	if (*size == 1)
 		*calls = malloc(sizeof(call_t));
@@ -100,7 +52,7 @@ int
 ophonekitd_call_check(call_t * calls, int *size, int id)
 {
 	int i;
-	g_debug("[fso] ophonekitd_call_check(%d)", id);
+	g_debug("ophonekitd_call_check(%d)", id);
 	for (i = 0; i < (*size); i++) {
 		if (calls[i].id == id)
 			return i;
@@ -111,7 +63,7 @@ ophonekitd_call_check(call_t * calls, int *size, int id)
 void
 ophonekitd_call_remove(call_t ** calls, int *size, int id)
 {
-	g_debug("[fso] ophonekitd_call_remove(%d)", id);
+	g_debug("ophonekitd_call_remove(%d)", id);
 	if (*size == 1) {
 		free(*calls);
 		(*size)--;
@@ -137,20 +89,20 @@ ophonekitd_device_idle_notifier_power_state_handler(GError * error,
 						    const int status,
 						    gpointer userdata)
 {
-	g_debug("[fso] power status: %d", status);
+	g_debug("power status: %d", status);
 	if (incoming_calls_size == 0 && outgoing_calls_size == 0
 	    && error == NULL && status != DEVICE_POWER_STATE_CHARGING
 	    && status != DEVICE_POWER_STATE_FULL) {
 
 		ousaged_suspend(NULL, NULL);
-		g_debug("[fso] Suspend !");
+		g_debug("Suspend !");
 	}
 }
 
 void
 ophonekitd_device_idle_notifier_state_handler(const int state)
 {
-	g_debug("[fso] idle notifier state handler called, id %d", state);
+	g_debug("idle notifier state handler called, id %d", state);
 
 	if (state == DEVICE_IDLE_STATE_SUSPEND) {
 		odeviced_power_supply_get_power_status
@@ -163,7 +115,7 @@ void
 ophonekitd_call_status_handler(const int call_id, const int status,
 			       GHashTable * properties)
 {
-	g_debug("[fso] call status handler called, id: %d, status: %d", call_id,
+	g_debug("call status handler called, id: %d, status: %d", call_id,
 		status);
 
 	GValue *peerNumber = g_hash_table_lookup(properties, "peer");
@@ -191,41 +143,39 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 
 	switch (status) {
 		case CALL_STATUS_INCOMING:
-			g_debug("[fso] incoming call");
+			g_debug("incoming call");
 			if (ophonekitd_call_check
 			    (incoming_calls, &incoming_calls_size,
 			     call_id) == -1) {
 				ophonekitd_call_add(&incoming_calls,
 						    &incoming_calls_size,
 						    call_id);
-				ophonekitd_phonegui_call_command(
-						INCOMING_CALL_SHOW, call_id,
-						status, number);
+				phonegui_call_management_show_incoming(
+						call_id, status, number);
 			}
 			break;
 		case CALL_STATUS_OUTGOING:
-			g_debug("[fso] outgoing call");
+			g_debug("outgoing call");
 			if (ophonekitd_call_check
 			    (outgoing_calls, &outgoing_calls_size,
 			     call_id) == -1) {
 				ophonekitd_call_add(&outgoing_calls,
 						    &outgoing_calls_size,
 						    call_id);
-				ophonekitd_phonegui_call_command(
-						OUTGOING_CALL_SHOW, call_id,
-						status, number);
+				phonegui_call_management_show_outgoing(
+						call_id, status, number);
 			}
 			break;
 		case CALL_STATUS_RELEASE:
-			g_debug("[fso] release call");
+			g_debug("release call");
 			if (ophonekitd_call_check
 			    (incoming_calls, &incoming_calls_size,
 			     call_id) != -1) {
 				ophonekitd_call_remove(&incoming_calls,
 						       &incoming_calls_size,
 						       call_id);
-				ophonekitd_phonegui_command(INCOMING_CALL_HIDE,
-						GINT_TO_POINTER(call_id));
+				phonegui_call_management_hide_incoming(
+						call_id);
 			}
 			if (ophonekitd_call_check
 			    (outgoing_calls, &outgoing_calls_size,
@@ -233,18 +183,18 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 				ophonekitd_call_remove(&outgoing_calls,
 						       &outgoing_calls_size,
 						       call_id);
-				ophonekitd_phonegui_command(OUTGOING_CALL_HIDE,
-						GINT_TO_POINTER(call_id));
+				phonegui_call_management_hide_outgoing(
+						call_id);
 			}
 			break;
 		case CALL_STATUS_HELD:
-			g_debug("[fso] held call");
+			g_debug("held call");
 			break;
 		case CALL_STATUS_ACTIVE:
-			g_debug("[fso] active call");
+			g_debug("active call");
 			break;
 		default:
-			g_debug("[fso] Unknown CallStatus");
+			g_debug("Unknown CallStatus");
 			break;
 	}
 }
@@ -253,23 +203,21 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 void
 ophonekitd_sim_auth_status_handler(const int status)
 {
-	g_debug("[fso] ophonekitd_sim_auth_status_handler()");
+	g_debug("ophonekitd_sim_auth_status_handler()");
 	if (status == SIM_READY) {
-		g_debug("[fso] sim auth ready");
+		g_debug("sim auth ready");
 
 		if (sim_auth_active) {
 			sim_auth_active = FALSE;
-			ophonekitd_phonegui_command(SIM_AUTH_HIDE, 
-					GINT_TO_POINTER(status));
+			phonegui_dialogs_hide_sim_auth(status);
 		}
 		power_up_antenna();
 	}
 	else {
-		g_debug("[fso] sim not ready");
+		g_debug("sim not ready");
 		if (!sim_auth_active) {
 			sim_auth_active = TRUE;
-			ophonekitd_phonegui_command(SIM_AUTH_SHOW,
-					GINT_TO_POINTER(status));
+			phonegui_dialogs_show_sim_auth(status);
 		}
 	}
 }
@@ -277,7 +225,7 @@ ophonekitd_sim_auth_status_handler(const int status)
 void
 sim_ready_actions(void)
 {
-	g_debug("[fso] sim ready");
+	g_debug("sim ready");
 	sim_ready = TRUE;
 	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
@@ -287,7 +235,7 @@ sim_ready_actions(void)
 void
 ophonekitd_sim_ready_status_handler(gboolean status)
 {
-	g_debug("[fso] ophonekitd_sim_ready_status_handler()");
+	g_debug("ophonekitd_sim_ready_status_handler()");
 	if (status)
 		sim_ready_actions();
 }
@@ -296,10 +244,9 @@ ophonekitd_sim_ready_status_handler(gboolean status)
 void
 ophonekitd_sim_incoming_stored_message_handler(const int id)
 {
-	g_debug("[fso] ophonekitd_sim_incoming_stored_message_handler()");
+	g_debug("ophonekitd_sim_incoming_stored_message_handler()");
 	if (show_incoming_sms == TRUE) {
-		ophonekitd_phonegui_command(MESSAGE_SHOW,
-			GINT_TO_POINTER(id));
+		phonegui_messages_display_item(id);
 	}
 	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
@@ -307,9 +254,9 @@ ophonekitd_sim_incoming_stored_message_handler(const int id)
 void
 ophonekitd_incoming_ussd_handler(int mode, const char *message)
 {
-	g_debug("[fso] ophonekitd_incoming_ussd_handler(mode=%d, message=%s)", mode,
+	g_debug("ophonekitd_incoming_ussd_handler(mode=%d, message=%s)", mode,
 		message);
-	ophonekitd_phonegui_ussd_command(mode, message);
+	phonegui_dialogs_show_ussd(mode, message);
 }
 
 
@@ -318,7 +265,7 @@ ophonekitd_incoming_ussd_handler(int mode, const char *message)
 gboolean
 list_resources()
 {
-	g_debug("[fso] list_resources()");
+	g_debug("list_resources()");
 	if (!gsm_available)
 		ousaged_list_resources(list_resources_callback, NULL);
 	return FALSE;
@@ -327,11 +274,11 @@ list_resources()
 void
 list_resources_callback(GError * error, char **resources, gpointer userdata)
 {
-	g_debug("[fso] list_resources_callback()");
+	g_debug("list_resources_callback()");
 	if (error == NULL) {
 		int i = 0;
 		while (resources[i] != NULL) {
-			g_debug("[fso] Resource %s available", resources[i]);
+			g_debug("Resource %s available", resources[i]);
 			if (!strcmp(resources[i], "GSM")) {
 				gsm_available = TRUE;
 				break;
@@ -340,7 +287,7 @@ list_resources_callback(GError * error, char **resources, gpointer userdata)
 		}
 
 		if (gsm_available) {
-			g_debug("[fso] Request GSM resource");
+			g_debug("Request GSM resource");
 			ousaged_request_resource("GSM",
 						 request_resource_callback,
 						 NULL);
@@ -352,11 +299,11 @@ list_resources_callback(GError * error, char **resources, gpointer userdata)
 						  FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)
 		) {
 
-		g_debug("[fso] dbus not available, try again in 5s");
+		g_debug("dbus not available, try again in 5s");
 		g_timeout_add(5000, list_resources, NULL);
 	}
 	else {
-		g_debug("[fso] Unknown error, try again in 10s");
+		g_debug("Unknown error, try again in 10s");
 		g_timeout_add(10000, list_resources, NULL);
 	}
 }
@@ -364,7 +311,7 @@ list_resources_callback(GError * error, char **resources, gpointer userdata)
 gboolean
 power_up_antenna()
 {
-	g_debug("[fso] call ogsmd_device_set_antenna_power()");
+	g_debug("call ogsmd_device_set_antenna_power()");
 	ogsmd_device_set_antenna_power(TRUE, power_up_antenna_callback, NULL);
 	return FALSE;
 }
@@ -372,7 +319,7 @@ power_up_antenna()
 void
 request_resource_callback(GError * error, gpointer userdata)
 {
-	g_debug("[fso] request_resource_callback()");
+	g_debug("request_resource_callback()");
 
 	if (error == NULL) {
 		/* nothing to do when there is no error
@@ -385,13 +332,13 @@ request_resource_callback(GError * error, gpointer userdata)
 		 || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error,
 						  FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY))
 	{
-		g_debug("[fso] dbus not available, try again in 5s");
+		g_debug("dbus not available, try again in 5s");
 		g_timeout_add(5000, list_resources, NULL);
 	}
 	else {
 		/* FIXME: Remove this when frameworkd code is ready */
-		g_debug("[fso] request resource error, try again in 5s");
-		g_debug("[fso] error: %s %s %d", error->message,
+		g_debug("request resource error, try again in 5s");
+		g_debug("error: %s %s %d", error->message,
 			g_quark_to_string(error->domain), error->code);
 		g_timeout_add(5000, list_resources, NULL);
 	}
@@ -401,7 +348,7 @@ request_resource_callback(GError * error, gpointer userdata)
 void
 power_up_antenna_callback(GError * error, gpointer userdata)
 {
-	g_debug("[fso] power_up_antenna_callback()");
+	g_debug("power_up_antenna_callback()");
 	if (error != NULL) {
 		if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)) {
 			/*
@@ -416,8 +363,8 @@ power_up_antenna_callback(GError * error, gpointer userdata)
 		}
 		else if (IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
 			g_message("SIM card not present.");
-			ophonekitd_phonegui_command(DIALOG_SHOW,
-				GINT_TO_POINTER(PHONEGUI_DIALOG_SIM_NOT_PRESENT));
+			phonegui_dialogs_show_dialog(
+				PHONEGUI_DIALOG_SIM_NOT_PRESENT);
 			return;
 		}
 		else if (IS_RESOURCE_ERROR(error, RESOURCE_ERROR_NOT_ENABLED)) {
@@ -430,12 +377,12 @@ power_up_antenna_callback(GError * error, gpointer userdata)
 			 || IS_FRAMEWORKD_GLIB_DBUS_ERROR(error,
 							  FRAMEWORKD_GLIB_DBUS_ERROR_NO_REPLY)
 			) {
-			g_debug("[fso] dbus not available, try again in 5s");
+			g_debug("dbus not available, try again in 5s");
 			g_timeout_add(5000, power_up_antenna, NULL);
 			return;
 		}
 		else {
-			g_debug("[fso] Unknown error: %s %s %d", error->message,
+			g_debug("Unknown error: %s %s %d", error->message,
 				g_quark_to_string(error->domain), error->code);
 			g_timeout_add(5000, power_up_antenna, NULL);
 			return;
@@ -448,20 +395,18 @@ power_up_antenna_callback(GError * error, gpointer userdata)
 void
 sim_auth_status_callback(GError * error, int status, gpointer userdata)
 {
-	g_debug("[fso] sim_auth_status_callback()");
+	g_debug("sim_auth_status_callback()");
 
-	g_debug("[fso] sim_auth_active: %d", sim_auth_active);
+	g_debug("sim_auth_active: %d", sim_auth_active);
 	if (sim_auth_active) {
 		sim_auth_active = FALSE;
-		ophonekitd_phonegui_command(SIM_AUTH_HIDE,
-			GINT_TO_POINTER(status));
+		phonegui_dialogs_hide_sim_auth(status);
 	}
 
 	if (status != SIM_READY) {
 		if (!sim_auth_active) {
 			sim_auth_active = TRUE;
-			ophonekitd_phonegui_command(SIM_AUTH_SHOW,
-				GINT_TO_POINTER(status));
+			phonegui_dialogs_show_sim_auth(status);
 		}
 		return;
 	}
@@ -477,12 +422,12 @@ sim_ready_status_callback(GError * error, gboolean status, gpointer userdata)
 		return;
 
 	if (error) {
-		g_debug("[fso] GetSimReady failed: %s %s %d", error->message,
+		g_debug("GetSimReady failed: %s %s %d", error->message,
 			g_quark_to_string(error->domain), error->code);
 		return;
 	}
 
-	g_debug("[fso] sim_ready_status_callback(status=%d)", status);
+	g_debug("sim_ready_status_callback(status=%d)", status);
 	if (status)
 		sim_ready_actions();
 }
@@ -492,12 +437,12 @@ sim_ready_status_callback(GError * error, gboolean status, gpointer userdata)
 void
 register_to_network_callback(GError * error, gpointer userdata)
 {
-	g_debug("[fso] register_to_network_callback()");
+	g_debug("register_to_network_callback()");
 	if (error == NULL) {
 		/* Antenna works, registered to network */
 	}
 	else {
-		g_debug("[fso] Registering to network failed: %s %s %d",
+		g_debug("Registering to network failed: %s %s %d",
 			error->message, g_quark_to_string(error->domain),
 			error->code);
 		/* FIXME */
@@ -508,7 +453,7 @@ void
 get_messagebook_info_callback(GError * error, GHashTable * info,
 			      gpointer userdata)
 {
-	g_debug("[fso] get_messagebook_info_callback()");
+	g_debug("get_messagebook_info_callback()");
 	if (error == NULL && info != NULL) {
 		gpointer p = NULL;
 		int first = 0, last = 0, used = 0, total = 0;
@@ -516,31 +461,31 @@ get_messagebook_info_callback(GError * error, GHashTable * info,
 		if ((p = g_hash_table_lookup(info, "first")) != NULL)
 			first = g_value_get_int(p);
 		else
-			g_debug("[fso] get_messagebok_info_callback(): No value for \"first\"");
+			g_debug("get_messagebok_info_callback(): No value for \"first\"");
 
 		if ((p = g_hash_table_lookup(info, "last")) != NULL)
 			last = g_value_get_int(p);
 		else
-			g_debug("[fso] get_messagebok_info_callback(): No value for \"last\"");
+			g_debug("get_messagebok_info_callback(): No value for \"last\"");
 
 		if ((p = g_hash_table_lookup(info, "used")) != NULL)
 			used = g_value_get_int(p);
 		else
-			g_debug("[fso] get_messagebok_info_callback(): No value for \"used\"");
+			g_debug("get_messagebok_info_callback(): No value for \"used\"");
 
 		total = last - first + 1;
-		g_debug("[fso] messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
+		g_debug("messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
 		if (used == total) {
-			ophonekitd_phonegui_command(DIALOG_SHOW,
-				GINT_TO_POINTER(PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL));
+			phonegui_dialogs_show_dialog(
+					PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL);
 		}
 	}
 	else {
-		g_debug("[fso] MessageBookInfo failed: %s %s %d", error->message,
+		g_debug("MessageBookInfo failed: %s %s %d", error->message,
 			g_quark_to_string(error->domain), error->code);
 		/* TODO */
 	}
-	g_debug("[fso] get_messagebook_info_callback done");
+	g_debug("get_messagebook_info_callback done");
 }
 
 
@@ -548,13 +493,13 @@ get_messagebook_info_callback(GError * error, GHashTable * info,
 void
 ophonekitd_resource_available_handler(const char *name, gboolean availability)
 {
-	g_debug("[fso] resource %s is now %s", name,
+	g_debug("resource %s is now %s", name,
 		availability ? "available" : "vanished");
 	if (strcmp(name, "GSM") == 0) {
 		if (gsm_available ^ availability) {
 			gsm_available = availability;
 			if (gsm_available) {
-				g_debug("[fso] Request GSM resource");
+				g_debug("Request GSM resource");
 				ousaged_request_resource("GSM",
 							 request_resource_callback,
 							 NULL);
@@ -569,13 +514,13 @@ ophonekitd_resource_changed_handler(const char *name, gboolean state,
 				    GHashTable * attributes)
 {
 	gpointer p = NULL;
-	g_debug("[fso] resource %s is now %s", name, state ? "enabled" : "disabled");
+	g_debug("resource %s is now %s", name, state ? "enabled" : "disabled");
 	p = g_hash_table_lookup(attributes, "policy");
 	if (p)
-		g_debug("[fso]    policy:   %d", g_value_get_int(p));
+		g_debug("   policy:   %d", g_value_get_int(p));
 	p = g_hash_table_lookup(attributes, "refcount");
 	if (p)
-		g_debug("[fso]    refcount: %d", g_value_get_int(p));
+		g_debug("   refcount: %d", g_value_get_int(p));
 
 	if (strcmp(name, "GSM") == 0) {
 		/* check if state actually really changed for GSM */

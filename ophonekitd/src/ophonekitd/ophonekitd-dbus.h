@@ -18,6 +18,6 @@
 #ifndef _OPHONEKITD_DBUS_H
 #define _OPHONEKITD_DBUS_H
 
-void *ophonekitd_dbus_main(void *_data);
+void ophonekitd_dbus_setup();
 
 #endif
