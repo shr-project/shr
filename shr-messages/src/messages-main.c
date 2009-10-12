@@ -14,17 +14,45 @@
  *  GNU Lesser Public License for more details.
  */
 
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <dbus/dbus-glib.h>
 
 int
 main(int argc, char **argv)
 {
-	/* Load, connect and initiate phonegui */
-	phonegui_load("shr-messages");
-	phonegui_init(argc, argv, NULL);
+	GError *error = NULL;
+	DBusGConnection *bus;
+	DBusGProxy *proxy;
 
-	phonegui_messages_show();
+	g_type_init();
 
-	return 0;
+	bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
+	if (bus == NULL) {
+		g_printerr ("Failed to open connection to bus: %s\n",
+			error->message);
+		g_error_free (error);
+		return (1);
+	}
+
+	proxy = dbus_g_proxy_new_for_name (bus,
+			"org.shr.ophonekitd.Messages",
+			"/org/shr/ophonekitd/Messages",
+			"org.shr.ophonekitd.Messages");
+
+	if (!dbus_g_proxy_call (proxy, "DisplayList", &error,
+				G_TYPE_INVALID, G_TYPE_INVALID)) {
+		if (error->domain == DBUS_GERROR &&
+			error->code == DBUS_GERROR_REMOTE_EXCEPTION) {
+			g_printerr ("Caught remote method exception %s: %s",
+				dbus_g_error_get_name (error),
+				error->message);
+		}
+		else {
+			g_printerr ("Error: %s\n", error->message);
+		}
+		g_error_free (error);
+		return (1);
+	}
+
+	return (0);
 }
 
