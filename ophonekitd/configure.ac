@@ -1,7 +1,7 @@
 # get rid of that stupid cache mechanism
 rm -f config.cache
 
-AC_INIT(ophonekitd, 0.1, http://www.openmoko.org/)
+AC_INIT(ophonekitd, 0.1, http://shr-project.org/)
 AC_PREREQ(2.52)
 AC_CONFIG_SRCDIR(configure.ac)
 AC_ISC_POSIX
@@ -37,6 +37,6 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 src/ophonekitd/Makefile
-src/phonegui/Makefile
+src/phoneuid/Makefile
 ])
 

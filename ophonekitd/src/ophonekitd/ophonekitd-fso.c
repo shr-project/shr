@@ -18,7 +18,7 @@
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-powersupply.h>
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
-#include "ophonekitd-phonegui-dbus.h"
+#include "ophonekitd-phoneuid-dbus.h"
 #include "ophonekitd-fso.h"
 #include "ophonekitd-globals.h"
 
@@ -150,7 +150,7 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 				ophonekitd_call_add(&incoming_calls,
 						    &incoming_calls_size,
 						    call_id);
-				phonegui_call_management_show_incoming(
+				phoneuid_call_management_show_incoming(
 						call_id, status, number);
 			}
 			break;
@@ -162,7 +162,7 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 				ophonekitd_call_add(&outgoing_calls,
 						    &outgoing_calls_size,
 						    call_id);
-				phonegui_call_management_show_outgoing(
+				phoneuid_call_management_show_outgoing(
 						call_id, status, number);
 			}
 			break;
@@ -174,7 +174,7 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 				ophonekitd_call_remove(&incoming_calls,
 						       &incoming_calls_size,
 						       call_id);
-				phonegui_call_management_hide_incoming(
+				phoneuid_call_management_hide_incoming(
 						call_id);
 			}
 			if (ophonekitd_call_check
@@ -183,7 +183,7 @@ ophonekitd_call_status_handler(const int call_id, const int status,
 				ophonekitd_call_remove(&outgoing_calls,
 						       &outgoing_calls_size,
 						       call_id);
-				phonegui_call_management_hide_outgoing(
+				phoneuid_call_management_hide_outgoing(
 						call_id);
 			}
 			break;
@@ -209,7 +209,7 @@ ophonekitd_sim_auth_status_handler(const int status)
 
 		if (sim_auth_active) {
 			sim_auth_active = FALSE;
-			phonegui_dialogs_hide_sim_auth(status);
+			phoneuid_dialogs_hide_sim_auth(status);
 		}
 		power_up_antenna();
 	}
@@ -217,7 +217,7 @@ ophonekitd_sim_auth_status_handler(const int status)
 		g_debug("sim not ready");
 		if (!sim_auth_active) {
 			sim_auth_active = TRUE;
-			phonegui_dialogs_show_sim_auth(status);
+			phoneuid_dialogs_show_sim_auth(status);
 		}
 	}
 }
@@ -246,7 +246,7 @@ ophonekitd_sim_incoming_stored_message_handler(const int id)
 {
 	g_debug("ophonekitd_sim_incoming_stored_message_handler()");
 	if (show_incoming_sms == TRUE) {
-		phonegui_messages_display_item(id);
+		phoneuid_messages_display_item(id);
 	}
 	ogsmd_sim_get_messagebook_info(get_messagebook_info_callback, NULL);
 }
@@ -256,7 +256,7 @@ ophonekitd_incoming_ussd_handler(int mode, const char *message)
 {
 	g_debug("ophonekitd_incoming_ussd_handler(mode=%d, message=%s)", mode,
 		message);
-	phonegui_dialogs_show_ussd(mode, message);
+	phoneuid_dialogs_show_ussd(mode, message);
 }
 
 
@@ -363,7 +363,7 @@ power_up_antenna_callback(GError * error, gpointer userdata)
 		}
 		else if (IS_SIM_ERROR(error, SIM_ERROR_NOT_PRESENT)) {
 			g_message("SIM card not present.");
-			phonegui_dialogs_show_dialog(
+			phoneuid_dialogs_show_dialog(
 				PHONEGUI_DIALOG_SIM_NOT_PRESENT);
 			return;
 		}
@@ -400,13 +400,13 @@ sim_auth_status_callback(GError * error, int status, gpointer userdata)
 	g_debug("sim_auth_active: %d", sim_auth_active);
 	if (sim_auth_active) {
 		sim_auth_active = FALSE;
-		phonegui_dialogs_hide_sim_auth(status);
+		phoneuid_dialogs_hide_sim_auth(status);
 	}
 
 	if (status != SIM_READY) {
 		if (!sim_auth_active) {
 			sim_auth_active = TRUE;
-			phonegui_dialogs_show_sim_auth(status);
+			phoneuid_dialogs_show_sim_auth(status);
 		}
 		return;
 	}
@@ -476,7 +476,7 @@ get_messagebook_info_callback(GError * error, GHashTable * info,
 		total = last - first + 1;
 		g_debug("messagebook info: first: %d, last %d, used: %d, total %d", first, last, used, total);
 		if (used == total) {
-			phonegui_dialogs_show_dialog(
+			phoneuid_dialogs_show_dialog(
 					PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL);
 		}
 	}

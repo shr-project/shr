@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT(openmoko-dialer, 3.0, http://www.openmoko.org/)
+AC_INIT(shr-dialer, 3.0, http://shr-project.org/)
 AM_INIT_AUTOMAKE()
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
@@ -10,21 +10,13 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
-dnl glib-genmarshal
-AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 # base deps
-PKG_CHECK_MODULES(DIALER, libframeworkd-glib)
-PKG_CHECK_MODULES(FRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
-PKG_CHECK_MODULES(GLIB, glib-2.0)
+PKG_CHECK_MODULES(DBUS, dbus-glib-1)
                                    
 
-AC_SUBST(DIALER_CFLAGS)
-AC_SUBST(DIALER_LIBS)
-AC_SUBST(FRAMEWORKD_GLIB_CFLAGS)
-AC_SUBST(FRAMEWORKD_GLIB_LIBS)
-AC_SUBST(FRAMEWORKD_PHONEGUI_CFLAGS)
-AC_SUBST(FRAMEWORKD_PHONEGUI_LIBS)
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
 
 
 # output stuff

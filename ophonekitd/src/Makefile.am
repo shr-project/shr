@@ -1,1 +1,1 @@
-SUBDIRS = ophonekitd phonegui
+SUBDIRS = ophonekitd phoneuid

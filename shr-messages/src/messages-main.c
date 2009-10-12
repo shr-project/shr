@@ -3,6 +3,7 @@
  *
  *  Authored by:
  *    quickdev
+ *    Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Public License as published by
@@ -34,9 +35,9 @@ main(int argc, char **argv)
 	}
 
 	proxy = dbus_g_proxy_new_for_name (bus,
-			"org.shr.ophonekitd.Messages",
-			"/org/shr/ophonekitd/Messages",
-			"org.shr.ophonekitd.Messages");
+			"org.shr.phoneuid.Messages",
+			"/org/shr/phoneuid/Messages",
+			"org.shr.phoneuid.Messages");
 
 	if (!dbus_g_proxy_call (proxy, "DisplayList", &error,
 				G_TYPE_INVALID, G_TYPE_INVALID)) {

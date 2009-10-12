@@ -21,8 +21,8 @@ ophonekitd_SOURCES = $(dbus_sources) \
 	ophonekitd-dbus.c \
 	ophonekitd-dbus.h \
 	ophonekitd-dbus-common.h \
-	ophonekitd-phonegui-dbus.c \
-	ophonekitd-phonegui-dbus.h
+	ophonekitd-phoneuid-dbus.c \
+	ophonekitd-phoneuid-dbus.h
 
 ophonekitd_CFLAGS = \
 	-DDATADIR=\"$(datadir)\" \
