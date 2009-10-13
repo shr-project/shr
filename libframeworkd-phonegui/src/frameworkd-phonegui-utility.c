@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <phone-utils.h>
-#include <phone-utils-gsm.h>
 #include <assert.h>
 #include <time.h>
 
