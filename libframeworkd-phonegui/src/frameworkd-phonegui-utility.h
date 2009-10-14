@@ -30,6 +30,12 @@ int phonegui_contact_lookup(const char *number,
 int phonegui_contact_delete(const char *path,
 				void (*name_callback) (GError *, char *, gpointer),
 				void *data);
+int phonegui_contact_update(const char *path,
+				GHashTable *data, void (*callback)(GError *, gpointer),
+				void* data);
+int phonegui_contact_add(const GHashTable *contact_data,
+			void (*callback)(GError*, char *, gpointer),
+			void* data);
 /* FIXME: rename to message send */
 int phonegui_sms_send(const char *message, GPtrArray * recipients,
 		void *callback1, void *callback2);

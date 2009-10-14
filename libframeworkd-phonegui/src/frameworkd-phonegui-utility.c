@@ -429,3 +429,21 @@ phonegui_message_delete(const char *path,
 	opimd_message_delete(path, callback, data);
 	return 0;
 }
+
+int
+phonegui_contact_update(const char *path,
+				GHashTable *contact_data,
+				void (*callback)(GError *, gpointer),
+				void* data)
+{
+	opimd_contact_update(path, contact_data, callback, data);
+	return 0;
+}
+
+int
+phonegui_contact_add(const GHashTable *contact_data,
+			void (*callback)(GError*, char *, gpointer),
+			void* data)
+{
+	opimd_contacts_add(contact_data, callback, data);
+}
