@@ -401,3 +401,12 @@ phonegui_contact_delete(const char *path,
 	opimd_contact_delete(path, callback, data);
 	return 0;
 }
+
+int
+phonegui_call_send_dtmf(const char *tones,
+				void (*callback)(GError *, gpointer),
+				void *data)
+{
+	ogsmd_call_send_dtmf(tones, callback, data);
+	return 0;
+}

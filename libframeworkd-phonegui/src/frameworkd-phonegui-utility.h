@@ -41,4 +41,8 @@ int phonegui_call_release(int call_id,
 int phonegui_call_activate(int call_id, 
 			void (*callback)(GError *, int id_call, gpointer),
 			gpointer userdata);
+int phonegui_call_send_dtmf(const char *tones,
+				void (*callback)(GError *, gpointer),
+				gpointer userdata);
+
 #endif
