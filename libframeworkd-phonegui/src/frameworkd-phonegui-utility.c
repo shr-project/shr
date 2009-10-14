@@ -114,7 +114,7 @@ _lookup_add_prefix(const char *_number)
 	return number;
 }
 
-void
+int
 phonegui_contact_lookup(const char *_number,
 			void (*name_callback) (GError *, char *, gpointer),
 			void *data)
@@ -123,7 +123,7 @@ phonegui_contact_lookup(const char *_number,
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	char *number = _lookup_add_prefix(_number);
 	if (!number) {
-		return;
+		return 1;
 	}
 
 	g_debug("Attempting to resolve name for: \"%s\"", number);
@@ -132,7 +132,7 @@ phonegui_contact_lookup(const char *_number,
 	GValue *value = _new_gvalue_string((number) ? number : _number);	/*  we prefer using number */
 	if (!value) {
 		free(number);
-		return;
+		return 1;
 	}
 	g_hash_table_insert(query, "Phone", value);
 
@@ -143,6 +143,7 @@ phonegui_contact_lookup(const char *_number,
 	if (number)
 		free(number);
 
+	return 0;
 }
 
 char *
@@ -389,5 +390,14 @@ phonegui_call_activate(int call_id,
 			gpointer userdata)
 {
 	ogsmd_call_activate(call_id, callback, userdata);
+	return 0;
+}
+
+int
+phonegui_contact_delete(const char *path,
+				void (*callback) (GError *, char *, gpointer),
+				void *data)
+{
+	opimd_contact_delete(path, callback, data);
 	return 0;
 }

@@ -24,9 +24,12 @@ void phonegui_destroy_contacts_cache();
 /* end of soon to be deleted */
 
 
-void phonegui_contact_lookup(const char *number,
+int phonegui_contact_lookup(const char *number,
 			     void (*name_callback) (GError *, char *, gpointer),
 			     void *data);
+int phonegui_contact_delete(const char *path,
+				void (*name_callback) (GError *, char *, gpointer),
+				void *data);
 int phonegui_sms_send(const char *message, GPtrArray * recipients,
 		void *callback1, void *callback2);
 int phonegui_call_initiate(const char *number,
