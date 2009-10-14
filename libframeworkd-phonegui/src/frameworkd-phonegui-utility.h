@@ -31,7 +31,7 @@ int phonegui_contact_delete(const char *path,
 				void (*name_callback) (GError *, char *, gpointer),
 				void *data);
 int phonegui_contact_update(const char *path,
-				GHashTable *data, void (*callback)(GError *, gpointer),
+				GHashTable *contact_data, void (*callback)(GError *, gpointer),
 				void* data);
 int phonegui_contact_add(const GHashTable *contact_data,
 			void (*callback)(GError*, char *, gpointer),
