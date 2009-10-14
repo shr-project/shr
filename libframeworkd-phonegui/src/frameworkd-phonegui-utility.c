@@ -9,6 +9,7 @@
 #include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-network.h>
 
 #include "frameworkd-phonegui-utility.h"
 
@@ -416,7 +417,7 @@ phonegui_network_send_ussd_request(char *request,
 				void (*callback)(GError *, gpointer),
 				void *data)
 {
-	ogsmd_network_send_ussd_request(request, callback, data;
+	ogsmd_network_send_ussd_request(request, callback, data);
 	return 0;
 }
 
