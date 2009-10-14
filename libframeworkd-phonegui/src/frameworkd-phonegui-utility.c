@@ -419,3 +419,12 @@ phonegui_network_send_ussd_request(char *request,
 	ogsmd_network_send_ussd_request(request, callback, data;
 	return 0;
 }
+
+int
+phonegui_message_delete(const char *path,
+				void (*callback)(GError *, gpointer),
+				void *data)
+{
+	opimd_message_delete(path, callback, data);
+	return 0;
+}
