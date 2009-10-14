@@ -45,4 +45,8 @@ int phonegui_call_send_dtmf(const char *tones,
 				void (*callback)(GError *, gpointer),
 				gpointer userdata);
 
+int phonegui_network_send_ussd_request(char *request,
+				void (*callback)(GError *, gpointer),
+				gpointer userdata);
+
 #endif

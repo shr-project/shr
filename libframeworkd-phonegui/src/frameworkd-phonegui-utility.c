@@ -410,3 +410,12 @@ phonegui_call_send_dtmf(const char *tones,
 	ogsmd_call_send_dtmf(tones, callback, data);
 	return 0;
 }
+
+int
+phonegui_network_send_ussd_request(char *request,
+				void (*callback)(GError *, gpointer),
+				void *data)
+{
+	ogsmd_network_send_ussd_request(request, callback, data;
+	return 0;
+}
