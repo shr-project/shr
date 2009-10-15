@@ -38,31 +38,20 @@ void phonegui_outgoing_call_hide(const int id);
 
 /* Contacts */
 void phonegui_contacts_show();
-void phonegui_contacts_hide();
 void phonegui_contacts_new_show(const char *name, const char *number);
-void phonegui_contacts_new_hide();
-
-/* Dialer */
-void phonegui_dialer_show();
-void phonegui_dialer_hide();
-
-/* Dialog */
-void phonegui_dialog_show(int type);
-void phonegui_dialog_hide();
 
 /* Messages */
 void phonegui_messages_show();
-void phonegui_messages_hide();
 void phonegui_messages_message_show(const int id);
-void phonegui_messages_message_hide();
 
-/* Sim auth */
+/* Dialer */
+void phonegui_dialer_show();
+
+/* Notifications */
+void phonegui_dialog_show(int type);
 void phonegui_sim_auth_show(const int status);
 void phonegui_sim_auth_hide(const int status);
-
-/* USSD */
 void phonegui_ussd_show(int mode, const char *message);
-void phonegui_ussd_hide();
 
 
 #endif
