@@ -22,12 +22,13 @@
 #include <frameworkd-glib/ousaged/frameworkd-glib-ousaged.h>
 #include "ophonekitd-dbus-usage.h"
 #include "ophonekitd-main.h"
-//#include "ophonekitd-usage-service-glue.h"
+#include "ophonekitd-globals.h"
 
 G_DEFINE_TYPE(OphonekitdUsageService, ophonekitd_usage_service, G_TYPE_OBJECT)
 
 
 int resources[OUSAGED_RESOURCE_COUNT];
+
 
 static void
 ophonekitd_usage_service_class_init(OphonekitdUsageServiceClass * klass)
@@ -49,6 +50,33 @@ ophonekitd_usage_service_new(void)
 {
 	return g_object_new(OPHONEKITD_TYPE_USAGE_SERVICE, NULL);
 }
+
+void
+ophonekitd_usage_service_register_ui_handler(OphonekitdUsageService *object,
+		const char *bus_path, DBusGMethodInvocation *context)
+{
+	GError *error = NULL;
+	/* only one handler is allowed ! */
+	//if (ui_handler_bus) {
+	//	GError *error = g_error_new(q_quark_from_sring("ophonekitd"),
+	//			USAGE_ERROR_HANDLER_ALREADY_REGISTERED,
+	//			"There is already a handler registered");
+	//	dbus_g_method_return_error(context, error);
+	//	return;
+	//}
+
+	g_debug("RegisterUiHandler %s", bus_path);
+	if (session_bus)
+		dbus_g_connection_unref(session_bus);
+	setenv("DBUS_SESSION_BUS_ADDRESS", bus_path);
+	session_bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+	if (error) {
+		g_debug("failed... %d %s", error->code, error->message);
+	}
+
+	dbus_g_method_return(context);
+}
+
 
 void
 ophonekitd_usage_get_resource_state_callback(GError * error, gboolean state,

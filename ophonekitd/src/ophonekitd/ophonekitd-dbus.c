@@ -51,6 +51,7 @@ ophonekitd_dbus_setup()
 	DBusGProxy *proxy;
 
 	g_debug("get on the bus");
+	session_bus = NULL;
 	system_bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
 	if (error) {
 		g_error("%d: %s", error->code, error->message);

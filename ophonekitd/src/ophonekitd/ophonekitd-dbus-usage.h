@@ -41,6 +41,9 @@ struct _OphonekitdUsageServiceClass {
 	GObjectClass parent;
 };
 
+void
+ophonekitd_usage_service_register_ui_handler(OphonekitdUsageService *object,
+		const char *bus_path, DBusGMethodInvocation *context);
 void ophonekitd_usage_service_get_resource_state(OphonekitdUsageService *
 						 object, const char *resource,
 						 DBusGMethodInvocation *

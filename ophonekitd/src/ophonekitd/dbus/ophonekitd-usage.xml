@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <node name="/org/shr/ophonekitd/Usage">
   <interface name="org.shr.ophonekitd.Usage">
+	  <method name="RegisterUiHandler">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value="true"/>
+		  <arg type="s" name="session_bus" direction="in"/>
+	  </method>
     <method name="RequestResource">
       <annotation name="org.freedesktop.DBus.GLib.Async" value="true"/>
       <arg type="s" name="resource" direction="in" />
