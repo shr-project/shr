@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/">
+  <interface name="org.shr.phoneuid.Dialogs">
+    <method name="DisplaySimAuth">
+      <arg type="i" name="status" direction="in"/>
+    </method>
+    <method name="HideSimAuth">
+      <arg type="i" name="status" direction="in"/>
+    </method>
+    <method name="DisplayUssd">
+      <arg type="i" name="mode" direction="in"/>
+      <arg type="s" name="message" direction="in"/>
+    </method>
+    <method name="DisplayDialog">
+      <arg type="i" name="dialog" direction="in"/>
+    </method>
+  </interface>
+</node>

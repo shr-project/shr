@@ -3,7 +3,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "phoneuid-call-management.h"
-#include "phoneuid.h"
 
 G_DEFINE_TYPE(PhoneuidCallManagementService, phoneuid_call_management_service, G_TYPE_OBJECT)
 

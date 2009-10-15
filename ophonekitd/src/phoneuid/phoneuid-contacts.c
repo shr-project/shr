@@ -2,7 +2,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "phoneuid-contacts.h"
-#include "phoneuid.h"
 
 G_DEFINE_TYPE(PhoneuidContactsService, phoneuid_contacts_service, G_TYPE_OBJECT)
 

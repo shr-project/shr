@@ -23,18 +23,17 @@ struct _PhoneuidDialogsServiceClass {
 };
 
 gboolean
-phoneuid_dialogs_service_display_list(PhoneuidDialogsService *object,
+phoneuid_dialogs_service_display_sim_auth(PhoneuidDialogsService *object,
 		GError **error);
 gboolean
-phoneuid_dialogs_service_display_item(PhoneuidDialogsService *object,
-		const char *contact_path, GError **error);
+phoneuid_dialogs_service_hide_sim_auth(PhoneuidDialogsService *object,
+		GError **error);
 gboolean
-phoneuid_dialogs_service_create_contact(PhoneuidDialogsService *object,
-		GHashTable *values, GError **error);
+phoneuid_dialogs_service_display_ussd(PhoneuidDialogsService *object,
+		const int mode, const char *message, GError **error);
 gboolean
-phoneuid_dialogs_service_edit_contact(PhoneuidDialogsService *object,
-		const char *contact_path, GError **error);
-
+phoneuid_dialogs_service_display_dialog(PhoneuidDialogsService *object,
+		const int dialog, GError **error);
 
 
 PhoneuidDialogsService *phoneuid_dialogs_service_new(void);
@@ -42,4 +41,3 @@ PhoneuidDialogsService *phoneuid_dialogs_service_new(void);
 
 
 #endif
-
