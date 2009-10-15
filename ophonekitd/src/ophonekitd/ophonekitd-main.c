@@ -125,7 +125,7 @@ main(int argc, char **argv)
 
 	/* Start glib main loop and run list_resources() */
 	g_debug("entering glib main loop");
-	g_timeout_add(0, list_resources, NULL);
+	g_timeout_add(0, ophonekitd_list_resources, NULL);
 
 	g_main_loop_run(loop);
 
