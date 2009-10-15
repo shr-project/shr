@@ -106,8 +106,8 @@ main(int argc, char **argv)
 	fwHandler = frameworkd_handler_new();
 	fwHandler->simAuthStatus = ophonekitd_sim_auth_status_handler;
 	fwHandler->simReadyStatus = ophonekitd_sim_ready_status_handler;
-	fwHandler->simIncomingStoredMessage =
-		ophonekitd_sim_incoming_stored_message_handler;
+	//fwHandler->simIncomingStoredMessage =
+	//	ophonekitd_sim_incoming_stored_message_handler;
 	fwHandler->callCallStatus = ophonekitd_call_status_handler;
 	fwHandler->deviceIdleNotifierState =
 		ophonekitd_device_idle_notifier_state_handler;
@@ -117,6 +117,7 @@ main(int argc, char **argv)
 		ophonekitd_resource_available_handler;
 	fwHandler->usageResourceChanged = ophonekitd_resource_changed_handler;
 	fwHandler->networkStatus = ophonekitd_network_status_handler;
+	fwHandler->pimIncomingMessage = ophonekitd_incoming_message_handler;
 
 	frameworkd_handler_connect(fwHandler);
 	g_debug("connected to the buses");

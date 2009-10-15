@@ -524,7 +524,6 @@ ophonekitd_sim_auth_status_handler(const int status)
 
 
 /* --- SimReady --- */
-
 void
 ophonekitd_sim_ready_status_handler(gboolean status)
 {
@@ -534,9 +533,18 @@ ophonekitd_sim_ready_status_handler(gboolean status)
 }
 
 
+/* --- IncomingMessage (opimd) --- */
+void
+ophonekitd_incoming_message_handler(char *message_path)
+{
+	g_debug("ophonekitd_incoming_message_handler()");
+	if (show_incoming_sms)
+		phoneuid_messages_display_item(message_path);
+	ogsmd_sim_get_messagebook_info(_get_messagebook_info_callback, NULL);
+}
+
 
 /* --- IncomingStoredMessage --- */
-
 void
 ophonekitd_sim_incoming_stored_message_handler(const int id)
 {
