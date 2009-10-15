@@ -28,7 +28,7 @@ main(int argc, char **argv)
 
 	g_type_init();
 
-	bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
+	bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 	if (bus == NULL) {
 		g_printerr ("Failed to open connection to bus: %s\n",
 			error->message);
@@ -37,12 +37,14 @@ main(int argc, char **argv)
 	}
 
 	proxy = dbus_g_proxy_new_for_name (bus,
-			"org.shr.phoneuid.Dialer",
+			"org.shr.phoneuid",
 			"/org/shr/phoneuid/Dialer",
 			"org.shr.phoneuid.Dialer");
 
+	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	if (!dbus_g_proxy_call (proxy, "Display", &error,
-				G_TYPE_INVALID, G_TYPE_INVALID)) {
+			dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE),
+			options, G_TYPE_INVALID, G_TYPE_INVALID)) {
 		if (error->domain == DBUS_GERROR &&
 			error->code == DBUS_GERROR_REMOTE_EXCEPTION) {
 			g_printerr ("Caught remote method exception %s: %s",
