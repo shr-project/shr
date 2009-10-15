@@ -94,7 +94,7 @@ main(int argc, char **argv)
 	GMainLoop *loop = g_main_loop_new(NULL, FALSE);
 
 	/* --- set up signal handling --- */
-	set_signals();
+	//set_signals();
 
 	load_config();
 
