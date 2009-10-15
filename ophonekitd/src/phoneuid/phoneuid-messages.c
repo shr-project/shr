@@ -2,7 +2,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "phoneuid-messages.h"
-#include "phoneuid.h"
 
 G_DEFINE_TYPE(PhoneuidMessagesService, phoneuid_messages_service, G_TYPE_OBJECT)
 
