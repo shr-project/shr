@@ -125,7 +125,6 @@ phonegui_load_backend(enum BackendType type)
 	else {
 		g_error("Loading failed. library not set.");
 	}
-	free(library);
 }
 
 void
@@ -233,7 +232,7 @@ _phonegui_init_backend(int argc, char **argv, void (*exit_cb) (),
 			enum BackendType type)
 {
 	void (*_phonegui_init) (int argc, char **argv, void (*exit_cb) ());
-	_phonegui_init = phonegui_get_function(backends[type].name, backends[type].library);
+	_phonegui_init = phonegui_get_function("phonegui_backend_init", backends[type].library);
 	if (_phonegui_init)
 		_phonegui_init(argc, argv, exit_cb);
 	else
