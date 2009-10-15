@@ -13,7 +13,7 @@
 
 #include "frameworkd-phonegui-utility.h"
 
-extern Settings *conf;
+GHashTable *contact_cache;
 
 static GValue *
 _new_gvalue_string(const char *value)
@@ -71,7 +71,7 @@ cache_phonebook_entry(GValueArray * entry, void *data)
 		strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
 	char *name =
 		strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
-	g_hash_table_insert(conf->contact_cache, number, name);
+	g_hash_table_insert(contact_cache, number, name);
 }
 
 
@@ -82,11 +82,11 @@ cache_phonebook_callback(GError * error, GPtrArray * contacts,
 	g_debug("cache_phonebook_callback called");
 	if (error == NULL && contacts != NULL) {
 		g_debug("creating contact_cache");
-		conf->contact_cache =
+		contact_cache =
 			g_hash_table_new_full(phone_number_hash,
 					      phone_utils_numbers_equal, free,
 					      free);
-		if (!conf->contact_cache) {
+		if (!contact_cache) {
 			g_warning("could not allocate contact cache");
 			return;
 		}
@@ -150,7 +150,7 @@ phonegui_contact_lookup(const char *_number,
 char *
 phonegui_contact_cache_lookup(char *number)
 {
-	if (conf->contact_cache == NULL)
+	if (contact_cache == NULL)
 		return (number);
 	g_debug("looking for '%s' in contacts_cache", number);
 	if (!number || !*number || !strcmp(number, "*****")) {
@@ -169,7 +169,7 @@ phonegui_contact_cache_lookup(char *number)
 		}
 	}
 
-	char *name = g_hash_table_lookup(conf->contact_cache, number);
+	char *name = g_hash_table_lookup(contact_cache, number);
 	if (name && *name) {
 		g_debug("found name '%s'", name);
 		return (name);
@@ -187,7 +187,7 @@ phonegui_init_contacts_cache()
 void
 phonegui_destroy_contacts_cache()
 {
-	g_hash_table_destroy(conf->contact_cache);
+	g_hash_table_destroy(contact_cache);
 }
 
 

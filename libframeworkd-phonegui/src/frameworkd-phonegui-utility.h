@@ -10,11 +10,6 @@ typedef enum {
 	PHONEGUI_DIALOG_SIM_NOT_PRESENT
 } PhoneguiDialogType;
 
-typedef struct {
-	gchar *library;
-	GHashTable *contact_cache;
-} Settings;
-
 gchar *phonegui_get_user_home_prefix();
 gchar *phonegui_get_user_home_code();
 /* soon to be deleted functions */
