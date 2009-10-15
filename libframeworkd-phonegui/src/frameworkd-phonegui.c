@@ -166,41 +166,23 @@ phonegui_connect()
 	_phonegui_contacts_show =
 		phonegui_get_function("phonegui_backend_contacts_show",
 					backends[BACKEND_CONTACTS].library);
-	_phonegui_contacts_hide =
-		phonegui_get_function("phonegui_backend_contacts_hide",
-					backends[BACKEND_CONTACTS].library);
 	_phonegui_contacts_new_show =
 		phonegui_get_function("phonegui_backend_contacts_new_show",
-					backends[BACKEND_CONTACTS].library);
-	_phonegui_contacts_new_hide =
-		phonegui_get_function("phonegui_backend_contacts_new_hide",
 					backends[BACKEND_CONTACTS].library);
 
 	_phonegui_dialer_show =
 		phonegui_get_function("phonegui_backend_dialer_show",
 					backends[BACKEND_DIALER].library);
-	_phonegui_dialer_hide =
-		phonegui_get_function("phonegui_backend_dialer_hide",
-					backends[BACKEND_DIALER].library);
 
 	_phonegui_dialog_show =
 		phonegui_get_function("phonegui_backend_dialog_show",
-					backends[BACKEND_NOTIFICATION].library);
-	_phonegui_dialog_hide =
-		phonegui_get_function("phonegui_backend_dialog_hide",
 					backends[BACKEND_NOTIFICATION].library);
 
 	_phonegui_messages_message_show =
 		phonegui_get_function("phonegui_backend_messages_message_show",
 					backends[BACKEND_MESSAGES].library);
-	_phonegui_messages_message_hide =
-		phonegui_get_function("phonegui_backend_messages_message_hide",
-					backends[BACKEND_MESSAGES].library);
 	_phonegui_messages_show =
 		phonegui_get_function("phonegui_backend_messages_show",
-					backends[BACKEND_MESSAGES].library);
-	_phonegui_messages_hide =
-		phonegui_get_function("phonegui_backend_messages_hide",
 					backends[BACKEND_MESSAGES].library);
 
 	_phonegui_sim_auth_show =
@@ -211,9 +193,6 @@ phonegui_connect()
 					backends[BACKEND_NOTIFICATION].library);
 	_phonegui_ussd_show =
 		phonegui_get_function("phonegui_backend_ussd_show",
-					backends[BACKEND_NOTIFICATION].library);
-	_phonegui_ussd_hide =
-		phonegui_get_function("phonegui_backend_ussd_hide",
 					backends[BACKEND_NOTIFICATION].library);
 }
 
@@ -317,66 +296,10 @@ phonegui_contacts_show()
 }
 
 void
-phonegui_contacts_hide()
-{
-	if (_phonegui_contacts_hide)
-		_phonegui_contacts_hide();
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-void
 phonegui_contacts_new_show(const char *name, const char *number)
 {
 	if (_phonegui_contacts_new_show)
 		_phonegui_contacts_new_show(name, number);
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-void
-phonegui_contacts_new_hide()
-{
-	if (_phonegui_contacts_new_hide)
-		_phonegui_contacts_new_hide();
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-/* Dialer */
-void
-phonegui_dialer_show()
-{
-	if (_phonegui_dialer_show)
-		_phonegui_dialer_show();
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-void
-phonegui_dialer_hide()
-{
-	if (_phonegui_dialer_hide)
-		_phonegui_dialer_hide();
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-/* Dialog */
-void
-phonegui_dialog_show(int type)
-{
-	if (_phonegui_dialog_show)
-		_phonegui_dialog_show(type);
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-void
-phonegui_dialog_hide()
-{
-	if (_phonegui_dialog_hide)
-		_phonegui_dialog_hide();
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
@@ -392,15 +315,6 @@ phonegui_messages_show()
 }
 
 void
-phonegui_messages_hide()
-{
-	if (_phonegui_messages_hide)
-		_phonegui_messages_hide();
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-void
 phonegui_messages_message_show(const int id)
 {
 	if (_phonegui_messages_message_show)
@@ -409,16 +323,26 @@ phonegui_messages_message_show(const int id)
 		g_debug("can't find function %s", __FUNCTION__);
 }
 
+/* Dialer */
 void
-phonegui_messages_message_hide()
+phonegui_dialer_show()
 {
-	if (_phonegui_messages_message_hide)
-		_phonegui_messages_message_hide();
+	if (_phonegui_dialer_show)
+		_phonegui_dialer_show();
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
 
-/* Sim auth */
+/* Notifications */
+void
+phonegui_dialog_show(int type)
+{
+	if (_phonegui_dialog_show)
+		_phonegui_dialog_show(type);
+	else
+		g_debug("can't find function %s", __FUNCTION__);
+}
+
 void
 phonegui_sim_auth_show(const int status)
 {
@@ -437,21 +361,11 @@ phonegui_sim_auth_hide(const int status)
 		g_debug("can't find function %s", __FUNCTION__);
 }
 
-/* USSD */
 void
 phonegui_ussd_show(int mode, const char *message)
 {
 	if (_phonegui_ussd_show)
 		_phonegui_ussd_show(mode, message);
-	else
-		g_debug("can't find function %s", __FUNCTION__);
-}
-
-void
-phonegui_ussd_hide()
-{
-	if (_phonegui_ussd_hide)
-		_phonegui_ussd_hide();
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
