@@ -369,6 +369,7 @@ phonegui_call_initiate(const char *number,
 			void (*callback)(GError *, int id_call, gpointer),
 			gpointer userdata)
 {
+	g_debug("Inititating a call to %s\n", number);
 	ogsmd_call_initiate(number, "voice", callback, userdata);
 	return 0;
 }
