@@ -243,10 +243,15 @@ _phonegui_init_backend(int argc, char **argv, void (*exit_cb) (),
 void
 phonegui_init(int argc, char **argv, void (*exit_cb) ())
 {
+#if 0
 	int i;
 	for (i = 0 ; i < BACKEND_NO ; i++) {
 		_phonegui_init_backend(argc, argv, exit_cb, i);
 	}
+#else
+	/* FIXME: until we add support for threads, initialize only one */
+	_phonegui_init_backend(argc, argv, exit_cb, BACKEND_CALLS);
+#endif
 }
 
 /* Calls */
