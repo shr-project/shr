@@ -22,7 +22,7 @@
 #define FRAMEWORKD_PHONEGUI_CONFIG "@SYSCONFDIR@/frameworkd-phonegui.conf"
 
 void phonegui_load(const char *application_name);
-void *phonegui_get_function(const char *function_name);
+void *phonegui_get_function(const char *name, void *phonegui_library);
 
 /* Implementation prototypes */
 void phonegui_init(int argc, char **argv, void (*exit_cb) ());
