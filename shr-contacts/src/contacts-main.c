@@ -27,7 +27,7 @@ main(int argc, char **argv)
 
 	g_type_init();
 
-	bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &error);
+	bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 	if (bus == NULL) {
 		g_printerr ("Failed to open connection to bus: %s\n",
 			error->message);
@@ -36,7 +36,7 @@ main(int argc, char **argv)
 	}
 
 	proxy = dbus_g_proxy_new_for_name (bus,
-			"org.shr.phoneuid.Contacts",
+			"org.shr.phoneuid",
 			"/org/shr/phoneuid/Contacts",
 			"org.shr.phoneuid.Contacts");
 
