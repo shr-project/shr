@@ -121,7 +121,16 @@ load_config()
 	    (keyfile, FRAMEWORKD_PHONEGUI_CONFIG, flags, &error)) {
 		show_incoming_sms =
 			g_key_file_get_boolean(keyfile, "phonegui",
-					       "show_incoming_sms", NULL);
+				       "show_incoming_sms", NULL);
+		gsm_reregister_timeout =
+			g_key_file_get_integer(keyfile, "ophonekitd",
+					"reregister_timeout", NULL);
+		/* ensure a sane value for the timeout... minimum is 60s */
+		if (gsm_reregister_timeout < MINIMUM_GSM_REREGISTER_TIMEOUT) {
+			g_message("invalid reregister_timeout - setting to %ds",
+					MINIMUM_GSM_REREGISTER_TIMEOUT);
+			gsm_reregister_timeout = MINIMUM_GSM_REREGISTER_TIMEOUT;
+		}
 		g_debug("Configuration file read");
 	}
 	else {

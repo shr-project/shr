@@ -22,6 +22,8 @@
 #include <dbus/dbus-glib.h>
 #include <frameworkd-phonegui/frameworkd-phonegui.h>
 
+#define MINIMUM_GSM_REREGISTER_TIMEOUT 60
+
 int main(int argc, char **argv);
 
 static void
