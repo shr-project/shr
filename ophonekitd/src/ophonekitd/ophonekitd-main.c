@@ -122,7 +122,7 @@ main(int argc, char **argv)
 	g_debug("connected to the buses");
 
 	//notify = inotify_init();
-	//inotify_add_watch(notify, FRAMEWORKD_PHONEGUI_CONFIG, IN_MODIFY);
+	//inotify_add_watch(notify, OPHONEKITD_CONFIG, IN_MODIFY);
 
 	/* Start glib main loop and run list_resources() */
 	g_debug("entering glib main loop");
@@ -151,7 +151,7 @@ load_config()
 	keyfile = g_key_file_new();
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
 	if (g_key_file_load_from_file
-	    (keyfile, FRAMEWORKD_PHONEGUI_CONFIG, flags, &error)) {
+	    (keyfile, OPHONEKITD_CONFIG, flags, &error)) {
 		show_incoming_sms =
 			g_key_file_get_boolean(keyfile, "phonegui",
 				       "show_incoming_sms", NULL);

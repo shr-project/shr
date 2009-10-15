@@ -27,6 +27,7 @@ ophonekitd_SOURCES = $(dbus_sources) \
 ophonekitd_CFLAGS = \
 	-DDATADIR=\"$(datadir)\" \
 	-DPKGDATADIR=\"$(pkgdatadir)\" \
+	-DOPHONEKITD_CONFIG=\"$(sysconfdir)/ophonekitd.conf\" \
 	@DBUS_GLIB_CFLAGS@ \
 	@DBUS_CFLAGS@ \
 	@FRAMEWORKD_GLIB_CFLAGS@ \
