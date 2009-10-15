@@ -116,6 +116,7 @@ main(int argc, char **argv)
 	fwHandler->usageResourceAvailable =
 		ophonekitd_resource_available_handler;
 	fwHandler->usageResourceChanged = ophonekitd_resource_changed_handler;
+	fwHandler->networkStatus = ophonekitd_network_status_handler;
 
 	frameworkd_handler_connect(fwHandler);
 	g_debug("connected to the buses");

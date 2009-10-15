@@ -39,6 +39,8 @@ void
 ophonekitd_sim_incoming_stored_message_handler(const int id);
 void
 ophonekitd_incoming_ussd_handler(int mode, const char *message);
+void
+ophonekitd_network_status_handler(GHashTable *status);
 
 #endif
 

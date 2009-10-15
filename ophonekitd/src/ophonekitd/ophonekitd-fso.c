@@ -237,7 +237,7 @@ _set_antenna_power_callback(GError * error, gpointer userdata)
 			return;
 		}
 	}
-
+	ophonekitd_register_network();
 }
 
 
@@ -554,5 +554,20 @@ ophonekitd_incoming_ussd_handler(int mode, const char *message)
 	g_debug("ophonekitd_incoming_ussd_handler(mode=%d, message=%s)", mode,
 		message);
 	phoneuid_dialogs_show_ussd(mode, message);
+}
+
+/* --- NetworkStatus --- */
+void
+ophonekitd_network_status_handler(GHashTable *status)
+{
+	char *registration = g_value_get_string(
+			g_hash_table_lookup(status, "registration"));
+	g_debug("ophonekitd_network_status_handler(registration=%s)",
+			registration);
+	if (!strcmp(registration, "unregistered")) {
+		g_message("scheduling registration to network");
+		g_timeout_add(gsm_reregister_timeout * 1000,
+				ophonekitd_register_network, NULL);
+	}
 }
 
