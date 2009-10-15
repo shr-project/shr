@@ -26,6 +26,7 @@ void *phonegui_get_function(const char *name, void *phonegui_library);
 
 /* Implementation prototypes */
 void phonegui_init(int argc, char **argv, void (*exit_cb) ());
+void phonegui_loop();
 
 /* Calls */
 void phonegui_incoming_call_show(const int id, const int status,

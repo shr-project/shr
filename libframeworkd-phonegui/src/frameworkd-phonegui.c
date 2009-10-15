@@ -228,13 +228,24 @@ phonegui_connect()
 }
 
 static void
-_phonegui_init_backend(int argc, char **argv, void (*exit_cb) (),
+_phonegui_backend_init(int argc, char **argv, void (*exit_cb) (),
 			enum BackendType type)
 {
 	void (*_phonegui_init) (int argc, char **argv, void (*exit_cb) ());
 	_phonegui_init = phonegui_get_function("phonegui_backend_init", backends[type].library);
 	if (_phonegui_init)
 		_phonegui_init(argc, argv, exit_cb);
+	else
+		g_debug("can't find function %s", __FUNCTION__);	
+}
+
+static void
+_phonegui_backend_loop(enum BackendType type)
+{
+	void (*_phonegui_loop) ();
+	_phonegui_loop = phonegui_get_function("phonegui_backend_loop", backends[type].library);
+	if (_phonegui_loop)
+		_phonegui_loop();
 	else
 		g_debug("can't find function %s", __FUNCTION__);	
 }
@@ -246,11 +257,25 @@ phonegui_init(int argc, char **argv, void (*exit_cb) ())
 #if 0
 	int i;
 	for (i = 0 ; i < BACKEND_NO ; i++) {
-		_phonegui_init_backend(argc, argv, exit_cb, i);
+		_phonegui_backend_init(argc, argv, exit_cb, i);
 	}
 #else
 	/* FIXME: until we add support for threads, initialize only one */
-	_phonegui_init_backend(argc, argv, exit_cb, BACKEND_CALLS);
+	_phonegui_backend_init(argc, argv, exit_cb, BACKEND_CALLS);
+#endif
+}
+
+void
+phonegui_loop()
+{
+#if 0
+	int i;
+	for (i = 0 ; i < BACKEND_NO ; i++) {
+		_phonegui_backend_loop(i);
+	}
+#else
+	/* FIXME: until we add support for threads, run only one loop */
+	_phonegui_backend_loop(BACKEND_CALLS);
 #endif
 }
 
