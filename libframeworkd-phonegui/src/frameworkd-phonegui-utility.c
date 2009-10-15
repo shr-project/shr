@@ -9,10 +9,11 @@
 #include <dbus/dbus-glib-bindings.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
+#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-network.h>
 
 #include "frameworkd-phonegui-utility.h"
 
-extern Settings *conf;
+GHashTable *contact_cache;
 
 static GValue *
 _new_gvalue_string(const char *value)
@@ -70,7 +71,7 @@ cache_phonebook_entry(GValueArray * entry, void *data)
 		strdup(g_value_get_string(g_value_array_get_nth(entry, 2)));
 	char *name =
 		strdup(g_value_get_string(g_value_array_get_nth(entry, 1)));
-	g_hash_table_insert(conf->contact_cache, number, name);
+	g_hash_table_insert(contact_cache, number, name);
 }
 
 
@@ -81,11 +82,11 @@ cache_phonebook_callback(GError * error, GPtrArray * contacts,
 	g_debug("cache_phonebook_callback called");
 	if (error == NULL && contacts != NULL) {
 		g_debug("creating contact_cache");
-		conf->contact_cache =
+		contact_cache =
 			g_hash_table_new_full(phone_number_hash,
 					      phone_utils_numbers_equal, free,
 					      free);
-		if (!conf->contact_cache) {
+		if (!contact_cache) {
 			g_warning("could not allocate contact cache");
 			return;
 		}
@@ -114,7 +115,7 @@ _lookup_add_prefix(const char *_number)
 	return number;
 }
 
-void
+int
 phonegui_contact_lookup(const char *_number,
 			void (*name_callback) (GError *, char *, gpointer),
 			void *data)
@@ -123,7 +124,7 @@ phonegui_contact_lookup(const char *_number,
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	char *number = _lookup_add_prefix(_number);
 	if (!number) {
-		return;
+		return 1;
 	}
 
 	g_debug("Attempting to resolve name for: \"%s\"", number);
@@ -132,7 +133,7 @@ phonegui_contact_lookup(const char *_number,
 	GValue *value = _new_gvalue_string((number) ? number : _number);	/*  we prefer using number */
 	if (!value) {
 		free(number);
-		return;
+		return 1;
 	}
 	g_hash_table_insert(query, "Phone", value);
 
@@ -143,12 +144,13 @@ phonegui_contact_lookup(const char *_number,
 	if (number)
 		free(number);
 
+	return 0;
 }
 
 char *
 phonegui_contact_cache_lookup(char *number)
 {
-	if (conf->contact_cache == NULL)
+	if (contact_cache == NULL)
 		return (number);
 	g_debug("looking for '%s' in contacts_cache", number);
 	if (!number || !*number || !strcmp(number, "*****")) {
@@ -167,7 +169,7 @@ phonegui_contact_cache_lookup(char *number)
 		}
 	}
 
-	char *name = g_hash_table_lookup(conf->contact_cache, number);
+	char *name = g_hash_table_lookup(contact_cache, number);
 	if (name && *name) {
 		g_debug("found name '%s'", name);
 		return (name);
@@ -185,7 +187,7 @@ phonegui_init_contacts_cache()
 void
 phonegui_destroy_contacts_cache()
 {
-	g_hash_table_destroy(conf->contact_cache);
+	g_hash_table_destroy(contact_cache);
 }
 
 
@@ -390,4 +392,58 @@ phonegui_call_activate(int call_id,
 {
 	ogsmd_call_activate(call_id, callback, userdata);
 	return 0;
+}
+
+int
+phonegui_contact_delete(const char *path,
+				void (*callback) (GError *, char *, gpointer),
+				void *data)
+{
+	opimd_contact_delete(path, callback, data);
+	return 0;
+}
+
+int
+phonegui_call_send_dtmf(const char *tones,
+				void (*callback)(GError *, gpointer),
+				void *data)
+{
+	ogsmd_call_send_dtmf(tones, callback, data);
+	return 0;
+}
+
+int
+phonegui_network_send_ussd_request(char *request,
+				void (*callback)(GError *, gpointer),
+				void *data)
+{
+	ogsmd_network_send_ussd_request(request, callback, data);
+	return 0;
+}
+
+int
+phonegui_message_delete(const char *path,
+				void (*callback)(GError *, gpointer),
+				void *data)
+{
+	opimd_message_delete(path, callback, data);
+	return 0;
+}
+
+int
+phonegui_contact_update(const char *path,
+				GHashTable *contact_data,
+				void (*callback)(GError *, gpointer),
+				void* data)
+{
+	opimd_contact_update(path, contact_data, callback, data);
+	return 0;
+}
+
+int
+phonegui_contact_add(const GHashTable *contact_data,
+			void (*callback)(GError*, char *, gpointer),
+			void* data)
+{
+	opimd_contacts_add(contact_data, callback, data);
 }

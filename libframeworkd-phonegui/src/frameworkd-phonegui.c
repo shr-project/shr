@@ -26,9 +26,6 @@
 #include <phone-utils.h>
 #include <frameworkd-glib/frameworkd-glib-dbus.h>
 
-static void (*_phonegui_init) (int argc, char **argv, int (*idle_cb) (void *)) = NULL;
-static void (*_phonegui_loop) () = NULL;
-
 /* Calls */
 static void (*_phonegui_incoming_call_show) (const int id, const int status,
 					     const char *number) = NULL;
@@ -65,18 +62,48 @@ static void (*_phonegui_sim_auth_hide) (const int status) = NULL;
 static void (*_phonegui_ussd_show) (int mode, const char *message) = NULL;
 static void (*_phonegui_ussd_hide) () = NULL;
 
+typedef const char * BackendType;
 
-static void *phonegui_library = NULL;
-Settings *conf = NULL;
+
+/* got to be in the same order as in the backends array */
+enum BackendType {
+	BACKEND_DIALER = 0,
+	BACKEND_MESSAGES,
+	BACKEND_CONTACTS,
+	BACKEND_CALLS,
+	BACKEND_PHONELOG,
+	BACKEND_NOTIFICATION,
+	BACKEND_IDLE_SCREEN,
+	BACKEND_SETTINGS,
+	BACKEND_NO /* must be last, means the null */
+};
+
+struct BackendInfo {
+	void *library;
+	const char *name;
+};
+
+static struct BackendInfo backends[] = {
+					{NULL, "dialer"},
+					{NULL, "messages"},
+					{NULL, "contacts"},
+					{NULL, "calls"},
+					{NULL, "phonelog"},
+					{NULL, "notification"},
+					{NULL, "idle_screen"},
+					{NULL, "settings"},
+					{NULL, NULL}
+					};
 
 static void phonegui_connect();
 
 void
-phonegui_load(const char *application_name)
+phonegui_load_backend(enum BackendType type)
 {
 	GKeyFile *keyfile;
 	GKeyFileFlags flags;
 	GError *error = NULL;
+	char *library;
 
 	/* we have to call this before using any glib functions */
 	if (!g_thread_supported())
@@ -91,33 +118,38 @@ phonegui_load(const char *application_name)
 		return;
 	}
 
-	conf = g_slice_new(Settings);
-	conf->library =
-		g_key_file_get_string(keyfile, "phonegui", "library", NULL);
+	library =
+		g_key_file_get_string(keyfile, backends[type].name, "library", NULL);
 	/* Load library */
-	if (conf->library != NULL) {
-		phonegui_library =
-			dlopen(conf->library, RTLD_LOCAL | RTLD_LAZY);
-		if (!phonegui_library) {
-			g_error("Loading %s failed: %s", conf->library,
-				dlerror());
+	if (library != NULL) {
+		backends[type].library = 
+			dlopen(library, RTLD_LOCAL | RTLD_LAZY);
+		if (!backends[type].library) {
+			g_error("Loading %s failed: %s", library, dlerror());
 		}
 	}
 	else {
-		g_error("Loading failed. Conf->library not set.");
+		g_error("Loading failed. library not set.");
 	}
+}
+
+void
+phonegui_load(const char *application_name)
+{
+	int i;
+	for (i = 0 ; i < BACKEND_NO ; i++) {
+		phonegui_load_backend(i);
+	}
+
 	phonegui_connect();
 	/* init phone utils */
 	/* FIXME: should deinit somewhere! */
 	phone_utils_init();
-
-	/* Connect to frameworkd */
-	frameworkd_handler_connect(frameworkd_handler_new());
 }
 
 
 void *
-phonegui_get_function(const char *name)
+phonegui_get_function(const char *name, void *phonegui_library)
 {
 	if (phonegui_library == NULL) {
 		g_error("phonegui library not loaded");
@@ -134,74 +166,123 @@ phonegui_get_function(const char *name)
 static void
 phonegui_connect()
 {
-	_phonegui_init = phonegui_get_function("phonegui_backend_init");
-	_phonegui_loop = phonegui_get_function("phonegui_backend_loop");
-
 	_phonegui_incoming_call_show =
-		phonegui_get_function("phonegui_backend_incoming_call_show");
+		phonegui_get_function("phonegui_backend_incoming_call_show",
+					backends[BACKEND_CALLS].library);
 	_phonegui_incoming_call_hide =
-		phonegui_get_function("phonegui_backend_incoming_call_hide");
+		phonegui_get_function("phonegui_backend_incoming_call_hide",
+					backends[BACKEND_CALLS].library);
 	_phonegui_outgoing_call_show =
-		phonegui_get_function("phonegui_backend_outgoing_call_show");
+		phonegui_get_function("phonegui_backend_outgoing_call_show",
+					backends[BACKEND_CALLS].library);
 	_phonegui_outgoing_call_hide =
-		phonegui_get_function("phonegui_backend_outgoing_call_hide");
+		phonegui_get_function("phonegui_backend_outgoing_call_hide",
+					backends[BACKEND_CALLS].library);
 
 	_phonegui_contacts_show =
-		phonegui_get_function("phonegui_backend_contacts_show");
+		phonegui_get_function("phonegui_backend_contacts_show",
+					backends[BACKEND_CONTACTS].library);
 	_phonegui_contacts_hide =
-		phonegui_get_function("phonegui_backend_contacts_hide");
+		phonegui_get_function("phonegui_backend_contacts_hide",
+					backends[BACKEND_CONTACTS].library);
 	_phonegui_contacts_new_show =
-		phonegui_get_function("phonegui_backend_contacts_new_show");
+		phonegui_get_function("phonegui_backend_contacts_new_show",
+					backends[BACKEND_CONTACTS].library);
 	_phonegui_contacts_new_hide =
-		phonegui_get_function("phonegui_backend_contacts_new_hide");
+		phonegui_get_function("phonegui_backend_contacts_new_hide",
+					backends[BACKEND_CONTACTS].library);
 
 	_phonegui_dialer_show =
-		phonegui_get_function("phonegui_backend_dialer_show");
+		phonegui_get_function("phonegui_backend_dialer_show",
+					backends[BACKEND_DIALER].library);
 	_phonegui_dialer_hide =
-		phonegui_get_function("phonegui_backend_dialer_hide");
+		phonegui_get_function("phonegui_backend_dialer_hide",
+					backends[BACKEND_DIALER].library);
 
 	_phonegui_dialog_show =
-		phonegui_get_function("phonegui_backend_dialog_show");
+		phonegui_get_function("phonegui_backend_dialog_show",
+					backends[BACKEND_NOTIFICATION].library);
 	_phonegui_dialog_hide =
-		phonegui_get_function("phonegui_backend_dialog_hide");
+		phonegui_get_function("phonegui_backend_dialog_hide",
+					backends[BACKEND_NOTIFICATION].library);
 
 	_phonegui_messages_message_show =
-		phonegui_get_function("phonegui_backend_messages_message_show");
+		phonegui_get_function("phonegui_backend_messages_message_show",
+					backends[BACKEND_MESSAGES].library);
 	_phonegui_messages_message_hide =
-		phonegui_get_function("phonegui_backend_messages_message_hide");
+		phonegui_get_function("phonegui_backend_messages_message_hide",
+					backends[BACKEND_MESSAGES].library);
 	_phonegui_messages_show =
-		phonegui_get_function("phonegui_backend_messages_show");
+		phonegui_get_function("phonegui_backend_messages_show",
+					backends[BACKEND_MESSAGES].library);
 	_phonegui_messages_hide =
-		phonegui_get_function("phonegui_backend_messages_hide");
+		phonegui_get_function("phonegui_backend_messages_hide",
+					backends[BACKEND_MESSAGES].library);
 
 	_phonegui_sim_auth_show =
-		phonegui_get_function("phonegui_backend_sim_auth_show");
+		phonegui_get_function("phonegui_backend_sim_auth_show",
+					backends[BACKEND_NOTIFICATION].library);
 	_phonegui_sim_auth_hide =
-		phonegui_get_function("phonegui_backend_sim_auth_hide");
-
+		phonegui_get_function("phonegui_backend_sim_auth_hide",
+					backends[BACKEND_NOTIFICATION].library);
 	_phonegui_ussd_show =
-		phonegui_get_function("phonegui_backend_ussd_show");
+		phonegui_get_function("phonegui_backend_ussd_show",
+					backends[BACKEND_NOTIFICATION].library);
 	_phonegui_ussd_hide =
-		phonegui_get_function("phonegui_backend_ussd_hide");
+		phonegui_get_function("phonegui_backend_ussd_hide",
+					backends[BACKEND_NOTIFICATION].library);
 }
 
-/* Implementation prototypes */
-void
-phonegui_init(int argc, char **argv, int (*idle_cb)(void *))
+static void
+_phonegui_backend_init(int argc, char **argv, void (*exit_cb) (),
+			enum BackendType type)
 {
+	void (*_phonegui_init) (int argc, char **argv, void (*exit_cb) ());
+	_phonegui_init = phonegui_get_function("phonegui_backend_init", backends[type].library);
 	if (_phonegui_init)
 		_phonegui_init(argc, argv, idle_cb);
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
 
-void
-phonegui_loop()
+static void
+_phonegui_backend_loop(enum BackendType type)
 {
+	void (*_phonegui_loop) ();
+	_phonegui_loop = phonegui_get_function("phonegui_backend_loop", backends[type].library);
 	if (_phonegui_loop)
 		_phonegui_loop();
 	else
-		g_debug("can't find function %s", __FUNCTION__);
+		g_debug("can't find function %s", __FUNCTION__);	
+}
+
+/* Implementation prototypes */
+void
+phonegui_init(int argc, char **argv, void (*exit_cb) ())
+{
+#if 0
+	int i;
+	for (i = 0 ; i < BACKEND_NO ; i++) {
+		_phonegui_backend_init(argc, argv, exit_cb, i);
+	}
+#else
+	/* FIXME: until we add support for threads, initialize only one */
+	_phonegui_backend_init(argc, argv, exit_cb, BACKEND_CALLS);
+#endif
+}
+
+void
+phonegui_loop()
+{
+#if 0
+	int i;
+	for (i = 0 ; i < BACKEND_NO ; i++) {
+		_phonegui_backend_loop(i);
+	}
+#else
+	/* FIXME: until we add support for threads, run only one loop */
+	_phonegui_backend_loop(BACKEND_CALLS);
+#endif
 }
 
 
