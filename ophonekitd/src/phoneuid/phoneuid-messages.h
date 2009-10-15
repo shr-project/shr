@@ -24,7 +24,7 @@ struct _PhoneuidMessagesServiceClass {
 
 gboolean
 phoneuid_messages_service_display_list(PhoneuidMessagesService *object,
-		GError **error);
+		GHashTable *options, DBusGMethodInvocation *context);
 gboolean
 phoneuid_messages_service_display_item(PhoneuidMessagesService *object,
 		const char *message_path, GError **error);
