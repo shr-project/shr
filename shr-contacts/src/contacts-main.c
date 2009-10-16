@@ -70,6 +70,5 @@ void
 exit_callback()
 {
 	g_debug("exit_callback()");
-	phonegui_contacts_hide();
 	exit(EXIT_SUCCESS);
 }
