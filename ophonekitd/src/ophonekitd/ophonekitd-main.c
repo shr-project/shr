@@ -63,19 +63,6 @@ main(int argc, char **argv)
 	fd_set fdst;
 	FrameworkdHandler *fwHandler;
 
-	/* --- daemonize --- */
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
-	umask(0077);
-
-	if (fork())
-		return (0);
-
-	chdir("/tmp");
-	setsid();
-	setpgrp();
-
 	logfile = open("/var/log/ophonekitd.log", O_WRONLY|O_CREAT|O_APPEND);
 	if (logfile == -1) {
 		printf("failed creating the logfile");
@@ -92,6 +79,19 @@ main(int argc, char **argv)
 	dbus_g_thread_init();
 
 	GMainLoop *loop = g_main_loop_new(NULL, FALSE);
+
+	/* --- daemonize --- */
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+	umask(0);
+
+	if (fork())
+		return (0);
+
+	chdir("/");
+	setsid();
+	setpgrp();
 
 	/* --- set up signal handling --- */
 	//set_signals();
