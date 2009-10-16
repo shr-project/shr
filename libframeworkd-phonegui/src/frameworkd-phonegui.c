@@ -237,6 +237,7 @@ phonegui_init(int argc, char **argv, void (*exit_cb) ())
 #else
 	/* FIXME: until we add support for threads, initialize only one */
 	_phonegui_backend_init(argc, argv, exit_cb, BACKEND_CALLS);
+	frameworkd_handler_connect(frameworkd_handler_new());
 #endif
 }
 
