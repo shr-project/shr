@@ -1,0 +1,6 @@
+#!/bin/sh -e
+/usr/bin/dbus-send --system \
+--dest=org.shr.ophonekitd.Usage \
+/org/shr/ophonekitd/Usage \
+org.shr.ophonekitd.Usage.RegisterUiHandler string:"$DBUS_SESSION_BUS_ADDRESS"
+
