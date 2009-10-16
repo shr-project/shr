@@ -44,7 +44,7 @@ void phonegui_contacts_new_show(const char *name, const char *number);
 
 /* Messages */
 void phonegui_messages_show();
-void phonegui_messages_message_show(const int id);
+void phonegui_messages_message_show(const char *path);
 
 /* Dialer */
 void phonegui_dialer_show();

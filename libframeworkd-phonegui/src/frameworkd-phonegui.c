@@ -332,10 +332,10 @@ phonegui_messages_show()
 }
 
 void
-phonegui_messages_message_show(const int id)
+phonegui_messages_message_show(const char *path)
 {
 	if (_phonegui_messages_message_show)
-		_phonegui_messages_message_show(id);
+		_phonegui_messages_message_show(path);
 	else
 		g_debug("can't find function %s", __FUNCTION__);
 }
