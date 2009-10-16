@@ -1,0 +1,41 @@
+#! /bin/sh
+#
+# ophonekitd -- This shell script starts and stops the SHR ophonekitd daemon.
+#
+# chkconfig: 345 90 20
+# description: ophonekitd is the GSM resource handling daemon of SHR
+# processname: ophonekitd
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=ophonekitd
+
+[ -f /etc/default/rcS ] && . /etc/default/rcS
+
+case "$1" in
+    start)
+        echo -n "Starting SHR ophonekitd daemon: "
+        start-stop-daemon --start --pidfile /var/run/${NAME}.pid --make-pidfile --background -x /usr/bin/ophonekitd
+        if [ $? = 0 ]; then
+            echo "(ok)"
+        else
+            echo "(failed)"
+        fi
+        ;;
+    stop)
+        echo -n "Stopping SHR ophonekitd daemon: "
+        start-stop-daemon --stop --pidfile /var/run/${NAME}.pid --oknodo
+        rm -f /var/run/${NAME}.pid
+        echo "(done)"
+        ;;
+    restart|force-reload)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: /etc/init.d/ophonekitd {start|stop|restart|force-reload}"
+        exit 1
+        ;;
+esac
+
+exit 0
+
