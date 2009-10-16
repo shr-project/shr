@@ -19,6 +19,7 @@ struct _PhoneuidCallManagementService {
 
 struct _PhoneuidCallManagementServiceClass {
 	GObjectClass parent;
+	DBusGConnection *connection;
 };
 
 gboolean

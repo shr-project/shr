@@ -20,6 +20,7 @@ struct _PhoneuidMessagesService {
 
 struct _PhoneuidMessagesServiceClass {
 	GObjectClass parent;
+	DBusGConnection *connection;
 };
 
 gboolean

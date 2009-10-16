@@ -35,6 +35,7 @@ struct _PhoneuidDialerService {
 
 struct _PhoneuidDialerServiceClass {
 	GObjectClass parent;
+	DBusGConnection *connection;
 };
 
 gboolean

@@ -3,6 +3,13 @@
 
 #define PHONEUID_SERVICE                     "org.shr.phoneuid"
 
+#define PHONEUID_CALL_MANAGEMENT_NAME        PHONEUID_SERVICE ".CallManagement"
+#define PHONEUID_DIALER_NAME                 PHONEUID_SERVICE ".Dialer"
+#define PHONEUID_DIALOGS_NAME                PHONEUID_SERVICE ".Dialogs"
+#define PHONEUID_CONTACTS_NAME               PHONEUID_SERVICE ".Contacts"
+#define PHONEUID_MESSAGES_NAME               PHONEUID_SERVICE ".Messages"
+#define PHONEUID_PHONE_LOG_NAME              PHONEUID_SERVICE ".PhoneLog"
+
 #define PHONEUID_CALL_MANAGEMENT_INTERFACE   PHONEUID_SERVICE ".CallManagement"
 #define PHONEUID_DIALER_INTERFACE            PHONEUID_SERVICE ".Dialer"
 #define PHONEUID_DIALOGS_INTERFACE           PHONEUID_SERVICE ".Dialogs"
