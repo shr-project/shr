@@ -36,6 +36,7 @@ static void (*_phonegui_outgoing_call_hide) (const int id) = NULL;
 
 /* Contacts */
 static void (*_phonegui_contacts_show) () = NULL;
+static void (*_phonegui_contacts_contact_show) (const char *path);
 static void (*_phonegui_contacts_new_show) (const char *name, const char *number) = NULL;
 
 /* Messages */
@@ -301,6 +302,14 @@ phonegui_contacts_show()
 		_phonegui_contacts_show();
 	else
 		g_debug("can't find function %s", __FUNCTION__);
+}
+
+void phonegui_contacts_contact_show(const char *path)
+{
+	if (_phonegui_contacts_contact_show)
+		_phonegui_contacts_contact_show(path);
+	else
+		g_debug("can't fine function %s", __FUNCTION__);
 }
 
 void
