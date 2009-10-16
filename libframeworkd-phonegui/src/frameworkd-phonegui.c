@@ -254,15 +254,19 @@ _phonegui_backend_loop(enum BackendType type)
 void
 phonegui_init(int argc, char **argv, void (*exit_cb) ())
 {
-#if 0
+	/* the hash table is used to make sure we only init one backend once */
 	int i;
+	GHashTable *inits;
+	inits = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+	
 	for (i = 0 ; i < BACKEND_NO ; i++) {
-		_phonegui_backend_init(argc, argv, exit_cb, i);
+		if (!g_hash_table_lookup(inits, backends[i].library)) {
+			g_hash_table_insert(inits, backends[i].library, backends[i].name);
+			_phonegui_backend_init(argc, argv, exit_cb, i);
+		}
 	}
-#else
-	/* FIXME: until we add support for threads, initialize only one */
-	_phonegui_backend_init(argc, argv, exit_cb, BACKEND_CALLS);
-#endif
+
+	g_hash_table_destroy(inits);
 }
 
 void
