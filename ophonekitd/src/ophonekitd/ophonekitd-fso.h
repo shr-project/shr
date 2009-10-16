@@ -36,7 +36,7 @@ ophonekitd_sim_auth_status_handler(const int status);
 void
 ophonekitd_sim_ready_status_handler(gboolean status);
 void
-ophonekitd_incoming_message_handler(char *message_path)
+ophonekitd_incoming_message_handler(char *message_path);
 void
 ophonekitd_sim_incoming_stored_message_handler(const int id);
 void
