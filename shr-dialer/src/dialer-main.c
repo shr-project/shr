@@ -37,7 +37,7 @@ main(int argc, char **argv)
 	}
 
 	proxy = dbus_g_proxy_new_for_name (bus,
-			"org.shr.phoneuid",
+			"org.shr.phoneuid.Dialer",
 			"/org/shr/phoneuid/Dialer",
 			"org.shr.phoneuid.Dialer");
 
