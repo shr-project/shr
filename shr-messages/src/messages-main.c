@@ -35,14 +35,14 @@ main(int argc, char **argv)
 	}
 
 	proxy = dbus_g_proxy_new_for_name (bus,
-			"org.shr.phoneuid.Messages",
-			"/org/shr/phoneuid/Messages",
-			"org.shr.phoneuid.Messages");
+			"org.shr.phoneui.Messages",
+			"/org/shr/phoneui/Messages",
+			"org.shr.phoneui.Messages");
 
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+	GHashTable *filter = g_hash_table_new(g_str_hash, g_str_equal);
 	if (!dbus_g_proxy_call (proxy, "DisplayList", &error,
 			dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE),
-			options, G_TYPE_INVALID, G_TYPE_INVALID)) {
+			filter, G_TYPE_INVALID, G_TYPE_INVALID)) {
 		if (error->domain == DBUS_GERROR &&
 			error->code == DBUS_GERROR_REMOTE_EXCEPTION) {
 			g_printerr ("Caught remote method exception %s: %s",

@@ -37,9 +37,9 @@ main(int argc, char **argv)
 	}
 
 	proxy = dbus_g_proxy_new_for_name (bus,
-			"org.shr.phoneuid.Dialer",
-			"/org/shr/phoneuid/Dialer",
-			"org.shr.phoneuid.Dialer");
+			"org.shr.phoneui.Dialer",
+			"/org/shr/phoneui/Dialer",
+			"org.shr.phoneui.Dialer");
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	if (!dbus_g_proxy_call (proxy, "Display", &error,
