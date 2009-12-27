@@ -1,6 +1,10 @@
 [Desktop Entry]
 Name=Media Player
+Name[es]=Reproductor de medios
+Name[gl]=Reproductor de medios
 Comment=Enjoy music and movies
+Comment[es]=Disfrute de su música y películas
+Comment[gl]=Disfrute da súa música e películas
 Exec=openmoko-mediaplayer
 Icon=openmoko-mediaplayer
 MimeType=audio/x-scpls;audio/mp3;audio/x-mp3;audio/mpeg;audio/x-mpeg;audio/x-wav;application/x-ogg;

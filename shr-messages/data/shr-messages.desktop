@@ -2,8 +2,12 @@
 Encoding=UTF-8
 Name=Messages
 Name[pl]=Wiadomości
+Name[es]=Mensajes
+Name[gl]=Mensaxes
 Comment=View and send SMS messages
 Comment[pl]=Przeglądaj i wysyłaj wiadomości SMS
+Comment[es]=Lea y envíe mensajes SMS
+Comment[gl]=Vexa e envíe mensaxes SMS
 Exec=shr-messages
 Icon=shr-messages
 Terminal=false

@@ -1,8 +1,12 @@
 [Desktop Entry]
 Name=Settings
+Name[es]=Ajustes
+Name[gl]=Axustes
 TryExec=exposure.py
 GenericName=Settings
 Comment=Settings of Openmoko Phone
+Comment[es]=Ajustes del Teléfono Openmoko
+Comment[gl]=Axustes do Teléfono Openmoko
 StartupNotify=false
 Exec=exposure.py
 Icon=settings

@@ -2,8 +2,12 @@
 Encoding=UTF-8
 Name=Contacts
 Name[pl]=Kontakty
+Name[es]=Contactos
+Name[gl]=Contactos
 Comment=View Contacts
 Comment[pl]=Książka adresowa 
+Comment[es]=Ver contactos
+Comment[gl]=Ver contactos
 Exec=shr-contacts
 Icon=shr-contacts
 Terminal=false

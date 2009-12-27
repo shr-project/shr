@@ -2,8 +2,12 @@
 Encoding=UTF-8
 Name=Dialer
 Name[pl]=Zadzwoń
+Name[es]=Marcador
+Name[gl]=Marcador
 Comment=Telephone Calls
 Comment[pl]=Rozmowy telefoniczne
+Comment[es]=Llamadas de teléfono
+Comment[gl]=Chamadas de teléfono
 Exec=shr-dialer
 Icon=shr-dialer
 Terminal=false
