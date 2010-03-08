@@ -1,6 +1,9 @@
 #!/bin/sh
 case "$1" in
     start)
+       # Hide cursor
+       echo -n -e "\033[?25l" > /dev/tty0
+
        if [ -f /usr/share/shr-splash/theme/boot.fb ]; then
          (cat /usr/share/shr-splash/theme/boot.fb > /dev/fb0) &
        else
